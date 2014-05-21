@@ -1,14 +1,20 @@
 package gameObject.statics;
 
-import gameObject.player.Player;
+import com.badlogic.gdx.math.Vector2;
 
 public interface Hookable {
 
 	/**
-	 * Check whether Player is in Position to hook.
-	 * @param player
+	 * Check whether object is in Position to hook.
+	 * @param currentPosition
 	 * @return hookable
 	 */
-	public boolean isHookable(Player player);
+	public boolean isHookable(Vector2 position);
+	
+	/**
+	 * Get Hooking Point.
+	 * @return hookPoint
+	 */
+	public Vector2 getHookPoint();
 	
 }
