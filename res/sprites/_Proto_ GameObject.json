@@ -1,0 +1,24 @@
+//// DATA ////
+{
+	"name" : "<NAME>",
+	"bodyDef" :	{
+					
+				}
+	"texture" : "<TEXTURE.FILE>",
+	"defaultState" : "STATE0",
+	"states" : ["STATE0", "STATE1", "..."],
+	"stateframes" :	{
+						"STATE0" :	[
+										{
+											"textureMap" : [1, 2, 3, 4],
+											"boundingBox" : [1, 2, 3, 4]
+										},
+										{
+											"textureMap" : [5, 6, 7, 8],
+											"boundingBox" : [1, 2, 3, 4]
+										},
+										"..."
+									],
+						"STATE1" : "..."
+					}
+}
