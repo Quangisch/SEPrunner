@@ -1,6 +1,7 @@
 package core.ingame;
 
-import gameObject.DrawableObject;
+import gameObject.DrawableAnimated;
+import gameObject.DrawableStatic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,8 @@ public class GameManager implements Manageable {
 
 	private static GameManager manager;
 	
-	private List<DrawableObject> drawables = new ArrayList<DrawableObject>();
+	private List<DrawableStatic> drawableStatic = new ArrayList<DrawableStatic>();
+	private List<DrawableAnimated> drawableAnimated = new ArrayList<DrawableAnimated>();
 	private List<World> worlds = new ArrayList<World>();
 	
 	private GameManager() {
@@ -25,20 +27,36 @@ public class GameManager implements Manageable {
 		return manager;
 	}
 	
-	public synchronized boolean addDrawable(DrawableObject drawable) {
-		return drawables.add(drawable);
+	public synchronized boolean addDrawableStatic(DrawableStatic drawable) {
+		return drawableStatic.add(drawable);
 	}
 	
-	public synchronized boolean removeDrawable(DrawableObject drawable) {
-		return drawables.remove(drawable);
+	public synchronized boolean removeDrawableStatic(DrawableStatic drawable) {
+		return drawableStatic.remove(drawable);
 	}
 	
-	public void clearDrawables() {
-		drawables.clear();
+	public void clearDrawableStatic() {
+		drawableStatic.clear();
 	}
 	
-	public List<DrawableObject> getDrawables() {
-		return drawables;
+	public List<DrawableStatic> getDrawableStatic() {
+		return drawableStatic;
+	}
+	
+	public synchronized boolean addDrawableAnimated(DrawableAnimated drawable) {
+		return drawableAnimated.add(drawable);
+	}
+	
+	public synchronized boolean removeDrawableAnimated(DrawableAnimated drawable) {
+		return drawableAnimated.remove(drawable);
+	}
+	
+	public void clearDrawableAnimated() {
+		drawableAnimated.clear();
+	}
+	
+	public List<DrawableAnimated> getDrawableAnimated() {
+		return drawableAnimated;
 	}
 	
 	public synchronized boolean addWorld(World world) {

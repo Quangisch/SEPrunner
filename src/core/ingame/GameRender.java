@@ -1,6 +1,7 @@
 package core.ingame;
 
-import gameObject.DrawableObject;
+import gameObject.DrawableAnimated;
+import gameObject.DrawableStatic;
 import gameObject.player.InputHandler;
 import gameWorld.Map;
 
@@ -41,12 +42,15 @@ public class GameRender implements ApplicationListener {
 		batch.setProjectionMatrix(Camera.getInstance().combined);
 
 		batch.begin();
-		Map.getInstance().draw(batch);								//map
+		Map.getInstance().draw(batch);				 						//map
 		
-		for(DrawableObject d : GameManager.getInstance().getDrawables())	//gameObjects
-			d.draw(Gdx.graphics.getDeltaTime(), batch);
+		for(DrawableStatic d : GameManager.getInstance().getDrawableStatic())	//gameObjects
+			d.draw(batch);
 		
-		HUD.getInstance().draw(batch);								//userInterface
+		for(DrawableAnimated d : GameManager.getInstance().getDrawableAnimated())	//gameObjects
+			d.draw(batch);
+		
+		HUD.getInstance().draw(batch);										//userInterface
 		batch.end();
 		
 		

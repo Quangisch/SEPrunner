@@ -10,10 +10,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
-import core.ingame.GameManager;
 import core.ingame.GameProperties;
 
-public class GameObject implements DrawableObject, Moveable {
+public class GameObject implements DrawableStatic, Moveable {
 
 	protected Body body;
 	protected TextureRegion textRG;
@@ -22,11 +21,11 @@ public class GameObject implements DrawableObject, Moveable {
 	private boolean visible;
 
 	protected GameObject() {
-		GameManager.getInstance().addDrawable(this);
+		
 	}
 	
 	@Override
-	public void draw(float stateTime, SpriteBatch batch) {
+	public void draw(SpriteBatch batch) {
 		if (visible)
 			batch.draw(textRG, GameProperties.meterToPixel(body.getPosition().x), GameProperties.meterToPixel(body.getPosition().y));
 	}

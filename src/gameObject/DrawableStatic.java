@@ -2,9 +2,9 @@ package gameObject;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public interface DrawableObject {
+public interface DrawableStatic {
 
-	public void draw(float stateTime, SpriteBatch batch);
+	public void draw(SpriteBatch batch);
 	public void flip();
 	public void setFlip(boolean flip);
 	public boolean isFlipped();

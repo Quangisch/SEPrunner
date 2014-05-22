@@ -14,6 +14,7 @@ public class MainLauncher {
 		cfg.useGL20 = false;
 		cfg.width = GameProperties.width;
 		cfg.height = GameProperties.height;
+//		cfg.fullscreen = true;
 		
 		new LwjglApplication(GameRender.getInstance(), cfg);
 	}
