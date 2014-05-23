@@ -101,7 +101,7 @@ public class MainMenu implements Screen {
 		
 		//putting stuff together
 		table.add(heading);
-		table.getCell(heading).spaceBottom(100); //lücke unter heading legen = Abstand
+		table.getCell(heading).spaceBottom(100); //luecke unter heading legen = Abstand
 		table.row();
 		table.add(buttonPlay);
 		table.getCell(buttonPlay).spaceBottom(20);
@@ -124,7 +124,7 @@ public class MainMenu implements Screen {
 			.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 1))
 			.end().start(tweenManager);
 			//.end().repeat(Tween.INFINITY, 0).start(tweenManager);
-		//alternativcode würde headline durch farben kontinuierlich wechseln
+		//alternativcode wuerde headline durch farben kontinuierlich wechseln
 	
 		//heading and buttons fade-in
 		Timeline.createSequence().beginSequence()
