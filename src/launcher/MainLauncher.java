@@ -1,21 +1,24 @@
 package launcher;
 
+import menu.Project;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import core.ingame.GameProperties;
-import core.ingame.GameRender;
 
 public class MainLauncher {
 	
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "LibGDXTest";
-		cfg.useGL20 = false;
+		cfg.title = Project.TITLE + " v" + Project.VERSION; //changed by menu
+		cfg.vSyncEnabled = true; //changed by menu, saves some cpu
+		cfg.useGL20 = true;	//changed by menu
 		cfg.width = GameProperties.width;
 		cfg.height = GameProperties.height;
 //		cfg.fullscreen = true;
 		
-		new LwjglApplication(GameRender.getInstance(), cfg);
+		//new LwjglApplication(GameRender.getInstance(), cfg);        taken out by menu
+		new LwjglApplication(new Project(), cfg);
 	}
 }
