@@ -1,4 +1,4 @@
-package screens;
+package menu;
 
 import tween.SpriteAccessor;
 import aurelienribon.tweenengine.BaseTween;
@@ -41,15 +41,15 @@ public class Splash implements Screen{
 		batch = new SpriteBatch();
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-		
-		Texture splashTexture = new Texture("img/splash.png");
+		//Gdx.files.internal("res/GeneralForests.png")
+		Texture splashTexture = new Texture(Gdx.files.internal("res/img/splash.png"));
 		splash = new Sprite(splashTexture);
 		splash.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		Tween.set(splash, SpriteAccessor.ALPHA).target(0).start(tweenManager);
 		Tween.to(splash, SpriteAccessor.ALPHA, 2).target(1).repeatYoyo(1,.25f).setCallback(new TweenCallback(){
 			public void onEvent(int type, BaseTween<?> source){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 			}
 		}).start(tweenManager);
 	}

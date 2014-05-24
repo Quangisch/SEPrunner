@@ -1,6 +1,6 @@
 package menu;
 
-import screens.Splash;
+import menu.Splash;
 
 import com.badlogic.gdx.Game;
 
