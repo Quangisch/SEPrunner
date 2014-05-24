@@ -1,7 +1,5 @@
 package menu;
 
-import menu.Splash;
-
 import com.badlogic.gdx.Game;
 
 public class Project extends Game{

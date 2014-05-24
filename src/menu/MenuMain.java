@@ -8,19 +8,15 @@ import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MenuMain implements Screen {
@@ -30,9 +26,9 @@ public class MenuMain implements Screen {
 	private Skin skin;
 	private Table table; //objects get organized on here
 	private TextButton buttonPlay, buttonExit; //buttonlist
-	private BitmapFont white, black;
 	private Label heading;
 	private TweenManager tweenManager; //tween-engine starter, stuff like fade-in/out animations
+	//textButtonStyle pushed in json-file, put in skin
 	
 	@Override
 	public void render(float delta) {
@@ -61,29 +57,17 @@ public class MenuMain implements Screen {
 		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
 		atlas = new TextureAtlas(Gdx.files.internal("res/ui/button.pack"));
-		skin = new Skin(atlas);
+		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), atlas);
 		
 		table = new Table(skin);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
-		//creating fonts (used same font-family as in splash)
-		white = new BitmapFont(Gdx.files.internal("res/font/white.fnt"), false);
-		black = new BitmapFont(Gdx.files.internal("res/font/black.fnt"), false);
-		
 		//creating heading
-		heading = new Label(Project.TITLE, new LabelStyle(white, Color.WHITE)); //menu.Project
+		heading = new Label(Project.TITLE, skin, "default"); //menu.Project			default-value in res/ui.menu.Skin.json
 		heading.setFontScale(1); //sizable headline
 		
 		//creating buttons
-		TextButtonStyle textButtonStyle = new TextButtonStyle();
-
-		textButtonStyle.up = skin.getDrawable("button.up");
-		textButtonStyle.down = skin.getDrawable("button.down");
-		textButtonStyle.pressedOffsetX = 1;
-		textButtonStyle.pressedOffsetY = -1;
-		textButtonStyle.font = black;
-		
-		buttonPlay = new TextButton("PLAY", textButtonStyle);
+		buttonPlay = new TextButton("PLAY", skin, "default");
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect());
@@ -91,7 +75,7 @@ public class MenuMain implements Screen {
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		buttonExit = new TextButton("EXIT", textButtonStyle);
+		buttonExit = new TextButton("EXIT", skin, "default");
 		buttonExit.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				Gdx.app.exit();
@@ -116,12 +100,12 @@ public class MenuMain implements Screen {
 		
 		//heading color animation
 		Timeline.createSequence().beginSequence()
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 0, 1))
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 0))
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 1))
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 0, 0))
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 0))
-			.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 1))
+			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 0, 1))			//dunkelblau
+			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 0))			//grün
+			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 1))			//hellblau
+			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 0, 0))			//rot
+			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 0))			//gelb
+			.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 1))			//weiß
 			.end().start(tweenManager);
 			//.end().repeat(Tween.INFINITY, 0).start(tweenManager);
 		//alternativcode wuerde headline durch farben kontinuierlich wechseln
@@ -161,8 +145,6 @@ public class MenuMain implements Screen {
 		stage.dispose();
 		atlas.dispose();
 		skin.dispose();
-		white.dispose();
-		black.dispose();
 	}
 
 }
