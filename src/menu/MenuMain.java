@@ -101,11 +101,11 @@ public class MenuMain implements Screen {
 		//heading color animation
 		Timeline.createSequence().beginSequence()
 			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 0, 1))			//dunkelblau
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 0))			//grün
+			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 0))			//gruen
 			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 1))			//hellblau
 			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 0, 0))			//rot
 			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 0))			//gelb
-			.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 1))			//weiß
+			.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 1))			//weiss
 			.end().start(tweenManager);
 			//.end().repeat(Tween.INFINITY, 0).start(tweenManager);
 		//alternativcode wuerde headline durch farben kontinuierlich wechseln
