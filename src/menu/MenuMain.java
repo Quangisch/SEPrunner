@@ -25,7 +25,7 @@ public class MenuMain implements Screen {
 	private TextureAtlas atlas; //defining regions
 	private Skin skin;
 	private Table table; //objects get organized on here
-	private TextButton buttonPlay, buttonExit; //buttonlist
+	private TextButton buttonPlay, buttonOption, buttonHighscore, buttonExit; //buttonlist
 	private Label heading;
 	private TweenManager tweenManager; //tween-engine starter, stuff like fade-in/out animations
 	//textButtonStyle pushed in json-file, put in skin
@@ -67,7 +67,7 @@ public class MenuMain implements Screen {
 		heading.setFontScale(1); //sizable headline
 		
 		//creating buttons
-		buttonPlay = new TextButton("PLAY", skin, "default");
+		buttonPlay = new TextButton("Spiel starten", skin, "default");
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect());
@@ -75,7 +75,23 @@ public class MenuMain implements Screen {
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		buttonExit = new TextButton("EXIT", skin, "default");
+		buttonOption = new TextButton("Optionen", skin, "default");
+		buttonOption.addListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y){
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuOption());
+			}
+		});
+		buttonOption.pad(15);  //puffer zwischen buchstaben & buttonrand
+		
+		buttonHighscore = new TextButton("Highscore", skin, "default");
+		buttonHighscore.addListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y){
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuHighscore());
+			}
+		});
+		buttonHighscore.pad(15);  //puffer zwischen buchstaben & buttonrand
+		
+		buttonExit = new TextButton("Beenden", skin, "default");
 		buttonExit.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				Gdx.app.exit();
@@ -89,6 +105,12 @@ public class MenuMain implements Screen {
 		table.row();
 		table.add(buttonPlay);
 		table.getCell(buttonPlay).spaceBottom(20);
+		table.row();
+		table.add(buttonOption);
+		table.getCell(buttonOption).spaceBottom(20);
+		table.row();
+		table.add(buttonHighscore);
+		table.getCell(buttonHighscore).spaceBottom(20);
 		table.row();
 		table.add(buttonExit);
 //table.debug();             case debuglines needed 2/2
@@ -113,9 +135,13 @@ public class MenuMain implements Screen {
 		//heading and buttons fade-in
 		Timeline.createSequence().beginSequence()
 			.push(Tween.set(buttonPlay, ActorAccessor.ALPHA).target(0))
+			.push(Tween.set(buttonOption, ActorAccessor.ALPHA).target(0))
+			.push(Tween.set(buttonHighscore, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonExit, ActorAccessor.ALPHA).target(0))
 			.push(Tween.from(heading, ActorAccessor.ALPHA, .25f).target(0))
 			.push(Tween.to(buttonPlay, ActorAccessor.ALPHA, .25f).target(1))
+			.push(Tween.to(buttonOption, ActorAccessor.ALPHA, .25f).target(1))
+			.push(Tween.to(buttonHighscore, ActorAccessor.ALPHA, .25f).target(1))
 			.push(Tween.to(buttonExit, ActorAccessor.ALPHA, .25f).target(1))
 			.end().start(tweenManager);
 		
