@@ -20,5 +20,5 @@ public class LauncherAlex {
 		
 		//new LwjglApplication(GameRender.getInstance(), cfg);        taken out by menu
 		new LwjglApplication(new Project(), cfg);
-	}
+	}							//start view project Z11 = first img set
 }

@@ -70,7 +70,7 @@ public class MenuMain implements Screen {
 		buttonPlay = new TextButton("Spiel starten", skin, "default");
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect());
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking imgages
 			}
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
