@@ -29,11 +29,11 @@ public class MainMenu implements Screen {
 	private Stage stage;
 	private TextureAtlas atlas; //defining regions
 	private Skin skin;
-	private Table table;
-	private TextButton buttonPlay, buttonExit;
+	private Table table; //objects get organized on here
+	private TextButton buttonPlay, buttonExit; //buttonlist
 	private BitmapFont white, black;
 	private Label heading;
-	private TweenManager tweenManager;
+	private TweenManager tweenManager; //tween-engine starter, stuff like fade-in/out animations
 	
 	@Override
 	public void render(float delta) {
@@ -45,7 +45,7 @@ public class MainMenu implements Screen {
 		stage.act(delta); //updates table also since thats in there
 		stage.draw();
 		
-		//Table.drawDebug(stage);
+//Table.drawDebug(stage);             case debuglines needed 2/2
 	}
 
 	@Override
@@ -71,6 +71,10 @@ public class MainMenu implements Screen {
 		white = new BitmapFont(Gdx.files.internal("font/white.fnt"), false);
 		black = new BitmapFont(Gdx.files.internal("font/black.fnt"), false);
 		
+		//creating heading
+		heading = new Label(Project.TITLE, new LabelStyle(white, Color.WHITE)); //menu.Project
+		heading.setFontScale(1); //sizable headline
+		
 		//creating buttons
 		TextButtonStyle textButtonStyle = new TextButtonStyle();
 		textButtonStyle.up = skin.getDrawable("button.up");
@@ -85,7 +89,7 @@ public class MainMenu implements Screen {
 				((Game) Gdx.app.getApplicationListener()).setScreen(new Levels());
 			}
 		});
-		buttonPlay.pad(15);
+		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
 		buttonExit = new TextButton("EXIT", textButtonStyle);
 		buttonExit.addListener(new ClickListener(){
@@ -94,11 +98,7 @@ public class MainMenu implements Screen {
 			}
 		});
 		buttonExit.pad(15);
-		
-		//creating heading
-		heading = new Label(Project.TITLE, new LabelStyle(white, Color.WHITE));
-		heading.setFontScale(1); //sizable headline
-		
+				
 		//putting stuff together
 		table.add(heading);
 		table.getCell(heading).spaceBottom(100); //luecke unter heading legen = Abstand
@@ -107,7 +107,7 @@ public class MainMenu implements Screen {
 		table.getCell(buttonPlay).spaceBottom(20);
 		table.row();
 		table.add(buttonExit);
-		//table.debug();
+//table.debug();             case debuglines needed 2/2
 		stage.addActor(table);
 		
 		//creating animations
