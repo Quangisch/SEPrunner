@@ -20,8 +20,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
-import core.ingame.GameProperties;
-
 public class GameObject implements DrawableStatic, Moveable {
 
 	protected Body body;
@@ -34,7 +32,7 @@ public class GameObject implements DrawableStatic, Moveable {
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
 
-	protected int currentStatus; // animation die bei draw ausgeführt wird
+	protected int currentStatus;
 
 	public GameObject(World world, Vector2 position) {
 		// init bodyDef
@@ -43,15 +41,12 @@ public class GameObject implements DrawableStatic, Moveable {
 		body = world.createBody(bodyDef);
 	}
 
-	// neu
 	public void init(String name) {
 		init(name, "res/sprites/" + name + ".json");
 		// init(name, "res/sprites/" + name + ".json");
 	}
 
-	// aktuellen status speichern
 	public void init(String name, String jsonPath) {
-		// an neues json anpassen
 		JsonReader reader = new JsonReader();
 		JsonValue root;
 		try {
@@ -119,12 +114,16 @@ public class GameObject implements DrawableStatic, Moveable {
 		this.currentStatus = currentStatus;
 	}
 
+	private float stateTime = 0;
+
 	@Override
 	public void draw(SpriteBatch batch) {
 		if (!visible) return;
 
-		TextureRegion frame = new TextureRegion(animations[currentStatus].getKeyFrame(Gdx.graphics
-				.getDeltaTime()));
+		stateTime += Gdx.graphics.getDeltaTime();
+
+		TextureRegion frame = new TextureRegion(animations[currentStatus].getKeyFrame(stateTime,
+				true));
 		frame.flip(flip, false);
 
 		// TODO MeterToPixel

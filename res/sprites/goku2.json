@@ -1,7 +1,7 @@
 {
 	"goku2" :{
 		"bodyDef" :	{
-					 "density":0, "friction":0, "restitution":0, "sensor":false,"bodyType": 0
+					 "density":0, "friction":0, "restitution":0, "sensor":false, "bodyType": 0
 					},
 		"texture" : "res/sprites/goku.png",
 		"defaultState" : 0,
