@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -30,8 +31,11 @@ public class GameObject implements DrawableStatic, Moveable {
 	private boolean flip;
 	private boolean visible;
 
-	protected Map<String, Animation> anim = new HashMap<String, Animation>();
-	protected Animation currentStatus;
+	protected String[] stati;
+	protected Animation[] animations;
+	protected PolygonShape[] boundingBoxes;
+
+	protected int currentStatus;// animation die bei draw ausgeführt wird
 
 	public GameObject(World world, Vector2 position) {
 		// init bodyDef
@@ -48,15 +52,54 @@ public class GameObject implements DrawableStatic, Moveable {
 
 	// aktuellen status speichern
 	public void init(String name, String jsonPath) {
-		//an neues json anpassen
+		// an neues json anpassen
 		JsonReader reader = new JsonReader();
 		JsonValue root = reader.parse(jsonPath).get(name);
+
+		// ARRAY INIT
+		stati = new String[root.get("animationen").size];
+		animations = new Animation[stati.length];
+		boundingBoxes = new PolygonShape[stati.length];
+
+		// STATES
+		for (int i = 0; i < stati.length; i++)
+			stati[i] = root.get("animationen").getString(i);
+
+		for (int j = 0; j < stati.length; j++) {
+			JsonValue animationFrames = root.get("stateframes").get(stati[j]);
+
+			// BOUNDING BOX
+			PolygonShape boundingBox = new PolygonShape();
+			JsonValue bBox = animationFrames.get("boundingBox");
+			int i = 0;
+			float[] vertices = new float[bBox.size];
+			for (JsonValue v : bBox)
+				vertices[i++] = v.asFloat();
+			boundingBox.set(vertices);
+			boundingBoxes[i] = boundingBox;
+
+			// TEXTURE FRAMES
+			i = 0;
+			TextureRegion[] textureRegions = new TextureRegion[animationFrames
+					.get("textureMap").size];
+			for (JsonValue frame : animationFrames.get("textureMap"))
+				textureRegions[i++] = new TextureRegion(new Texture(root.get(
+						"texture").asString()), frame.getInt(0),
+						frame.getInt(1), frame.getInt(2), frame.getInt(3));
+
+			animations[i] = new Animation(
+					animationFrames.getFloat("frameDuration"), textureRegions);
+
+			// STATUS
+			currentStatus = root.getInt("defaultState");
+		}
 
 		// BODYDEF
 		setFixture(root.get("bodyDef").getFloat("density"), root.get("bodyDef")
 				.getFloat("friction"),
 				root.get("bodyDef").getFloat("restitution"), root
-						.get("bodyDef").getBoolean("sensor"), shape);
+						.get("bodyDef").getBoolean("sensor"),
+				boundingBoxes[currentStatus]);
 
 		switch (root.get("bodyDef").get("bodyType").asInt()) {
 		case 0:
@@ -66,48 +109,9 @@ public class GameObject implements DrawableStatic, Moveable {
 		case 2:
 			body.setType(BodyType.DynamicBody);
 		}
-
-		// was soll mit shape geschehen? -> bounding box?
-
-		// STATES
-		for (JsonValue j : root.get("animationen"))
-			anim.put(j.asString(), null);
-
-		// ANIMATIONS
-		for (Map.Entry<String, Animation> a : anim.entrySet()) {
-			JsonValue animations = root.get("stateframes").get(a.getKey());
-
-			Animation a_curr = new Animation();
-
-			// FRAMES
-			for (JsonValue frame : animations) {
-				JsonValue textureMap = frame.get("textureMap");
-				TextureRegion texts = new TextureRegion(new Texture(root.get(
-						"texture").asString()), textureMap.getInt(0),
-						textureMap.getInt(1), textureMap.getInt(2),
-						textureMap.getInt(3));
-
-				PolygonShape boundingBox = new PolygonShape();
-				JsonValue bBox = frame.get("boundingBox");
-				int i = 0;
-				float[] vertices = new float[bBox.size];
-				for (JsonValue v : bBox)
-					vertices[i++] = v.asFloat();
-				boundingBox.set(vertices);
-
-				a_curr.addFrame(boundingBox, texts);
-			}
-			anim.put(a.getKey(), a_curr);
-		}
-
-		//
-
-		// pro Objekt eigenes json anlegen
-		// also pro Ordnertyp
-
 	}
-	
-	public void setCurrentStatus(Animation currentStatus){
+
+	public void setCurrentStatus(int currentStatus) {
 		this.currentStatus = currentStatus;
 	}
 
@@ -183,7 +187,7 @@ public class GameObject implements DrawableStatic, Moveable {
 	// @Override
 	// ändern: -world -position -shape
 	public void initBody(BodyDef.BodyType type, float density, float friction,
-			float restitution, boolean sensor) {
+			float restitution, boolean sensor, Shape shape) {
 
 		setFixture(density, friction, restitution, sensor, shape); // Problem:shape
 	}

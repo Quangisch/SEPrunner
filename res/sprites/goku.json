@@ -2,72 +2,38 @@
 {
 	"goku" :{
 		"bodyDef" :	{
-					 "density":0, "friction":0, "restitution":0, "sensor":true
+					 "density":0, "friction":0, "restitution":0, "sensor":true,"bodyType": 0
 					}
 		"texture" : "res/sprites/goku.png",
-		//"defaultState" : "gokuStand",
+		"defaultState" : "gokuStand",
 		"animationen" : ["gokuStand","gokuRun"],
 		"stateframes" :	{
-						"gokuStand" :	[
-										{
-											"textureMap" : [7, 53, 31, 41],
-											"boundingBox" : [1, 2, 31, 41]
-										},
-										{
-											"textureMap" : [43, 53, 31, 41],
-											"boundingBox" : [1, 2, 31, 41]
-										},
-										{
-											"textureMap" : [80, 53, 31, 41],
-											"boundingBox" : [1, 2, 31, 41]
-										},
-										{
-											"textureMap" : [116, 53, 31, 41],
-											"boundingBox" : [1, 2, 31, 41]
-										},
-										{
-											"textureMap" : [153, 53, 31, 41],
-											"boundingBox" : [1, 2, 31, 41]
-										},
-										{
-											"textureMap" : [189, 53, 31, 41],
-											"boundingBox" : [1, 2, 31, 41]
-										}
-										],
-						"gokuRun" :	[
-										{
-											"textureMap" : [6,623, 32,38],
-											"boundingBox" : [1, 2, 32, 38]
-										},
-										{
-											"textureMap" : [41,623, 31,38],
-											"boundingBox" : [1, 2, 31, 38]
-										},
-										{
-											"textureMap" : [77,622, 28,37],
-											"boundingBox" : [1, 2, 28, 37]
-										},
-										{
-											"textureMap" : [110,620, 33,39],
-											"boundingBox" : [1, 2, 33, 39]
-										},
-										{
-											"textureMap" : [149,622, 31,35],
-											"boundingBox" : [1, 2, 31, 35]
-										},
-										{
-											"textureMap" : [185,623, 29,36],
-											"boundingBox" : [1, 2, 29, 36]
-										},
-										{
-											"textureMap" : [221,621, 28,38],
-											"boundingBox" : [1, 2, 28, 38]
-										},
-										{
-											"textureMap" : [253,618, 35,40],
-											"boundingBox" : [1, 2, 35, 40]
-										}
-										],
+						"gokuStand" :	{
+										"frameDuration":0.3,
+										"boundingBox" : [1, 2, 31, 41],
+										"textureMap" : [
+														[7, 53, 31, 41],
+														[43, 53, 31, 41],
+														[80, 53, 31, 41],
+														[116, 53, 31, 41],
+														[153, 53, 31, 41],
+														[189, 53, 31, 41]
+														],
+									},
+						"gokuRun" :	{
+										"frameDuration":0.3,
+										"boundingBox" : [1, 2, 32, 38],
+										"textureMap" : [
+														[6,623, 32,38],
+														[41,623, 31,38],
+														[77,622, 28,37],
+														[110,620, 33,39],
+														[149,622, 31,35],
+														[185,623, 29,36],
+														[221,621, 28,38],
+														[253,618, 35,40]
+														],
+									}
 		}
 	}
 }
