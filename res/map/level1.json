@@ -1,0 +1,23 @@
+{
+	"mapTexture" : "res/map/Map1v3k.png",
+	"size" : [4096, 1024],
+	"gravity" : [0, -20],
+	"ground" :	[
+[67, 971, 168, 923, 170, 223, 184, 70, 69, 71],
+[70, 70, 70, 220, 380, 220, 380, 70],
+[380, 220, 520, 270, 520, 70]
+				],
+	"music" : "map1.mp3",
+	"shurikans" : 10,
+	"objects" :	[
+					{
+						"ID" : "goku",
+						"position" : [30, 155],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"isPlayer" : true
+							}
+					}
+				]
+}

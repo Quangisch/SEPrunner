@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.JsonValue;
 public class GameObject implements DrawableStatic, Moveable {
 
 	protected Body body;
-	protected TextureRegion textRG;
 
 	private boolean flip;
 	private boolean visible;
@@ -139,7 +138,6 @@ public class GameObject implements DrawableStatic, Moveable {
 	@Override
 	public void flip() {
 		flip = !flip;
-		textRG.flip(true, false);
 	}
 
 	@Override
