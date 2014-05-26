@@ -14,14 +14,13 @@ public class GameRender implements ApplicationListener {
 
 	private SpriteBatch batch;
 
-	private GameRender() {
-
-	}
+	private GameRender() {}
 
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		Gdx.input.setInputProcessor(InputHandler.getInstance());
+		Map.getInstance().initMap(1);
 	}
 
 	@Override

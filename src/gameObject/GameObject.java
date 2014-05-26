@@ -1,5 +1,9 @@
 package gameObject;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -49,7 +53,13 @@ public class GameObject implements DrawableStatic, Moveable {
 	public void init(String name, String jsonPath) {
 		// an neues json anpassen
 		JsonReader reader = new JsonReader();
-		JsonValue root = reader.parse(jsonPath).get(name);
+		JsonValue root;
+		try {
+			root = reader.parse(new FileReader(jsonPath)).get(name);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
 
 		// ARRAY INIT
 		stati = new String[root.get("animationen").size];
@@ -71,7 +81,7 @@ public class GameObject implements DrawableStatic, Moveable {
 			for (JsonValue v : bBox)
 				vertices[i++] = v.asFloat();
 			boundingBox.set(vertices);
-			boundingBoxes[i] = boundingBox;
+			boundingBoxes[j] = boundingBox;
 
 			// TEXTURE FRAMES
 			i = 0;
@@ -81,11 +91,11 @@ public class GameObject implements DrawableStatic, Moveable {
 						new Texture(root.get("texture").asString()), frame.getInt(0),
 						frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
-			animations[i] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
-
-			// STATUS
-			currentStatus = root.getInt("defaultState");
+			animations[j] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
 		}
+
+		// STATUS
+		currentStatus = root.getInt("defaultState");
 
 		// BODYDEF
 		setFixture(root.get("bodyDef").getFloat("density"), root.get("bodyDef")
@@ -95,10 +105,13 @@ public class GameObject implements DrawableStatic, Moveable {
 		switch (root.get("bodyDef").get("bodyType").asInt()) {
 		case 0:
 			body.setType(BodyType.StaticBody);
+			break;
 		case 1:
 			body.setType(BodyType.KinematicBody);
+			break;
 		case 2:
 			body.setType(BodyType.DynamicBody);
+			break;
 		}
 	}
 
@@ -106,14 +119,16 @@ public class GameObject implements DrawableStatic, Moveable {
 		this.currentStatus = currentStatus;
 	}
 
-	//
-
 	@Override
 	public void draw(SpriteBatch batch) {
-		if (visible)
-			batch.draw(textRG, GameProperties.meterToPixel(body.getPosition().x),
-					GameProperties.meterToPixel(body.getPosition().y));
-		// aktuellen status des gameobjekts abfragen und ausführen
+		if (!visible) return;
+
+		TextureRegion frame = new TextureRegion(animations[currentStatus].getKeyFrame(Gdx.graphics
+				.getDeltaTime()));
+		frame.flip(flip, false);
+
+		// TODO MeterToPixel
+		batch.draw(frame, body.getPosition().x, body.getPosition().y);
 	}
 
 	@Override
