@@ -1,24 +1,27 @@
 //// DATA ////
+//hinzufügen: floatwert für animationsgeschwindigkeit
+//boundingbox pro Animation nicht pro texturemap
+//bodytype
 {
-	"name" : "<NAME>",
-	"bodyDef" :	{
-					
-				}
-	"texture" : "<TEXTURE.FILE>",
-	"defaultState" : "STATE0",
-	"states" : ["STATE0", "STATE1", "..."],
-	"stateframes" :	{
-						"STATE0" :	[
-										{
-											"textureMap" : [1, 2, 3, 4],
-											"boundingBox" : [1, 2, 3, 4]
-										},
-										{
-											"textureMap" : [5, 6, 7, 8],
-											"boundingBox" : [1, 2, 3, 4]
-										},
-										"..."
-									],
-						"STATE1" : "..."
+	"name" :{
+		"bodyDef" :	{
+					 "density":0, "friction":0, "restitution":0, "sensor":true, "bodyType": 0
 					}
+		"texture" : "<TEXTURE.FILE>",
+		//"defaultState" : "STATE0",
+		"animationen" : ["animation0", "animation1", "..."],
+		"stateframes" :	{
+						"animation0" :	{
+										"boundingBox" : [1, 2, 3, 4],
+										"textureMap" : [
+														[1, 2, 3, 4]
+														],
+										"textureMap" : [
+														[5, 6, 7, 8]
+														],
+										"..."
+									},
+						"animation1" : "..."
+		}
+	}
 }

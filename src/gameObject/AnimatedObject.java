@@ -12,5 +12,8 @@ public class AnimatedObject extends GameObject implements DrawableAnimated {
 		textRG = animation.getKeyFrame(stateTime);
 		super.draw(batch);
 	}
+	
+	//sprites auf Quang warten
+	//draw Methode anpassen
 
 }

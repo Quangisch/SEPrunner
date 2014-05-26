@@ -18,12 +18,12 @@ public interface Collisionable {
 	 * @param sensor Durchlässigkeit
 	 * @param shape geometrische Form
 	 */
-	public void initBody(World world, BodyDef.BodyType type, Vector2 position, 
+/*	public void initBody(World world, BodyDef.BodyType type, Vector2 position, 
 			float density, float friction, float restitution, boolean sensor, Shape shape);
 	
 	
 	public void addFixture(float density, float friction, float restitution, boolean sensor, Shape shape);
 	
 	public void setFixture(float density, float friction, float restitution, boolean sensor, Shape shape);
-	
+	*/
 }
