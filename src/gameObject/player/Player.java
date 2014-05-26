@@ -1,29 +1,32 @@
 package gameObject.player;
 
-import gameObject.AnimatedObject;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
+import gameObject.GameObject;
+import gameObject.enemy.Enemy;
 
-public class Player extends AnimatedObject implements Runnable {
-	
-	private static Player player;
-	
-	private Player() {
-		
-	}
-	
-	public static Player getInstance() {
-		if(player == null)
-			player = new Player();
-		return player;
-	}
-	
-	public static Player resetInstance() {
-		return player = new Player();
+public class Player extends GameObject implements Runnable, Detectable {
+
+	public Player(World world, Vector2 position) {
+		super(world, position);
+		// TODO Auto-generated constructor stub
 	}
 
-	
 	public void run() {
-		
+
 	}
-	
+
+	@Override
+	public boolean isDetectable(Enemy enemy) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setCaptured(Enemy enemy) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

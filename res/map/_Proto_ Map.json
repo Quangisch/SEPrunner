@@ -1,0 +1,27 @@
+{
+	"mapTexture" : "<file>",
+	"size" : [0, 0],
+	"gravity" : [0, -20],
+	"ground" :	[
+					[...], // Polygon
+					...
+				]
+	"music" : "<file>",
+	"shurikans" : 10,
+	"objects" :	[
+					{
+						"ID" : "name",
+						<"json" : "file",>
+						"position" : [0, 0],
+						"scale" : 1.0,
+						"flip" : false
+						"AI" : {
+							"isPlayer" : true,
+							"isStatic" : false,
+							"ID" : <AI ID>
+							"Params" : { <JSONValue direkt an AI Klasse> }
+							}
+					},
+					{...}
+				]
+}

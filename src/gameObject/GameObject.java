@@ -1,8 +1,5 @@
 package gameObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,8 +17,6 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
-//
-//
 
 public class GameObject implements DrawableStatic, Moveable {
 
@@ -35,7 +30,7 @@ public class GameObject implements DrawableStatic, Moveable {
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
 
-	protected int currentStatus;// animation die bei draw ausgeführt wird
+	protected int currentStatus; // animation die bei draw ausgeführt wird
 
 	public GameObject(World world, Vector2 position) {
 		// init bodyDef
@@ -80,15 +75,13 @@ public class GameObject implements DrawableStatic, Moveable {
 
 			// TEXTURE FRAMES
 			i = 0;
-			TextureRegion[] textureRegions = new TextureRegion[animationFrames
-					.get("textureMap").size];
+			TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
 			for (JsonValue frame : animationFrames.get("textureMap"))
-				textureRegions[i++] = new TextureRegion(new Texture(root.get(
-						"texture").asString()), frame.getInt(0),
+				textureRegions[i++] = new TextureRegion(
+						new Texture(root.get("texture").asString()), frame.getInt(0),
 						frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
-			animations[i] = new Animation(
-					animationFrames.getFloat("frameDuration"), textureRegions);
+			animations[i] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
 
 			// STATUS
 			currentStatus = root.getInt("defaultState");
@@ -96,10 +89,8 @@ public class GameObject implements DrawableStatic, Moveable {
 
 		// BODYDEF
 		setFixture(root.get("bodyDef").getFloat("density"), root.get("bodyDef")
-				.getFloat("friction"),
-				root.get("bodyDef").getFloat("restitution"), root
-						.get("bodyDef").getBoolean("sensor"),
-				boundingBoxes[currentStatus]);
+				.getFloat("friction"), root.get("bodyDef").getFloat("restitution"),
+				root.get("bodyDef").getBoolean("sensor"), boundingBoxes[currentStatus]);
 
 		switch (root.get("bodyDef").get("bodyType").asInt()) {
 		case 0:
@@ -120,16 +111,14 @@ public class GameObject implements DrawableStatic, Moveable {
 	@Override
 	public void draw(SpriteBatch batch) {
 		if (visible)
-			batch.draw(textRG,
-					GameProperties.meterToPixel(body.getPosition().x),
+			batch.draw(textRG, GameProperties.meterToPixel(body.getPosition().x),
 					GameProperties.meterToPixel(body.getPosition().y));
 		// aktuellen status des gameobjekts abfragen und ausführen
 	}
 
 	@Override
 	public void setFlip(boolean flip) {
-		if (this.flip == flip)
-			return;
+		if (this.flip == flip) return;
 		flip();
 	}
 
@@ -145,8 +134,8 @@ public class GameObject implements DrawableStatic, Moveable {
 	}
 
 	// @Override
-	public void addFixture(float density, float friction, float restitution,
-			boolean sensor, Shape shape) {
+	public void addFixture(float density, float friction, float restitution, boolean sensor,
+			Shape shape) {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = density;
 		fixtureDef.isSensor = sensor;
@@ -158,8 +147,8 @@ public class GameObject implements DrawableStatic, Moveable {
 	}
 
 	// @Override
-	public void setFixture(float density, float friction, float restitution,
-			boolean sensor, Shape shape) {
+	public void setFixture(float density, float friction, float restitution, boolean sensor,
+			Shape shape) {
 		for (Fixture f : body.getFixtureList())
 			body.destroyFixture(f);
 		addFixture(density, friction, restitution, sensor, shape);
@@ -186,8 +175,8 @@ public class GameObject implements DrawableStatic, Moveable {
 	 */
 	// @Override
 	// ändern: -world -position -shape
-	public void initBody(BodyDef.BodyType type, float density, float friction,
-			float restitution, boolean sensor, Shape shape) {
+	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution,
+			boolean sensor, Shape shape) {
 
 		setFixture(density, friction, restitution, sensor, shape); // Problem:shape
 	}
