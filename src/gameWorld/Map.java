@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -42,7 +42,7 @@ public class Map implements DrawableMap {
 
 	private Map() {
 		objects = new ArrayList<GameObject>();
-		//		debugRender = new Box2DDebugRenderer();
+//				debugRender = new Box2DDebugRenderer();
 	}
 
 	public void draw(SpriteBatch batch) {
@@ -93,6 +93,8 @@ public class Map implements DrawableMap {
 		JsonValue JGrounds = root.get("ground");
 		GameObject ground = new GameObject(world, new Vector2());
 		for (JsonValue JGround : JGrounds) {
+			
+			/*
 			PolygonShape p = new PolygonShape();
 			//			float[] vertices = new float[8];
 			//			vertices[0] = JGround.getFloat(0);
@@ -107,8 +109,15 @@ public class Map implements DrawableMap {
 			float[] vertices = new float[JGround.size];
 			for (int i = 0; i < vertices.length; i++)
 				vertices[i] = JGround.getFloat(i);
-
-			p.set(vertices);
+			*/
+			
+			ChainShape p = new ChainShape();
+			float[] vertices = new float[JGround.size];
+			for (int i = 0; i < vertices.length; i += 2) {
+				vertices[i] = JGround.getFloat(i);
+				vertices[i+1] = mapTexture.getHeight() - JGround.getFloat(i+1);
+			}
+			p.createChain(vertices);
 
 			ground.addFixture(0, 0, 0, false, p);
 		}
