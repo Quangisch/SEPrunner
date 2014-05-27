@@ -6,4 +6,7 @@ public interface Moveable extends Collisionable {
 	
 	public void applyForce(Vector2 force, boolean wake);
 
+	public float getX();
+	public float getY();
+	
 }

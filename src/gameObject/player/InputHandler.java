@@ -15,6 +15,13 @@ public class InputHandler implements InputProcessor {
 
 	}
 
+	public boolean isKeyDown(int[] key) {
+		for(int k : key)
+			if(isKeyDown(k))
+				return true;
+		return false;
+	}
+	
 	public boolean isKeyDown(int key) {
 		return pressedKeys.contains(key);
 	}

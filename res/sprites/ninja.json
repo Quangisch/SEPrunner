@@ -1,16 +1,16 @@
 {
 	"ninja" :{
 		"bodyDef" :	{
-					 "density":100, "friction":8, "restitution":0, "sensor":false, "bodyType": 2
+					 "density":30, "friction":0.4, "restitution":0, "sensor":false, "bodyType": 2
 					},
 		"texture" : "res/sprites/ninja.png",
-		"defaultState" : 1,
+		"defaultState" : 0,
 		"animationen" : ["stand","sneak","cower","run"],
 		"stateframes" :	{
 						"stand" :	{
-										"frameDuration":0.3,
-										"boundingBox" : [0, 0, 0, 41,
-														 31, 41, 31, 0],
+										"frameDuration":0.2,
+										"boundingBox" : [39.5, 35, 39.5, 117,
+														 90, 117, 90, 35],
 										"textureMap" : [
 														[150, 0, 150, 150],
 														[150, 150, 150, 150],
@@ -38,9 +38,9 @@
 														]
 									},
 						"cower" :	{
-										"frameDuration":0.3,
-										"boundingBox" : [0, 0, 0, 41,
-														 31, 41, 31, 0],
+										"frameDuration":0.07,
+										"boundingBox" : [39.5, 35, 39.5, 117,
+														 90, 117, 90, 35],
 										"textureMap" : [
 														[0, 0, 150, 150],
 														[0, 150, 150, 150],
@@ -51,9 +51,9 @@
 														]
 									},
 						"run" :	{
-										"frameDuration":0.3,
-										"boundingBox" : [0, 0, 0, 38,
-														32, 38, 32, 0],
+										"frameDuration":0.1,
+										"boundingBox" : [39.5, 35, 39.5, 117,
+														 90, 117, 90, 35],
 										"textureMap" : [
 														[450, 0, 150, 150],
 														[450, 150, 150, 150],

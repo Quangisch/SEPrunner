@@ -20,6 +20,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import core.ingame.GameProperties;
+
 public class GameObject implements DrawableStatic, Moveable {
 
 	protected Body body;
@@ -73,7 +75,7 @@ public class GameObject implements DrawableStatic, Moveable {
 			int i = 0;
 			float[] vertices = new float[bBox.size];
 			for (JsonValue v : bBox)
-				vertices[i++] = v.asFloat();
+				vertices[i++] = GameProperties.pixelToMeter(v.asFloat());
 			boundingBox.set(vertices);
 			boundingBoxes[j] = boundingBox;
 
@@ -112,6 +114,10 @@ public class GameObject implements DrawableStatic, Moveable {
 	public void setCurrentStatus(int currentStatus) {
 		this.currentStatus = currentStatus;
 	}
+	
+	public int getCurrentStatus() {
+		return currentStatus;
+	}
 
 	private float stateTime = 0;
 
@@ -124,9 +130,8 @@ public class GameObject implements DrawableStatic, Moveable {
 		TextureRegion frame = new TextureRegion(animations[currentStatus].getKeyFrame(stateTime,
 				true));
 		frame.flip(flip, false);
-
 		// TODO MeterToPixel
-		batch.draw(frame, body.getPosition().x, body.getPosition().y);
+		batch.draw(frame, getX(), getY());
 	}
 
 	@Override
@@ -195,6 +200,18 @@ public class GameObject implements DrawableStatic, Moveable {
 
 	// setter der alte werte beh�lt und nur shape �ndert
 
+	public void setObjectData(int type, int subType) {
+		setObjectData(new GameObjectData(type, subType));
+	}
+	
+	public void setObjectData(GameObjectData data) {
+		body.setUserData(data);
+	}
+	
+	public GameObjectData getObjectData() {
+		return (GameObjectData) body.getUserData();
+	}
+	
 	@Override
 	public void applyForce(Vector2 force, boolean wake) {
 		body.applyForceToCenter(force, wake);
@@ -217,5 +234,15 @@ public class GameObject implements DrawableStatic, Moveable {
 	@Override
 	public void toogleVisible() {
 		visible = !visible;
+	}
+
+	@Override
+	public float getX() {
+		return GameProperties.meterToPixel(body.getPosition().x);
+	}
+
+	@Override
+	public float getY() {
+		return GameProperties.meterToPixel(body.getPosition().y);
 	}
 }

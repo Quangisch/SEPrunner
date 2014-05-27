@@ -9,14 +9,32 @@ import com.badlogic.gdx.math.Vector2;
 public class Camera extends OrthographicCamera implements MoveableCamera {
 	
 	private static Camera camera;
+	private Moveable follow;
 	
 	private Camera() {
+//		super.setToOrtho(false, GameProperties.pixelToMeter(Gdx.graphics.getWidth()), GameProperties.pixelToMeter(Gdx.graphics.getHeight()));
 		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		
 	}
 	
 	public void update() {
 		super.update();
-		//relativ zur Spielfigur bewegen
+		if(follow == null)
+			return;
+		
+		
+		float toX = follow.getX()+GameProperties.width/3;
+		float toY = follow.getY()+GameProperties.height/5;
+		
+		//TODO
+		if(this.position.x != toX) {
+			this.position.x = toX;
+		}
+		
+		if(this.position.y != toY) {
+			this.position.y = toY;
+		}
 	}
 	
 	public static Camera getInstance() {
@@ -27,14 +45,13 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 
 	@Override
 	public void setToFollowMoveable(Moveable moveable) {
-		// TODO Auto-generated method stub
-		
+		this.follow = moveable;
 	}
 
 	@Override
 	public void jumpTo(Vector2 position) {
-		// TODO Auto-generated method stub
-		
+		this.position.x = position.x;
+		this.position.y = position.y;
 	}
 	
 	

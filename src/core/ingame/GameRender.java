@@ -35,7 +35,6 @@ public class GameRender implements ApplicationListener {
 
 		Camera.getInstance().update();
 		batch.setProjectionMatrix(Camera.getInstance().combined);
-
 		batch.begin();
 		Map.getInstance().draw(batch); //map
 
