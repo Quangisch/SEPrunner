@@ -26,7 +26,7 @@ public class GameObject implements DrawableStatic, Moveable {
 
 	private boolean flip;
 	private boolean visible;
-
+	
 	protected String[] stati;
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
@@ -186,14 +186,14 @@ public class GameObject implements DrawableStatic, Moveable {
 	 *            geometrische Form
 	 */
 	// @Override
-	// ändern: -world -position -shape
+	// ï¿½ndern: -world -position -shape
 	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution,
 			boolean sensor, Shape shape) {
 
 		setFixture(density, friction, restitution, sensor, shape); // Problem:shape
 	}
 
-	// setter der alte werte behält und nur shape ändert
+	// setter der alte werte behï¿½lt und nur shape ï¿½ndert
 
 	@Override
 	public void applyForce(Vector2 force, boolean wake) {

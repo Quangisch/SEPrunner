@@ -62,15 +62,6 @@ public class Map implements DrawableMap {
 		if (player != null) player.draw(batch);
 
 		world.clearForces();
-		player.setCurrentStatus(1);
-		if (InputHandler.getInstance().isKeyDown(22)) {
-			player.applyForce(new Vector2(100.0f, 0), true);
-			player.setFlip(false);
-		} else if (InputHandler.getInstance().isKeyDown(21)) {
-			player.applyForce(new Vector2(-100.0f, 0), true);
-			player.setFlip(true);
-		} else
-			player.setCurrentStatus(0);
 	}
 
 	public void initMap(String json) {
@@ -123,14 +114,9 @@ public class Map implements DrawableMap {
 		}
 		//		objects.add(ground);
 
-		player = new Player(world, new Vector2(200, 250));
-		player.init("goku");
+		player = new Player(world, new Vector2(200, 150));
+		player.init("ninja");
 		player.setVisible(true);
-
-		//		GameObject goku2 = new GameObject(world, new Vector2(50, 50));
-		//		goku2.init("goku2");
-		//		goku2.setVisible(true);
-		//		objects.add(goku2);
 	}
 
 	public void initMap(int level) {
