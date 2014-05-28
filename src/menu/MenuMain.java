@@ -1,4 +1,4 @@
-package menu;
+ package menu;
 
 import com.badlogic.gdx.Screen;
 

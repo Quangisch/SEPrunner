@@ -230,6 +230,7 @@ public class GameObject implements Drawable, Collisionable {
 			boolean sensor, Shape shape, boolean disposeShape) {
 
 		setFixture(density, friction, restitution, sensor, shape, disposeShape);
+		body.setFixedRotation(true);
 	}
 
 	public void addSensorShape(Shape shape) {
@@ -299,5 +300,10 @@ public class GameObject implements Drawable, Collisionable {
 	@Override
 	public GameObjectData getGameObjectData() {
 		return (GameObjectData) body.getUserData();
+	}
+
+	@Override
+	public void handleCollision(Collisionable other) {
+		
 	}
 }

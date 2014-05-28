@@ -109,19 +109,24 @@ public class Map implements DrawableMap {
 		}
 		
 		ground.setGameObjectData(GameObjectData.GROUND, 0);
-		//		objects.add(ground);
 
+		// TODO cleanup
+//		init player
 		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200),
 				GameProperties.pixelToMeter(150)));
 		player.init("ninja");
+		
 		PolygonShape p = new PolygonShape();
 		float[] vertices = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
 		p.set(vertices);
 		player.addSensorShape(p);
-		player.setVisible(true);
 		player.getBody().setLinearDamping(2.5f);
-		player.getBody().setFixedRotation(true);
 		player.setGameObjectData(GameObjectData.PLAYER, 0);
+		
+//		init gameObjects
+		
+		
+		
 		world.setContactListener(new CollisionHandler());
 	}
 

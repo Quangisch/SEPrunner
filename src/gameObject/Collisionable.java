@@ -34,6 +34,12 @@ public interface Collisionable {
 	public void setGameObjectData(int type, int subType);
 	public void setGameObjectData(GameObjectData gameObjectData);
 	public GameObjectData getGameObjectData();
+
+	/**
+	 * Override method in child classes for correct usage.
+	 * @param Collisionable
+	 */
+	public void handleCollision(Collisionable other);
 	
 	/**
 	 * Get x coordinate as float in pixel
