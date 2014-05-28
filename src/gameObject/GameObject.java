@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements DrawableStatic, Collisionable {
+public class GameObject implements Drawable, Collisionable {
 
 	private String name;
 
@@ -40,7 +40,7 @@ public class GameObject implements DrawableStatic, Collisionable {
 	private boolean flip = false;
 	private boolean visible = true;
 	private volatile boolean grounded = true;
-	
+
 	protected String[] states;
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
@@ -162,6 +162,9 @@ public class GameObject implements DrawableStatic, Collisionable {
 
 		this.currentState = state;
 
+		// TODO Solve addFixture slowdown
+		if (!force) return;
+
 		setFixture(density, friction, restitution, sensor, boundingBoxes[this.currentState], false);
 		for (Shape s : sensorShapes)
 			addFixture(0, 0, 0, true, s, false);
@@ -175,16 +178,14 @@ public class GameObject implements DrawableStatic, Collisionable {
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		if (!visible) 
-			return;
+		if (!visible) return;
 
 		stateTime += Gdx.graphics.getDeltaTime();
-
 
 		TextureRegion frame = new TextureRegion(animations[currentState].getKeyFrame(stateTime,
 				true));
 		frame.flip(flip, false);
-		
+
 		batch.draw(frame, getX(), getY());
 	}
 
@@ -217,7 +218,7 @@ public class GameObject implements DrawableStatic, Collisionable {
 		if (disposeShape) shape.dispose();
 	}
 
-@Override
+	@Override
 	public void setFixture(float density, float friction, float restitution, boolean sensor,
 			Shape shape, boolean disposeShape) {
 		for (Fixture f : body.getFixtureList())
@@ -265,11 +266,6 @@ public class GameObject implements DrawableStatic, Collisionable {
 	}
 
 	@Override
-	public void toogleVisible() {
-		visible = !visible;
-	}
-
-	@Override
 	public float getX() {
 		return GameProperties.meterToPixel(body.getPosition().x);
 	}
@@ -278,12 +274,12 @@ public class GameObject implements DrawableStatic, Collisionable {
 	public float getY() {
 		return GameProperties.meterToPixel(body.getPosition().y);
 	}
-	
+
 	@Override
 	public void setGrounded(boolean grounded) {
 		this.grounded = grounded;
 	}
-	
+
 	@Override
 	public boolean isGrounded() {
 		return grounded;
@@ -294,12 +290,12 @@ public class GameObject implements DrawableStatic, Collisionable {
 		body.setUserData(gameObjectData);
 		System.out.println(getGameObjectData().toString());
 	}
-	
+
 	@Override
 	public void setGameObjectData(int type, int subType) {
 		setGameObjectData(new GameObjectData(type, subType, this));
 	}
-	
+
 	@Override
 	public GameObjectData getGameObjectData() {
 		return (GameObjectData) body.getUserData();
