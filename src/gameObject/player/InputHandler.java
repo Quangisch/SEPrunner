@@ -48,6 +48,10 @@ public class InputHandler implements InputProcessor {
 				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
 		}
 		
+//		toogle debug
+		if(keycode == Keys.TAB)
+			GameProperties.debugMode = !GameProperties.debugMode;
+		
 		return false;
 	}
 

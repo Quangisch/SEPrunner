@@ -13,9 +13,7 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 	
 	private Camera() {
 //		super.setToOrtho(false, GameProperties.pixelToMeter(Gdx.graphics.getWidth()), GameProperties.pixelToMeter(Gdx.graphics.getHeight()));
-		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		
+		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());	
 	}
 	
 	public void update() {
@@ -35,6 +33,10 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		if(this.position.y != toY) {
 			this.position.y = toY;
 		}
+	}
+	
+	public void updateOrtho() {
+		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());	
 	}
 	
 	public static Camera getInstance() {

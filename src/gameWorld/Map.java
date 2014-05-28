@@ -46,8 +46,7 @@ public class Map implements DrawableMap {
 
 	private Map() {
 		objects = new ArrayList<GameObject>();
-
-		 debugRender = new Box2DDebugRenderer();
+		debugRender = new Box2DDebugRenderer();
 		
 	}
 
@@ -71,7 +70,7 @@ public class Map implements DrawableMap {
 
 		if (player != null) player.draw(batch);
 
-		if (debugRender != null) debugRender.render(world, debugMatrix);
+		if (debugRender != null && GameProperties.debugMode) debugRender.render(world, debugMatrix);
 		
 		world.clearForces();
 	}

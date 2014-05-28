@@ -46,8 +46,7 @@ public class GameRender implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-		GameProperties.width = width;
-		GameProperties.height = height;
+		
 	}
 
 	@Override

@@ -15,6 +15,8 @@ public abstract class GameProperties {
 	public static float gamma = 1.0f;
 	public static float brightness = 1.0f;
 
+	public static boolean debugMode = false;
+	
 	public static int[] keyLeft = {Keys.A, Keys.LEFT}, 
 			keyRight = {Keys.D, Keys.RIGHT},
 			keyRun = {Keys.F, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT},
