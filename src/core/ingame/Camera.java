@@ -1,6 +1,6 @@
 package core.ingame;
 
-import gameObject.Moveable;
+import gameObject.Collisionable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Camera extends OrthographicCamera implements MoveableCamera {
 	
 	private static Camera camera;
-	private Moveable follow;
+	private Collisionable follow;
 	
 	private Camera() {
 //		super.setToOrtho(false, GameProperties.pixelToMeter(Gdx.graphics.getWidth()), GameProperties.pixelToMeter(Gdx.graphics.getHeight()));
@@ -44,7 +44,7 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 	}
 
 	@Override
-	public void setToFollowMoveable(Moveable moveable) {
+	public void setToFollowMoveable(Collisionable moveable) {
 		this.follow = moveable;
 	}
 

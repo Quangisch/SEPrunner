@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 import gameObject.GameObject;
-import gameObject.Moveable;
+import gameObject.Collisionable;
 
 public class Tree extends GameObject implements Hideable {
 
@@ -14,7 +14,7 @@ public class Tree extends GameObject implements Hideable {
 	}
 
 	@Override
-	public boolean canHide(Moveable moveableObject) {
+	public boolean canHide(Collisionable moveableObject) {
 		// TODO Auto-generated method stub
 		return false;
 	}

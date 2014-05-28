@@ -56,13 +56,12 @@ public class Map implements DrawableMap {
 		
 		player.run();
 		
-		//		for (Background b : backgrounds)
-		batch.disableBlending();
-		//			batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
-		//					b.scrollFactorY * Camera.getInstance().position.y);
-		batch.enableBlending();
-
-		if (debugRender != null) debugRender.render(world, debugMatrix);
+		
+//		batch.disableBlending();
+//		for (Background b : backgrounds)
+//			batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
+//					b.scrollFactorY * Camera.getInstance().position.y);
+//		batch.enableBlending();
 
 		if (mapTexture != null) batch.draw(mapTexture, 0, 0);
 
@@ -70,6 +69,8 @@ public class Map implements DrawableMap {
 			o.draw(batch);
 
 		if (player != null) player.draw(batch);
+		
+		if (debugRender != null) debugRender.render(world, debugMatrix);
 		
 		world.clearForces();
 	}
@@ -124,8 +125,7 @@ public class Map implements DrawableMap {
 			ground.addFixture(0, 0.4f, 0, false, p);
 		}
 		
-		ground.setObjectData(GameObjectData.GROUND, j++);
-		System.out.println(ground.getObjectData().toString());
+		ground.setGameObjectData(GameObjectData.GROUND, 0);
 		//		objects.add(ground);
 
 		
@@ -140,7 +140,7 @@ public class Map implements DrawableMap {
 		player.setVisible(true);
 		player.getBody().setLinearDamping(2.5f);
 		player.getBody().setFixedRotation(true);
-		player.setObjectData(GameObjectData.PLAYER, 0);
+		player.setGameObjectData(GameObjectData.PLAYER, 0);
 		
 		
 		world.setContactListener(new CollisionHandler());

@@ -13,11 +13,8 @@ public class Player extends GameObject implements Runnable, Detectable {
 	
 	private static Player player;
 	
-	private boolean grounded;
-	
 	private Player(World world, Vector2 position) {
 		super(world, position);
-		// TODO Auto-generated constructor stub
 		Camera.getInstance().setToFollowMoveable(this);
 	}
 
@@ -36,8 +33,10 @@ public class Player extends GameObject implements Runnable, Detectable {
 	}
 	
 	private void processInput() {
+		
 		Vector2 baseForce = new Vector2(0,0);
 		
+//		basic movement
 		if(InputHandler.getInstance().isKeyDown(GameProperties.keyRight)) {
 			baseForce.add(1, 0);
 			setFlip(false);
@@ -46,23 +45,31 @@ public class Player extends GameObject implements Runnable, Detectable {
 			baseForce.add(-1, 0);
 			setFlip(true);
 			setCurrentStatus(1);
-		} else if(!grounded)
-			setCurrentStatus(2);
+		} else if(!isGrounded())
+			setCurrentStatus(1);
 		else
 			setCurrentStatus(0);
 		
-		if((getCurrentStatus() == 1 || getCurrentStatus() == 3) && InputHandler.getInstance().isKeyDown(GameProperties.keyRun)) {
+//		tweak gravity
+		if(baseForce.len() != 0)
+			body.setGravityScale(0.7f);
+		else
+			body.setGravityScale(1);
+		
+//		run
+		if((getCurrentStatus() == 1 || getCurrentStatus() == 3) && InputHandler.getInstance().isKeyDown(GameProperties.keyRun) && isGrounded()) {
 			setCurrentStatus(3);
 			baseForce.scl(1.7f);
 		}
 		
-		if(InputHandler.getInstance().isKeyDown(GameProperties.keyJump) && grounded) {
-			grounded = false;
+//		jump
+		if(InputHandler.getInstance().isKeyDown(GameProperties.keyJump) && isGrounded()) {
+			setGrounded(false);
 			body.applyLinearImpulse(new Vector2(body.getLocalCenter().x,body.getLocalCenter().y+100), body.getWorldCenter(), true);
 		}
 		
-			
-		body.applyLinearImpulse(baseForce.scl(2f), body.getWorldCenter(), true);
+//		apply impulse
+		body.applyLinearImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f), body.getWorldCenter(), true);
 		
 	}
 
@@ -78,12 +85,6 @@ public class Player extends GameObject implements Runnable, Detectable {
 
 	}
 	
-	public void setGrounded(boolean grounded) {
-		this.grounded = grounded;
-	}
 	
-	public boolean isGrounded() {
-		return grounded;
-	}
 
 }

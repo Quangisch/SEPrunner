@@ -22,12 +22,13 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements DrawableStatic, Moveable {
+public class GameObject implements DrawableStatic, Collisionable {
 
 	protected Body body;
 
-	private boolean flip;
-	private boolean visible;
+	private boolean flip = false;
+	private boolean visible = true;
+	private volatile boolean grounded = true;
 	
 	protected String[] stati;
 	protected Animation[] animations;
@@ -47,7 +48,7 @@ public class GameObject implements DrawableStatic, Moveable {
 		// init(name, "res/sprites/" + name + ".json");
 	}
 
-	public void init(String name, String jsonPath) {
+	private void init(String name, String jsonPath) {
 		JsonReader reader = new JsonReader();
 		JsonValue root;
 		try {
@@ -123,14 +124,14 @@ public class GameObject implements DrawableStatic, Moveable {
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		if (!visible) return;
+		if (!visible) 
+			return;
 
 		stateTime += Gdx.graphics.getDeltaTime();
 
-		TextureRegion frame = new TextureRegion(animations[currentStatus].getKeyFrame(stateTime,
-				true));
+		TextureRegion frame = new TextureRegion(animations[currentStatus].getKeyFrame(stateTime, true));
 		frame.flip(flip, false);
-		// TODO MeterToPixel
+		
 		batch.draw(frame, getX(), getY());
 	}
 
@@ -150,7 +151,7 @@ public class GameObject implements DrawableStatic, Moveable {
 		return flip;
 	}
 
-	// @Override
+	@Override
 	public void addFixture(float density, float friction, float restitution, boolean sensor,
 			Shape shape) {
 		FixtureDef fixtureDef = new FixtureDef();
@@ -163,7 +164,7 @@ public class GameObject implements DrawableStatic, Moveable {
 		shape.dispose();
 	}
 
-	// @Override
+	@Override
 	public void setFixture(float density, float friction, float restitution, boolean sensor,
 			Shape shape) {
 		for (Fixture f : body.getFixtureList())
@@ -171,27 +172,7 @@ public class GameObject implements DrawableStatic, Moveable {
 		addFixture(density, friction, restitution, sensor, shape);
 	}
 
-	/**
-	 * 
-	 * @param world
-	 *            Kollisionsebene
-	 * @param type
-	 *            Beweglichkeit
-	 * @param position
-	 *            Positionsvektor
-	 * @param density
-	 *            Dichte
-	 * @param friction
-	 *            Reibungskoeffizient
-	 * @param restitution
-	 *            Elastizitätskoeffizient
-	 * @param sensor
-	 *            Durchlässigkeit
-	 * @param shape
-	 *            geometrische Form
-	 */
-	// @Override
-	// �ndern: -world -position -shape
+	@Override
 	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution,
 			boolean sensor, Shape shape) {
 
@@ -200,17 +181,7 @@ public class GameObject implements DrawableStatic, Moveable {
 
 	// setter der alte werte beh�lt und nur shape �ndert
 
-	public void setObjectData(int type, int subType) {
-		setObjectData(new GameObjectData(type, subType));
-	}
 	
-	public void setObjectData(GameObjectData data) {
-		body.setUserData(data);
-	}
-	
-	public GameObjectData getObjectData() {
-		return (GameObjectData) body.getUserData();
-	}
 	
 	@Override
 	public void applyForce(Vector2 force, boolean wake) {
@@ -244,5 +215,31 @@ public class GameObject implements DrawableStatic, Moveable {
 	@Override
 	public float getY() {
 		return GameProperties.meterToPixel(body.getPosition().y);
+	}
+	
+	@Override
+	public void setGrounded(boolean grounded) {
+		this.grounded = grounded;
+	}
+	
+	@Override
+	public boolean isGrounded() {
+		return grounded;
+	}
+
+	@Override
+	public void setGameObjectData(GameObjectData gameObjectData) {
+		body.setUserData(gameObjectData);
+		System.out.println(getGameObjectData().toString());
+	}
+	
+	@Override
+	public void setGameObjectData(int type, int subType) {
+		setGameObjectData(new GameObjectData(type, subType, this));
+	}
+	
+	@Override
+	public GameObjectData getGameObjectData() {
+		return (GameObjectData) body.getUserData();
 	}
 }
