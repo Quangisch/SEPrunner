@@ -59,7 +59,7 @@ public class CollisionHandler implements ContactListener {
 		if(colDataPlayer.fix.isSensor())
 		if(colDataObject.gameObj.TYPE == GameObjectData.GROUND) {
 			colDataPlayer.gameObj.GAMEOBJECT.setGrounded(true);
-			System.out.println("player grounded");
+//			System.out.println("player grounded");
 			return;
 		}
 	}
