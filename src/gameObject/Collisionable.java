@@ -18,11 +18,11 @@ public interface Collisionable {
 	 * @param shape geometrische Form
 	 */
 	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution,
-			boolean sensor, Shape shape);
+			boolean sensor, Shape shape, boolean disposeShape);
 	
 	
-	public void addFixture(float density, float friction, float restitution, boolean sensor, Shape shape);
-	public void setFixture(float density, float friction, float restitution, boolean sensor, Shape shape);
+	public void addFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
+	public void setFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
 	
 	public void applyForce(Vector2 force, boolean wake);
 	

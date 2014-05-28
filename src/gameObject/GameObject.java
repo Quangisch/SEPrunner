@@ -2,6 +2,8 @@ package gameObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,19 +26,31 @@ import core.ingame.GameProperties;
 
 public class GameObject implements DrawableStatic, Collisionable {
 
+	private String name;
+
+	// BODY
 	protected Body body;
+	private float density;
+	private float friction;
+	private float restitution;
+	private boolean sensor;
+
+	private List<Shape> sensorShapes;
 
 	private boolean flip = false;
 	private boolean visible = true;
 	private volatile boolean grounded = true;
 	
-	protected String[] stati;
+	protected String[] states;
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
 
-	protected int currentStatus;
+	protected int defaultState;
+	protected int currentState;
 
 	public GameObject(World world, Vector2 position) {
+		sensorShapes = new LinkedList<Shape>();
+
 		// init bodyDef
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(position);
@@ -58,17 +72,19 @@ public class GameObject implements DrawableStatic, Collisionable {
 			return;
 		}
 
+		this.name = name;
+
 		// ARRAY INIT
-		stati = new String[root.get("animationen").size];
-		animations = new Animation[stati.length];
-		boundingBoxes = new PolygonShape[stati.length];
+		states = new String[root.get("animationen").size];
+		animations = new Animation[states.length];
+		boundingBoxes = new PolygonShape[states.length];
 
 		// STATES
-		for (int i = 0; i < stati.length; i++)
-			stati[i] = root.get("animationen").getString(i);
+		for (int i = 0; i < states.length; i++)
+			states[i] = root.get("animationen").getString(i);
 
-		for (int j = 0; j < stati.length; j++) {
-			JsonValue animationFrames = root.get("stateframes").get(stati[j]);
+		for (int j = 0; j < states.length; j++) {
+			JsonValue animationFrames = root.get("stateframes").get(states[j]);
 
 			// BOUNDING BOX
 			PolygonShape boundingBox = new PolygonShape();
@@ -92,12 +108,13 @@ public class GameObject implements DrawableStatic, Collisionable {
 		}
 
 		// STATUS
-		currentStatus = root.getInt("defaultState");
+		defaultState = root.getInt("defaultState");
 
 		// BODYDEF
-		setFixture(root.get("bodyDef").getFloat("density"), root.get("bodyDef")
-				.getFloat("friction"), root.get("bodyDef").getFloat("restitution"),
-				root.get("bodyDef").getBoolean("sensor"), boundingBoxes[currentStatus]);
+		density = root.get("bodyDef").getFloat("density");
+		friction = root.get("bodyDef").getFloat("friction");
+		restitution = root.get("bodyDef").getFloat("restitution");
+		sensor = root.get("bodyDef").getBoolean("sensor");
 
 		switch (root.get("bodyDef").get("bodyType").asInt()) {
 		case 0:
@@ -110,14 +127,48 @@ public class GameObject implements DrawableStatic, Collisionable {
 			body.setType(BodyType.DynamicBody);
 			break;
 		}
+
+		setCurrentState(defaultState, true);
 	}
 
-	public void setCurrentStatus(int currentStatus) {
-		this.currentStatus = currentStatus;
+	public void setCurrentState(String state) {
+		for (int i = 0; i < states.length; i++)
+			if (states[i].equalsIgnoreCase(state)) {
+				setCurrentState(i);
+				return;
+			}
+
+		if (String.valueOf(Integer.parseInt(state)).equals(state)) {
+			setCurrentState(Integer.parseInt(state));
+			return;
+		}
+
+		System.err.println(name + ": Unknown state '" + state + "'");
+		setCurrentState(defaultState);
 	}
-	
-	public int getCurrentStatus() {
-		return currentStatus;
+
+	public void setCurrentState(int state) {
+		setCurrentState(state, false);
+	}
+
+	public void setCurrentState(int state, boolean force) {
+		if (this.currentState == state && !force) return;
+
+		if (state % states.length != state) {
+			System.err.println(name + ": Unknown state '" + state + "'");
+			setCurrentState(defaultState);
+			return;
+		}
+
+		this.currentState = state;
+
+		setFixture(density, friction, restitution, sensor, boundingBoxes[this.currentState], false);
+		for (Shape s : sensorShapes)
+			addFixture(0, 0, 0, true, s, false);
+	}
+
+	public int getCurrentState() {
+		return currentState;
 	}
 
 	private float stateTime = 0;
@@ -129,7 +180,9 @@ public class GameObject implements DrawableStatic, Collisionable {
 
 		stateTime += Gdx.graphics.getDeltaTime();
 
-		TextureRegion frame = new TextureRegion(animations[currentStatus].getKeyFrame(stateTime, true));
+
+		TextureRegion frame = new TextureRegion(animations[currentState].getKeyFrame(stateTime,
+				true));
 		frame.flip(flip, false);
 		
 		batch.draw(frame, getX(), getY());
@@ -153,7 +206,7 @@ public class GameObject implements DrawableStatic, Collisionable {
 
 	@Override
 	public void addFixture(float density, float friction, float restitution, boolean sensor,
-			Shape shape) {
+			Shape shape, boolean disposeShape) {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = density;
 		fixtureDef.isSensor = sensor;
@@ -161,28 +214,37 @@ public class GameObject implements DrawableStatic, Collisionable {
 		fixtureDef.friction = friction;
 		fixtureDef.restitution = restitution;
 		body.createFixture(fixtureDef);
-		shape.dispose();
+		if (disposeShape) shape.dispose();
 	}
 
-	@Override
+@Override
 	public void setFixture(float density, float friction, float restitution, boolean sensor,
-			Shape shape) {
+			Shape shape, boolean disposeShape) {
 		for (Fixture f : body.getFixtureList())
 			body.destroyFixture(f);
-		addFixture(density, friction, restitution, sensor, shape);
+		addFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 
-	@Override
 	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution,
-			boolean sensor, Shape shape) {
+			boolean sensor, Shape shape, boolean disposeShape) {
 
-		setFixture(density, friction, restitution, sensor, shape); // Problem:shape
+		setFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 
-	// setter der alte werte beh�lt und nur shape �ndert
+	public void addSensorShape(Shape shape) {
+		sensorShapes.add(shape);
 
-	
-	
+		setCurrentState(currentState, true);
+	}
+
+	public void setObjectData(GameObjectData data) {
+		body.setUserData(data);
+	}
+
+	public GameObjectData getObjectData() {
+		return (GameObjectData) body.getUserData();
+	}
+
 	@Override
 	public void applyForce(Vector2 force, boolean wake) {
 		body.applyForceToCenter(force, wake);
