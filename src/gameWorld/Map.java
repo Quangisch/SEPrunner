@@ -47,14 +47,15 @@ public class Map implements DrawableMap {
 	private Map() {
 		objects = new ArrayList<GameObject>();
 
-		// debugRender = new Box2DDebugRenderer();
-		debugMatrix = new Matrix4(Camera.getInstance().combined);
-		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
+		 debugRender = new Box2DDebugRenderer();
+		
 	}
 
 	public void draw(SpriteBatch batch) {
 
 		player.run();
+		debugMatrix = new Matrix4(Camera.getInstance().combined);
+		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
 //		batch.disableBlending();
 //		for (Background b : backgrounds) {
