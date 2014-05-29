@@ -1,6 +1,7 @@
 package gameObject.player;
 
 import gameObject.GameObject;
+import gameObject.Sensor;
 import gameObject.enemy.Enemy;
 import gameWorld.Map;
 
@@ -11,7 +12,7 @@ import core.ingame.Camera;
 import core.ingame.GameProperties;
 
 public class Player extends GameObject implements Runnable, Detectable {
-	
+
 	public Player(World world, Vector2 position) {
 		super(world, position);
 		Camera.getInstance().setToFollowMoveable(this);
@@ -26,11 +27,11 @@ public class Player extends GameObject implements Runnable, Detectable {
 	}
 
 	private void processInput() {
-		
-		Vector2 baseForce = new Vector2(0,0);
-		
-//		basic movement
-		if(InputHandler.getInstance().isKeyDown(GameProperties.keyRight)) {
+
+		Vector2 baseForce = new Vector2(0, 0);
+
+		//		basic movement
+		if (InputHandler.getInstance().isKeyDown(GameProperties.keyRight)) {
 			baseForce.add(1, 0);
 			setFlip(false);
 			setCurrentState(1);
@@ -38,32 +39,42 @@ public class Player extends GameObject implements Runnable, Detectable {
 			baseForce.add(-1, 0);
 			setFlip(true);
 			setCurrentState(1);
-		} else if(!isGrounded())
+		} else if (!isGrounded())
 			setCurrentState(1);
 		else
 			setCurrentState(0);
-		
-//		tweak gravity
-		if(baseForce.len() != 0)
+
+		//		tweak gravity
+		if (baseForce.len() != 0)
 			body.setGravityScale(0.7f);
 		else
 			body.setGravityScale(1);
-		
-//		run
-		if((getCurrentState() == 1 || getCurrentState() == 3) && InputHandler.getInstance().isKeyDown(GameProperties.keyRun) && isGrounded()) {
+
+		//		run
+		if ((getCurrentState() == 1 || getCurrentState() == 3)
+				&& InputHandler.getInstance().isKeyDown(GameProperties.keyRun) && isGrounded()) {
 			setCurrentState(3);
 			baseForce.scl(1.7f);
 		}
-		
-//		jump
-		if(InputHandler.getInstance().isKeyDown(GameProperties.keyJump) && isGrounded()) {
+
+		//		jump
+		if (InputHandler.getInstance().isKeyDown(GameProperties.keyJump) && isGrounded()) {
 			setGrounded(false);
-			body.applyLinearImpulse(new Vector2(body.getLocalCenter().x,body.getLocalCenter().y+100), body.getWorldCenter(), true);
+			body.applyLinearImpulse(new Vector2(body.getLocalCenter().x, body.getLocalCenter().y + 100),
+					body.getWorldCenter(), true);
 		}
-		
-//		apply impulse
+
+		//		apply impulse
 		body.applyLinearImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f), body.getWorldCenter(), true);
-		
+
+	}
+
+	@Override
+	public void init(String name) {
+		super.init(name);
+		setGameObjectType(PLAYER);
+		body.setLinearDamping(2.5f);
+		body.setFixedRotation(true);
 	}
 
 	@Override
@@ -76,5 +87,14 @@ public class Player extends GameObject implements Runnable, Detectable {
 	public void setCaptured(Enemy enemy) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor) {
+		if (other.getGameObjectType() == GROUND) {
+			setGrounded(true);
+			return true;
+		}
+		return false;
 	}
 }

@@ -1,7 +1,8 @@
 package gameWorld;
 
 import gameObject.GameObject;
-import gameObject.GameObjectData;
+import gameObject.IGameObjectTypes;
+import gameObject.Sensor;
 import gameObject.player.Player;
 
 import java.io.FileNotFoundException;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -47,7 +48,7 @@ public class Map implements DrawableMap {
 	private Map() {
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
-		
+
 	}
 
 	public void draw(SpriteBatch batch) {
@@ -56,12 +57,12 @@ public class Map implements DrawableMap {
 		debugMatrix = new Matrix4(Camera.getInstance().combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
-//		batch.disableBlending();
-//		for (Background b : backgrounds) {
-//			batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
-//			b.scrollFactorY * Camera.getInstance().position.y);
-//		}
-// 		batch.enableBlending();
+		//		batch.disableBlending();
+		//		for (Background b : backgrounds) {
+		//			batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
+		//			b.scrollFactorY * Camera.getInstance().position.y);
+		//		}
+		// 		batch.enableBlending();
 
 		if (mapTexture != null) batch.draw(mapTexture, 0, 0);
 
@@ -71,7 +72,7 @@ public class Map implements DrawableMap {
 		if (player != null) player.draw(batch);
 
 		if (debugRender != null && GameProperties.debugMode) debugRender.render(world, debugMatrix);
-		
+
 		world.clearForces();
 	}
 
@@ -86,47 +87,38 @@ public class Map implements DrawableMap {
 		}
 
 		if (world == null)
-			world = new World(new Vector2(root.get("gravity").getFloat(0), root.get("gravity")
-					.getFloat(1)), false);
+			world = new World(new Vector2(root.get("gravity").getFloat(0), root.get("gravity").getFloat(1)), false);
 
 		mapTexture = new Texture(root.getString("mapTexture"));
 
 		// GROUND
 		JsonValue JGrounds = root.get("ground");
 		GameObject ground = new GameObject(world, new Vector2(0, 0));
-	
+
 		for (JsonValue JGround : JGrounds) {
 			ChainShape p = new ChainShape();
 			float[] vertices = new float[JGround.size];
 			for (int i = 0; i < vertices.length; i += 2) {
 				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
-				vertices[i + 1] = GameProperties.pixelToMeter(mapTexture.getHeight()
-						- JGround.getFloat(i + 1));
+				vertices[i + 1] = GameProperties.pixelToMeter(mapTexture.getHeight() - JGround.getFloat(i + 1));
 			}
 			p.createChain(vertices);
 
 			ground.addFixture(0, 0.4f, 0, false, p, true);
 		}
-		
-		ground.setGameObjectData(GameObjectData.GROUND, 0);
+
+		ground.setGameObjectType(IGameObjectTypes.GROUND);
 
 		// TODO cleanup
-//		init player
-		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200),
-				GameProperties.pixelToMeter(150)));
+		// init player
+		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
 		player.init("ninja");
-		
-		PolygonShape p = new PolygonShape();
+
 		float[] vertices = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
-		p.set(vertices);
-		player.addSensorShape(p);
-		player.getBody().setLinearDamping(2.5f);
-		player.setGameObjectData(GameObjectData.PLAYER, 0);
-		
-//		init gameObjects
-		
-		
-		
+		player.addSensor(new Sensor(player, Type.Polygon, vertices, 1, Sensor.HANDLE_FIRST));
+
+		// init gameObjects
+
 		world.setContactListener(new CollisionHandler());
 	}
 
