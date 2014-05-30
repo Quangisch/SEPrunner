@@ -4,8 +4,14 @@ import gameObject.player.Player;
 import gameObject.statics.Hideable;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class Enemy extends EnemyAI implements Runnable, Stunnable {
+
+	public Enemy(World world, Vector2 position) {
+		super(world, position);
+		// TODO Auto-generated constructor stub
+	}
 
 	public void run() {
 		

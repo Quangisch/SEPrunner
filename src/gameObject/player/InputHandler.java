@@ -3,7 +3,11 @@ package gameObject.player;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+
+import core.ingame.GameProperties;
 
 public class InputHandler implements InputProcessor {
 
@@ -15,6 +19,13 @@ public class InputHandler implements InputProcessor {
 
 	}
 
+	public boolean isKeyDown(int[] key) {
+		for(int k : key)
+			if(isKeyDown(k))
+				return true;
+		return false;
+	}
+	
 	public boolean isKeyDown(int key) {
 		return pressedKeys.contains(key);
 	}
@@ -28,6 +39,19 @@ public class InputHandler implements InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 		pressedKeys.add(keycode);
+		
+//		toogle Fullscreen
+		if(keycode == Keys.ESCAPE) {
+			if(Gdx.graphics.isFullscreen())
+				Gdx.graphics.setDisplayMode(GameProperties.width, GameProperties.height, false);
+			else
+				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
+		}
+		
+//		toogle debug
+		if(keycode == Keys.TAB)
+			GameProperties.debugMode = !GameProperties.debugMode;
+		
 		return false;
 	}
 

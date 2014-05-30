@@ -2,11 +2,11 @@ package gameObject;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.World;
 
 public interface Collisionable {
-
+	
 	/**
 	 * 
 	 * @param world Kollisionsebene
@@ -18,12 +18,46 @@ public interface Collisionable {
 	 * @param sensor Durchlässigkeit
 	 * @param shape geometrische Form
 	 */
-	public void initBody(World world, BodyDef.BodyType type, Vector2 position, 
-			float density, float friction, float restitution, boolean sensor, Shape shape);
+	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution,
+			boolean sensor, Shape shape, boolean disposeShape);
 	
 	
-	public void addFixture(float density, float friction, float restitution, boolean sensor, Shape shape);
+	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
+	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
 	
-	public void setFixture(float density, float friction, float restitution, boolean sensor, Shape shape);
+	public void applyForce(Vector2 force, boolean wake);
 	
+	/**
+	 * Handle an incoming collision
+	 * @param sender Sensor owned by <code>this</code> that raised the event, maybe <code>null</code>
+	 * @param other the other Object
+	 * @param otherSensor the hit Sensor owned by <code>other</code>, maybe <code>null</code> 
+	 * @return return whether the handling is done or should be passed to the other
+	 */
+	public boolean handleCollision(Sensor mySender, GameObject other, Sensor otherSensor);
+	
+	/**
+	 * Get x coordinate as float in pixel
+	 * @return x
+	 */
+	public float getX();
+	
+	/**
+	 * Get y coordinate as float in pixel
+	 * @return y
+	 */
+	public float getY();
+	
+	/**
+	 * Check whether body is on ground.
+	 * @return grounded
+	 */
+	public boolean isGrounded();
+	
+	/**
+	 * Set grounded for body.
+	 * @param grounded
+	 */
+	public void setGrounded(boolean grounded);
+
 }

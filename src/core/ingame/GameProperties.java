@@ -15,11 +15,14 @@ public abstract class GameProperties {
 	public static float gamma = 1.0f;
 	public static float brightness = 1.0f;
 
-	public static int keyLeft = Keys.A, 
-			keyRight = Keys.D, 
-			keyJump = Keys.W, 
-			keyCrouch = Keys.S, 
-			keyAction = Keys.E;
+	public static boolean debugMode = false;
+	
+	public static int[] keyLeft = {Keys.A, Keys.LEFT}, 
+			keyRight = {Keys.D, Keys.RIGHT},
+			keyRun = {Keys.F, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT},
+			keyJump = {Keys.SPACE, Keys.UP}, 
+			keyCower = {Keys.C, Keys.DOWN}, 
+			keyAction = {Keys.E, Keys.ENTER};
 
 	final public static float PIXELPROMETER = 100;
 

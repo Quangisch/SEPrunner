@@ -1,7 +1,5 @@
 package core.ingame;
 
-import gameObject.DrawableAnimated;
-import gameObject.DrawableStatic;
 import gameObject.player.InputHandler;
 import gameWorld.Map;
 
@@ -9,29 +7,26 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class GameRender implements ApplicationListener {
-	
+
 	private static GameRender render;
-	
+
 	private SpriteBatch batch;
 
-	private GameRender() {
-		
-	}
-	
+	private GameRender() {}
+
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		Gdx.input.setInputProcessor(InputHandler.getInstance());
+		Map.getInstance().initMap(1);
 	}
 
 	@Override
 	public void dispose() {
 		batch.dispose();
 	}
-
 
 	@Override
 	public void render() {
@@ -40,23 +35,13 @@ public class GameRender implements ApplicationListener {
 
 		Camera.getInstance().update();
 		batch.setProjectionMatrix(Camera.getInstance().combined);
-
 		batch.begin();
-		Map.getInstance().draw(batch);				 						//map
-		
-		for(DrawableStatic d : GameManager.getInstance().getDrawableStatic())	//gameObjects
-			d.draw(batch);
-		
-		for(DrawableAnimated d : GameManager.getInstance().getDrawableAnimated())	//gameObjects
-			d.draw(batch);
-		
-		HUD.getInstance().draw(batch);										//userInterface
+		Map.getInstance().draw(batch); //map
+
+		HUD.getInstance().draw(batch); //userInterface
 		batch.end();
-		
-		
-		for(World w : GameManager.getInstance().getWorlds())
-			w.step(Gdx.graphics.getDeltaTime(), 6, 4);
-		
+
+		Map.getInstance().step(Gdx.graphics.getDeltaTime(), 6, 4);
 	}
 
 	@Override
@@ -66,17 +51,16 @@ public class GameRender implements ApplicationListener {
 
 	@Override
 	public void pause() {
-		
+
 	}
 
 	@Override
 	public void resume() {
-		
+
 	}
-	
+
 	public static GameRender getInstance() {
-		if(render == null)
-			render = new GameRender();
+		if (render == null) render = new GameRender();
 		return render;
 	}
 
