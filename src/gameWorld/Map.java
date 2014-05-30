@@ -123,7 +123,7 @@ public class Map implements DrawableMap {
 		player.getBody().setLinearDamping(2.5f);
 		player.setGameObjectData(GameObjectData.PLAYER, 0);
 		
-//		init gameObjects
+//		init gameObjectsf
 		
 		
 		
