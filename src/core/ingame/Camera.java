@@ -21,18 +21,27 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		if(follow == null)
 			return;
 		
+		float lerp = 0.1f;		
 		
-		float toX = follow.getX()+GameProperties.width/3;
-		float toY = follow.getY()+GameProperties.height/5;
+		float toX = follow.getX();//+GameProperties.width/3;
+		float toY = follow.getY();//+GameProperties.height/5;
 		
 		//TODO
 		if(this.position.x != toX) {
-			this.position.x = toX;
+			//this.position.x = toX;
+			this.position.x += (follow.getX() - position.x) * lerp +20;
 		}
 		
 		if(this.position.y != toY) {
-			this.position.y = toY;
+			//this.position.y = toY;
+			this.position.y += (follow.getY() - position.y) * lerp +10;
 		}
+		
+		//
+		
+		
+		
+		//
 	}
 	
 	public void updateOrtho() {

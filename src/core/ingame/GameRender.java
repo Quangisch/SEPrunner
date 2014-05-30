@@ -6,6 +6,8 @@ import gameWorld.Map;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameRender implements ApplicationListener {
@@ -30,12 +32,17 @@ public class GameRender implements ApplicationListener {
 
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(255, 255, 255, 1);//(0,0,0,1)
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		Camera.getInstance().update();
 		batch.setProjectionMatrix(Camera.getInstance().combined);
 		batch.begin();
+		
+		//Background -> führt aber noch zu Lags
+//		Texture backTXT = new Texture(Gdx.files.internal("res/map/Rio.png"));
+//		batch.draw(backTXT, 150, 150, 1500, 309);
+		
 		Map.getInstance().draw(batch); //map
 
 		HUD.getInstance().draw(batch); //userInterface
