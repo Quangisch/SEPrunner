@@ -24,9 +24,10 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements Drawable, Collisionable {
+public class GameObject implements Drawable, Collisionable, IGameObjectTypes {
 
 	private String name;
+	private int gameObjectType = -1;
 
 	// BODY
 	protected Body body;
@@ -35,7 +36,7 @@ public class GameObject implements Drawable, Collisionable {
 	private float restitution;
 	private boolean sensor;
 
-	private List<Shape> sensorShapes;
+	private List<Sensor> sensors;
 
 	private boolean flip = false;
 	private boolean visible = true;
@@ -49,12 +50,13 @@ public class GameObject implements Drawable, Collisionable {
 	protected int currentState;
 
 	public GameObject(World world, Vector2 position) {
-		sensorShapes = new LinkedList<Shape>();
+		sensors = new LinkedList<Sensor>();
 
 		// init bodyDef
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(position);
 		body = world.createBody(bodyDef);
+		body.setUserData(this);
 	}
 
 	public void init(String name) {
@@ -128,6 +130,9 @@ public class GameObject implements Drawable, Collisionable {
 			break;
 		}
 
+		// SENSORS
+		// TODO Add Sensors
+
 		setCurrentState(defaultState, true);
 	}
 
@@ -166,8 +171,8 @@ public class GameObject implements Drawable, Collisionable {
 		if (!force) return;
 
 		setFixture(density, friction, restitution, sensor, boundingBoxes[this.currentState], false);
-		for (Shape s : sensorShapes)
-			addFixture(0, 0, 0, true, s, false);
+		for (Sensor s : sensors)
+			addFiture(s.getFixtureDef()).setUserData(s);
 	}
 
 	public int getCurrentState() {
@@ -206,7 +211,7 @@ public class GameObject implements Drawable, Collisionable {
 	}
 
 	@Override
-	public void addFixture(float density, float friction, float restitution, boolean sensor,
+	public Fixture addFixture(float density, float friction, float restitution, boolean sensor,
 			Shape shape, boolean disposeShape) {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = density;
@@ -214,47 +219,47 @@ public class GameObject implements Drawable, Collisionable {
 		fixtureDef.shape = shape;
 		fixtureDef.friction = friction;
 		fixtureDef.restitution = restitution;
-		body.createFixture(fixtureDef);
-		if (disposeShape) 
-			shape.dispose();
-		body.setFixedRotation(true);
+		Fixture fix = addFiture(fixtureDef);
+		if (disposeShape) shape.dispose();
+		return fix;
+	}
+
+	public Fixture addFiture(FixtureDef fixtureDef) {
+		return body.createFixture(fixtureDef);
 	}
 
 	@Override
-	public void setFixture(float density, float friction, float restitution, boolean sensor,
+	public Fixture setFixture(float density, float friction, float restitution, boolean sensor,
 			Shape shape, boolean disposeShape) {
 		for (Fixture f : body.getFixtureList())
 			body.destroyFixture(f);
-		addFixture(density, friction, restitution, sensor, shape, disposeShape);
+		return addFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 
 	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution,
 			boolean sensor, Shape shape, boolean disposeShape) {
 
+		body.setFixedRotation(true);
 		setFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 
-	public void addSensorShape(Shape shape) {
-		sensorShapes.add(shape);
+	public void addSensor(Sensor sensor) {
+		if (sensors.contains(sensor)) return;
+
+		sensors.add(sensor);
+		sensor.setGameObject(this);
 
 		setCurrentState(currentState, true);
 	}
 
-	public void setObjectData(GameObjectData data) {
-		body.setUserData(data);
-	}
-
-	public GameObjectData getObjectData() {
-		return (GameObjectData) body.getUserData();
+	public void removeSensor(Sensor sensor) {
+		if (sensor.getGameObject() == this) sensor.setGameObject(null);
+		if (sensors.remove(sensor)) setCurrentState(currentState, true);
 	}
 
 	@Override
 	public void applyForce(Vector2 force, boolean wake) {
 		body.applyForceToCenter(force, wake);
-	}
-
-	public Body getBody() {
-		return body;
 	}
 
 	@Override
@@ -287,24 +292,16 @@ public class GameObject implements Drawable, Collisionable {
 		return grounded;
 	}
 
-	@Override
-	public void setGameObjectData(GameObjectData gameObjectData) {
-		body.setUserData(gameObjectData);
-		System.out.println(getGameObjectData().toString());
+	public int getGameObjectType() {
+		return gameObjectType;
+	}
+
+	public void setGameObjectType(int gameObjectType) {
+		this.gameObjectType = gameObjectType;
 	}
 
 	@Override
-	public void setGameObjectData(int type, int subType) {
-		setGameObjectData(new GameObjectData(type, subType, this));
-	}
-
-	@Override
-	public GameObjectData getGameObjectData() {
-		return (GameObjectData) body.getUserData();
-	}
-
-	@Override
-	public void handleCollision(Collisionable other) {
-		
+	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor) {
+		return false;
 	}
 }

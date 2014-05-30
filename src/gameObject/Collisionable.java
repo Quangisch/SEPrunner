@@ -2,6 +2,7 @@ package gameObject;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Shape;
 
 public interface Collisionable {
@@ -21,25 +22,19 @@ public interface Collisionable {
 			boolean sensor, Shape shape, boolean disposeShape);
 	
 	
-	public void addFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
-	public void setFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
+	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
+	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
 	
 	public void applyForce(Vector2 force, boolean wake);
 	
 	/**
-	 * Set UserData for corresponding body-Object with type and subtype.
-	 * @param type
-	 * @param subType
+	 * Handle an incoming collision
+	 * @param sender Sensor owned by <code>this</code> that raised the event, maybe <code>null</code>
+	 * @param other the other Object
+	 * @param otherSensor the hit Sensor owned by <code>other</code>, maybe <code>null</code> 
+	 * @return return wheter the handling is done or should be passed to the other
 	 */
-	public void setGameObjectData(int type, int subType);
-	public void setGameObjectData(GameObjectData gameObjectData);
-	public GameObjectData getGameObjectData();
-
-	/**
-	 * Override method in child classes for correct usage.
-	 * @param Collisionable
-	 */
-	public void handleCollision(Collisionable other);
+	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor);
 	
 	/**
 	 * Get x coordinate as float in pixel
@@ -64,5 +59,5 @@ public interface Collisionable {
 	 * @param grounded
 	 */
 	public void setGrounded(boolean grounded);
-	
+
 }
