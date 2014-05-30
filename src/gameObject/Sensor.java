@@ -14,18 +14,12 @@ public class Sensor {
 	protected GameObject link;
 	protected Shape.Type sensorShapeType;
 	protected float[] sensorPoints;
-	protected Sensor.Type sensorType;
+	protected int sensorType;
 
 	protected int priority;
 
 	public static final int HANDLE_FIRST = 75, HANDLE_SECOND = 50, HANDLE_LAST = 25;
 	
-	public enum Type {
-		GROUND,
-		BODY,
-		VIEW;
-	}
-
 	/**
 	 * Create Sensor linked to the GameObject
 	 * 
@@ -34,7 +28,7 @@ public class Sensor {
 	 * @param shapePoints Points to initianize Shape
 	 * @param eventData Data passed to Handler on collision
 	 */
-	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, Sensor.Type sensorType) {
+	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType) {
 		this(parent, shapeType, shapePoints, sensorType, HANDLE_SECOND);
 	}
 
@@ -47,7 +41,7 @@ public class Sensor {
 	 * @param eventData Data passed to Handler on collision
 	 * @param priority Determine on Sensor-Sensor collision which Sensor is activated
 	 */
-	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, Sensor.Type sensorType, int priority) {
+	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType, int priority) {
 		active = true;
 		this.sensorType = sensorType;
 		this.priority = priority;
@@ -143,7 +137,7 @@ public class Sensor {
 	 * 
 	 * @return event data
 	 */
-	public Sensor.Type getSensorType() {
+	public int getSensorType() {
 		return sensorType;
 	}
 
@@ -152,7 +146,7 @@ public class Sensor {
 	 * 
 	 * @param eventData the event data
 	 */
-	public void setSensorType(Sensor.Type sensorType) {
+	public void setSensorType(int sensorType) {
 		this.sensorType = sensorType;
 	}
 

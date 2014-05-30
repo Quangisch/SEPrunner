@@ -7,6 +7,7 @@ import gameWorld.Map;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.Shape.Type;
 
 import core.ingame.Camera;
 import core.ingame.GameProperties;
@@ -72,9 +73,11 @@ public class Player extends GameObject implements Runnable, Detectable {
 	@Override
 	public void init(String name) {
 		super.init(name);
-		setGameObjectType(PLAYER);
+		setGameObjectType(GameObjectTypes.PLAYER);
 		body.setLinearDamping(2.5f);
 		body.setFixedRotation(true);
+		float[] vertices = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
+		addSensor(new Sensor(this, Type.Polygon, vertices, SensorTypes.FOOT, Sensor.HANDLE_FIRST));
 	}
 
 	@Override
@@ -91,14 +94,13 @@ public class Player extends GameObject implements Runnable, Detectable {
 
 	@Override
 	public boolean handleCollision(Sensor mySensor, GameObject other, Sensor otherSensor) {
-		if(mySensor != null) {
-			if(mySensor.getSensorType().equals(Sensor.Type.GROUND) 
-					&& other.getGameObjectType() == GROUND) {
+		if (mySensor != null) {
+			if (mySensor.getSensorType() == SensorTypes.FOOT && other.getGameObjectType() == GameObjectTypes.GROUND) {
 				setGrounded(true);
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

@@ -2,7 +2,6 @@ package gameWorld;
 
 import gameObject.GameObject;
 import gameObject.IGameObjectTypes;
-import gameObject.Sensor;
 import gameObject.player.Player;
 
 import java.io.FileNotFoundException;
@@ -16,7 +15,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -107,16 +105,12 @@ public class Map implements DrawableMap {
 			ground.addFixture(0, 0.4f, 0, false, p, true);
 		}
 
-		ground.setGameObjectType(IGameObjectTypes.GROUND);
+		ground.setGameObjectType(IGameObjectTypes.GameObjectTypes.GROUND);
 
 		// TODO cleanup
 		// init player
 		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
 		player.init("ninja");
-
-		float[] vertices = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
-
-		player.addSensor(new Sensor(player, Type.Polygon, vertices, Sensor.Type.GROUND, Sensor.HANDLE_FIRST));
 
 		// init gameObjects
 		world.setContactListener(new CollisionHandler());

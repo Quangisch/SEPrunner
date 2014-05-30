@@ -24,10 +24,10 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements Drawable, Collisionable, IGameObjectTypes {
+public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes {
 
 	private String name;
-	private int gameObjectType = IGameObjectTypes.UNSPECIFIED;
+	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
 
 	// BODY
 	protected Body body;

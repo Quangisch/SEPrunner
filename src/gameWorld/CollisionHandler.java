@@ -26,20 +26,22 @@ public class CollisionHandler implements ContactListener {
 		Sensor sensorB = (fixB.getUserData() instanceof Sensor) ? (Sensor) fixB.getUserData() : null;
 
 		boolean handled = false;
-		handled = handled || ((sensorA != null && sensorB != null && sensorA.getPriority() >= sensorB.getPriority()) // sensorB hits sensorA
+		handled = handled || ((sensorA != null && sensorB != null // 
+				&& sensorA.getPriority() >= sensorB.getPriority() && sensorA.isActive()) // sensorB hits sensorA
 				&& (sensorA.getGameObject().handleCollision(sensorA, sensorB.getGameObject(), sensorB)));
-		handled = handled || ((sensorA != null && sensorB != null) // sensorA hits sensorB
+		handled = handled || ((sensorA != null && sensorB != null && sensorB.isActive()) // sensorA hits sensorB
 				&& (sensorB.getGameObject().handleCollision(sensorB, sensorA.getGameObject(), sensorA)));
-		handled = handled || ((sensorA != null && objectB != null) // sensorA hits objectB
+		handled = handled || ((sensorA != null && objectB != null && sensorA.isActive()) // sensorA hits objectB
 				&& (sensorA.getGameObject().handleCollision(sensorA, objectB, null)));
-		handled = handled || ((objectA != null && sensorB != null) // sensorB hits objectA
+		handled = handled || ((objectA != null && sensorB != null && sensorB.isActive()) // sensorB hits objectA
 				&& (sensorB.getGameObject().handleCollision(sensorB, objectA, null)));
 		handled = handled || ((objectA != null && objectB != null) // objectA hits objectB
 				&& (objectA.handleCollision(null, objectB, null)));
 		handled = handled || ((objectA != null && objectB != null) // objectB hits objectA
 				&& (objectB.handleCollision(null, objectA, null)));
 
-		if (!handled && GameProperties.debugMode) System.err.println("Unhandled Collision (" + contact.toString() + ")");
+		if (!handled && GameProperties.debugMode)
+			System.err.println("Unhandled Collision (" + contact.toString() + ")");
 	}
 
 	@Override
