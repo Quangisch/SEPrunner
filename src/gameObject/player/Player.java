@@ -62,6 +62,7 @@ public class Player extends GameObject implements Runnable, Detectable {
 			setGrounded(false);
 			body.applyLinearImpulse(new Vector2(body.getLocalCenter().x, body.getLocalCenter().y + 100),
 					body.getWorldCenter(), true);
+			setCurrentState(0);
 		}
 
 		//		apply impulse
