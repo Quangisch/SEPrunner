@@ -116,7 +116,7 @@ public class Map implements DrawableMap {
 
 		float[] vertices = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
 
-		player.addSensor(new Sensor(player, Type.Polygon, vertices, 1, Sensor.HANDLE_FIRST));
+		player.addSensor(new Sensor(player, Type.Polygon, vertices, Sensor.Type.GROUND, Sensor.HANDLE_FIRST));
 
 		// init gameObjects
 		world.setContactListener(new CollisionHandler());

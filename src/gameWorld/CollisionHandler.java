@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import core.ingame.GameProperties;
+
 public class CollisionHandler implements ContactListener {
 
 	@Override
@@ -37,7 +39,7 @@ public class CollisionHandler implements ContactListener {
 		handled = handled || ((objectA != null && objectB != null) // objectB hits objectA
 				&& (objectB.handleCollision(null, objectA, null)));
 
-		if (!handled) System.err.println("Unhandled Collision (" + contact.toString() + ")");
+		if (!handled && GameProperties.debugMode) System.err.println("Unhandled Collision (" + contact.toString() + ")");
 	}
 
 	@Override

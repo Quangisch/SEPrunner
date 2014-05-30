@@ -7,19 +7,24 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.Shape.Type;
 
 public class Sensor {
 
 	protected boolean active;
 	protected GameObject link;
-	protected Type sensorShapeType;
+	protected Shape.Type sensorShapeType;
 	protected float[] sensorPoints;
-	protected Object sensorData;
+	protected Sensor.Type sensorType;
 
 	protected int priority;
 
 	public static final int HANDLE_FIRST = 75, HANDLE_SECOND = 50, HANDLE_LAST = 25;
+	
+	public enum Type {
+		GROUND,
+		BODY,
+		VIEW;
+	}
 
 	/**
 	 * Create Sensor linked to the GameObject
@@ -29,8 +34,8 @@ public class Sensor {
 	 * @param shapePoints Points to initianize Shape
 	 * @param eventData Data passed to Handler on collision
 	 */
-	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, Object eventData) {
-		this(parent, shapeType, shapePoints, eventData, HANDLE_SECOND);
+	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, Sensor.Type sensorType) {
+		this(parent, shapeType, shapePoints, sensorType, HANDLE_SECOND);
 	}
 
 	/**
@@ -42,9 +47,9 @@ public class Sensor {
 	 * @param eventData Data passed to Handler on collision
 	 * @param priority Determine on Sensor-Sensor collision which Sensor is activated
 	 */
-	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, Object eventData, int priority) {
+	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, Sensor.Type sensorType, int priority) {
 		active = true;
-		sensorData = eventData;
+		this.sensorType = sensorType;
 		this.priority = priority;
 		setShape(shapeType, shapePoints);
 		setGameObject(parent);
@@ -138,8 +143,8 @@ public class Sensor {
 	 * 
 	 * @return event data
 	 */
-	public Object getEventData() {
-		return sensorData;
+	public Sensor.Type getSensorType() {
+		return sensorType;
 	}
 
 	/**
@@ -147,8 +152,8 @@ public class Sensor {
 	 * 
 	 * @param eventData the event data
 	 */
-	public void setEventData(Object eventData) {
-		this.sensorData = eventData;
+	public void setSensorType(Sensor.Type sensorType) {
+		this.sensorType = sensorType;
 	}
 
 	/**

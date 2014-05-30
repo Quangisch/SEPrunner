@@ -32,7 +32,7 @@ public interface Collisionable {
 	 * @param sender Sensor owned by <code>this</code> that raised the event, maybe <code>null</code>
 	 * @param other the other Object
 	 * @param otherSensor the hit Sensor owned by <code>other</code>, maybe <code>null</code> 
-	 * @return return wheter the handling is done or should be passed to the other
+	 * @return return whether the handling is done or should be passed to the other
 	 */
 	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor);
 	

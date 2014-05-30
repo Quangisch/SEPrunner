@@ -27,7 +27,7 @@ import core.ingame.GameProperties;
 public class GameObject implements Drawable, Collisionable, IGameObjectTypes {
 
 	private String name;
-	private int gameObjectType = -1;
+	private int gameObjectType = IGameObjectTypes.UNSPECIFIED;
 
 	// BODY
 	protected Body body;

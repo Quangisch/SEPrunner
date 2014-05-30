@@ -90,11 +90,15 @@ public class Player extends GameObject implements Runnable, Detectable {
 	}
 
 	@Override
-	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor) {
-		if (other.getGameObjectType() == GROUND) {
-			setGrounded(true);
-			return true;
+	public boolean handleCollision(Sensor mySensor, GameObject other, Sensor otherSensor) {
+		if(mySensor != null) {
+			if(mySensor.getSensorType().equals(Sensor.Type.GROUND) 
+					&& other.getGameObjectType() == GROUND) {
+				setGrounded(true);
+				return true;
+			}
 		}
+		
 		return false;
 	}
 }
