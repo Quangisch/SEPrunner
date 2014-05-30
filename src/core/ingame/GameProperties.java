@@ -4,8 +4,8 @@ import com.badlogic.gdx.Input.Keys;
 
 public abstract class GameProperties {
 
-	public static int width = 1280;
-	public static int height = 720;
+	public static int width = 640;
+	public static int height = 360;
 
 	public static boolean menu = false;
 	public static boolean ingame = false;
