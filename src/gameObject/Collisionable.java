@@ -34,7 +34,7 @@ public interface Collisionable {
 	 * @param otherSensor the hit Sensor owned by <code>other</code>, maybe <code>null</code> 
 	 * @return return whether the handling is done or should be passed to the other
 	 */
-	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor);
+	public boolean handleCollision(Sensor mySender, GameObject other, Sensor otherSensor);
 	
 	/**
 	 * Get x coordinate as float in pixel

@@ -1,11 +1,8 @@
 package gameObject;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
+import misc.BodyFunctions;
+
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 
 public class Sensor {
@@ -14,17 +11,11 @@ public class Sensor {
 	protected GameObject link;
 	protected Shape.Type sensorShapeType;
 	protected float[] sensorPoints;
-	protected Sensor.Type sensorType;
+	protected int sensorType;
 
 	protected int priority;
 
 	public static final int HANDLE_FIRST = 75, HANDLE_SECOND = 50, HANDLE_LAST = 25;
-	
-	public enum Type {
-		GROUND,
-		BODY,
-		VIEW;
-	}
 
 	/**
 	 * Create Sensor linked to the GameObject
@@ -34,7 +25,7 @@ public class Sensor {
 	 * @param shapePoints Points to initianize Shape
 	 * @param eventData Data passed to Handler on collision
 	 */
-	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, Sensor.Type sensorType) {
+	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType) {
 		this(parent, shapeType, shapePoints, sensorType, HANDLE_SECOND);
 	}
 
@@ -47,7 +38,7 @@ public class Sensor {
 	 * @param eventData Data passed to Handler on collision
 	 * @param priority Determine on Sensor-Sensor collision which Sensor is activated
 	 */
-	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, Sensor.Type sensorType, int priority) {
+	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType, int priority) {
 		active = true;
 		this.sensorType = sensorType;
 		this.priority = priority;
@@ -109,32 +100,9 @@ public class Sensor {
 	 * @return FixtureDef
 	 */
 	public FixtureDef getFixtureDef() {
-		Shape p = null;
-		switch (sensorShapeType) {
-		case Chain:
-			p = new ChainShape();
-			((ChainShape) p).createChain(sensorPoints);
-			break;
-		case Circle:
-			p = new CircleShape();
-			((CircleShape) p).setPosition(new Vector2(sensorPoints[0], sensorPoints[1]));
-			((CircleShape) p).setRadius(sensorPoints[2]);
-			break;
-		case Edge:
-			p = new EdgeShape();
-			((EdgeShape) p).set(sensorPoints[0], sensorPoints[1], sensorPoints[2], sensorPoints[3]);
-			break;
-		case Polygon:
-			p = new PolygonShape();
-			((PolygonShape) p).set(sensorPoints);
-			break;
-		default:
-			throw new NullPointerException();
-		}
-
 		FixtureDef fixture = new FixtureDef();
 		fixture.isSensor = true;
-		fixture.shape = p;
+		fixture.shape = BodyFunctions.getShape(sensorShapeType, sensorPoints);
 		return fixture;
 	}
 
@@ -143,7 +111,7 @@ public class Sensor {
 	 * 
 	 * @return event data
 	 */
-	public Sensor.Type getSensorType() {
+	public int getSensorType() {
 		return sensorType;
 	}
 
@@ -152,7 +120,7 @@ public class Sensor {
 	 * 
 	 * @param eventData the event data
 	 */
-	public void setSensorType(Sensor.Type sensorType) {
+	public void setSensorType(int sensorType) {
 		this.sensorType = sensorType;
 	}
 
