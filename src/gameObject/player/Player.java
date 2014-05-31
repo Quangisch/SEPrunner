@@ -63,6 +63,7 @@ public class Player extends GameObject implements Runnable, Detectable {
 			setGrounded(false);
 			body.applyLinearImpulse(new Vector2(body.getLocalCenter().x, body.getLocalCenter().y + 100),
 					body.getWorldCenter(), true);
+			setCurrentState(0);
 		}
 
 		//		apply impulse
@@ -74,6 +75,8 @@ public class Player extends GameObject implements Runnable, Detectable {
 	public void init(String name) {
 		super.init(name);
 		setGameObjectType(GameObjectTypes.PLAYER);
+		setLayer(3);
+		setAlpha(0.8f);
 		body.setLinearDamping(2.5f);
 		body.setFixedRotation(true);
 		float[] vertices = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
