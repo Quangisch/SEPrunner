@@ -95,11 +95,7 @@ public class MenuMain implements Screen {
 			}
 		});
 		buttonExit.pad(15);
-				/*	table.add(new Label("Levelauswahl", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
-					table.add(scrollPane).uniformX().expandY().top().left();
-					table.add(play).uniformX();
-					table.add(back).uniformX().bottom().right();	
-				*/
+
 		//putting stuff together
 		table.add(heading).spaceBottom(100).row(); //100 abstand, neue zeile
 		table.add(buttonPlay).spaceBottom(15).row();
