@@ -7,6 +7,7 @@ import gameObject.player.Player;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class Map implements DrawableMap {
 
 		if (mapTexture != null) batch.draw(mapTexture, 0, 0);
 
-		objects.sort(new Comparator<GameObject>() {
+		Collections.sort(objects, new Comparator<GameObject>() {
 
 			@Override
 			public int compare(GameObject a, GameObject b) {
