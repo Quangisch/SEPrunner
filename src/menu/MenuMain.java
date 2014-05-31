@@ -64,7 +64,7 @@ public class MenuMain implements Screen {
 		heading.setFontScale(1); //sizable headline
 		
 		//creating buttons
-		TextButton buttonPlay = new TextButton("Spiel starten", skin, "big");
+		TextButton buttonPlay = new TextButton("Spiel starten", skin);
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking imgages
@@ -89,7 +89,7 @@ public class MenuMain implements Screen {
 		});
 		buttonHighscore.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		TextButton buttonExit = new TextButton("Beenden", skin, "big");
+		TextButton buttonExit = new TextButton("Beenden", skin);
 		buttonExit.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				Gdx.app.exit();
