@@ -42,6 +42,8 @@ public class MenuOption implements Screen {
 		
 		stage.act(delta);
 		stage.draw();
+		
+//Table.drawDebug(stage);            // case debuglines needed 1/2
 	}
 
 	@Override
@@ -61,13 +63,15 @@ public class MenuOption implements Screen {
 		table = new Table(skin);
 		table.setFillParent(true);
 		
+//table.debug();            // case debuglines needed 2/2
+		
 		final CheckBox vSyncCheckBox = new CheckBox("vSync", skin);
 		vSyncCheckBox.setChecked(Gdx.app.getPreferences(Project.TITLE).getBoolean("vsync"));
 		
 		final TextField levelDirectoryInput = new TextField(levelDirectory().path(),skin);
 		levelDirectoryInput.setMessageText("level directory");
 		
-		final TextButton back = new TextButton("BACK", skin);
+		final TextButton back = new TextButton("Zurueck", skin);
 		back.pad(10);
 		
 		ClickListener buttonHandler = new ClickListener() {

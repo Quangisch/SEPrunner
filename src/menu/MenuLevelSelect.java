@@ -67,7 +67,6 @@ public class MenuLevelSelect implements Screen {
 		});
 		play.pad(15);
 		
-		//siehe atlas.pack
 		TextButton back = new TextButton("Zurueck", skin);
 		back.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
@@ -76,6 +75,7 @@ public class MenuLevelSelect implements Screen {
 		});
 		back.pad(10);
 		
+		//putting stuff together
 		table.add(new Label("Levelauswahl", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
 		table.add(scrollPane).uniformX().expandY().top().left();
 		table.add(play).uniformX();
