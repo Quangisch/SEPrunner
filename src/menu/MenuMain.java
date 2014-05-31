@@ -25,8 +25,6 @@ public class MenuMain implements Screen {
 	private TextureAtlas atlas; //defining regions
 	private Skin skin;
 	private Table table; //objects get organized on here
-	private TextButton buttonPlay, buttonOption, buttonHighscore, buttonExit; //buttonlist
-	private Label heading;
 	private TweenManager tweenManager; //tween-engine starter, stuff like fade-in/out animations
 	//textButtonStyle pushed in json-file, put in skin
 	
@@ -35,19 +33,18 @@ public class MenuMain implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);	//black background
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 				
-		tweenManager.update(delta);
-		
 		stage.act(delta); //updates table also since thats in there
 		stage.draw();
+		
+		tweenManager.update(delta);
 		
 //Table.drawDebug(stage);            // case debuglines needed 1/2
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.setViewport(width, height, true);
+		stage.setViewport(width, height, false);
 		table.invalidateHierarchy();
-		table.setSize(width, height);
 	}
 
 	@Override
@@ -63,11 +60,11 @@ public class MenuMain implements Screen {
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		//creating heading
-		heading = new Label(Project.TITLE, skin); //menu.Project			default-value in res/ui.menu.Skin.json
+		Label heading = new Label(Project.TITLE, skin, "big"); //menu.Project			default-value in res/ui.menu.Skin.json
 		heading.setFontScale(1); //sizable headline
 		
 		//creating buttons
-		buttonPlay = new TextButton("Spiel starten", skin);
+		TextButton buttonPlay = new TextButton("Spiel starten", skin, "big");
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking imgages
@@ -76,7 +73,7 @@ public class MenuMain implements Screen {
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		buttonOption = new TextButton("Optionen", skin);
+		TextButton buttonOption = new TextButton("Optionen", skin);
 		buttonOption.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuOption());
@@ -84,7 +81,7 @@ public class MenuMain implements Screen {
 		});
 		buttonOption.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		buttonHighscore = new TextButton("Highscore", skin);
+		TextButton buttonHighscore = new TextButton("Highscore", skin);
 		buttonHighscore.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuHighscore());
@@ -92,7 +89,7 @@ public class MenuMain implements Screen {
 		});
 		buttonHighscore.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		buttonExit = new TextButton("Beenden", skin);
+		TextButton buttonExit = new TextButton("Beenden", skin, "big");
 		buttonExit.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				Gdx.app.exit();
@@ -150,11 +147,12 @@ public class MenuMain implements Screen {
 		Tween.from(table, ActorAccessor.ALPHA, .5f).target(0).start(tweenManager);
 		Tween.from(table, ActorAccessor.Y, .5f).target(Gdx.graphics.getHeight()/8).start(tweenManager);
 		
+		tweenManager.update(Gdx.graphics.getDeltaTime());
 	}
 
 	@Override
 	public void hide() {
-
+		dispose();
 	}
 
 	@Override
