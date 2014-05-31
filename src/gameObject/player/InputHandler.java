@@ -3,6 +3,9 @@ package gameObject.player;
 import java.util.Set;
 import java.util.TreeSet;
 
+import menu.MenuMain;
+
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
@@ -46,6 +49,12 @@ public class InputHandler implements InputProcessor {
 				Gdx.graphics.setDisplayMode(GameProperties.width, GameProperties.height, false);
 			else
 				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
+		}
+		
+//		back to menu
+		if(keycode == Keys.BACKSPACE) {
+			GameProperties.switchMode(true, false);
+			((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 		}
 		
 //		toogle debug

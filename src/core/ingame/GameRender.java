@@ -5,10 +5,11 @@ import gameWorld.Map;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class GameRender implements ApplicationListener {
+public class GameRender implements Screen, ApplicationListener {
 
 	private static GameRender render;
 
@@ -16,7 +17,6 @@ public class GameRender implements ApplicationListener {
 
 	private GameRender() {}
 
-	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		Gdx.input.setInputProcessor(InputHandler.getInstance());
@@ -28,7 +28,7 @@ public class GameRender implements ApplicationListener {
 		batch.dispose();
 	}
 
-	@Override
+	
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -62,6 +62,25 @@ public class GameRender implements ApplicationListener {
 	public static GameRender getInstance() {
 		if (render == null) render = new GameRender();
 		return render;
+	}
+
+	@Override
+	public void render(float delta) {
+		// TODO Auto-generated method stub
+		render();
+		
+	}
+
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
+		create();
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

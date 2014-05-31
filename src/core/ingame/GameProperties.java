@@ -1,14 +1,15 @@
 package core.ingame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
 public abstract class GameProperties {
 
-	public static int width = 1280;
-	public static int height = 720;
-
 	public static boolean menu = false;
 	public static boolean ingame = false;
+	
+	public static int width = 1280;	//640
+	public static int height = 720; //360
 
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
@@ -32,6 +33,25 @@ public abstract class GameProperties {
 
 	public static float pixelToMeter(float pixel) {
 		return pixel / PIXELPROMETER;
+	}
+	
+	public static void switchMode(boolean menu, boolean ingame) {
+		GameProperties.menu = menu;
+		GameProperties.ingame = ingame;
+		
+		width = menu ? 1280 : 640;	//640
+		height = menu ? 720 : 360; 	//360
+		
+		if(Gdx.graphics == null)
+			return;
+		
+		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
+		
+		if(debugMode)
+			System.out.println(width+"x"+height);
+		
+		if(!menu && !ingame)
+			Gdx.app.exit();
 	}
 
 }

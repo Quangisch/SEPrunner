@@ -16,6 +16,8 @@ public class LauncherQuang {
 		cfg.height = GameProperties.height;
 //		cfg.fullscreen = true;
 		
+		GameProperties.switchMode(false, true);
+		
 		new LwjglApplication(GameRender.getInstance(), cfg);
 		}
 }

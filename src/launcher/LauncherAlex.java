@@ -18,6 +18,8 @@ public class LauncherAlex {
 		cfg.height = GameProperties.height;
 //		cfg.fullscreen = true;
 		
+		GameProperties.switchMode(true, false);
+		
 		//new LwjglApplication(GameRender.getInstance(), cfg);        taken out by menu
 		new LwjglApplication(new Project(), cfg);
 	}							//start view project Z11 = first img set

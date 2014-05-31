@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import core.ingame.GameProperties;
+import core.ingame.GameRender;
+
 public class MenuLevelSelect implements Screen {
 	
 	private Stage stage;
@@ -60,7 +63,15 @@ public class MenuLevelSelect implements Screen {
 		play = new TextButton("Spielen", skin);
 		play.pad(15);
 															//siehe atlas.pack
-		back = new TextButton("Zurück", skin, "small");		//small weil wir hier nicht die defaultgroeße wollen
+		
+		play.addListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y){
+				GameProperties.switchMode(false, true);
+				((Game) Gdx.app.getApplicationListener()).setScreen(GameRender.getInstance());
+			}
+		});
+		
+		back = new TextButton("Zurï¿½ck", skin, "small");		//small weil wir hier nicht die defaultgroeï¿½e wollen
 		back.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
