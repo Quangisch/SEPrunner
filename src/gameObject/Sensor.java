@@ -1,11 +1,8 @@
 package gameObject;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
+import misc.BodyFunctions;
+
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 
 public class Sensor {
@@ -19,7 +16,7 @@ public class Sensor {
 	protected int priority;
 
 	public static final int HANDLE_FIRST = 75, HANDLE_SECOND = 50, HANDLE_LAST = 25;
-	
+
 	/**
 	 * Create Sensor linked to the GameObject
 	 * 
@@ -103,32 +100,9 @@ public class Sensor {
 	 * @return FixtureDef
 	 */
 	public FixtureDef getFixtureDef() {
-		Shape p = null;
-		switch (sensorShapeType) {
-		case Chain:
-			p = new ChainShape();
-			((ChainShape) p).createChain(sensorPoints);
-			break;
-		case Circle:
-			p = new CircleShape();
-			((CircleShape) p).setPosition(new Vector2(sensorPoints[0], sensorPoints[1]));
-			((CircleShape) p).setRadius(sensorPoints[2]);
-			break;
-		case Edge:
-			p = new EdgeShape();
-			((EdgeShape) p).set(sensorPoints[0], sensorPoints[1], sensorPoints[2], sensorPoints[3]);
-			break;
-		case Polygon:
-			p = new PolygonShape();
-			((PolygonShape) p).set(sensorPoints);
-			break;
-		default:
-			throw new NullPointerException();
-		}
-
 		FixtureDef fixture = new FixtureDef();
 		fixture.isSensor = true;
-		fixture.shape = p;
+		fixture.shape = BodyFunctions.getShape(sensorShapeType, sensorPoints);
 		return fixture;
 	}
 
