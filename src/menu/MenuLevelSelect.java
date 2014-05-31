@@ -60,18 +60,17 @@ public class MenuLevelSelect implements Screen {
 		
 		scrollPane = new ScrollPane(list, skin);
 		
-		play = new TextButton("Spielen", skin);
-		play.pad(15);
-															//siehe atlas.pack
-		
+		play = new TextButton("Spielen", skin);					
 		play.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				GameProperties.switchMode(false, true);
 				((Game) Gdx.app.getApplicationListener()).setScreen(GameRender.getInstance());
 			}
 		});
+		play.pad(15);
 		
-		back = new TextButton("Zur�ck", skin, "small");		//small weil wir hier nicht die defaultgroe�e wollen
+		//siehe atlas.pack
+		back = new TextButton("Zurueck", skin, "small");		//small weil wir hier nicht die defaultgroe�e wollen
 		back.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
