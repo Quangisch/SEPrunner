@@ -1,4 +1,4 @@
- package menu;
+package menu;
 
 import tween.ActorAccessor;
 import aurelienribon.tweenengine.Timeline;
@@ -40,7 +40,7 @@ public class MenuMain implements Screen {
 		stage.act(delta); //updates table also since thats in there
 		stage.draw();
 		
-//Table.drawDebug(stage);             case debuglines needed 2/2
+//Table.drawDebug(stage);            // case debuglines needed 1/2
 	}
 
 	@Override
@@ -56,26 +56,27 @@ public class MenuMain implements Screen {
 		
 		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
-		atlas = new TextureAtlas(Gdx.files.internal("res/ui/button.pack"));
+		atlas = new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack"));
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), atlas);
 		
 		table = new Table(skin);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		//creating heading
-		heading = new Label(Project.TITLE, skin, "default"); //menu.Project			default-value in res/ui.menu.Skin.json
+		heading = new Label(Project.TITLE, skin); //menu.Project			default-value in res/ui.menu.Skin.json
 		heading.setFontScale(1); //sizable headline
 		
 		//creating buttons
-		buttonPlay = new TextButton("Spiel starten", skin, "default");
+		buttonPlay = new TextButton("Spiel starten", skin);
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking imgages
+								
 			}
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		buttonOption = new TextButton("Optionen", skin, "default");
+		buttonOption = new TextButton("Optionen", skin);
 		buttonOption.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuOption());
@@ -83,7 +84,7 @@ public class MenuMain implements Screen {
 		});
 		buttonOption.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		buttonHighscore = new TextButton("Highscore", skin, "default");
+		buttonHighscore = new TextButton("Highscore", skin);
 		buttonHighscore.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuHighscore());
@@ -91,7 +92,7 @@ public class MenuMain implements Screen {
 		});
 		buttonHighscore.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		buttonExit = new TextButton("Beenden", skin, "default");
+		buttonExit = new TextButton("Beenden", skin);
 		buttonExit.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				Gdx.app.exit();
@@ -113,7 +114,7 @@ public class MenuMain implements Screen {
 		table.getCell(buttonHighscore).spaceBottom(20);
 		table.row();
 		table.add(buttonExit);
-//table.debug();             case debuglines needed 2/2
+//table.debug();            // case debuglines needed 2/2
 		stage.addActor(table);
 		
 		//creating animations
