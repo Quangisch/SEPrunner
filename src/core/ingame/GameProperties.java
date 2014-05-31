@@ -1,7 +1,9 @@
 package core.ingame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameProperties {
 
@@ -21,9 +23,15 @@ public abstract class GameProperties {
 	public static int[] keyLeft = {Keys.A, Keys.LEFT}, 
 			keyRight = {Keys.D, Keys.RIGHT},
 			keyRun = {Keys.F, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT},
+			
 			keyJump = {Keys.SPACE, Keys.UP}, 
-			keyCower = {Keys.C, Keys.DOWN}, 
-			keyAction = {Keys.E, Keys.ENTER};
+			keyCrouch = {Keys.C, Keys.DOWN},
+			
+			keyAction = {Keys.E, Keys.ENTER}, //hide, dispose, grab - abhängig von den Umgebung
+			keyThrow = {Input.Buttons.LEFT},
+			keyHook = {Input.Buttons.RIGHT};
+		
+	
 
 	final public static float PIXELPROMETER = 100;
 
@@ -33,6 +41,14 @@ public abstract class GameProperties {
 
 	public static float pixelToMeter(float pixel) {
 		return pixel / PIXELPROMETER;
+	}
+	
+	public static Vector2 meterToPixel(Vector2 meter) {
+		return new Vector2(meterToPixel(meter.x), meterToPixel(meter.y));
+	}
+	
+	public static Vector2 pixelToMeter(Vector2 pixel) {
+		return new Vector2(pixelToMeter(pixel.x), pixelToMeter(pixel.y));
 	}
 	
 	public static void switchMode(boolean menu, boolean ingame) {

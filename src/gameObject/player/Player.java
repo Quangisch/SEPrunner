@@ -1,18 +1,16 @@
 package gameObject.player;
 
-import gameObject.GameObject;
 import gameObject.Sensor;
-import gameObject.enemy.Enemy;
 import gameWorld.Map;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
+import com.badlogic.gdx.physics.box2d.World;
 
 import core.ingame.Camera;
 import core.ingame.GameProperties;
 
-public class Player extends GameObject implements Runnable, Detectable {
+public class Player extends PlayerInteraction implements Runnable {
 
 	public Player(World world, Vector2 position) {
 		super(world, position);
@@ -22,12 +20,13 @@ public class Player extends GameObject implements Runnable, Detectable {
 	public static Player getInstance() {
 		return Map.getInstance().getPlayer();
 	}
-
+	
 	public void run() {
 		processInput();
+		processStates();
 	}
 
-	private void processInput() {
+	private void processStates() {
 
 		Vector2 baseForce = new Vector2(0, 0);
 
@@ -53,7 +52,7 @@ public class Player extends GameObject implements Runnable, Detectable {
 
 		//		run
 		if ((getCurrentState() == 1 || getCurrentState() == 3)
-				&& InputHandler.getInstance().isKeyDown(GameProperties.keyRun) && isGrounded()) {
+				&& isGrounded() && isRunning()) {
 			setCurrentState(3);
 			baseForce.scl(1.7f);
 		}
@@ -81,27 +80,4 @@ public class Player extends GameObject implements Runnable, Detectable {
 		addSensor(new Sensor(this, Type.Polygon, vertices, SensorTypes.FOOT, Sensor.HANDLE_FIRST));
 	}
 
-	@Override
-	public boolean isDetectable(Enemy enemy) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setCaptured(Enemy enemy) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean handleCollision(Sensor mySensor, GameObject other, Sensor otherSensor) {
-		if (mySensor != null) {
-			if (mySensor.getSensorType() == SensorTypes.FOOT && other.getGameObjectType() == GameObjectTypes.GROUND) {
-				setGrounded(true);
-				return true;
-			}
-		}
-
-		return false;
-	}
 }

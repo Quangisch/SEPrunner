@@ -1,5 +1,7 @@
 package gameObject;
 
+import gameObject.IGameObjectStates.GameObjectStates.InteractionState;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.LinkedList;
@@ -24,7 +26,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes {
+public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IGameObjectStates {
 
 	private String name;
 	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
@@ -48,6 +50,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	protected int defaultState;
 	protected int currentState;
+	
+	protected InteractionState interactionState = InteractionState.STAND;
 
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
@@ -303,5 +307,20 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	@Override
 	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor) {
 		return false;
+	}
+
+	@Override
+	public World getWorld() {
+		return body.getWorld();
+	}
+
+	@Override
+	public Vector2 getWorldPosition() {
+		return body.getPosition();
+	}
+
+	@Override
+	public Vector2 getPosition() {
+		return new Vector2(getX(), getY());
 	}
 }

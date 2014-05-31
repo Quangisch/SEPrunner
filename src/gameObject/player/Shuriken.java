@@ -1,15 +1,14 @@
 package gameObject.player;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-
-import gameObject.GameObject;
 import gameObject.Collisionable;
+import gameObject.GameObject;
+
+import com.badlogic.gdx.math.Vector2;
 
 public class Shuriken extends GameObject implements Collisionable {
 
-	public Shuriken(World world, Vector2 position, Player player) {
-		super(world, position);
+	public Shuriken(Collisionable thrower, Vector2 direction) {
+		super(thrower.getWorld(), thrower.getWorldPosition());
 		// TODO Auto-generated constructor stub
 	}
 	

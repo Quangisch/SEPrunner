@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.World;
 
 public interface Collisionable {
 	
@@ -59,5 +60,23 @@ public interface Collisionable {
 	 * @param grounded
 	 */
 	public void setGrounded(boolean grounded);
+	
+	/**
+	 * Get corresponding world.
+	 * @return world
+	 */
+	public World getWorld();
+	
+	/**
+	 * Get Body Position in meter.
+	 * @return position
+	 */
+	public Vector2 getWorldPosition();
+	
+	/**
+	 * Get Body Position in pixel.
+	 * @return position
+	 */
+	public Vector2 getPosition();
 
 }
