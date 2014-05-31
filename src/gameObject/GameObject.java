@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -38,9 +39,11 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	private List<Sensor> sensors;
 
-	private boolean flip = false;
-	private boolean visible = true;
+	protected boolean flip = false;
+	protected boolean visible = true;
 	private volatile boolean grounded = true;
+	protected int layer = 0;
+	protected float alpha = 1;
 
 	protected String[] states;
 	protected Animation[] animations;
@@ -102,8 +105,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 			i = 0;
 			TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
 			for (JsonValue frame : animationFrames.get("textureMap"))
-				textureRegions[i++] = new TextureRegion(
-						new Texture(root.get("texture").asString()), frame.getInt(0),
+				textureRegions[i++] = new TextureRegion(new Texture(root.get("texture").asString()), frame.getInt(0),
 						frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
 			animations[j] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
@@ -187,11 +189,13 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		stateTime += Gdx.graphics.getDeltaTime();
 
-		TextureRegion frame = new TextureRegion(animations[currentState].getKeyFrame(stateTime,
-				true));
+		TextureRegion frame = new TextureRegion(animations[currentState].getKeyFrame(stateTime, true));
 		frame.flip(flip, false);
 
+		batch.setColor(1, 1, 1, getAlpha());
+		// batch.setBlendFunction(GL11.GL_SRC0_ALPHA, org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA);
 		batch.draw(frame, getX(), getY());
+		batch.setColor(Color.WHITE);
 	}
 
 	@Override
@@ -211,8 +215,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	@Override
-	public Fixture addFixture(float density, float friction, float restitution, boolean sensor,
-			Shape shape, boolean disposeShape) {
+	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
+			boolean disposeShape) {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = density;
 		fixtureDef.isSensor = sensor;
@@ -229,15 +233,15 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	@Override
-	public Fixture setFixture(float density, float friction, float restitution, boolean sensor,
-			Shape shape, boolean disposeShape) {
+	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
+			boolean disposeShape) {
 		for (Fixture f : body.getFixtureList())
 			body.destroyFixture(f);
 		return addFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 
-	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution,
-			boolean sensor, Shape shape, boolean disposeShape) {
+	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution, boolean sensor,
+			Shape shape, boolean disposeShape) {
 
 		body.setFixedRotation(true);
 		setFixture(density, friction, restitution, sensor, shape, disposeShape);
@@ -298,6 +302,35 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	public void setGameObjectType(int gameObjectType) {
 		this.gameObjectType = gameObjectType;
+	}
+
+	/**
+	 * @return the drawing layer
+	 */
+	public int getLayer() {
+		return layer;
+	}
+
+	/**
+	 * @param layer set the drawing layer
+	 */
+	protected void setLayer(int layer) {
+		this.layer = layer;
+	}
+
+	/**
+	 * @return the alpha
+	 */
+	protected float getAlpha() {
+		return alpha;
+	}
+
+	/**
+	 * @param alpha the alpha to set
+	 */
+	protected void setAlpha(float alpha) {
+		this.alpha = Math.abs(alpha) % 1;
+		// this.alpha = (100 + alpha) % 1;
 	}
 
 	@Override

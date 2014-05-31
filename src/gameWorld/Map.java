@@ -7,6 +7,7 @@ import gameObject.player.Player;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -64,10 +65,18 @@ public class Map implements DrawableMap {
 
 		if (mapTexture != null) batch.draw(mapTexture, 0, 0);
 
+		objects.sort(new Comparator<GameObject>() {
+
+			@Override
+			public int compare(GameObject a, GameObject b) {
+				return a.getLayer() - b.getLayer();
+			}
+		});
+
 		for (GameObject o : objects)
 			o.draw(batch);
 
-		if (player != null) player.draw(batch);
+//		if (player != null) player.draw(batch);
 
 		if (debugRender != null && GameProperties.debugMode) debugRender.render(world, debugMatrix);
 
@@ -111,6 +120,7 @@ public class Map implements DrawableMap {
 		// init player
 		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
 		player.init("ninja");
+		objects.add(player);
 
 		// init gameObjects
 		world.setContactListener(new CollisionHandler());
