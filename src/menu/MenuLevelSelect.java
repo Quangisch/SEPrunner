@@ -58,7 +58,7 @@ public class MenuLevelSelect implements Screen {
 		
 		ScrollPane scrollPane = new ScrollPane(list, skin);
 		
-		TextButton play = new TextButton("Spielen", skin, "big");		   //big weil wir hier nicht die defaultgroesse wollen
+		TextButton play = new TextButton("Level starten", skin);
 		play.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				GameProperties.switchMode(false, true);
@@ -67,7 +67,7 @@ public class MenuLevelSelect implements Screen {
 		});
 		play.pad(15);
 		
-		TextButton back = new TextButton("Zurueck", skin);
+		TextButton back = new TextButton("Zurueck", skin, "small"); //small da ungleich defaultgroesse
 		back.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());

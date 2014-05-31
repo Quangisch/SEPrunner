@@ -57,18 +57,17 @@ public class MenuMain implements Screen {
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), atlas);
 		
 		table = new Table(skin);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		table.setFillParent(true);
 		
 		//creating heading
 		Label heading = new Label(Project.TITLE, skin, "big"); //menu.Project			default-value in res/ui.menu.Skin.json
 		heading.setFontScale(1); //sizable headline
 		
 		//creating buttons
-		TextButton buttonPlay = new TextButton("Spiel starten", skin);
+		TextButton buttonPlay = new TextButton("Spielen", skin);
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking imgages
-								
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking imgages		
 			}
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
@@ -96,20 +95,16 @@ public class MenuMain implements Screen {
 			}
 		});
 		buttonExit.pad(15);
-				
+				/*	table.add(new Label("Levelauswahl", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
+					table.add(scrollPane).uniformX().expandY().top().left();
+					table.add(play).uniformX();
+					table.add(back).uniformX().bottom().right();	
+				*/
 		//putting stuff together
-		table.add(heading);
-		table.getCell(heading).spaceBottom(100); //luecke unter heading legen = Abstand
-		table.row();
-		table.add(buttonPlay);
-		table.getCell(buttonPlay).spaceBottom(20);
-		table.row();
-		table.add(buttonOption);
-		table.getCell(buttonOption).spaceBottom(20);
-		table.row();
-		table.add(buttonHighscore);
-		table.getCell(buttonHighscore).spaceBottom(20);
-		table.row();
+		table.add(heading).spaceBottom(100).row(); //100 abstand, neue zeile
+		table.add(buttonPlay).spaceBottom(15).row();
+		table.add(buttonOption).spaceBottom(15).row();
+		table.add(buttonHighscore).spaceBottom(15).row();
 		table.add(buttonExit);
 //table.debug();            // case debuglines needed 2/2
 		stage.addActor(table);
