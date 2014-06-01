@@ -96,6 +96,7 @@ public class MenuMain implements Screen {
 
 		//putting stuff together
 		table.add(heading).spaceBottom(100).colspan(3).expandX().row(); //100 abstand, neue zeile
+		table.defaults().width(buttonHighscore.getWidth()+15); //setzt alle buttons auf groesse vom Highscore button
 		table.add().uniformX();		table.add(buttonPlay).spaceBottom(15);			table.add().row().uniformX();
 		table.add();				table.add(buttonOption).spaceBottom(15);		table.add().row();
 		table.add();				table.add(buttonHighscore).spaceBottom(15);		table.add().row();
