@@ -97,11 +97,12 @@ public class MenuMain implements Screen {
 		buttonExit.pad(15);
 
 		//putting stuff together
-		table.add(heading).spaceBottom(100).row(); //100 abstand, neue zeile
-		table.add(buttonPlay).spaceBottom(15).row();
-		table.add(buttonOption).spaceBottom(15).row();
-		table.add(buttonHighscore).spaceBottom(15).row();
-		table.add(buttonExit);
+		table.add(heading).spaceBottom(100).colspan(3).expandX().row(); //100 abstand, neue zeile
+		table.add().uniformX();		table.add(buttonPlay).spaceBottom(15);			table.add().row().uniformX();
+		table.add();				table.add(buttonOption).spaceBottom(15);		table.add().row();
+		table.add();				table.add(buttonHighscore).spaceBottom(15);		table.add().row();
+		table.add();				table.add(buttonExit);							table.add();
+		
 //table.debug();            // case debuglines needed 2/2
 		stage.addActor(table);
 		

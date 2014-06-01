@@ -71,7 +71,7 @@ public class MenuOption implements Screen {
 		final TextField levelDirectoryInput = new TextField(levelDirectory().path(),skin);
 		levelDirectoryInput.setMessageText("level directory");
 		
-		final TextButton back = new TextButton("Zurueck", skin);
+		final TextButton back = new TextButton("Zurueck", skin, "small");
 		back.pad(10);
 		
 		ClickListener buttonHandler = new ClickListener() {
@@ -107,12 +107,10 @@ public class MenuOption implements Screen {
 		
 		//putting stuff together
 		table.add("Optionen").spaceBottom(50).colspan(3).expandX().row();
-		table.add();
-		table.add("level directory");
-		table.add().row();
-		table.add(vSyncCheckBox).top().expandY();
-		table.add(levelDirectoryInput).top().fillX();
-		table.add(back).bottom().right();
+		table.add();		table.add("level directory").uniformX();		table.add().row();
+		table.add(vSyncCheckBox).top().expandY().uniformX();
+		 table.add(levelDirectoryInput).top().fillX();
+		  table.add(back).bottom().right().uniformX();
 		
 		stage.addActor(table);
 	}

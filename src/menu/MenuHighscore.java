@@ -55,7 +55,7 @@ public class MenuHighscore implements Screen {
 		
 		ScrollPane scrollPane = new ScrollPane(list, skin);
 		
-		TextButton back = new TextButton("Zurueck", skin);
+		TextButton back = new TextButton("Zurueck", skin, "small");
 		back.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
@@ -66,8 +66,8 @@ public class MenuHighscore implements Screen {
 		//putting stuff together
 		table.add(new Label("Highscore", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
 		table.add(scrollPane).uniformX().expandY().top().left();
-		table.add().uniformX();
-		table.add(back).uniformX().bottom().right();
+		 table.add().uniformX();
+		  table.add(back).uniformX().bottom().right();
 		
 		stage.addActor(table);
 	}
