@@ -54,7 +54,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	protected int currentState;
 
 	protected enum gameObjectStates {
-		DEFAULT
+		// DEFAULT
 	}
 
 	public GameObject(World world, Vector2 position) {
