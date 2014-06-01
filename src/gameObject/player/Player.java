@@ -14,6 +14,10 @@ import core.ingame.GameProperties;
 
 public class Player extends GameObject implements Runnable, Detectable {
 
+	protected enum State {
+		STAND, SNEAK, COWER, RUN
+	}
+
 	public Player(World world, Vector2 position) {
 		super(world, position);
 		Camera.getInstance().setToFollowMoveable(this);
@@ -31,49 +35,49 @@ public class Player extends GameObject implements Runnable, Detectable {
 
 		Vector2 baseForce = new Vector2(0, 0);
 
-		//		basic movement
+		// basic movement
 		if (InputHandler.getInstance().isKeyDown(GameProperties.keyRight)) {
 			baseForce.add(1, 0);
 			setFlip(false);
-			setCurrentState(1);
+			setCurrentState(State.SNEAK);
 		} else if (InputHandler.getInstance().isKeyDown(GameProperties.keyLeft)) {
 			baseForce.add(-1, 0);
 			setFlip(true);
-			setCurrentState(1);
+			setCurrentState(State.SNEAK);
 		} else if (!isGrounded())
-			setCurrentState(1);
+			setCurrentState(State.SNEAK);
 		else
-			setCurrentState(0);
+			setCurrentState(State.STAND);
 
-		//		tweak gravity
+		// tweak gravity
 		if (baseForce.len() != 0)
 			body.setGravityScale(0.7f);
 		else
 			body.setGravityScale(1);
 
-		//		run
+		// run
 		if ((getCurrentState() == 1 || getCurrentState() == 3)
 				&& InputHandler.getInstance().isKeyDown(GameProperties.keyRun) && isGrounded()) {
-			setCurrentState(3);
+			setCurrentState(State.RUN);
 			baseForce.scl(1.7f);
 		}
 
-		//		jump
+		// jump
 		if (InputHandler.getInstance().isKeyDown(GameProperties.keyJump) && isGrounded()) {
 			setGrounded(false);
 			body.applyLinearImpulse(new Vector2(body.getLocalCenter().x, body.getLocalCenter().y + 100),
 					body.getWorldCenter(), true);
-			setCurrentState(0);
+			setCurrentState(State.STAND);
 		}
 
-		//		apply impulse
+		// apply impulse
 		body.applyLinearImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f), body.getWorldCenter(), true);
 
 	}
 
 	@Override
 	public void init(String name) {
-		super.init(name);
+		super.init(name, State.class);
 		setGameObjectType(GameObjectTypes.PLAYER);
 		setLayer(3);
 		setAlpha(0.8f);
@@ -92,7 +96,6 @@ public class Player extends GameObject implements Runnable, Detectable {
 	@Override
 	public void setCaptured(Enemy enemy) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
