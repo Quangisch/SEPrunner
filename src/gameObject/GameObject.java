@@ -2,6 +2,7 @@ package gameObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,12 +46,16 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	protected int layer = 0;
 	protected float alpha = 1;
 
-	protected String[] states;
+	private String[] states;
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
 
 	protected int defaultState;
 	protected int currentState;
+
+	protected enum gameObjectStates {
+		// DEFAULT
+	}
 
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
@@ -63,11 +68,16 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	public void init(String name) {
-		init(name, "res/sprites/" + name + ".json");
-		// init(name, "res/sprites/" + name + ".json");
+		init(name, gameObjectStates.class);
 	}
 
-	private void init(String name, String jsonPath) {
+	@SuppressWarnings("rawtypes")
+	public void init(String name, Class<? extends Enum> stateEnum) {
+		init(name, "res/sprites/" + name + ".json", stateEnum);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void init(String name, String jsonPath, Class<? extends Enum> stateEnum) {
 		JsonReader reader = new JsonReader();
 		JsonValue root;
 		try {
@@ -79,16 +89,43 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		this.name = name;
 
+		// GAMEOBJECT STATE ENUM and STATES
+		try {
+			EnumSet<?> enumSet = EnumSet.allOf(stateEnum);
+			states = new String[enumSet.size()];
+			for (Enum<?> i : enumSet)
+				states[i.ordinal()] = i.toString().toUpperCase();
+
+			if (root.hasChild("animationen")) {
+				List<String> addAni = new LinkedList<String>();
+				json: for (JsonValue ani : root.get("animationen")) {
+					for (int i = 0; i < states.length; i++)
+						if (states[i].equalsIgnoreCase(ani.asString())) break json;
+					addAni.add(ani.asString());
+				}
+				String[] tmp = new String[states.length + addAni.size()];
+				System.arraycopy(states, 0, tmp, 0, states.length);
+				for (int i = 0; i < addAni.size(); i++)
+					tmp[states.length + i] = addAni.get(i);
+				states = tmp;
+			}
+		} catch (Exception e) {
+			states = null;
+			System.err.println(name + ": State initialisation error!");
+		}
+
 		// ARRAY INIT
-		states = new String[root.get("animationen").size];
+		if (states == null) states = new String[root.get("animationen").size];
 		animations = new Animation[states.length];
 		boundingBoxes = new PolygonShape[states.length];
 
-		// STATES
-		for (int i = 0; i < states.length; i++)
-			states[i] = root.get("animationen").getString(i);
+		// CORRECT CASE
+		for (JsonValue s : root.get("stateframes"))
+			s.name = s.name.toUpperCase();
 
 		for (int j = 0; j < states.length; j++) {
+			if (!root.get("stateframes").hasChild(states[j])) continue;
+
 			JsonValue animationFrames = root.get("stateframes").get(states[j]);
 
 			// BOUNDING BOX
@@ -152,6 +189,10 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		System.err.println(name + ": Unknown state '" + state + "'");
 		setCurrentState(defaultState);
+	}
+
+	public <T extends Enum<T>> void setCurrentState(T state) {
+		setCurrentState(state.ordinal());
 	}
 
 	public void setCurrentState(int state) {
