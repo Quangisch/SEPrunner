@@ -43,11 +43,11 @@ public class Splash implements Screen{
 		Gdx.graphics.setVSync(MenuOption.vSync());
 		
 		batch = new SpriteBatch();
+		
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-		//Gdx.files.internal("res/GeneralForests.png")
-		Texture splashTexture = new Texture(Gdx.files.internal("res/img/splash.png"));
-		splash = new Sprite(splashTexture);
+		
+		splash = new Sprite(new Texture(Gdx.files.internal("res/img/splash.png")));
 		splash.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		Tween.set(splash, SpriteAccessor.ALPHA).target(0).start(tweenManager);

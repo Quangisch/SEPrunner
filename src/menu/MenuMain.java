@@ -22,7 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class MenuMain implements Screen {
 
 	private Stage stage;
-	private TextureAtlas atlas; //defining regions
 	private Skin skin;
 	private Table table; //objects get organized on here
 	private TweenManager tweenManager; //tween-engine starter, stuff like fade-in/out animations
@@ -53,8 +52,7 @@ public class MenuMain implements Screen {
 		
 		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
-		atlas = new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack"));
-		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), atlas);
+		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		
 		table = new Table(skin);
 		table.setFillParent(true);
@@ -104,31 +102,21 @@ public class MenuMain implements Screen {
 		table.add();				table.add(buttonExit);							table.add();
 		
 //table.debug();            // case debuglines needed 2/2
+		
 		stage.addActor(table);
 		
 		//creating animations
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(Actor.class, new ActorAccessor());
-		
-		//heading color animation
-		Timeline.createSequence().beginSequence()
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 0, 1))			//dunkelblau
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 0))			//gruen
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(0, 1, 1))			//hellblau
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 0, 0))			//rot
-			//.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 0))			//gelb
-			.push(Tween.to(heading, ActorAccessor.RGB, .5f).target(1, 1, 1))			//weiss
-			.end().start(tweenManager);
-			//.end().repeat(Tween.INFINITY, 0).start(tweenManager);
-		//alternativcode wuerde headline durch farben kontinuierlich wechseln
 	
 		//heading and buttons fade-in
 		Timeline.createSequence().beginSequence()
+			.push(Tween.set(heading, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonPlay, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonOption, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonHighscore, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonExit, ActorAccessor.ALPHA).target(0))
-			.push(Tween.from(heading, ActorAccessor.ALPHA, .25f).target(0))
+			.push(Tween.to(heading, ActorAccessor.ALPHA, .5f).target(1))
 			.push(Tween.to(buttonPlay, ActorAccessor.ALPHA, .25f).target(1))
 			.push(Tween.to(buttonOption, ActorAccessor.ALPHA, .25f).target(1))
 			.push(Tween.to(buttonHighscore, ActorAccessor.ALPHA, .25f).target(1))
@@ -160,7 +148,6 @@ public class MenuMain implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
-		atlas.dispose();
 		skin.dispose();
 	}
 
