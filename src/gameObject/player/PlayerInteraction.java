@@ -1,5 +1,6 @@
 package gameObject.player;
 
+import gameObject.GameObject;
 import gameObject.IGameObjectStates.GameObjectStates.InteractionState;
 import gameObject.enemy.Enemy;
 import gameObject.player.InputHandler.Click;
@@ -18,7 +19,8 @@ import core.ingame.GameProperties;
 abstract class PlayerInteraction extends PlayerCollision implements Detectable, RayCastCallback {
 
 	private Enemy enemyGrab;
-	private int shuriken = 0;
+	private int shuriken = 10;
+	private Click click;
 	
 	protected PlayerInteraction(World world, Vector2 position) {
 		super(world, position);
@@ -28,46 +30,67 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	protected void processInput() {
 //		basic movement
 		
-		processHook();
-//		
-//		if(isGrounded()) {
-//			if(InputHandler.getInstance().isKeyDown(GameProperties.keyJump)
-//					&& !isHooking() && !isHiding() && !isGrabbing())
-//				interactionState = InteractionState.JUMP;
-//			
-//			if(InputHandler.getInstance().isKeyDown(GameProperties.keyCrouch))
-//				interactionState = InteractionState.CROUCH_STAND;
-//			
-//			if(InputHandler.getInstance().isKeyDown(GameProperties.keyThrow))
-//				processThrow();
-//			
-//			if(InputHandler.getInstance().isKeyDown(GameProperties.keyHook))
-//				processHook();
-//			
-//			if(InputHandler.getInstance().isKeyDown(GameProperties.keyAction))
-//				processAction();
-//		}
-//		
-//		if (InputHandler.getInstance().isKeyDown(GameProperties.keyRight)
-//				|| InputHandler.getInstance().isKeyDown(GameProperties.keyLeft)) {
-//		
-//			switch(interactionState) {
-//			case STAND : 
-//				interactionState = InteractionState.WALK; 
-//				break;
-//			case CROUCH_STAND :
-//				interactionState = InteractionState.CROUCH_SNEAK;
-//				break;
-//			case GRAB :
-//				interactionState = InteractionState.GRAB_PULL;
-//				break;
-//
-//			default:
-//				break;
-//			}		
-//		}
-//		
-//		processRun();
+		click = InputHandler.getInstance().getClick();
+		
+		
+		
+		if(actionTimer >= ACTION_TIMER_INITIAL) {
+			
+			if(click != null) {
+				normalizeClickPoint();
+				if(InputHandler.getInstance().buttonDown(GameProperties.keyThrow))
+						processThrow();
+					
+					if(InputHandler.getInstance().buttonDown(GameProperties.keyHook))
+						processHook();
+				
+				InputHandler.getInstance().resetClick();
+			}
+		} else
+			actionTimer++;
+
+		
+		if(isGrounded()) {
+			if(InputHandler.getInstance().isKeyDown(GameProperties.keyJump)
+					&& !isHooking() && !isHiding() && !isGrabbing())
+				interactionState = InteractionState.JUMP;
+			
+			if(InputHandler.getInstance().isKeyDown(GameProperties.keyCrouch))
+				interactionState = InteractionState.CROUCH_STAND;
+			
+			if(InputHandler.getInstance().isKeyDown(GameProperties.keyThrow))
+				processThrow();
+			
+			if(InputHandler.getInstance().isKeyDown(GameProperties.keyHook))
+				processHook();
+			
+			if(InputHandler.getInstance().isKeyDown(GameProperties.keyAction))
+				processAction();
+		}
+		
+		if (InputHandler.getInstance().isKeyDown(GameProperties.keyRight)
+				|| InputHandler.getInstance().isKeyDown(GameProperties.keyLeft)) {
+		
+//			TODO buggy
+			setFlip(InputHandler.getInstance().isKeyDown(GameProperties.keyLeft));
+			
+			switch(interactionState) {
+			case STAND : 
+				interactionState = InteractionState.WALK; 
+				break;
+			case CROUCH_STAND :
+				interactionState = InteractionState.CROUCH_SNEAK;
+				break;
+			case GRAB :
+				interactionState = InteractionState.GRAB_PULL;
+				break;
+
+			default:
+				break;
+			}		
+		}
+		
+		processRun();
 
 	}
 	
@@ -78,7 +101,7 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	
 	private boolean processRun() {
 		
-		if(GameProperties.debugMode)
+		if(GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
 			System.out.println(runTapTimer);
 		
 		switch(interactionState) {
@@ -103,70 +126,61 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	}
 	
 
-	private final int ACTION_TIMER_INITIAL = 10;
+	private final int ACTION_TIMER_INITIAL = 50;
 	private int actionTimer = ACTION_TIMER_INITIAL;
 	
-	private boolean processThrow() {
+	private Vector2 startPoint, clickPoint;
+	
+	private void normalizeClickPoint() {
+		startPoint = GameProperties.meterToPixel(this.getLocalCenterInWorld());
+		clickPoint = new Vector2(click.screenX, click.screenY);
+		Camera.getInstance().unproject(clickPoint);
 		
-		Click click = InputHandler.getInstance().getClick();
-		if(click == null)
-			return false;
-		InputHandler.getInstance().keyUp(GameProperties.keyHook);
+		System.out.println("--"+clickPoint.toString());
 		
-//		only can throw, if throwTimer >= 10, to prevent spamming
-		if(actionTimer < ACTION_TIMER_INITIAL) {
-			actionTimer++;
-			return false;
+		switch(GameProperties.debugMode) {
+		case GEOMETRIC:
+			new GeometricObject(new Circle(startPoint.x, startPoint.y, 5), Color.RED);
+			new GeometricObject(new Circle(clickPoint.x, clickPoint.y, 10), Color.GREEN);
+			break;
+		case CONSOLE:
+			System.out.println(startPoint.toString()+" -- "+clickPoint.toString());
+			break;
+		default:
+			break;
 		}
-		
+	}
+	
+	private boolean processThrow() {
 		if(shuriken <= 0)
 			return false;
 		
+		interactionState = InteractionState.THROW;
 		shuriken--;
-		Vector2 direction = new Vector2();
-		new Shuriken(this, direction);
+		new Shuriken(this, clickPoint.sub(startPoint));
 		actionTimer = 0;
-
+		
 		return true;
 	}
 	
-	private final int HOOK_RADIUS = 150;
+	private final int HOOK_RADIUS = 300;
 	
 	private boolean processHook() {
+		Vector2 endPoint = clickPoint.cpy();
 		
+		endPoint.sub(startPoint);
+		endPoint.nor().scl(HOOK_RADIUS);
+		endPoint.add(startPoint);
 		
-		if(actionTimer < ACTION_TIMER_INITIAL) {
-			actionTimer++;
-			return false;
-		}
-		
-		Click click = InputHandler.getInstance().getClick();
-		if(click == null)
-			return false;
-		InputHandler.getInstance().keyUp(GameProperties.keyHook);
-		
-		Vector2 startPoint = GameProperties.meterToPixel(body.getWorldPoint(body.getLocalCenter()));
-		Vector2 clickPoint = new Vector2(click.screenX, click.screenY);
-		Camera.getInstance().unproject(clickPoint);
-		
-		Vector2 endPoint = startPoint.cpy();
-		endPoint.add(clickPoint);
-		endPoint.limit(startPoint.len() + HOOK_RADIUS);
-		System.out.println(startPoint.toString()+" -- "+endPoint.toString());
-		
-		
-		
-		new GeometricObject(new Circle(startPoint.x, startPoint.y, 5), Color.RED);
-		new GeometricObject(new Circle(clickPoint.x, clickPoint.y, 10), Color.RED);
-		new GeometricObject(new Circle(endPoint.x, endPoint.y, 5), Color.GREEN);
-//		endPoint.limit(HOOK_RADIUS);
-		
-		
-		body.getWorld().rayCast(this, getWorldPosition(), clickPoint);
+		body.getWorld().rayCast(this, getLocalCenterInWorld(), GameProperties.pixelToMeter(endPoint));
 		
 		actionTimer = 0;
 		
 		return true;
+	}
+	
+	private void hook(Vector2 target) {
+		
 	}
 	
 	private boolean processAction() {
@@ -240,7 +254,18 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	}
 	
 	public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-		return 0;
+		System.out.println("---"+point.toString());
+		if(((GameObject) fixture.getBody().getUserData()).getGameObjectType() == GameObjectTypes.GROUND) {
+			
+//			visualize target
+			Vector2 p = GameProperties.meterToPixel(point);
+			new GeometricObject(new Circle(p.x-5, p.y-5, 5), Color.BLUE);
+		
+			hook(point);
+			
+			return 0;
+		} else
+			return 1;
 	}
 
 }

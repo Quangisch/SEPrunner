@@ -12,6 +12,7 @@ public interface IGameObjectStates {
 			CROUCH_SNEAK,
 			
 			JUMP,
+			JUMP_MOVE,
 			
 			HIDE,
 			THROW,

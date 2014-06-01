@@ -40,7 +40,7 @@ public class CollisionHandler implements ContactListener {
 		handled = handled || ((objectA != null && objectB != null) // objectB hits objectA
 				&& (objectB.handleCollision(null, objectA, null)));
 
-		if (!handled && GameProperties.debugMode)
+		if (!handled && GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
 			System.err.println("Unhandled Collision (" + contact.toString() + ")");
 	}
 

@@ -30,6 +30,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	private String name;
 	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
+	protected float rotation = 0;
 
 	// BODY
 	protected Body body;
@@ -193,9 +194,13 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		TextureRegion frame = new TextureRegion(animations[currentState].getKeyFrame(stateTime,
 				true));
-		frame.flip(flip, false);
-
-		batch.draw(frame, getX(), getY());
+		batch.draw(frame.getTexture(), getX(), getY(), 
+				frame.getRegionWidth()/2, frame.getRegionHeight()/2, //origin
+				frame.getRegionWidth(), frame.getRegionHeight(), 
+				1, 1, //scale 
+				rotation, frame.getRegionX(), frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(), flip, false);
+		
+//		batch.draw(frame, getX(), getY());
 	}
 
 	@Override
@@ -262,11 +267,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	@Override
-	public void applyForce(Vector2 force, boolean wake) {
-		body.applyForceToCenter(force, wake);
-	}
-
-	@Override
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
@@ -322,5 +322,14 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	@Override
 	public Vector2 getPosition() {
 		return new Vector2(getX(), getY());
+	}
+	
+	public Body getBody() {
+		return body;
+	}
+
+	@Override
+	public Vector2 getLocalCenterInWorld() {
+		return body.getWorldPoint(body.getLocalCenter());
 	}
 }

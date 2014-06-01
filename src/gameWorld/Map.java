@@ -7,6 +7,7 @@ import gameObject.player.Player;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -22,13 +23,15 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.ingame.Camera;
 import core.ingame.GameProperties;
 
-public class Map implements DrawableMap {
+public class Map implements DrawableMap, Runnable {
 
 	protected Texture mapTexture;
 	protected World world;
 
 	protected List<GameObject> objects;
 	protected Player player;
+	
+	private List<Runnable> runnables;
 
 	private Box2DDebugRenderer debugRender;
 	private Matrix4 debugMatrix;
@@ -46,12 +49,22 @@ public class Map implements DrawableMap {
 	private Map() {
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
+		runnables = new ArrayList<Runnable>();
 
 	}
+	
+	public void run() {
+		try {
+			for(Runnable r : runnables)
+				r.run();
+		} catch (ConcurrentModificationException e) {
+//			e.printStackTrace();
+		}
+	}
+	
 
 	public void draw(SpriteBatch batch) {
-
-		player.run();
+		
 		debugMatrix = new Matrix4(Camera.getInstance().combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
@@ -69,7 +82,8 @@ public class Map implements DrawableMap {
 
 		if (player != null) player.draw(batch);
 
-		if (debugRender != null && GameProperties.debugMode) debugRender.render(world, debugMatrix);
+		if (debugRender != null && GameProperties.debugMode.equals(GameProperties.Debug.BOXRENDERER)) 
+			debugRender.render(world, debugMatrix);
 
 		world.clearForces();
 	}
@@ -140,5 +154,21 @@ public class Map implements DrawableMap {
 
 	public void step(float timeStep, int velocityIterations, int positionIterations) {
 		world.step(timeStep, velocityIterations, positionIterations);
+	}
+	
+	public boolean addRunnable(Runnable r) {
+		return runnables.add(r);
+	}
+	
+	public boolean removeRunnable(Runnable r) {
+		return runnables.remove(r);
+	}
+	
+	public boolean addGameObject(GameObject object) {
+		return objects.add(object);
+	}
+	
+	public boolean removeGameObject(GameObject object) {
+		return objects.remove(object);
 	}
 }

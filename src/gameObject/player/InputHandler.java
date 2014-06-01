@@ -66,9 +66,16 @@ public class InputHandler implements InputProcessor {
 		}
 		
 //		toogle debug
-		if(keycode == Keys.TAB)
-			GameProperties.debugMode = !GameProperties.debugMode;
+		if(keycode == Keys.TAB) {
+			GameProperties.debugMode = GameProperties.Debug.getNext();
+			System.out.println("DebugMode "+GameProperties.debugMode.toString());
+		}
 		
+////		tmp switchAnimationStates
+//		if(keycode == Keys.N) {
+//			Player p = Map.getInstance().getPlayer();
+//			p.setCurrentState(p.getCurrentState()+1);
+//		}
 		return false;
 	}
 
@@ -95,6 +102,15 @@ public class InputHandler implements InputProcessor {
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		click = new Click(screenX, screenY, pointer, button);
 		
+		return false;
+	}
+	
+	public boolean buttonDown(int[] button) {
+		if(click == null)
+			return false;
+		for(int b : button)
+			if(click.button == b)
+				return true;
 		return false;
 	}
 
@@ -139,17 +155,35 @@ public class InputHandler implements InputProcessor {
 			this.pointer = pointer;
 			this.button = button;
 			
+			
 			Vector3 vec = new Vector3(screenX, screenY, 0);
 			Camera.getInstance().unproject(vec);
-			geo = new GeometricObject(new Circle(vec.x, vec.y, 10), Color.CYAN);
-			if(GameProperties.debugMode) {
+			
+			switch(GameProperties.debugMode) {
+			case CONSOLE: 
 				System.out.println("clickLocal@"+screenX+"x"+screenY);
 				System.out.println("clickReal @"+vec.x+"x"+vec.y);
+				break;
+			case GEOMETRIC:
+				float radius = 10;
+				geo = new GeometricObject(new Circle(vec.x-radius, vec.y-radius, radius), Color.CYAN);
+				break;
+			default:
+				break;
 			}
 		}
 		
 		public void draw(SpriteBatch batch) {
+			if(geo != null)
 			geo.draw(batch);
+		}
+		
+		public Click cpy() {
+			return new Click(screenX, screenY, pointer, button);
+		}
+		
+		public String toString() {
+			return "Click@"+screenX+"x"+screenY+", pointer:"+pointer+", button:"+button;
 		}
 	}
 

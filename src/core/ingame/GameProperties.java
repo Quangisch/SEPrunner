@@ -18,7 +18,30 @@ public abstract class GameProperties {
 	public static float gamma = 1.0f;
 	public static float brightness = 1.0f;
 
-	public static boolean debugMode = false;
+//	0: off, 1: boxrenderer, 2: geometricObject, 3: console
+	public static Debug debugMode = Debug.OFF;
+	
+	public enum Debug {
+		OFF,
+		BOXRENDERER,
+		GEOMETRIC,
+		CONSOLE;
+		
+		public static Debug getNext() {
+			switch(debugMode) {
+			case BOXRENDERER: 
+				return Debug.GEOMETRIC;
+			case CONSOLE: 	
+				return Debug.OFF;
+			case GEOMETRIC: 	
+				return Debug.CONSOLE;
+			case OFF: 			
+				return Debug.BOXRENDERER;
+			default:			
+				return Debug.OFF;	
+			}
+		}
+	}
 	
 	public static int[] keyLeft = {Keys.A, Keys.LEFT}, 
 			keyRight = {Keys.D, Keys.RIGHT},
@@ -63,7 +86,7 @@ public abstract class GameProperties {
 		
 		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
 		
-		if(debugMode)
+		if(debugMode.equals(Debug.CONSOLE))
 			System.out.println(width+"x"+height);
 		
 		if(!menu && !ingame)

@@ -12,6 +12,7 @@ import misc.GeometricObject;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
@@ -19,9 +20,9 @@ import com.badlogic.gdx.utils.Disposable;
 public class GameRender implements Screen, ApplicationListener {
 
 	private static GameRender render;
-
 	private int level = 1;
 	private SpriteBatch batch;
+	private FPSLogger log;
 	private List<GeometricObject> geometrics = new ArrayList<GeometricObject>();
 	
 	private GameRender(int level) {
@@ -30,7 +31,12 @@ public class GameRender implements Screen, ApplicationListener {
 
 	public void create() {
 		batch = new SpriteBatch();
+		
+		log = new FPSLogger();
 		Gdx.input.setInputProcessor(InputHandler.getInstance());
+		
+//		TODO
+		loadResources();
 		Map.getInstance().initMap(level);
 		
 	}
@@ -38,6 +44,7 @@ public class GameRender implements Screen, ApplicationListener {
 	@Override
 	public void dispose() {
 		batch.dispose();
+		ResourceManager.getInstance().dispose();
 		for(Disposable d : geometrics)
 			d.dispose();
 	}
@@ -52,6 +59,12 @@ public class GameRender implements Screen, ApplicationListener {
 
 	
 	public void render() {
+		
+		Map.getInstance().run();
+		
+		if(GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
+			log.log();
+		
 		Gdx.gl.glClearColor(255, 255, 255, 1);//(0,0,0,1)
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
@@ -74,8 +87,7 @@ public class GameRender implements Screen, ApplicationListener {
 //			if(GameProperties.debugMode)
 //				e.printStackTrace();
 		}
-		
-		
+
 		batch.end();
 
 		Map.getInstance().step(Gdx.graphics.getDeltaTime(), 6, 4);
@@ -124,5 +136,10 @@ public class GameRender implements Screen, ApplicationListener {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	private void loadResources() {
+		//TODO
+//		manager.load(fileName, type);
+	}
+	
 }

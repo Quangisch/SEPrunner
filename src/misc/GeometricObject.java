@@ -17,7 +17,7 @@ public class GeometricObject implements Disposable {
 	
 	private Texture texture;
 	private float x, y;
-	private int ttl = 200;
+	private int ttl = 20;
 
 	public GeometricObject(Rectangle rect, Color color) {
 		Pixmap pixmap = new Pixmap((int)rect.width, (int)rect.height, Format.RGBA8888 );
@@ -53,6 +53,8 @@ public class GeometricObject implements Disposable {
 		this.y = (float) Math.min(line.getY1(), line.getY2());
 		init(pixmap);
 	}
+	
+	
 	
 	private void init(Pixmap pixmap) {
 		texture = new Texture(pixmap);
