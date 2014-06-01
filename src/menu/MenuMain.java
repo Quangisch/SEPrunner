@@ -25,14 +25,14 @@ public class MenuMain implements Screen {
 	private Skin skin;
 	private Table table; //objects get organized on here
 	private TweenManager tweenManager; //tween-engine starter, stuff like fade-in/out animations
-	//textButtonStyle pushed in json-file, put in skin
+	 //textButtonStyle pushed in json-file, put in skin
 	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);	//black background
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 				
-		stage.act(delta); //updates table also since thats in there
+		stage.act(delta); //updates table as well since thats in there
 		stage.draw();
 		
 		tweenManager.update(delta);
@@ -58,14 +58,14 @@ public class MenuMain implements Screen {
 		table.setFillParent(true);
 		
 		//creating heading
-		Label heading = new Label(Project.TITLE, skin, "big"); //menu.Project			default-value in res/ui.menu.Skin.json
+		Label heading = new Label(Project.TITLE, skin, "big"); //menu.Project	size-values in res/ui.menu.Skin.json
 		heading.setFontScale(1); //sizable headline
 		
 		//creating buttons
 		TextButton buttonPlay = new TextButton("Spielen", skin);
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking imgages		
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking img's		
 			}
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
@@ -76,7 +76,7 @@ public class MenuMain implements Screen {
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuOption());
 			}
 		});
-		buttonOption.pad(15);  //puffer zwischen buchstaben & buttonrand
+		buttonOption.pad(15);
 		
 		TextButton buttonHighscore = new TextButton("Highscore", skin);
 		buttonHighscore.addListener(new ClickListener(){
@@ -84,7 +84,7 @@ public class MenuMain implements Screen {
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuHighscore());
 			}
 		});
-		buttonHighscore.pad(15);  //puffer zwischen buchstaben & buttonrand
+		buttonHighscore.pad(15);
 		
 		TextButton buttonExit = new TextButton("Beenden", skin);
 		buttonExit.addListener(new ClickListener(){
