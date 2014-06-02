@@ -1,6 +1,6 @@
 package menu;
 
-import tween.SpriteAccessor;
+import menu.tween.SpriteAccessor;
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;

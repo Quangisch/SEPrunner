@@ -1,5 +1,7 @@
 package gameObject;
 
+import gameObject.IGameObjectStates.GameObjectStates.InteractionState;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.LinkedList;
@@ -25,10 +27,11 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes {
+public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IGameObjectStates {
 
 	private String name;
 	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
+	protected float rotation = 0;
 
 	// BODY
 	protected Body body;
@@ -51,6 +54,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	protected int defaultState;
 	protected int currentState;
+
+	private InteractionState interactionState = InteractionState.STAND;
 
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
@@ -190,11 +195,12 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		stateTime += Gdx.graphics.getDeltaTime();
 
 		TextureRegion frame = new TextureRegion(animations[currentState].getKeyFrame(stateTime, true));
-		frame.flip(flip, false);
 
 		batch.setColor(1, 1, 1, getAlpha());
-		// batch.setBlendFunction(GL11.GL_SRC0_ALPHA, org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA);
-		batch.draw(frame, getX(), getY());
+		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
+				frame.getRegionWidth(), frame.getRegionHeight(), 1, 1, /* scale */
+				rotation, frame.getRegionX(), frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(),
+				flip, false);
 		batch.setColor(Color.WHITE);
 	}
 
@@ -259,11 +265,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public void removeSensor(Sensor sensor) {
 		if (sensor.getGameObject() == this) sensor.setGameObject(null);
 		if (sensors.remove(sensor)) setCurrentState(currentState, true);
-	}
-
-	@Override
-	public void applyForce(Vector2 force, boolean wake) {
-		body.applyForceToCenter(force, wake);
 	}
 
 	@Override
@@ -336,5 +337,39 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	@Override
 	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor) {
 		return false;
+	}
+
+	@Override
+	public World getWorld() {
+		return body.getWorld();
+	}
+
+	@Override
+	public Vector2 getWorldPosition() {
+		return body.getPosition();
+	}
+
+	@Override
+	public Vector2 getPosition() {
+		return new Vector2(getX(), getY());
+	}
+
+	public Body getBody() {
+		return body;
+	}
+
+	@Override
+	public Vector2 getLocalCenterInWorld() {
+		return body.getWorldPoint(body.getLocalCenter());
+	}
+
+	public InteractionState getInteractionState() {
+		return interactionState;
+	}
+
+	public void setInteractionState(InteractionState interactionState) {
+		this.interactionState = interactionState;
+		//		if(GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
+		System.out.println("Current InteractionState@ " + interactionState.toString());
 	}
 }

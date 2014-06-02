@@ -5,6 +5,7 @@ import gameObject.Collisionable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class Camera extends OrthographicCamera implements MoveableCamera {
 	
@@ -26,22 +27,13 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		float toX = follow.getX();//+GameProperties.width/3;
 		float toY = follow.getY();//+GameProperties.height/5;
 		
-		//TODO
-		if(this.position.x != toX) {
-			//this.position.x = toX;
-			this.position.x += (follow.getX() - position.x) * lerp +20;
+		if(position.x != toX || position.y != toY) {
+			this.position.x += (toX - position.x) * lerp + 20;
+			this.position.y += (toY - position.y) * lerp + 10;
+//			if(GameProperties.debugMode)
+//				System.out.println("Camera@"+position.x+"x"+position.y);
 		}
-		
-		if(this.position.y != toY) {
-			//this.position.y = toY;
-			this.position.y += (follow.getY() - position.y) * lerp +10;
-		}
-		
-		//
-		
-		
-		
-		//
+			
 	}
 	
 	public void updateOrtho() {
@@ -65,5 +57,17 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		this.position.y = position.y;
 	}
 	
+	/**
+	 * Additional helper
+	 * @param vector
+	 * @return unprojected vector
+	 */
+	public Vector2 unproject(Vector2 vec) {
+		Vector3 v = new Vector3(vec.x, vec.y, 0);
+		unproject(v);
+		vec.x = v.x;
+		vec.y = v.y;
+		return vec;
+	}
 	
 }

@@ -1,9 +1,11 @@
 package gameObject;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.World;
 
 public interface Collisionable {
 	
@@ -25,7 +27,7 @@ public interface Collisionable {
 	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
 	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
 	
-	public void applyForce(Vector2 force, boolean wake);
+	public Body getBody();
 	
 	/**
 	 * Handle an incoming collision
@@ -59,5 +61,29 @@ public interface Collisionable {
 	 * @param grounded
 	 */
 	public void setGrounded(boolean grounded);
+	
+	/**
+	 * Get corresponding world.
+	 * @return world
+	 */
+	public World getWorld();
+	
+	/**
+	 * Get Body Position in meter.
+	 * @return position
+	 */
+	public Vector2 getWorldPosition();
+	
+	/**
+	 * Get Body Position in pixel.
+	 * @return position
+	 */
+	public Vector2 getPosition();
+	
+	/**
+	 * Get Local Center in World in meter.
+	 * @return position
+	 */
+	public Vector2 getLocalCenterInWorld();
 
 }
