@@ -32,7 +32,7 @@ public class Player extends PlayerInteraction implements Runnable {
 
 		
 		
-		switch(interactionState) {
+		switch(getInteractionState()) {
 //		case STAND: case CROUCH_STAND: case THROW: case HIDE: case GRAB: 
 //		case GRAB_DISPOSE: case STUNNED: case HOOK_START: case HOOK_FLY:
 //			break;

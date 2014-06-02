@@ -52,7 +52,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	protected int defaultState;
 	protected int currentState;
 	
-	protected InteractionState interactionState = InteractionState.STAND;
+	private InteractionState interactionState = InteractionState.STAND;
 
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
@@ -331,5 +331,15 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	@Override
 	public Vector2 getLocalCenterInWorld() {
 		return body.getWorldPoint(body.getLocalCenter());
+	}
+
+	public InteractionState getInteractionState() {
+		return interactionState;
+	}
+
+	public void setInteractionState(InteractionState interactionState) {
+		this.interactionState = interactionState;
+//		if(GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
+			System.out.println("Current InteractionState@ "+interactionState.toString());
 	}
 }

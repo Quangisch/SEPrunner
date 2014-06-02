@@ -28,12 +28,9 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	}
 	
 	protected void processInput() {
-//		basic movement
 		
+//		CLICK 
 		click = InputHandler.getInstance().getClick();
-		
-		
-		
 		if(actionTimer >= ACTION_TIMER_INITIAL) {
 			
 			if(click != null) {
@@ -49,40 +46,51 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		} else
 			actionTimer++;
 
-		
+
 		if(isGrounded()) {
-			if(InputHandler.getInstance().isKeyDown(GameProperties.keyJump)
-					&& !isHooking() && !isHiding() && !isGrabbing())
-				interactionState = InteractionState.JUMP;
+			
+			if(InputHandler.getInstance().isKeyDown(GameProperties.keyAction)) {
+				processAction();
+				return;
+			}
 			
 			if(InputHandler.getInstance().isKeyDown(GameProperties.keyCrouch))
-				interactionState = InteractionState.CROUCH_STAND;
-			
-			if(InputHandler.getInstance().isKeyDown(GameProperties.keyThrow))
-				processThrow();
-			
-			if(InputHandler.getInstance().isKeyDown(GameProperties.keyHook))
-				processHook();
-			
-			if(InputHandler.getInstance().isKeyDown(GameProperties.keyAction))
-				processAction();
+				setInteractionState(InteractionState.CROUCH_STAND);
 		}
+		
 		
 		if (InputHandler.getInstance().isKeyDown(GameProperties.keyRight)
 				|| InputHandler.getInstance().isKeyDown(GameProperties.keyLeft)) {
 		
-//			TODO buggy
+
 			setFlip(InputHandler.getInstance().isKeyDown(GameProperties.keyLeft));
 			
-			switch(interactionState) {
-			case STAND : 
-				interactionState = InteractionState.WALK; 
-				break;
+			switch(getInteractionState()) {
 			case CROUCH_STAND :
-				interactionState = InteractionState.CROUCH_SNEAK;
+				setInteractionState(InteractionState.CROUCH_SNEAK);
 				break;
 			case GRAB :
-				interactionState = InteractionState.GRAB_PULL;
+				setInteractionState(InteractionState.GRAB_PULL);
+				break;
+			case STAND : 
+				setInteractionState(InteractionState.WALK); 
+				break;
+			default:
+				break;
+			}	
+			
+		} else {
+			
+			switch(getInteractionState()) {
+			case RUN : 
+			case WALK :
+				setInteractionState(InteractionState.STAND); 
+				break;
+			case CROUCH_SNEAK :
+				setInteractionState(InteractionState.CROUCH_STAND);
+				break;
+			case GRAB_PULL :
+				setInteractionState(InteractionState.GRAB);
 				break;
 
 			default:
@@ -91,7 +99,12 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		}
 		
 		processRun();
-
+		
+		
+		if(isGrounded()) {
+			
+			
+		}
 	}
 	
 
@@ -101,13 +114,14 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	
 	private boolean processRun() {
 		
+		
 		if(GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
 			System.out.println(runTapTimer);
 		
-		switch(interactionState) {
+		switch(getInteractionState()) {
 			case WALK:
 				if(runTapTimer > 0)
-					interactionState = InteractionState.RUN;
+					setInteractionState(InteractionState.RUN);
 				else
 					runTapTimer = TAP_TIMER_INITIAL;
 				break;
@@ -136,8 +150,6 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		clickPoint = new Vector2(click.screenX, click.screenY);
 		Camera.getInstance().unproject(clickPoint);
 		
-		System.out.println("--"+clickPoint.toString());
-		
 		switch(GameProperties.debugMode) {
 		case GEOMETRIC:
 			new GeometricObject(new Circle(startPoint.x, startPoint.y, 5), Color.RED);
@@ -155,7 +167,7 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		if(shuriken <= 0)
 			return false;
 		
-		interactionState = InteractionState.THROW;
+		setInteractionState(InteractionState.THROW);
 		shuriken--;
 		new Shuriken(this, clickPoint.sub(startPoint));
 		actionTimer = 0;
@@ -204,21 +216,21 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	}
 	
 	public boolean isHooking() 	{ 
-		return interactionState.equals(InteractionState.HOOK_FLY)
-				|| interactionState.equals(InteractionState.HOOK_START);	
+		return getInteractionState().equals(InteractionState.HOOK_FLY)
+				|| getInteractionState().equals(InteractionState.HOOK_START);	
 	}
 	public boolean isRunning() 	{ 
-		return interactionState.equals(InteractionState.RUN);	
+		return getInteractionState().equals(InteractionState.RUN);	
 	}
 	
 	public boolean isHiding() 	{ 
-		return interactionState.equals(InteractionState.HIDE);	
+		return getInteractionState().equals(InteractionState.HIDE);	
 	}
 	
 	public boolean isGrabbing() { 
 		return enemyGrab != null 
-				&& (interactionState.equals(InteractionState.GRAB) 
-						|| interactionState.equals(InteractionState.GRAB_PULL));	
+				&& (getInteractionState().equals(InteractionState.GRAB) 
+						|| getInteractionState().equals(InteractionState.GRAB_PULL));	
 	}
 	
 	public void setHook(boolean hook) {
@@ -239,7 +251,7 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		
 		enemy.isCarriable(body.getPosition());
 		this.enemyGrab = enemy;
-		interactionState = InteractionState.GRAB;
+		setInteractionState(InteractionState.GRAB);
 		return true;
 	}
 	
