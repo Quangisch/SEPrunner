@@ -56,8 +56,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	protected InteractionState defaultState;
 	protected InteractionState currentState;
 
-	private InteractionState interactionState = InteractionState.STAND;
-
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
 		aniDraw = new LinkedList<Integer>();
@@ -166,13 +164,11 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		if ((this.currentState == state) && !force) return;
 
 		this.currentState = state;
-
-		applyAnimation();
-
+		
 		// TODO Solve addFixture slowdown
 		if (!force) return;
 
-		setFixture(density, friction, restitution, sensor, boundingBoxes[this.currentState.getAnimationIndex()[0]],
+		setFixture(density, friction, restitution, sensor, boundingBoxes[aniDraw.peek()],
 				false);
 		for (Sensor s : sensors)
 			addFiture(s.getFixtureDef()).setUserData(s);
@@ -368,6 +364,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	public InteractionState getInteractionState() {
-		return interactionState;
+		return currentState;
 	}
 }
