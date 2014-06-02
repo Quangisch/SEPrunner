@@ -158,6 +158,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	public void setInteractionState(InteractionState state) {
 		setInteractionState(state, false);
+//		System.out.println(state.toString());
 	}
 
 	public void setInteractionState(InteractionState state, boolean force) {
@@ -177,6 +178,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public void applyAnimation() {
 		for (int i : getInteractionState().getAnimationIndex())
 			aniDraw.add(i);
+		System.out.println("apply "+currentState.toString());
 	}
 
 	private float stateTime = 0;

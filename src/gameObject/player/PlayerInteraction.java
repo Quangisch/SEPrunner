@@ -20,6 +20,7 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	private Enemy enemyGrab;
 	private int shuriken = 10;
 	private Click click;
+	private Vector2 target;
 	
 	protected PlayerInteraction(World world, Vector2 position) {
 		super(world, position);
@@ -27,6 +28,8 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	}
 	
 	protected void processInput() {
+		final InteractionState lastState = currentState;
+		boolean action = false;
 		
 //		CLICK 
 		click = InputHandler.getInstance().getClick();
@@ -35,10 +38,9 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 			if(click != null) {
 				normalizeClickPoint();
 				if(InputHandler.getInstance().buttonDown(GameProperties.keyThrow))
-						processThrow();
-					
-					if(InputHandler.getInstance().buttonDown(GameProperties.keyHook))
-						processHook();
+					action = processThrow();
+				else if(InputHandler.getInstance().buttonDown(GameProperties.keyHook))
+					action = processHook();
 				
 				InputHandler.getInstance().resetClick();
 			}
@@ -46,7 +48,7 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 			actionTimer++;
 
 
-		if(isGrounded()) {
+		if(!action && isGrounded()) {
 			
 			if(InputHandler.getInstance().isKeyDown(GameProperties.keyAction))
 				processAction();
@@ -54,11 +56,14 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 				setInteractionState(InteractionState.JUMP);
 			else if(InputHandler.getInstance().isKeyDown(GameProperties.keyCrouch))
 				setInteractionState(InteractionState.CROUCH_STAND);
-		}
+			else if(!currentState.equals(InteractionState.STAND))
+				setInteractionState(InteractionState.STAND);
+			
+		} 
 		
 		
-		if (InputHandler.getInstance().isKeyDown(GameProperties.keyRight)
-				|| InputHandler.getInstance().isKeyDown(GameProperties.keyLeft)) {
+		if (!action && (InputHandler.getInstance().isKeyDown(GameProperties.keyRight)
+				|| InputHandler.getInstance().isKeyDown(GameProperties.keyLeft))) {
 		
 
 			setFlip(InputHandler.getInstance().isKeyDown(GameProperties.keyLeft));
@@ -101,7 +106,11 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 			}		
 		}
 		
-		processRun();
+		if(!action)
+			processRun();
+		
+		if(!lastState.equals(currentState))
+			applyAnimation();
 		
 	}
 	
@@ -191,7 +200,8 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	}
 	
 	private void hook(Vector2 target) {
-		
+		setInteractionState(InteractionState.HOOK);
+		this.target = target;
 	}
 	
 	private boolean processAction() {
@@ -229,18 +239,6 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		return enemyGrab != null 
 				&& (getInteractionState().equals(InteractionState.GRAB) 
 						|| getInteractionState().equals(InteractionState.GRAB_PULL));	
-	}
-	
-	public void setHook(boolean hook) {
-//		TODO
-	}
-
-	public void setRun(boolean run) {
-//		TODO
-	}
-
-	public void setHide(boolean hide) {
-//		TODO
 	}
 	
 	public boolean setGrab(Enemy enemy) {

@@ -49,10 +49,10 @@ public class Player extends PlayerInteraction implements Runnable {
 			baseForce = new Vector2(0.6f,0);
 			break;
 		case JUMP:
-			baseForce = new Vector2(0,3);
+			baseForce = new Vector2(0,20);
 			break;
 		case JUMP_MOVE:
-			baseForce = new Vector2(1,3);
+			baseForce = new Vector2(1,20);
 			break;
 		default:
 			baseForce = new Vector2(0, 0);

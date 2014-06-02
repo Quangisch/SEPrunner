@@ -52,7 +52,7 @@ public class CollisionHandler implements ContactListener {
 
 	@Override
 	public void endContact(Contact contact) {
-		// TODO Auto-generated method stub
+		handleCollision(contact, false);
 
 	}
 
