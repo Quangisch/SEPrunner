@@ -5,7 +5,6 @@
 					},
 		"texture" : "res/sprites/ninja_full.png",
 		"defaultState" : 1,
-		"animationen" : ["stand","walk","run","crouch_down", "crouch", "crouch_walk", "throw", "hook_up", "hook_fly", "fall", "stunned", "pulled", "pull", "hide"],
 		"stateframes" :	{
 						"stand" :	{
 										"frameDuration":0.2,
@@ -72,7 +71,6 @@
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],
 										"textureMap" : [
-														[450, 900, 150, 150],
 														[450, 1050, 150, 150]
 														]
 									},
@@ -165,7 +163,7 @@
 														[1050, 1050, 150, 150]
 														]
 									},
-						"hide" :	{
+						"hide_start" :	{
 										"frameDuration":0.15,
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],
@@ -178,8 +176,15 @@
 														[1200, 750, 150, 150],
 														[1200, 900, 150, 150]
 														]
+									},
+						"hide" :	{
+										"frameDuration":0.15,
+										"boundingBox" : [39.5, 35, 39.5, 117,
+														 90, 117, 90, 35],
+										"textureMap" : [
+														[1200, 900, 150, 150]
+														]
 									}
-
 		}
 	}
 }
