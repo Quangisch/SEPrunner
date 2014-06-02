@@ -1,7 +1,6 @@
 package gameObject.player;
 
 import gameObject.GameObject;
-import gameObject.IGameObjectStates.GameObjectStates.InteractionState;
 import gameObject.enemy.Enemy;
 import gameObject.player.InputHandler.Click;
 import misc.GeometricObject;
