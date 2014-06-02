@@ -1,7 +1,5 @@
 package gameObject;
 
-import gameObject.IGameObjectStates.GameObjectStates.InteractionState;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.LinkedList;
@@ -27,9 +25,9 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IGameObjectStates {
+public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates {
 
-	private String name;
+	protected String name;
 	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
 	protected float rotation = 0;
 
@@ -48,12 +46,11 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	protected int layer = 0;
 	protected float alpha = 1;
 
-	protected String[] states;
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
 
-	protected int defaultState;
-	protected int currentState;
+	protected InteractionState defaultState;
+	protected InteractionState currentState;
 
 	private InteractionState interactionState = InteractionState.STAND;
 
@@ -85,16 +82,16 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		this.name = name;
 
 		// ARRAY INIT
-		states = new String[root.get("animationen").size];
-		animations = new Animation[states.length];
-		boundingBoxes = new PolygonShape[states.length];
+		int aniPointer = 0;
+		animations = new Animation[InteractionState.values().length];
+		boundingBoxes = new PolygonShape[animations.length];
 
-		// STATES
-		for (int i = 0; i < states.length; i++)
-			states[i] = root.get("animationen").getString(i);
+		for (JsonValue js : root.get("stateframes"))
+			js.name = js.name.toUpperCase();
 
-		for (int j = 0; j < states.length; j++) {
-			JsonValue animationFrames = root.get("stateframes").get(states[j]);
+		for (InteractionState iS : InteractionState.values()) {
+			JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation().toUpperCase());
+			if (animationFrames == null) continue;
 
 			// BOUNDING BOX
 			PolygonShape boundingBox = new PolygonShape();
@@ -104,7 +101,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 			for (JsonValue v : bBox)
 				vertices[i++] = GameProperties.pixelToMeter(v.asFloat());
 			boundingBox.set(vertices);
-			boundingBoxes[j] = boundingBox;
+			boundingBoxes[aniPointer] = boundingBox;
 
 			// TEXTURE FRAMES
 			i = 0;
@@ -113,11 +110,12 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 				textureRegions[i++] = new TextureRegion(new Texture(root.get("texture").asString()), frame.getInt(0),
 						frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
-			animations[j] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
+			animations[aniPointer] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
+			iS.setAnimationIndex(aniPointer++);
 		}
 
 		// STATUS
-		defaultState = root.getInt("defaultState");
+		defaultState = InteractionState.values()[root.getInt("defaultState")];
 
 		// BODYDEF
 		density = root.get("bodyDef").getFloat("density");
@@ -143,46 +141,24 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		setCurrentState(defaultState, true);
 	}
 
-	public void setCurrentState(String state) {
-		for (int i = 0; i < states.length; i++)
-			if (states[i].equalsIgnoreCase(state)) {
-				setCurrentState(i);
-				return;
-			}
-
-		if (String.valueOf(Integer.parseInt(state)).equals(state)) {
-			setCurrentState(Integer.parseInt(state));
-			return;
-		}
-
-		System.err.println(name + ": Unknown state '" + state + "'");
-		setCurrentState(defaultState);
-	}
-
-	public void setCurrentState(int state) {
+	public void setCurrentState(InteractionState state) {
 		setCurrentState(state, false);
 	}
 
-	public void setCurrentState(int state, boolean force) {
-		if (this.currentState == state && !force) return;
-
-		if (state % states.length != state) {
-			System.err.println(name + ": Unknown state '" + state + "'");
-			setCurrentState(defaultState);
-			return;
-		}
+	public void setCurrentState(InteractionState state, boolean force) {
+		if ((this.currentState == state) && !force) return;
 
 		this.currentState = state;
 
 		// TODO Solve addFixture slowdown
 		if (!force) return;
 
-		setFixture(density, friction, restitution, sensor, boundingBoxes[this.currentState], false);
+		setFixture(density, friction, restitution, sensor, boundingBoxes[this.currentState.getAnimationIndex()], false);
 		for (Sensor s : sensors)
 			addFiture(s.getFixtureDef()).setUserData(s);
 	}
 
-	public int getCurrentState() {
+	public InteractionState getCurrentState() {
 		return currentState;
 	}
 
@@ -194,7 +170,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		stateTime += Gdx.graphics.getDeltaTime();
 
-		TextureRegion frame = new TextureRegion(animations[currentState].getKeyFrame(stateTime, true));
+		TextureRegion frame = new TextureRegion(animations[currentState.getAnimationIndex()].getKeyFrame(stateTime,
+				true));
 
 		batch.setColor(1, 1, 1, getAlpha());
 		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
