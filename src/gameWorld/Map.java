@@ -134,7 +134,7 @@ public class Map implements DrawableMap, Runnable {
 		// TODO cleanup
 		// init player
 		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
-		player.init("ninja");
+		player.init("ninja_full");
 		objects.add(player);
 
 		// init gameObjects
