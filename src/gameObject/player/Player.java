@@ -49,16 +49,18 @@ public class Player extends PlayerInteraction implements Runnable {
 			baseForce = new Vector2(0.6f,0);
 			break;
 		case JUMP:
-			baseForce = new Vector2(0,1);
+			baseForce = new Vector2(0,3);
 			break;
 		case JUMP_MOVE:
-			baseForce = new Vector2(1,1);
+			baseForce = new Vector2(1,3);
 			break;
 		default:
 			baseForce = new Vector2(0, 0);
 			break;
 		}
 		
+		if(!isGrounded())
+			baseForce.y = 0;
 		
 		if(isFlipped())
 			baseForce.x *= -1;

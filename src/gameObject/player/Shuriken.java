@@ -44,9 +44,12 @@ public class Shuriken extends GameObject implements Collisionable, Runnable {
 	
 	
 	@Override
-	public boolean handleCollision(Sensor mySensor, GameObject other, Sensor otherSensor) {
-		if(other.getGameObjectType() == GameObjectTypes.GROUND)
-			Map.getInstance().removeGameObject(this);
+	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
+		if(start) {
+			if(other.getGameObjectType() == GameObjectTypes.GROUND)
+				Map.getInstance().removeGameObject(this);
+		}
+		
 		return false;
 	}
 

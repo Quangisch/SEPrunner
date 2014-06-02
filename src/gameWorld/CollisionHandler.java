@@ -15,6 +15,12 @@ public class CollisionHandler implements ContactListener {
 
 	@Override
 	public void beginContact(Contact contact) {
+		boolean handled = handleCollision(contact, true);
+		if (!handled && GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
+			System.err.println("Unhandled Collision (" + contact.toString() + ")");
+	}
+	
+	private boolean handleCollision(Contact contact, boolean start) {
 		Fixture fixA = contact.getFixtureA();
 		Fixture fixB = contact.getFixtureB();
 
@@ -28,20 +34,20 @@ public class CollisionHandler implements ContactListener {
 		boolean handled = false;
 		handled = handled || ((sensorA != null && sensorB != null // 
 				&& sensorA.getPriority() >= sensorB.getPriority() && sensorA.isActive()) // sensorB hits sensorA
-				&& (sensorA.getGameObject().handleCollision(sensorA, sensorB.getGameObject(), sensorB)));
+				&& (sensorA.getGameObject().handleCollision(start, sensorA, sensorB.getGameObject(), sensorB)));
 		handled = handled || ((sensorA != null && sensorB != null && sensorB.isActive()) // sensorA hits sensorB
-				&& (sensorB.getGameObject().handleCollision(sensorB, sensorA.getGameObject(), sensorA)));
+				&& (sensorB.getGameObject().handleCollision(start, sensorB, sensorA.getGameObject(), sensorA)));
 		handled = handled || ((sensorA != null && objectB != null && sensorA.isActive()) // sensorA hits objectB
-				&& (sensorA.getGameObject().handleCollision(sensorA, objectB, null)));
+				&& (sensorA.getGameObject().handleCollision(start, sensorA, objectB, null)));
 		handled = handled || ((objectA != null && sensorB != null && sensorB.isActive()) // sensorB hits objectA
-				&& (sensorB.getGameObject().handleCollision(sensorB, objectA, null)));
+				&& (sensorB.getGameObject().handleCollision(start, sensorB, objectA, null)));
 		handled = handled || ((objectA != null && objectB != null) // objectA hits objectB
-				&& (objectA.handleCollision(null, objectB, null)));
+				&& (objectA.handleCollision(start, null, objectB, null)));
 		handled = handled || ((objectA != null && objectB != null) // objectB hits objectA
-				&& (objectB.handleCollision(null, objectA, null)));
+				&& (objectB.handleCollision(start, null, objectA, null)));
 
-		if (!handled && GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
-			System.err.println("Unhandled Collision (" + contact.toString() + ")");
+		return handled;
+		
 	}
 
 	@Override

@@ -312,7 +312,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	@Override
-	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor sender, GameObject other, Sensor otherSensor) {
 		return false;
 	}
 

@@ -14,10 +14,10 @@ abstract class PlayerCollision extends GameObject {
 	}
 	
 	@Override
-	public boolean handleCollision(Sensor mySensor, GameObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
 		if (mySensor != null) {
 			if (mySensor.getSensorType() == SensorTypes.FOOT && other.getGameObjectType() == GameObjectTypes.GROUND) {
-				setGrounded(true);
+				setGrounded(start);
 				return true;
 			}
 		}
