@@ -49,12 +49,11 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 
 		if(isGrounded()) {
 			
-			if(InputHandler.getInstance().isKeyDown(GameProperties.keyAction)) {
+			if(InputHandler.getInstance().isKeyDown(GameProperties.keyAction))
 				processAction();
-				return;
-			}
-			
-			if(InputHandler.getInstance().isKeyDown(GameProperties.keyCrouch))
+			else if(InputHandler.getInstance().isKeyDown(GameProperties.keyJump))
+				setInteractionState(InteractionState.JUMP);
+			else if(InputHandler.getInstance().isKeyDown(GameProperties.keyCrouch))
 				setInteractionState(InteractionState.CROUCH_STAND);
 		}
 		
@@ -72,8 +71,11 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 			case GRAB :
 				setInteractionState(InteractionState.GRAB_PULL);
 				break;
-			case STAND : 
+			case STAND :
 				setInteractionState(InteractionState.WALK); 
+				break;
+			case JUMP :
+				setInteractionState(InteractionState.JUMP_MOVE);
 				break;
 			default:
 				break;
@@ -92,7 +94,9 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 			case GRAB_PULL :
 				setInteractionState(InteractionState.GRAB);
 				break;
-
+			case JUMP_MOVE :
+				setInteractionState(InteractionState.JUMP);
+				break;
 			default:
 				break;
 			}		
@@ -100,17 +104,13 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		
 		processRun();
 		
-		
-		if(isGrounded()) {
-			
-			
-		}
 	}
 	
 
 
-	private final int TAP_TIMER_INITIAL = 10;
-	private int runTapTimer = TAP_TIMER_INITIAL;
+	private final int TAP_TIMER_LIMIT_HIGH = 10,
+			TAP_TIMER_LIMIT_LOW = 3;
+	private int runTapTimer = 0;
 	
 	private boolean processRun() {
 		
@@ -120,15 +120,15 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		
 		switch(getInteractionState()) {
 			case WALK:
-				if(runTapTimer > 0)
+				if(runTapTimer < TAP_TIMER_LIMIT_HIGH && runTapTimer > TAP_TIMER_LIMIT_LOW)
 					setInteractionState(InteractionState.RUN);
 				else
-					runTapTimer = TAP_TIMER_INITIAL;
+					runTapTimer = 0;
 				break;
 			
 			case STAND:
-				if(runTapTimer > 0)
-					runTapTimer--;
+				if(runTapTimer < TAP_TIMER_LIMIT_HIGH)
+					runTapTimer++;
 				break;
 				
 			default:
