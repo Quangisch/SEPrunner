@@ -75,7 +75,7 @@ public class InputHandler implements InputProcessor {
 		//		tmp switchAnimationStates
 		if (keycode == Keys.N) {
 			Player p = Map.getInstance().getPlayer();
-			p.setCurrentState(InteractionState.values()[(p.getCurrentState().ordinal() + 1)
+			p.setInteractionState(InteractionState.values()[(p.getInteractionState().ordinal() + 1)
 					% InteractionState.values().length]);
 		}
 		return false;

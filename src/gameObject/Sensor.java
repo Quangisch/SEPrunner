@@ -91,7 +91,7 @@ public class Sensor {
 		this.sensorPoints = points;
 
 		if (getGameObject() != null) //
-			getGameObject().setCurrentState(getGameObject().getCurrentState(), true);
+			getGameObject().setInteractionState(getGameObject().getInteractionState(), true);
 	}
 
 	/**
