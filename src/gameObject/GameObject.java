@@ -103,7 +103,10 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 				}
 
 				JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation()[j].toUpperCase());
-				if (animationFrames == null) continue;
+				if (animationFrames == null) {
+					System.err.println(iS.getAnimation()[j] + " not found");
+					continue;
+				}
 
 				// BOUNDING BOX
 				PolygonShape boundingBox = new PolygonShape();
@@ -164,17 +167,17 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		if ((this.currentState == state) && !force) return;
 
 		this.currentState = state;
-		
+
 		// TODO Solve addFixture slowdown
 		if (!force) return;
 
-		setFixture(density, friction, restitution, sensor, boundingBoxes[aniDraw.peek()],
-				false);
+		setFixture(density, friction, restitution, sensor, boundingBoxes[aniDraw.peek()], false);
 		for (Sensor s : sensors)
 			addFiture(s.getFixtureDef()).setUserData(s);
 	}
 
 	public void applyAnimation() {
+		aniDraw.clear();
 		for (int i : getInteractionState().getAnimationIndex())
 			aniDraw.add(i);
 	}
