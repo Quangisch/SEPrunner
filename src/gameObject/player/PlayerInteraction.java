@@ -215,8 +215,7 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 	}
 	
 	public boolean isHooking() 	{ 
-		return getInteractionState().equals(InteractionState.HOOK_FLY)
-				|| getInteractionState().equals(InteractionState.HOOK_START);	
+		return getInteractionState().equals(InteractionState.HOOK);	
 	}
 	public boolean isRunning() 	{ 
 		return getInteractionState().equals(InteractionState.RUN);	
