@@ -31,6 +31,7 @@ abstract class PlayerInteraction extends PlayerCollision implements Detectable, 
 		final InteractionState lastState = currentState;
 		boolean action = false;
 		
+		
 //		CLICK 
 		click = InputHandler.getInstance().getClick();
 		if(actionTimer >= ACTION_TIMER_INITIAL) {
