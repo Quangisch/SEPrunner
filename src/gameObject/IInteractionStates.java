@@ -18,23 +18,19 @@ public interface IInteractionStates {
 		STUNNED;
 
 		private String[] animation;
-		private int animationIndex;
+		private int[] animationIndex;
 
 		InteractionState(String... animation) {
 			this.animation = animation;
 			if (animation == null || animation.length <= 0) this.animation = new String[] { this.name() };
-			animationIndex = 0;
+			animationIndex = new int[this.animation.length];
 		}
 
 		public String[] getAnimation() {
 			return animation;
 		}
 
-		protected void setAnimationIndex(int animationIndex) {
-			this.animationIndex = animationIndex;
-		}
-
-		public int getAnimationIndex() {
+		public int[] getAnimationIndex() {
 			return animationIndex;
 		}
 	}
