@@ -27,18 +27,18 @@ public abstract class GameProperties {
 		GEOMETRIC,
 		CONSOLE;
 		
-		public static Debug getNext() {
+		public static Debug toNext() {
 			switch(debugMode) {
 			case BOXRENDERER: 
-				return Debug.GEOMETRIC;
+				return debugMode = Debug.GEOMETRIC;
 			case CONSOLE: 	
-				return Debug.OFF;
+				return debugMode = Debug.OFF;
 			case GEOMETRIC: 	
-				return Debug.CONSOLE;
+				return debugMode = Debug.CONSOLE;
 			case OFF: 			
-				return Debug.BOXRENDERER;
+				return debugMode = Debug.BOXRENDERER;
 			default:			
-				return Debug.OFF;	
+				return debugMode = Debug.OFF;	
 			}
 		}
 	}

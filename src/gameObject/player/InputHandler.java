@@ -1,5 +1,7 @@
 package gameObject.player;
 
+import gameWorld.Map;
+
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -67,15 +69,15 @@ public class InputHandler implements InputProcessor {
 		
 //		toogle debug
 		if(keycode == Keys.TAB) {
-			GameProperties.debugMode = GameProperties.Debug.getNext();
+			GameProperties.Debug.toNext();
 			System.out.println("DebugMode "+GameProperties.debugMode.toString());
 		}
 		
-////		tmp switchAnimationStates
-//		if(keycode == Keys.N) {
-//			Player p = Map.getInstance().getPlayer();
-//			p.setCurrentState(p.getCurrentState()+1);
-//		}
+//		tmp switchAnimationStates
+		if(keycode == Keys.N) {
+			Player p = Map.getInstance().getPlayer();
+			p.setCurrentState(p.getCurrentState()+1);
+		}
 		return false;
 	}
 
