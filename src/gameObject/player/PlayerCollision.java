@@ -6,7 +6,7 @@ import gameObject.Sensor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
-abstract class PlayerCollision extends GameObject {
+abstract class PlayerCollision extends PlayerInteraction {
 
 	protected PlayerCollision(World world, Vector2 position) {
 		super(world, position);
@@ -17,7 +17,8 @@ abstract class PlayerCollision extends GameObject {
 	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
 		if (mySensor != null) {
 			if (mySensor.getSensorType() == SensorTypes.FOOT && other.getGameObjectType() == GameObjectTypes.GROUND) {
-				setGrounded(start);
+				if(isJumping())
+					setGrounded(start);
 				return true;
 			}
 		}

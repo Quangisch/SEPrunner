@@ -65,7 +65,8 @@ public class Map implements DrawableMap, Runnable {
 		}
 	}
 
-	public void draw(SpriteBatch batch) {
+	@Override
+	public void draw(SpriteBatch batch, float deltaTime) {
 
 		debugMatrix = new Matrix4(Camera.getInstance().combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
@@ -88,7 +89,7 @@ public class Map implements DrawableMap, Runnable {
 		});
 
 		for (GameObject o : objects)
-			o.draw(batch);
+			o.draw(batch, deltaTime);
 
 		//		if (player != null) player.draw(batch);
 

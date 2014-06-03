@@ -3,35 +3,48 @@ package gameObject;
 public interface IInteractionStates {
 
 	enum InteractionState {
-		STAND, WALK, RUN,
+		STAND(true), WALK(true), RUN(true),
 
-		CROUCH_STAND("CROUCH_DOWN", "CROUCH_STAND"), CROUCH_SNEAK,
+		CROUCH_STAND(true), CROUCH_DOWN(false), CROUCH_SNEAK(true),
 
-		JUMP("WALK"), JUMP_MOVE("WALK"),
+		JUMP(true, "WALK"), JUMP_MOVE(true, "WALK"),
 
-		HIDE("HIDE_START", "HIDE"), THROW,
+		HIDE_START(false), HIDE(true), THROW(false),
 
-		HOOK("THROW", "FLY"),
+		FLY(true), HOOK(false, "THROW"),
 
-		GRAB, GRAB_PULL, GRAB_DISPOSE,
+		GRAB(true), GRAB_PULL(true), GRAB_DISPOSE(false),
 
-		STUNNED;
+		STUNNED(true);
 
-		private String[] animation;
-		private int[] animationIndex;
-
-		InteractionState(String... animation) {
+		private String animation;
+		private int animationIndex;
+		private boolean interruptable;
+		
+		InteractionState(boolean interruptable) {
+			this.interruptable = interruptable;
+			this.animation = this.toString();
+		}
+		
+		InteractionState(boolean interruptable, String animation) {
+			this(interruptable);
 			this.animation = animation;
-			if (animation == null || animation.length <= 0) this.animation = new String[] { this.name() };
-			animationIndex = new int[this.animation.length];
 		}
 
-		public String[] getAnimation() {
+		public String getAnimation() {
 			return animation;
 		}
-
-		public int[] getAnimationIndex() {
+		
+		public int getAnimationIndex() {
 			return animationIndex;
+		}
+		
+		public void setAnimationIndex(int animationIndex) {
+			this.animationIndex = animationIndex;
+		}
+		
+		public boolean isInterruptable() {
+			return interruptable;
 		}
 	}
 }

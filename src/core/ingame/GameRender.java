@@ -61,6 +61,7 @@ public class GameRender implements Screen, ApplicationListener {
 	public void render() {
 		
 		Map.getInstance().run();
+		float deltaTime = Gdx.graphics.getDeltaTime();
 		
 		if(GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
 			log.log();
@@ -76,7 +77,7 @@ public class GameRender implements Screen, ApplicationListener {
 //		Texture backTXT = new Texture(Gdx.files.internal("res/map/Rio.png"));
 //		batch.draw(backTXT, 150, 150, 1500, 309);
 		
-		Map.getInstance().draw(batch); //map
+		Map.getInstance().draw(batch, deltaTime); //map
 
 		HUD.getInstance().draw(batch); //userInterface
 		

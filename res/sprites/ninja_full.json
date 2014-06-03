@@ -4,7 +4,7 @@
 					 "density":30, "friction":0.4, "restitution":0, "sensor":false, "bodyType": 2
 					},
 		"texture" : "res/sprites/ninja_full.png",
-		"defaultState" : 1,
+		"defaultState" : 0,
 		"stateframes" :	{
 						"stand" :	{
 										"frameDuration":0.2,
@@ -53,8 +53,8 @@
 									},
 						"crouch_down" :	{
 										"frameDuration":0.07,
-										"boundingBox" : [39.5, 0, 39.5, 117,
-														 90, 117, 90, 0],
+										"boundingBox" : [39.5, 35, 39.5, 117,
+														 90, 117, 90, 35],
 										"textureMap" : [
 														[450, 0, 150, 150],
 														[450, 150, 150, 150],
@@ -66,7 +66,7 @@
 														[450, 1050, 150, 150]
 														]
 									},
-						"crouch" :	{
+						"crouch_stand" :	{
 										"frameDuration":0.13,
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],
@@ -75,7 +75,7 @@
 														]
 									},
 
-						"crouch_walk" :	{
+						"crouch_sneak" :	{
 										"frameDuration":0.23,
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],
@@ -92,7 +92,7 @@
 														]
 									},
 						"throw" :	{
-										"frameDuration":0.08,
+										"frameDuration":0.07,
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],
 										"textureMap" : [
@@ -148,7 +148,15 @@
 														[900, 750, 150, 150]
 														]
 									},
-						"pull" :	{
+						"grab" :	{
+										"frameDuration":0.25,
+										"boundingBox" : [39.5, 35, 39.5, 117,
+														 90, 117, 90, 35],
+										"textureMap" : [
+														[1050, 0, 150, 150]
+														]
+									},
+						"grab_pull" :	{
 										"frameDuration":0.25,
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],

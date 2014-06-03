@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -27,6 +25,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
+import core.ingame.GameProperties.Debug;
 
 public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates {
 
@@ -51,15 +50,14 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
-	protected Queue<Integer> aniDraw;
+	protected int aniDraw;
 
-	protected InteractionState defaultState;
-	protected InteractionState currentState;
+	private InteractionState defaultState;
+	private InteractionState currentState;
 
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
-		aniDraw = new LinkedList<Integer>();
-		aniDraw.add(0);
+		aniDraw = 0;
 
 		// init bodyDef
 		BodyDef bodyDef = new BodyDef();
@@ -96,40 +94,38 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		Map<String, Integer> found = new HashMap<String, Integer>();
 
 		for (InteractionState iS : InteractionState.values()) {
-			for (int j = 0; j < iS.getAnimation().length; j++) {
-				if (found.containsKey(iS.getAnimation()[j])) {
-					iS.getAnimationIndex()[j] = found.get(iS.getAnimation()[j]);
-					continue;
-				}
-
-				JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation()[j].toUpperCase());
-				if (animationFrames == null) {
-					System.err.println(iS.getAnimation()[j] + " not found");
-					continue;
-				}
-
-				// BOUNDING BOX
-				PolygonShape boundingBox = new PolygonShape();
-				JsonValue bBox = animationFrames.get("boundingBox");
-				int i = 0;
-				float[] vertices = new float[bBox.size];
-				for (JsonValue v : bBox)
-					vertices[i++] = GameProperties.pixelToMeter(v.asFloat());
-				boundingBox.set(vertices);
-				boundingBoxes[aniPointer] = boundingBox;
-
-				// TEXTURE FRAMES
-				i = 0;
-				TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
-				for (JsonValue frame : animationFrames.get("textureMap"))
-					textureRegions[i++] = new TextureRegion(new Texture(root.get("texture").asString()),
-							frame.getInt(0), frame.getInt(1), frame.getInt(2), frame.getInt(3));
-
-				animations[aniPointer] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
-
-				found.put(iS.getAnimation()[j], aniPointer);
-				iS.getAnimationIndex()[j] = aniPointer++;
+			if (found.containsKey(iS.getAnimation())) {
+				iS.setAnimationIndex(found.get(iS.getAnimation()));
+				continue;
 			}
+
+			JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation().toUpperCase());
+			if (animationFrames == null) {
+				System.err.println(iS.getAnimation() + " not found");
+				continue;
+			}
+
+			// BOUNDING BOX
+			PolygonShape boundingBox = new PolygonShape();
+			JsonValue bBox = animationFrames.get("boundingBox");
+			int i = 0;
+			float[] vertices = new float[bBox.size];
+			for (JsonValue v : bBox)
+				vertices[i++] = GameProperties.pixelToMeter(v.asFloat());
+			boundingBox.set(vertices);
+			boundingBoxes[aniPointer] = boundingBox;
+
+			// TEXTURE FRAMES
+			i = 0;
+			TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
+			for (JsonValue frame : animationFrames.get("textureMap"))
+				textureRegions[i++] = new TextureRegion(new Texture(root.get("texture").asString()),
+						frame.getInt(0), frame.getInt(1), frame.getInt(2), frame.getInt(3));
+
+			animations[aniPointer] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
+
+			found.put(iS.getAnimation(), aniPointer);
+			iS.setAnimationIndex(aniPointer++);
 		}
 
 		// STATUS
@@ -161,49 +157,52 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	public void setInteractionState(InteractionState state) {
 		setInteractionState(state, false);
-		// System.out.println(state.toString());
 	}
 
-	public void setInteractionState(InteractionState state, boolean force) {
-		if ((this.currentState == state) && !force) return;
+	public boolean setInteractionState(InteractionState state, boolean force) {
+		if ((this.currentState == state) && !force) return true;
 
-		this.currentState = state;
+		if(currentState != null)
+			System.out.println("try to set "+state.toString()+" @current "+currentState.toString());
+		
+		if(force || isAnimationFinished())
+			this.currentState = state;
 
 		// TODO Solve addFixture slowdown
-		if (!force) return;
-
-		setFixture(density, friction, restitution, sensor, boundingBoxes[aniDraw.peek()], false);
-		for (Sensor s : sensors)
-			addFiture(s.getFixtureDef()).setUserData(s);
+		if (force) {
+			setFixture(density, friction, restitution, sensor, boundingBoxes[aniDraw], false);
+			for (Sensor s : sensors)
+				addFiture(s.getFixtureDef()).setUserData(s);
+		}
+		
+		return true;
 	}
 
-	public void applyAnimation() {
-		aniDraw.clear();
-		for (int i : getInteractionState().getAnimationIndex())
-			aniDraw.add(i);
-		System.out.println("apply " + currentState.toString());
+	public boolean applyAnimation() {
+		aniDraw = getInteractionState().getAnimationIndex();
+		stateTime = 0;
+		
+		if(GameProperties.debugMode.equals(Debug.CONSOLE))
+			System.out.println(">>apply " + currentState.toString());
+		return true;
 	}
 
-	public boolean isAnimationRunning() {
-		return aniDraw.size() > 1 || !animations[aniDraw.peek()].isAnimationFinished(stateTime);
+	public boolean isAnimationFinished() {
+		if(currentState != null || currentState.isInterruptable())
+			return true;
+		
+		return animations[aniDraw].isAnimationFinished(stateTime);
 	}
-
+	
 	private float stateTime = 0;
 
 	@Override
-	public void draw(SpriteBatch batch) {
+	public void draw(SpriteBatch batch, float deltaTime) {
 		if (!visible) return;
 
-		stateTime += Gdx.graphics.getDeltaTime();
+		stateTime += deltaTime;
 
-		Animation ani = animations[aniDraw.peek()];
-		if (aniDraw.size() > 1 && ani.isAnimationFinished(stateTime)) {
-			aniDraw.poll();
-			stateTime = 0;
-		}
-		// ani = animations[aniDraw.peek()];
-
-		TextureRegion frame = new TextureRegion(ani.getKeyFrame(stateTime, true));
+		TextureRegion frame = new TextureRegion(animations[aniDraw].getKeyFrame(stateTime, true));
 
 		batch.setColor(1, 1, 1, getAlpha());
 		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
@@ -211,6 +210,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 				rotation, frame.getRegionX(), frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(),
 				flip, false);
 		batch.setColor(Color.WHITE);
+		
 	}
 
 	@Override

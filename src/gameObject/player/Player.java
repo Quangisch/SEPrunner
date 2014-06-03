@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import core.ingame.Camera;
 
-public class Player extends PlayerInteraction implements Runnable {
+public class Player extends PlayerCollision implements Runnable {
 
 	public Player(World world, Vector2 position) {
 		super(world, position);

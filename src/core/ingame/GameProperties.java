@@ -48,7 +48,7 @@ public abstract class GameProperties {
 			keyRun = {Keys.F, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT},
 			
 			keyJump = {Keys.SPACE, Keys.UP}, 
-			keyCrouch = {Keys.C, Keys.DOWN},
+			keyCrouch = {Keys.S, Keys.DOWN},
 			
 			keyAction = {Keys.E, Keys.ENTER}, //hide, dispose, grab - abhängig von den Umgebung
 			keyThrow = {Input.Buttons.LEFT},
