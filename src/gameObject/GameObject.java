@@ -156,24 +156,20 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		primaryFixture = setFixture(density, friction, restitution, sensor, boundingBoxes[defaultState.getAnimationIndex()],
 				false);
 
-		setInteractionState(defaultState, true);
+		setInteractionState(defaultState);
 	}
 
-	public void setInteractionState(InteractionState state) {
-		setInteractionState(state, false);
-	}
-
-	public boolean setInteractionState(InteractionState state, boolean force) {
+	public boolean setInteractionState(InteractionState state) {
 		if (this.currentState == state) return true;
 
 		if (currentState != null) System.out.println("try to set " + state.toString() + " @current " + currentState.toString());
 
 		if (isAnimationFinished()) this.currentState = state;
 
-		Vector2 v[] = new Vector2[boundingBoxes[aniDraw].getVertexCount()];
+		Vector2 v[] = new Vector2[boundingBoxes[currentState.getAnimationIndex()].getVertexCount()];
 		for (int i = 0; i < v.length; i++) {
 			v[i] = new Vector2();
-			boundingBoxes[aniDraw].getVertex(i, v[i]);
+			boundingBoxes[currentState.getAnimationIndex()].getVertex(i, v[i]);
 		}
 		((PolygonShape) primaryFixture.getShape()).set(v);
 
@@ -270,7 +266,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	public void removeSensor(Sensor sensor) {
 		if (sensor.getGameObject() == this) sensor.setGameObject(null);
-		if (sensors.remove(sensor)) setInteractionState(currentState, true);
+		if (sensors.remove(sensor)) /* TODO Remove Sensor Fixture */;
 	}
 
 	@Override

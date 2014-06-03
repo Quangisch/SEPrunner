@@ -77,9 +77,8 @@ public class Sensor implements Disposable {
 	protected void setShape(Shape.Type shapeType, float[] points) {
 		this.sensorShapeType = shapeType;
 		this.sensorPoints = points;
-
-		if (getGameObject() != null) //
-			getGameObject().setInteractionState(getGameObject().getInteractionState(), true);
+		
+		// TODO Fixture aktualisieren
 	}
 
 	/** FixtureDef for internal use
