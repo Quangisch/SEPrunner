@@ -68,8 +68,8 @@
 									},
 						"crouch_stand" :	{
 										"frameDuration":0.13,
-										"boundingBox" : [39.5, 35, 39.5, 117,
-														 90, 117, 90, 35],
+										"boundingBox" : [39.5, 35, 39.5, 80,
+														 90, 80, 90, 35],
 										"textureMap" : [
 														[450, 1050, 150, 150]
 														]

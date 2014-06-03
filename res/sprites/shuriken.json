@@ -5,9 +5,9 @@
 					},
 		"texture" : "res/sprites/shuriken.png",
 		"defaultState" : 0,
-		"animationen" : ["fly"],
+		"animationen" : ["hook_fly"],
 		"stateframes" :	{
-						"fly" :	{
+						"hook_fly" :	{
 										"frameDuration":0.05,
 										"boundingBox" : [0,0, 0,30, 30,30, 30, 0],
 										"textureMap" : [

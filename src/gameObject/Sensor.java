@@ -4,8 +4,9 @@ import misc.BodyFunctions;
 
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Disposable;
 
-public class Sensor {
+public class Sensor implements Disposable {
 
 	protected boolean active;
 	protected GameObject link;
@@ -17,27 +18,24 @@ public class Sensor {
 
 	public static final int HANDLE_FIRST = 75, HANDLE_SECOND = 50, HANDLE_LAST = 25;
 
-	/**
-	 * Create Sensor linked to the GameObject
+	/** Create Sensor linked to the GameObject
 	 * 
 	 * @param parent GameObject linked to
 	 * @param shapeType Type of Shape of Sensor
 	 * @param shapePoints Points to initianize Shape
-	 * @param eventData Data passed to Handler on collision
-	 */
+	 * @param eventData Data passed to Handler on collision */
 	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType) {
 		this(parent, shapeType, shapePoints, sensorType, HANDLE_SECOND);
 	}
 
-	/**
-	 * Create Sensor linked to the GameObject
+	/** Create Sensor linked to the GameObject
 	 * 
 	 * @param parent GameObject linked to
 	 * @param shapeType Type of Shape of Sensor
 	 * @param shapePoints Points to initianize Shape
 	 * @param eventData Data passed to Handler on collision
-	 * @param priority Determine on Sensor-Sensor collision which Sensor is activated
-	 */
+	 * @param priority Determine on Sensor-Sensor collision which Sensor is
+	 *            activated */
 	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType, int priority) {
 		active = true;
 		this.sensorType = sensorType;
@@ -46,34 +44,26 @@ public class Sensor {
 		setGameObject(parent);
 	}
 
-	/**
-	 * @return true if collision is handled
-	 */
+	/** @return true if collision is handled */
 	public boolean isActive() {
 		return active;
 	}
 
-	/**
-	 * Set if collision is handled
+	/** Set if collision is handled
 	 * 
-	 * @param active true, if collision raises event
-	 */
+	 * @param active true, if collision raises event */
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
-	/**
-	 * @return the GameObject linked to
-	 */
+	/** @return the GameObject linked to */
 	public GameObject getGameObject() {
 		return link;
 	}
 
-	/**
-	 * Set the GameObject linked to
+	/** Set the GameObject linked to
 	 * 
-	 * @param link the GameObject
-	 */
+	 * @param link the GameObject */
 	protected void setGameObject(GameObject link) {
 		if (this.link == link) return;
 		if (this.link != null) this.link.removeSensor(this);
@@ -81,11 +71,9 @@ public class Sensor {
 		if (this.link != null) this.link.addSensor(this);
 	}
 
-	/**
-	 * Set the shape of Sensor
+	/** Set the shape of Sensor
 	 * 
-	 * @param sensorShapeType Shape of Sensor
-	 */
+	 * @param sensorShapeType Shape of Sensor */
 	protected void setShape(Shape.Type shapeType, float[] points) {
 		this.sensorShapeType = shapeType;
 		this.sensorPoints = points;
@@ -94,11 +82,9 @@ public class Sensor {
 			getGameObject().setInteractionState(getGameObject().getInteractionState(), true);
 	}
 
-	/**
-	 * FixtureDef for internal use
+	/** FixtureDef for internal use
 	 * 
-	 * @return FixtureDef
-	 */
+	 * @return FixtureDef */
 	public FixtureDef getFixtureDef() {
 		FixtureDef fixture = new FixtureDef();
 		fixture.isSensor = true;
@@ -106,36 +92,34 @@ public class Sensor {
 		return fixture;
 	}
 
-	/**
-	 * custom event data
+	/** custom event data
 	 * 
-	 * @return event data
-	 */
+	 * @return event data */
 	public int getSensorType() {
 		return sensorType;
 	}
 
-	/**
-	 * Set custom event data
+	/** Set custom event data
 	 * 
-	 * @param eventData the event data
-	 */
+	 * @param eventData the event data */
 	public void setSensorType(int sensorType) {
 		this.sensorType = sensorType;
 	}
 
-	/**
-	 * @return the priority
-	 */
+	/** @return the priority */
 	public int getPriority() {
 		return priority;
 	}
 
-	/**
-	 * @param priority the priority to set
-	 */
+	/** @param priority the priority to set */
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	@Override
+	public void dispose() {
+		link = null;
+		sensorPoints = null;
 	}
 
 }
