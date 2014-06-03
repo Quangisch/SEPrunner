@@ -40,6 +40,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	private float friction;
 	private float restitution;
 	private boolean sensor;
+	private Fixture primaryFixture;
 
 	private List<Sensor> sensors;
 
@@ -132,7 +133,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		}
 
 		// STATUS
-		defaultState = InteractionState.values()[root.getInt("defaultState")];
+		currentState = defaultState = InteractionState.values()[root.getInt("defaultState")];
 
 		// BODYDEF
 		density = root.get("bodyDef").getFloat("density");
@@ -152,8 +153,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 			break;
 		}
 
-		// SENSORS
-		// TODO Add Sensors
+		primaryFixture = setFixture(density, friction, restitution, sensor, boundingBoxes[defaultState.getAnimationIndex()],
+				false);
 
 		setInteractionState(defaultState, true);
 	}
@@ -163,18 +164,18 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	public boolean setInteractionState(InteractionState state, boolean force) {
-		if ((this.currentState == state) && !force) return true;
+		if (this.currentState == state) return true;
 
 		if (currentState != null) System.out.println("try to set " + state.toString() + " @current " + currentState.toString());
 
-		if (force || isAnimationFinished()) this.currentState = state;
+		if (isAnimationFinished()) this.currentState = state;
 
-		// TODO Solve addFixture slowdown
-		if (force) {
-			setFixture(density, friction, restitution, sensor, boundingBoxes[aniDraw], false);
-			for (Sensor s : sensors)
-				addFiture(s.getFixtureDef()).setUserData(s);
+		Vector2 v[] = new Vector2[boundingBoxes[aniDraw].getVertexCount()];
+		for (int i = 0; i < v.length; i++) {
+			v[i] = new Vector2();
+			boundingBoxes[aniDraw].getVertex(i, v[i]);
 		}
+		((PolygonShape) primaryFixture.getShape()).set(v);
 
 		return true;
 	}
@@ -264,7 +265,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		sensors.add(sensor);
 		sensor.setGameObject(this);
 
-		setInteractionState(currentState, true);
+		addFiture(sensor.getFixtureDef()).setUserData(sensor);
 	}
 
 	public void removeSensor(Sensor sensor) {
@@ -394,7 +395,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		animations = null;
 
-		for (PolygonShape b : boundingBoxes)
+		for (Shape b : boundingBoxes)
 			if (b != null) b.dispose();
 		boundingBoxes = null;
 
