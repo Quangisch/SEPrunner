@@ -14,8 +14,9 @@
 	"shurikans" : 10,
 	"objects" :	[
 					{
-						"ID" : "goku",
-						"position" : [30, 155],
+						"ID" : "player",
+						"json" : "ninja_full",
+						"position" : [200, 150],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {

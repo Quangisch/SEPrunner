@@ -2,16 +2,18 @@ package gameWorld;
 
 import gameObject.GameObject;
 import gameObject.IGameObjectTypes;
+import gameObject.enemy.Enemy;
 import gameObject.player.Player;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+
+import misc.StringFunctions;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -53,7 +55,6 @@ public class Map implements DrawableMap, Runnable {
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
 		runnables = new ArrayList<Runnable>();
-
 	}
 
 	public void run() {
@@ -61,7 +62,7 @@ public class Map implements DrawableMap, Runnable {
 			for (Runnable r : runnables)
 				r.run();
 		} catch (ConcurrentModificationException e) {
-			//			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -71,12 +72,12 @@ public class Map implements DrawableMap, Runnable {
 		debugMatrix = new Matrix4(Camera.getInstance().combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
-		//		batch.disableBlending();
-		//		for (Background b : backgrounds) {
-		//			batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
-		//			b.scrollFactorY * Camera.getInstance().position.y);
-		//		}
-		// 		batch.enableBlending();
+		// batch.disableBlending();
+		// for (Background b : backgrounds) {
+		//		batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
+		//		b.scrollFactorY * Camera.getInstance().position.y);
+		// }
+		// batch.enableBlending();
 
 		if (mapTexture != null) batch.draw(mapTexture, 0, 0);
 
@@ -91,7 +92,7 @@ public class Map implements DrawableMap, Runnable {
 		for (GameObject o : objects)
 			o.draw(batch, deltaTime);
 
-		//		if (player != null) player.draw(batch);
+		// if (player != null) player.draw(batch);
 
 		if (debugRender != null && GameProperties.debugMode.equals(GameProperties.Debug.BOXRENDERER))
 			debugRender.render(world, debugMatrix);
@@ -104,7 +105,6 @@ public class Map implements DrawableMap, Runnable {
 		try {
 			root = new JsonReader().parse(new FileReader(json));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
@@ -132,14 +132,60 @@ public class Map implements DrawableMap, Runnable {
 
 		ground.setGameObjectType(IGameObjectTypes.GameObjectTypes.GROUND);
 
+		if (root.hasChild("objects")) //
+			for (JsonValue o : root.get("objects"))
+				loadMapObject(o);
+
 		// TODO cleanup
 		// init player
-		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
-		player.init("ninja_full");
-		objects.add(player);
+		//		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
+		//		player.init("ninja_full");
+		//		objects.add(player);
 
-		// init gameObjects
 		world.setContactListener(new CollisionHandler());
+	}
+
+	private void loadMapObject(JsonValue root) {
+		Vector2 pos = GameProperties.pixelToMeter(new Vector2(root.get("position").getFloat(0), root.get("position")
+				.getFloat(1)));
+
+		GameObject obj = null;
+		switch (StringFunctions.getMostEqualIndexIgnoreCase(root.getString("ID"), new String[] //
+				{ "Player", "Enemy" })) {
+		case 0:
+			obj = new Player(world, pos);
+			if (root.getBoolean("isPlayer", false)) player = (Player) obj;
+			break;
+		case 1:
+			obj = new Enemy(world, pos);
+			break;
+		case -1:
+		default:
+			return;
+		}
+
+		obj.init(root.getString("json"));
+		obj.setScale(root.getFloat("scale", 1f));
+		obj.setFlip(root.getBoolean("flip", false));
+
+		/*
+		AI ai = null;
+		switch (StringFunctions.getMostEqualIndexIgnoreCase(root.get("AI").getString("ID"), new String[] //
+				{ "SimplePatrolAI" })) {
+		case 0:
+			ai = new SimplePatrolAI();
+			break;
+		case 1:
+			break;
+		case -1:
+		default:
+			return;
+		}
+		ai.init(root.get("AI").get("Params"));
+		obj.setAI(ai);
+		*/
+
+		objects.add(obj);
 	}
 
 	public void initMap(int level) {
