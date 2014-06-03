@@ -122,7 +122,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 			i = 0;
 			TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
 			for (JsonValue frame : animationFrames.get("textureMap"))
-				textureRegions[i++] = new TextureRegion(new Texture(root.get("texture").asString()), frame.getInt(0),
+				textureRegions[i++] = new TextureRegion(getTexture(root.get("texture").asString()), frame.getInt(0),
 						frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
 			animations[aniPointer] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
@@ -157,6 +157,13 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 				false);
 
 		setInteractionState(defaultState);
+	}
+
+	Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
+
+	private Texture getTexture(String path) {
+		if (!loadingTextures.containsKey(path)) loadingTextures.put(path, new Texture(path));
+		return loadingTextures.get(path);
 	}
 
 	public boolean setInteractionState(InteractionState state) {
