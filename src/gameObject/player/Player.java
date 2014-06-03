@@ -68,7 +68,6 @@ public class Player extends GameObject implements Runnable, Detectable {
 
 		//		apply impulse
 		body.applyLinearImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f), body.getWorldCenter(), true);
-
 	}
 
 	@Override

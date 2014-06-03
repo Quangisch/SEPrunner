@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;//
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
@@ -22,6 +23,10 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.ingame.Camera;
 import core.ingame.GameProperties;
 
+//NILS
+import gameObject.enemy.Enemy;
+//NILS
+
 public class Map implements DrawableMap {
 
 	protected Texture mapTexture;
@@ -29,6 +34,9 @@ public class Map implements DrawableMap {
 
 	protected List<GameObject> objects;
 	protected Player player;
+	//NILS
+	protected Enemy enemy;
+	//NILS
 
 	private Box2DDebugRenderer debugRender;
 	private Matrix4 debugMatrix;
@@ -49,23 +57,31 @@ public class Map implements DrawableMap {
 
 	}
 
+	Texture backTXT = new Texture(Gdx.files.internal("res/map/rioNight.png"));
 	public void draw(SpriteBatch batch) {
 
 		player.run();
 		debugMatrix = new Matrix4(Camera.getInstance().combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
-		//		batch.disableBlending();
+		batch.disableBlending();
 		//		for (Background b : backgrounds) {
 		//			batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
 		//			b.scrollFactorY * Camera.getInstance().position.y);
 		//		}
-		// 		batch.enableBlending();
+		batch.draw(backTXT, 150, 150, 4500, 927);//3000, 618);
+		batch.enableBlending();
 
 		if (mapTexture != null) batch.draw(mapTexture, 0, 0);
 
 		for (GameObject o : objects)
 			o.draw(batch);
+		
+		//aufrufen der ordner KI Methode und festlegen zwischen welchen Punkten ordner patrouliiert
+		//muss vor dem malen von player geschehen, da das sichtfeld sonst den player überdeckt
+		if (enemy != null) {
+			enemy.moveEnemy(enemy, player, batch, 930, 300, 1200, 300);
+		}
 
 		if (player != null) player.draw(batch);
 
@@ -111,6 +127,10 @@ public class Map implements DrawableMap {
 		// init player
 		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
 		player.init("ninja");
+		
+		//ordner erzeugen und startposition festlegen
+		enemy = new Enemy(world, new Vector2(GameProperties.pixelToMeter(1000), GameProperties.pixelToMeter(300)));
+		enemy.init("ordner");
 
 		// init gameObjects
 		world.setContactListener(new CollisionHandler());
@@ -137,6 +157,12 @@ public class Map implements DrawableMap {
 	public Player getPlayer() {
 		return player;
 	}
+	
+	//NILS
+	public Enemy getEnemy() {
+		return enemy;
+	}
+	//NILS
 
 	public void step(float timeStep, int velocityIterations, int positionIterations) {
 		world.step(timeStep, velocityIterations, positionIterations);
