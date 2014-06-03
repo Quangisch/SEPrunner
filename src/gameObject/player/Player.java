@@ -73,6 +73,8 @@ public class Player extends PlayerCollision implements Runnable {
 //		tweak gravity
 		if (baseForce.len() != 0)
 			body.setGravityScale(0.7f);
+		else if(getInteractionState().equals(InteractionState.HOOK_FLY))
+			body.setGravityScale(0);
 		else
 			body.setGravityScale(1);
 		

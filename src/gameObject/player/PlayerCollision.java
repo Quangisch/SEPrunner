@@ -15,6 +15,14 @@ abstract class PlayerCollision extends PlayerInteraction {
 	
 	@Override
 	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
+		if(mySensor == null && other.getGameObjectType() == GameObjectTypes.GROUND 
+				&& isHooking()) {
+			System.out.println("resetHook");
+			setGrounded(true);
+			resetHook();
+			return true;
+		}
+			
 		if (mySensor != null) {
 			if (mySensor.getSensorType() == SensorTypes.FOOT && other.getGameObjectType() == GameObjectTypes.GROUND) {
 				if(isJumping())

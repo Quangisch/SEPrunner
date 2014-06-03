@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
+import core.ingame.GameProperties.Debug;
 
 public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates {
 
@@ -53,7 +54,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	protected int aniDraw;
 
 	private InteractionState defaultState;
-	private InteractionState currentState;
+	protected InteractionState currentState;
 
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
@@ -163,9 +164,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public boolean setInteractionState(InteractionState state, boolean force) {
 		if ((this.currentState == state) && !force) return true;
 
-		if(currentState != null)
-			System.out.println("try to set "+state.toString()+" @current "+currentState.toString());
-		
 		if(force || isAnimationFinished())
 			this.currentState = state;
 
@@ -183,8 +181,9 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		aniDraw = getInteractionState().getAnimationIndex();
 		stateTime = 0;
 		
-//		if(GameProperties.debugMode.equals(Debug.CONSOLE))
+		if(GameProperties.debugMode.equals(Debug.CONSOLE))
 			System.out.println(">>apply " + currentState.toString());
+		
 		return true;
 	}
 
@@ -249,8 +248,10 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	@Override
 	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
 			boolean disposeShape) {
-		for (Fixture f : body.getFixtureList())
+		
+		for (Fixture f : body.getFixtureList()) {
 			body.destroyFixture(f);
+		}
 		return addFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 
@@ -383,4 +384,5 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		// TODO Scale Body
 		this.scale = scale;
 	}
+	
 }

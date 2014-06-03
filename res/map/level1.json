@@ -1,19 +1,19 @@
 {
-	"mapTexture" : {
-		"1": {
-					"position" : [0, 0], 
-					"texture" : "res/map/level1_1.png"
-				},
-		"2": {
-					"position" : [4260, 0], 
-					"texture" : "res/map/level1_2.png"
-				},
-		"3": {
-					"position" : [7100, 0], 
-					"texture" : "res/map/level1_3.png"
-				},
-			
-			}, 
+
+	"mapTexture" : [
+						{
+							"position" : [0, 0], 
+							"texture" : "res/map/level1_1.png"
+						},
+						{
+							"position" : [4260, 0], 
+							"texture" : "res/map/level1_2.png"
+						},
+						{
+							"position" : [7100, 0], 
+							"texture" : "res/map/level1_3.png"
+						},
+					],
 	"gravity" : [0, -20],
 	"ground" :	[
 

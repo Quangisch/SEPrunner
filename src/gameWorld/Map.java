@@ -15,7 +15,6 @@ import java.util.List;
 
 import misc.StringFunctions;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
@@ -121,7 +120,7 @@ public class Map implements DrawableMap, Runnable {
 		int part = 0;
 		for(JsonValue mT : mapTextureData) {
 			JsonValue position = mT.get("position");
-			mapTextures[part++] = new MapTexture(position.getInt(0), position.getInt(1), mT.getString("texture"));
+			mapTextures[part++] = new MapTexture(position.getFloat(0), position.getFloat(1), mT.getString("texture"));
 		}
 
 		// GROUND
@@ -242,10 +241,10 @@ public class Map implements DrawableMap, Runnable {
 	}
 	
 	private class MapTexture {
-		private final int x, y;
+		private final float x, y;
 		private final Texture texture;
 		
-		private MapTexture(int x, int y, String texturePath) {
+		private MapTexture(float x, float y, String texturePath) {
 			this.x = x;
 			this.y = y;
 			this.texture = new Texture(texturePath);
