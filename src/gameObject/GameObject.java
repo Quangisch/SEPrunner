@@ -48,6 +48,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	private volatile boolean grounded = true;
 	protected int layer = 0;
 	protected float alpha = 1;
+	private float scale = 1;
 
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
@@ -207,9 +208,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		batch.setColor(1, 1, 1, getAlpha());
 		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
-				frame.getRegionWidth(), frame.getRegionHeight(), 1, 1, /* scale */
-				rotation, frame.getRegionX(), frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(),
-				flip, false);
+				frame.getRegionWidth(), frame.getRegionHeight(), scale, scale, rotation, frame.getRegionX(),
+				frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(), flip, false);
 		batch.setColor(Color.WHITE);
 	}
 
@@ -374,5 +374,14 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	public InteractionState getInteractionState() {
 		return currentState;
+	}
+
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		// TODO Scale Body
+		this.scale = scale;
 	}
 }
