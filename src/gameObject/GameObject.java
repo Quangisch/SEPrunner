@@ -21,12 +21,14 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates {
+public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates, Runnable,
+		Disposable {
 
 	protected String name;
 	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
@@ -119,8 +121,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 			i = 0;
 			TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
 			for (JsonValue frame : animationFrames.get("textureMap"))
-				textureRegions[i++] = new TextureRegion(new Texture(root.get("texture").asString()),
-						frame.getInt(0), frame.getInt(1), frame.getInt(2), frame.getInt(3));
+				textureRegions[i++] = new TextureRegion(new Texture(root.get("texture").asString()), frame.getInt(0),
+						frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
 			animations[aniPointer] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
 			animations[aniPointer].setPlayMode(iS.getPlayMode());
@@ -163,11 +165,9 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public boolean setInteractionState(InteractionState state, boolean force) {
 		if ((this.currentState == state) && !force) return true;
 
-		if(currentState != null)
-			System.out.println("try to set "+state.toString()+" @current "+currentState.toString());
-		
-		if(force || isAnimationFinished())
-			this.currentState = state;
+		if (currentState != null) System.out.println("try to set " + state.toString() + " @current " + currentState.toString());
+
+		if (force || isAnimationFinished()) this.currentState = state;
 
 		// TODO Solve addFixture slowdown
 		if (force) {
@@ -175,25 +175,24 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 			for (Sensor s : sensors)
 				addFiture(s.getFixtureDef()).setUserData(s);
 		}
-		
+
 		return true;
 	}
 
 	public boolean applyAnimation() {
 		aniDraw = getInteractionState().getAnimationIndex();
 		stateTime = 0;
-		
-//		if(GameProperties.debugMode.equals(Debug.CONSOLE))
-			System.out.println(">>apply " + currentState.toString());
+
+		//		if(GameProperties.debugMode.equals(Debug.CONSOLE))
+		System.out.println(">>apply " + currentState.toString());
 		return true;
 	}
 
 	public boolean isAnimationFinished() {
-		if(currentState.isInterruptable() || currentState == null)
-			return true;
+		if (currentState.isInterruptable() || currentState == null) return true;
 		return animations[aniDraw].isAnimationFinished(stateTime);
 	}
-	
+
 	private float stateTime = 0;
 
 	@Override
@@ -206,10 +205,10 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		batch.setColor(1, 1, 1, getAlpha());
 		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
-				frame.getRegionWidth(), frame.getRegionHeight(), scale, scale, rotation, frame.getRegionX(),
-				frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(), flip, false);
+				frame.getRegionWidth(), frame.getRegionHeight(), scale, scale, rotation, frame.getRegionX(), frame.getRegionY(),
+				frame.getRegionWidth(), frame.getRegionHeight(), flip, false);
 		batch.setColor(Color.WHITE);
-		
+
 	}
 
 	@Override
@@ -229,8 +228,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	@Override
-	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
-			boolean disposeShape) {
+	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape) {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.density = density;
 		fixtureDef.isSensor = sensor;
@@ -247,15 +245,14 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	@Override
-	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
-			boolean disposeShape) {
+	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape) {
 		for (Fixture f : body.getFixtureList())
 			body.destroyFixture(f);
 		return addFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 
-	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution, boolean sensor,
-			Shape shape, boolean disposeShape) {
+	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution, boolean sensor, Shape shape,
+			boolean disposeShape) {
 
 		body.setFixedRotation(true);
 		setFixture(density, friction, restitution, sensor, shape, disposeShape);
@@ -313,30 +310,22 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		this.gameObjectType = gameObjectType;
 	}
 
-	/**
-	 * @return the drawing layer
-	 */
+	/** @return the drawing layer */
 	public int getLayer() {
 		return layer;
 	}
 
-	/**
-	 * @param layer set the drawing layer
-	 */
+	/** @param layer set the drawing layer */
 	protected void setLayer(int layer) {
 		this.layer = layer;
 	}
 
-	/**
-	 * @return the alpha
-	 */
+	/** @return the alpha */
 	protected float getAlpha() {
 		return alpha;
 	}
 
-	/**
-	 * @param alpha the alpha to set
-	 */
+	/** @param alpha the alpha to set */
 	protected void setAlpha(float alpha) {
 		this.alpha = Math.abs(alpha) % 1;
 		// this.alpha = (100 + alpha) % 1;
@@ -362,10 +351,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		return new Vector2(getX(), getY());
 	}
 
-	public Body getBody() {
-		return body;
-	}
-
 	@Override
 	public Vector2 getLocalCenterInWorld() {
 		return body.getWorldPoint(body.getLocalCenter());
@@ -382,5 +367,44 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public void setScale(float scale) {
 		// TODO Scale Body
 		this.scale = scale;
+	}
+
+	// DISPOSABLE
+
+	private boolean disposeNextStep = false;
+	private boolean disposed = false;
+
+	public void dispose() {
+		disposeNextStep = true;
+	}
+
+	public boolean willDisposed() {
+		return disposeNextStep;
+	}
+
+	public void disposeUnsafe() {
+		if (disposed) return;
+		disposed = true;
+
+		body.getWorld().destroyBody(body);
+
+		for (Sensor s : sensors)
+			if (s != null) s.dispose();
+		sensors.clear();
+
+		animations = null;
+
+		for (PolygonShape b : boundingBoxes)
+			if (b != null) b.dispose();
+		boundingBoxes = null;
+
+		defaultState = currentState = null;
+	}
+
+	// END DISPOSABLE
+
+	@Override
+	public void run() {
+		if (disposed) return;
 	}
 }

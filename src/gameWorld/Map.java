@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 import java.util.List;
 
 import misc.StringFunctions;
@@ -36,8 +37,6 @@ public class Map implements DrawableMap, Runnable {
 	protected List<GameObject> objects;
 	protected Player player;
 
-	private List<Runnable> runnables;
-
 	private Box2DDebugRenderer debugRender;
 	private Matrix4 debugMatrix;
 
@@ -54,14 +53,22 @@ public class Map implements DrawableMap, Runnable {
 	private Map() {
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
-		runnables = new ArrayList<Runnable>();
 	}
 
 	public void run() {
+		for (Iterator<GameObject> i = objects.iterator(); i.hasNext();) {
+			GameObject g = (GameObject) i.next();
+			if (g.willDisposed()) {
+				g.disposeUnsafe();
+				i.remove();
+			}
+		}
+
 		try {
-			for (Runnable r : runnables)
+			for (Runnable r : objects)
 				r.run();
 		} catch (ConcurrentModificationException e) {
+			// TODO
 			// e.printStackTrace();
 		}
 	}
@@ -136,18 +143,12 @@ public class Map implements DrawableMap, Runnable {
 			for (JsonValue o : root.get("objects"))
 				loadMapObject(o);
 
-		// TODO cleanup
-		// init player
-		//		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
-		//		player.init("ninja_full");
-		//		objects.add(player);
-
 		world.setContactListener(new CollisionHandler());
 	}
 
 	private void loadMapObject(JsonValue root) {
-		Vector2 pos = GameProperties.pixelToMeter(new Vector2(root.get("position").getFloat(0), root.get("position")
-				.getFloat(1)));
+		Vector2 pos = GameProperties
+				.pixelToMeter(new Vector2(root.get("position").getFloat(0), root.get("position").getFloat(1)));
 
 		GameObject obj = null;
 		switch (StringFunctions.getMostEqualIndexIgnoreCase(root.getString("ID"), new String[] //
@@ -214,19 +215,8 @@ public class Map implements DrawableMap, Runnable {
 		world.step(timeStep, velocityIterations, positionIterations);
 	}
 
-	public boolean addRunnable(Runnable r) {
-		return runnables.add(r);
-	}
-
-	public boolean removeRunnable(Runnable r) {
-		return runnables.remove(r);
-	}
-
 	public boolean addGameObject(GameObject object) {
 		return objects.add(object);
 	}
 
-	public boolean removeGameObject(GameObject object) {
-		return objects.remove(object);
-	}
 }

@@ -19,15 +19,17 @@ public class CollisionHandler implements ContactListener {
 		if (!handled && GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
 			System.err.println("Unhandled Collision (" + contact.toString() + ")");
 	}
-	
+
 	private boolean handleCollision(Contact contact, boolean start) {
 		Fixture fixA = contact.getFixtureA();
 		Fixture fixB = contact.getFixtureB();
 
-		GameObject objectA = (fixA.getBody().getUserData() instanceof GameObject) ? (GameObject) fixA.getBody()
-				.getUserData() : null;
-		GameObject objectB = (fixB.getBody().getUserData() instanceof GameObject) ? (GameObject) fixB.getBody()
-				.getUserData() : null;
+		if (fixA == null || fixB == null || fixA.getBody() == null || fixB.getBody() == null) return false;
+
+		GameObject objectA = (fixA.getBody().getUserData() instanceof GameObject) ? (GameObject) fixA.getBody().getUserData()
+				: null;
+		GameObject objectB = (fixB.getBody().getUserData() instanceof GameObject) ? (GameObject) fixB.getBody().getUserData()
+				: null;
 		Sensor sensorA = (fixA.getUserData() instanceof Sensor) ? (Sensor) fixA.getUserData() : null;
 		Sensor sensorB = (fixB.getUserData() instanceof Sensor) ? (Sensor) fixB.getUserData() : null;
 
@@ -47,24 +49,20 @@ public class CollisionHandler implements ContactListener {
 				&& (objectB.handleCollision(start, null, objectA, null)));
 
 		return handled;
-		
 	}
 
 	@Override
 	public void endContact(Contact contact) {
 		handleCollision(contact, false);
-
 	}
 
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 		// TODO Auto-generated method stub
-
 	}
 }
