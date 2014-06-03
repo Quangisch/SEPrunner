@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 
 import core.ingame.Camera;
+import core.ingame.GameProperties;
+import core.ingame.GameProperties.Debug;
 
 public class Player extends PlayerCollision implements Runnable {
 
@@ -22,6 +24,9 @@ public class Player extends PlayerCollision implements Runnable {
 	}
 	
 	public void run() {
+		if(GameProperties.debugMode.equals(Debug.CAMERA))
+			return;
+		
 		processInput();
 		processStates();
 	}

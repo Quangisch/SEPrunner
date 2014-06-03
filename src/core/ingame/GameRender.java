@@ -45,8 +45,10 @@ public class GameRender implements Screen, ApplicationListener {
 	public void dispose() {
 		batch.dispose();
 		ResourceManager.getInstance().dispose();
+		
 		for(Disposable d : geometrics)
 			d.dispose();
+		
 	}
 	
 	public boolean addGeometricObject(GeometricObject geo) {

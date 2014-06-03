@@ -25,18 +25,21 @@ public abstract class GameProperties {
 		OFF,
 		BOXRENDERER,
 		GEOMETRIC,
-		CONSOLE;
+		CONSOLE,
+		CAMERA;
 		
 		public static Debug toNext() {
 			switch(debugMode) {
-			case BOXRENDERER: 
-				return debugMode = Debug.GEOMETRIC;
-			case CONSOLE: 	
-				return debugMode = Debug.OFF;
-			case GEOMETRIC: 	
-				return debugMode = Debug.CONSOLE;
 			case OFF: 			
 				return debugMode = Debug.BOXRENDERER;
+			case BOXRENDERER: 
+				return debugMode = Debug.GEOMETRIC;
+			case GEOMETRIC: 	
+				return debugMode = Debug.CONSOLE;
+			case CONSOLE: 	
+				return debugMode = Debug.CAMERA;
+			case CAMERA:
+				return debugMode = Debug.OFF;
 			default:			
 				return debugMode = Debug.OFF;	
 			}

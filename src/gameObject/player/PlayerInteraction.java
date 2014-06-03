@@ -218,7 +218,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		return true;
 	}
 	
-	private final int HOOK_RADIUS = 300;
+	private final int HOOK_RADIUS = 400;
 	
 	private boolean processHook() {
 		Vector2 endPoint = clickPoint.cpy();
@@ -235,8 +235,8 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	}
 	
 	private void hook(Vector2 target) {
-		nextState = InteractionState.HOOK;
-		
+//		nextState = InteractionState.HOOK;
+		body.setTransform(target, body.getAngle());
 		this.target = target;
 	}
 	
