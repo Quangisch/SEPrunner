@@ -52,7 +52,7 @@
 														]
 									},
 						"crouch_down" :	{
-										"frameDuration":0.07,
+										"frameDuration":0.03,
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],
 										"textureMap" : [

@@ -125,26 +125,28 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		if(!action)
 			processRun();
 		
-		if(interruptedState != null && nextState == null && !interruptedState.equals(getInteractionState())) {
-			System.out.println("currentState@"+getInteractionState()+" interruptedState@"+interruptedState.toString());
-			setInteractionState(interruptedState);
-			boolean apply = applyAnimation();
-			
-			if(apply)
-				interruptedState = null;
-			
-		} else if(interruptedState == null && nextState != null && !nextState.equals(getInteractionState())) {
-			
-			System.out.println("currentState@"+getInteractionState()+" nextState@"+nextState.toString());
-			setInteractionState(nextState);
-			boolean apply = applyAnimation();
-			
-			if(apply)
-				nextState = null;	
-		} else {
-			interruptedState = nextState = null;
+		if(interruptedState != null && isAnimationFinished()) {
+			nextState = interruptedState;
+			interruptedState = null;
 		}
 		
+		applyState(nextState);
+		
+	}
+	
+	private void applyState(InteractionState state) {
+		if(nextState == null)
+			return;
+		
+		if(!nextState.equals(getInteractionState())) {
+			System.out.println("currentState@"+getInteractionState()+" nextState@"+nextState.toString());
+			setInteractionState(nextState);
+			
+			if(applyAnimation())
+				nextState = null;
+		} else
+			nextState = null;
+			
 	}
 
 	private final int TAP_TIMER_LIMIT_HIGH = 10,
@@ -205,8 +207,10 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	private boolean processThrow() {
 		if(shuriken <= 0)
 			return false;
+	
 		interruptedState = getInteractionState();
-		nextState = InteractionState.THROW;
+		applyState(nextState = InteractionState.THROW);
+		
 //		shuriken--;
 		new Shuriken(this, clickPoint.sub(startPoint));
 		actionTimer = 0;

@@ -25,7 +25,6 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
-import core.ingame.GameProperties.Debug;
 
 public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates {
 
@@ -124,6 +123,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 						frame.getInt(0), frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
 			animations[aniPointer] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
+			animations[aniPointer].setPlayMode(iS.getPlayMode());
 
 			found.put(iS.getAnimation(), aniPointer);
 			iS.setAnimationIndex(aniPointer++);
@@ -183,15 +183,14 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		aniDraw = getInteractionState().getAnimationIndex();
 		stateTime = 0;
 		
-		if(GameProperties.debugMode.equals(Debug.CONSOLE))
+//		if(GameProperties.debugMode.equals(Debug.CONSOLE))
 			System.out.println(">>apply " + currentState.toString());
 		return true;
 	}
 
 	public boolean isAnimationFinished() {
-		if(currentState != null || currentState.isInterruptable())
+		if(currentState.isInterruptable() || currentState == null)
 			return true;
-		
 		return animations[aniDraw].isAnimationFinished(stateTime);
 	}
 	
@@ -203,7 +202,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		stateTime += deltaTime;
 
-		TextureRegion frame = new TextureRegion(animations[aniDraw].getKeyFrame(stateTime, true));
+		TextureRegion frame = new TextureRegion(animations[aniDraw].getKeyFrame(stateTime));
 
 		batch.setColor(1, 1, 1, getAlpha());
 		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
