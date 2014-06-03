@@ -10,8 +10,8 @@
 	"shurikans" : 10,
 	"objects" :	[
 					{
-						"ID" : "name",
-						<"json" : "file",>
+						"ID" : "class",
+						"json" : "name", // JSON NAME
 						"position" : [0, 0],
 						"scale" : 1.0,
 						"flip" : false
