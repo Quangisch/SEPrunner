@@ -19,8 +19,7 @@ import core.ingame.IInputHandler;
 import core.ingame.InputHandler.Click;
 import core.ingame.KeyMap.ActionKey;
 
-public abstract class ObjectInteraction extends GameObject implements
-		Detectable, RayCastCallback {
+public abstract class ObjectInteraction extends GameObject implements Detectable, RayCastCallback {
 
 	private Enemy enemyGrab;
 	private int shuriken = 10;
@@ -37,6 +36,12 @@ public abstract class ObjectInteraction extends GameObject implements
 	protected ObjectInteraction(World world, Vector2 position) {
 		super(world, position);
 //		keyPressed = new HashSet<Integer>();
+	}
+	
+	public void run() {
+		super.run();
+		processInput();
+		processStates();
 	}
 	
 	protected void processInput() {
@@ -145,6 +150,53 @@ public abstract class ObjectInteraction extends GameObject implements
 		applyState(nextState);
 
 	}
+	
+protected void processStates() {
+		
+		Vector2 baseForce;
+		switch (getInteractionState()) {
+		// case STAND: case CROUCH_STAND: case THROW: case HIDE: case GRAB: 
+		// case GRAB_DISPOSE: case STUNNED: case HOOK_START: case HOOK_FLY:
+		//	break;
+		case WALK:
+			baseForce = new Vector2(1, 0);
+			break;
+		case RUN:
+			baseForce = new Vector2(1.7f, 0);
+			break;
+		case CROUCH_SNEAK:
+			baseForce = new Vector2(0.7f, 0);
+			break;
+		case GRAB_PULL:
+			baseForce = new Vector2(0.6f, 0);
+			break;
+		case JUMP:
+			baseForce = new Vector2(0, 20);
+			break;
+		case JUMP_MOVE:
+			baseForce = new Vector2(1, 20);
+			break;
+		default:
+			baseForce = new Vector2(0, 0);
+			break;
+		}
+
+		if (!isGrounded()) baseForce.y = 0;
+
+		if (isFlipped()) baseForce.x *= -1;
+
+		// tweak gravity
+		if (baseForce.len() != 0)
+			body.setGravityScale(0.7f);
+		else if(isHooking())
+			body.setGravityScale(0);
+		else
+			body.setGravityScale(1);
+
+		// apply impulse
+		body.applyLinearImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f), body.getWorldCenter(), true);
+	}
+
 
 	private void applyState(InteractionState state) {
 		if (nextState == null)

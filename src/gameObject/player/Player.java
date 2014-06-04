@@ -28,59 +28,10 @@ public class Player extends PlayerCollision {
 	public void run() {
 		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
-		
-//		System.out.println("isGrounded    "+isGrounded()+" @"+getGrounded());
-//		System.out.println("isBodyBlocked "+isBodyBlocked()+" @"+getBodyBlocked());
-		processInput();
-		processStates();
+		super.run();
 	}
 
-	private void processStates() {
-		
-		Vector2 baseForce;
-		switch (getInteractionState()) {
-		// case STAND: case CROUCH_STAND: case THROW: case HIDE: case GRAB: 
-		// case GRAB_DISPOSE: case STUNNED: case HOOK_START: case HOOK_FLY:
-		//	break;
-		case WALK:
-			baseForce = new Vector2(1, 0);
-			break;
-		case RUN:
-			baseForce = new Vector2(1.7f, 0);
-			break;
-		case CROUCH_SNEAK:
-			baseForce = new Vector2(0.7f, 0);
-			break;
-		case GRAB_PULL:
-			baseForce = new Vector2(0.6f, 0);
-			break;
-		case JUMP:
-			baseForce = new Vector2(0, 20);
-			break;
-		case JUMP_MOVE:
-			baseForce = new Vector2(1, 20);
-			break;
-		default:
-			baseForce = new Vector2(0, 0);
-			break;
-		}
-
-		if (!isGrounded()) baseForce.y = 0;
-
-		if (isFlipped()) baseForce.x *= -1;
-
-		// tweak gravity
-		if (baseForce.len() != 0)
-			body.setGravityScale(0.7f);
-		else if(isHooking())
-			body.setGravityScale(0);
-		else
-			body.setGravityScale(1);
-
-		// apply impulse
-		body.applyLinearImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f), body.getWorldCenter(), true);
-	}
-
+	
 	@Override
 	public void init(String name) {
 		super.init(name);
