@@ -25,8 +25,8 @@ public class Player extends PlayerCollision {
 		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
 		
-		System.out.println("isGrounded    "+isGrounded());
-		System.out.println("isBodyBlocked "+isBodyBlocked());
+//		System.out.println("isGrounded    "+isGrounded());
+//		System.out.println("isBodyBlocked "+isBodyBlocked());
 		processInput();
 		processStates();
 	}
