@@ -16,8 +16,8 @@ public abstract class Debug {
 		
 		System.out.println("Debug "+ (on ? "on" : "off"));
 		
-		if(on)
-			printCurrentMode();
+		if(on)	printCurrentMode();
+		else	endMode(mode);
 	}
 	
 	private static Mode mode = Mode.BOXRENDERER;
@@ -80,7 +80,7 @@ public abstract class Debug {
 		case BOXRENDERER:
 			break;
 		case CAMERA:
-			Camera.getInstance().zoom = initialZoom;
+			Camera.getInstance().zoom = 1;
 			break;
 		case CONSOLE:
 			break;
@@ -96,24 +96,24 @@ public abstract class Debug {
 		System.out.println("Mode "+mode.toString());
 	}
 	
-	private static final int CAM_UP = Keys.W,
-			CAM_RIGHT = Keys.D,
-			CAM_DOWN = Keys.S,
-			CAM_LEFT = Keys.A,
-			CAM_FAST = Keys.F,
-			CAM_ZOOM_IN = Keys.E,
-			CAM_ZOOM_OUT = Keys.Q;
+	private static final int[] CAM_UP = {Keys.W, Keys.UP},
+			CAM_RIGHT = {Keys.D, Keys.RIGHT},
+			CAM_DOWN = {Keys.S, Keys.DOWN},
+			CAM_LEFT = {Keys.A, Keys.LEFT},
+			CAM_FAST = {Keys.F, Keys.SPACE},
+			CAM_ZOOM_IN = {Keys.E, Keys.I},
+			CAM_ZOOM_OUT = {Keys.Q, Keys.O};
 	
 	private static final float CAMSPEED_INITIAL = 5,
 			CAMSPEED_UP = 2,
 			CAMSPEED_ZOOM = 0.1f;
+	
 	private static float camSpeed = CAMSPEED_INITIAL;
 	private static float zoom, initialZoom;
 	private static float moveX, moveY;
 	
 	public static void processCamera(Camera cam) {
 		
-		System.out.println("controlCam");
 		processCameraControll();
 		
 		float dx = moveX * camSpeed;
@@ -138,8 +138,8 @@ public abstract class Debug {
 		if(InputHandler.getInstance().isKeyDown(CAM_FAST))		camSpeed = CAMSPEED_INITIAL * CAMSPEED_UP;
 		else													camSpeed = CAMSPEED_INITIAL;	
 		
-		if(InputHandler.getInstance().isKeyDown(CAM_ZOOM_IN))			zoom = 1;
-		else if (InputHandler.getInstance().isKeyDown(CAM_ZOOM_OUT))	zoom = -1;
+		if(InputHandler.getInstance().isKeyDown(CAM_ZOOM_IN))			zoom = -1;
+		else if (InputHandler.getInstance().isKeyDown(CAM_ZOOM_OUT))	zoom = 1;
 		else															zoom = 0;
 	}
 }

@@ -25,7 +25,8 @@ public class Player extends PlayerCollision {
 		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
 		
-//		System.out.println("isBodyBlocked "+isBodyBlocked());
+		System.out.println("isGrounded    "+isGrounded());
+		System.out.println("isBodyBlocked "+isBodyBlocked());
 		processInput();
 		processStates();
 	}
@@ -87,7 +88,8 @@ public class Player extends PlayerCollision {
 		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
 		addSensor(new Sensor(this, Type.Polygon, verticesFoot, SensorTypes.FOOT, Sensor.HANDLE_FIRST));
 		
-		float[] verticesBody = {0.395f, 0.40f, 0.395f, 1.17f, 0.90f, 1.17f, 0.90f, 0.40f};
+		float yOffset = 0.5f;
+		float[] verticesBody = {0.395f, 0.40f+yOffset, 0.395f, 1.17f+yOffset, 0.90f, 1.17f+yOffset, 0.90f, 0.40f+yOffset};
 		addSensor(new Sensor(this, Type.Polygon, verticesBody, SensorTypes.BODY, Sensor.HANDLE_SECOND));
 	}
 
