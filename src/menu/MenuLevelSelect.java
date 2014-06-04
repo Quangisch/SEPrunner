@@ -54,7 +54,7 @@ public class MenuLevelSelect implements Screen {
 		
 //table.debug();            // case debuglines needed 2/2
 																			//looks in skin for liststyle named default
-		List list = new List(new String[] {"Level 01", "Level 02", "Level 03", "Level 04", "Level 05", "Level 06", "Level 07", "Level 08", "Level 09", "Level 10", "Level 11", "Level 12", "Level 13", "Level 14", "Level 15", "Level 16", "Level 17", "Level 18", "Level 19", "Level 20", "VERYLONGDEMONSTRATINGSIDESCROLLABILITY AND TABLE STABILITY"}, skin);
+		List list = new List(new String[] {"Level 01", "Level 02", "Level 03"}, skin);
 		
 		ScrollPane scrollPane = new ScrollPane(list, skin);
 		
