@@ -178,7 +178,10 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		if (currentState != null)
 				Debug.println("try to set " + state.toString() + " @current " + currentState.toString(), Mode.CONSOLE);
 
-		if (force || isAnimationFinished()) this.currentState = state;
+		if (force || isAnimationFinished()) 
+			this.currentState = state;
+		else 
+			return false;
 
 		Vector2 v[] = new Vector2[boundingBoxes[currentState.getAnimationIndex()].getVertexCount()];
 		for (int i = 0; i < v.length; i++) {
@@ -214,12 +217,10 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		TextureRegion frame = new TextureRegion(animations[aniDraw].getKeyFrame(stateTime));
 
-		batch.setColor(1, 1, 1, getAlpha());
+		batch.setColor(1, 1, 1, alpha);
 		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
 				frame.getRegionWidth(), frame.getRegionHeight(), scale, scale, rotation, frame.getRegionX(),
 				frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(), flip, false);
-		batch.setColor(Color.WHITE);
-
 	}
 
 	@Override
@@ -328,8 +329,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	/** @param alpha the alpha to set */
 	protected void setAlpha(float alpha) {
-		this.alpha = Math.abs(alpha) % 1;
-		// this.alpha = (100 + alpha) % 1;
+		this.alpha = Math.abs(alpha);
 	}
 
 	@Override

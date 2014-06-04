@@ -1,7 +1,7 @@
 {
 	"shuriken" :{
 		"bodyDef" :	{
-					 "density":0, "friction":0, "restitution":0, "sensor":true, "bodyType": 2
+					 "density":0, "friction":0, "restitution":0.1, "sensor":true, "bodyType": 2
 					},
 		"texture" : "res/sprites/shuriken.png",
 		"defaultState" : 0,

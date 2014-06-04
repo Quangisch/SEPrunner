@@ -40,7 +40,7 @@ public class Shuriken extends GameObject {
 			switch(other.getGameObjectType()) {
 			
 			case GameObjectTypes.GROUND :
-				dispose();
+				ttl = 5;
 				return true;
 			case GameObjectTypes.ENEMY :
 				((Enemy) other).setStun();

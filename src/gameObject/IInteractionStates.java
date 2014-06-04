@@ -11,9 +11,9 @@ public interface IInteractionStates {
 
 		JUMP(true, Animation.LOOP, "WALK"), JUMP_MOVE(true, Animation.LOOP, "WALK"),
 
-		HIDE_START(false, Animation.NORMAL), HIDE(true, Animation.LOOP), THROW(false, Animation.NORMAL),
+		HIDE_START(false, Animation.NORMAL), HIDE(true, Animation.LOOP), HIDE_END(false, Animation.NORMAL),
 
-		HOOK_FLY(true, Animation.LOOP), HOOK(false, Animation.NORMAL, "THROW"),
+		HOOK_FLY(true, Animation.LOOP), HOOK(false, Animation.NORMAL, "THROW"), THROW(false, Animation.NORMAL),
 
 		GRAB(true, Animation.NORMAL), GRAB_PULL(true, Animation.LOOP), GRAB_DISPOSE(false, Animation.NORMAL),
 

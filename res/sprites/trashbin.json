@@ -1,0 +1,20 @@
+{
+	"trashbin" :{
+		"bodyDef" :	{
+					 "density":0, "friction":0, "restitution":0, "sensor":true, "bodyType": 0
+					},
+		"texture" : "res/sprites/mapObjects.png",
+		"defaultState" : 0,
+		"animationen" : ["stand"],
+		"stateframes" :	{
+						"stand" :	{
+										"frameDuration": 1,
+										"boundingBox" : [25,90 , 75,90, 75,20 , 25,20],
+										"textureMap" : [	
+												[0, 0, 100, 100]
+												]
+								}
+		}
+	}
+
+}

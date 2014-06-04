@@ -4,6 +4,7 @@ import gameObject.GameObject;
 import gameObject.IGameObjectTypes;
 import gameObject.enemy.Enemy;
 import gameObject.player.Player;
+import gameObject.statics.Hideout;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -103,7 +104,10 @@ public class Map implements DrawableMap, Runnable {
 
 		// if (player != null) player.draw(batch);
 
-		if (debugRender != null && Debug.isMode(Debug.Mode.BOXRENDERER)) debugRender.render(world, debugMatrix);
+		if (debugRender != null && 
+				(Debug.isMode(Debug.Mode.BOXRENDERER)
+						|| Debug.isMode(Debug.Mode.CAMERA))) 
+			debugRender.render(world, debugMatrix);
 
 		world.clearForces();
 	}
@@ -164,7 +168,7 @@ public class Map implements DrawableMap, Runnable {
 
 		GameObject obj = null;
 		switch (StringFunctions.getMostEqualIndexIgnoreCase(root.getString("ID"), new String[] //
-				{ "Player", "Enemy" })) {
+				{ "player", "enemy", "hidable" })) {
 		case 0:
 			obj = new Player(world, pos);
 			if (root.getBoolean("isPlayer", false)) player = (Player) obj;
@@ -173,6 +177,9 @@ public class Map implements DrawableMap, Runnable {
 			obj = new Enemy(world, pos);
 			if (root.hasChild("AI"))
 				((Enemy)obj).setNewAI(root.get("AI"));
+			break;
+		case 2:
+			obj = new Hideout(world, pos);
 			break;
 		case -1:
 		default:

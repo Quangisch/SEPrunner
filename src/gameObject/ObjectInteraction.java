@@ -28,6 +28,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	private InteractionState nextState, interruptedState;
 	private volatile int bodyBlocked = 0;
 	private volatile int grounded = 0;
+	private volatile boolean hideable = false;
 
 //	private Set<Integer> keyPressed;
 	protected IInputHandler iHandler;
@@ -41,7 +42,8 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	public void run() {
 		super.run();
 		processInput();
-		processStates();
+		if(!isHooking())
+			processStates();
 	}
 	
 	protected void processInput() {
@@ -69,11 +71,24 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 
 		if (!action && isGrounded()) {
 
-			if (iHandler.isKeyDown(ActionKey.ACTION))
+			// ACTION (HIDE OR GRAB)
+			if (iHandler.isKeyDown(ActionKey.ACTION)) {
 				processAction();
-
-			// JUMP
-			else if (iHandler.isKeyDown(ActionKey.JUMP)) {
+				
+			} else if(!iHandler.isKeyDown(ActionKey.ACTION)) {
+				endAction();
+				
+				
+//				
+//			} else if(isGrabbing()) {
+//				nextState = InteractionState.STAND;
+//				break action;
+				
+			
+			} 
+			
+			// JUMP	
+			if (iHandler.isKeyDown(ActionKey.JUMP)) {
 				nextState = InteractionState.JUMP;
 			} else if (isJumping() && isGrounded())
 				nextState = getInteractionState().equals(InteractionState.JUMP) ? InteractionState.STAND
@@ -151,7 +166,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 
 	}
 	
-protected void processStates() {
+	protected void processStates() {
 		
 		Vector2 baseForce;
 		switch (getInteractionState()) {
@@ -188,8 +203,6 @@ protected void processStates() {
 		// tweak gravity
 		if (baseForce.len() != 0)
 			body.setGravityScale(0.7f);
-		else if(isHooking())
-			body.setGravityScale(0);
 		else
 			body.setGravityScale(1);
 
@@ -203,12 +216,14 @@ protected void processStates() {
 			return;
 
 		if (!nextState.equals(getInteractionState())) {
-			setInteractionState(nextState);
-			if (applyAnimation())
+			boolean set = setInteractionState(nextState);
+			
+			if (set) {
+				applyAnimation();
 				nextState = null;
+			}
 		} else
 			nextState = null;
-
 	}
 
 	private final int TAP_TIMER_LIMIT_HIGH = 10, TAP_TIMER_LIMIT_LOW = 1;
@@ -314,6 +329,8 @@ protected void processStates() {
 		if (target.x < getLocalCenterInWorld().x && !tryToFlip())
 			return false;
 
+
+		body.setGravityScale(0);
 		setInteractionState(InteractionState.HOOK, true);
 		applyAnimation();
 		// body.setGravityScale(scale);
@@ -338,11 +355,12 @@ protected void processStates() {
 
 		if (!getInteractionState().equals(InteractionState.HOOK_FLY))
 			return true;
-
-		body.applyLinearImpulse(target.clamp(10, 15), getLocalCenterInWorld(), true);
+		
+		body.applyLinearImpulse(target.nor().scl(10), getLocalCenterInWorld(), true);
 		hookTime++;
 
-		if (hookTime >= HOOK_TIME_LIMIT)
+		System.out.println(hookTime);
+		if (hookTime >= HOOK_TIME_LIMIT || (hookTime >= 5 && isGrounded()))
 			resetHook();
 
 		return true;
@@ -356,11 +374,55 @@ protected void processStates() {
 		applyAnimation();
 	}
 
-	// TODO
+	private int oriLayer;
+	private final int HIDE_LAYER = -1;
+	private float oriAlpha;
+	private final float HIDE_ALPHA = 0.5f;
+	
 	// ACTION
 	private boolean processAction() {
-		iHandler.keyUp(ActionKey.ACTION);
+		if(hideable)
+			processHiding(true);
 		return false;
+	}
+	
+	private void endAction() {
+		if(isHiding())
+			processHiding(false);
+	}
+	
+	private void processHiding(boolean start) {
+		if(!isGrounded())
+			return;
+		
+		// start hiding
+		if(start) {
+			switch(getInteractionState()) {
+			case STAND:
+			case WALK:
+			case CROUCH_STAND:
+			case CROUCH_SNEAK:
+				nextState = InteractionState.HIDE_START;
+				oriAlpha = getAlpha();
+				oriLayer = getLayer();
+				setLayer(HIDE_LAYER);
+				setAlpha(HIDE_ALPHA);
+				break;
+			case HIDE_START:
+				nextState = InteractionState.HIDE;
+			default:
+				break;
+			}
+		
+		// end hiding
+		} else {
+			if(getInteractionState().equals(InteractionState.HIDE))
+				nextState = InteractionState.HIDE_END;
+			if(getInteractionState().equals(InteractionState.HIDE_END))
+				nextState = InteractionState.STAND;
+			setLayer(oriLayer);
+			setAlpha(oriAlpha);
+		}
 	}
 
 	// INTERACTION WITH ENEMY
@@ -380,9 +442,15 @@ protected void processStates() {
 	public boolean isRunning() {
 		return getInteractionState().equals(InteractionState.RUN);
 	}
+	
+	public boolean isThrowing() {
+		return getInteractionState().equals(InteractionState.THROW);
+	}
 
 	public boolean isHiding() {
-		return getInteractionState().equals(InteractionState.HIDE);
+		return getInteractionState().equals(InteractionState.HIDE_START)
+				|| getInteractionState().equals(InteractionState.HIDE)
+				|| getInteractionState().equals(InteractionState.HIDE_END);
 	}
 
 	public boolean isCrouching() {
@@ -481,23 +549,33 @@ protected void processStates() {
 
 		if (mySensor != null) {
 			// CHECK GROUNDED
-			if (mySensor.getSensorType() == SensorTypes.FOOT
-					&& other.getGameObjectType() == GameObjectTypes.GROUND) {
-				calcGroundedContact(start);
-				return true;
+			if (mySensor.getSensorType() == SensorTypes.FOOT) {
+				switch(other.getGameObjectType()) {
+				case GameObjectTypes.GROUND:
+					calcGroundedContact(start);
+					return true;
+				default :
+					return false;
+				}
 			}
 
 			// CHECK BODY
-			if (mySensor.getSensorType() == SensorTypes.BODY
-					&& other.getGameObjectType() == GameObjectTypes.GROUND) {
-				calcBodyBlockedContact(start);
-				return true;
+			if (mySensor.getSensorType() == SensorTypes.BODY) {
+				switch(other.getGameObjectType()) {
+				case GameObjectTypes.GROUND:
+					calcBodyBlockedContact(start);
+					return true;
+				case GameObjectTypes.HIDEABLE:
+					hideable = start;
+					return true;
+				default :
+					return false;
+				}
 			}
 
 		} else {
 			// CHECK WHILE HOOKING
-			if (isHooking()
-					&& other.getGameObjectType() == GameObjectTypes.GROUND) {
+			if (isHooking() && other.getGameObjectType() == GameObjectTypes.GROUND) {
 				resetHook();
 				return true;
 			}

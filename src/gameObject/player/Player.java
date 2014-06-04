@@ -37,7 +37,6 @@ public class Player extends PlayerCollision {
 		super.init(name);
 		setGameObjectType(GameObjectTypes.PLAYER);
 		setLayer(3);
-		setAlpha(0.8f);
 		body.setLinearDamping(2.5f);
 		body.setFixedRotation(true);
 		
@@ -51,7 +50,7 @@ public class Player extends PlayerCollision {
 		
 		iHandler.addActionKey(ActionKey.LEFT, Keys.A, Keys.LEFT);
 		iHandler.addActionKey(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
-		iHandler.addActionKey(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
+		iHandler.addActionKey(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT);
 				
 		iHandler.addActionKey(ActionKey.JUMP, Keys.SPACE, Keys.UP); 
 		iHandler.addActionKey(ActionKey.CROUCH, Keys.S, Keys.DOWN);
