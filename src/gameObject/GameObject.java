@@ -1,7 +1,5 @@
 package gameObject;
 
-import gameObject.enemy.ai.IEnemyAI;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
@@ -54,8 +52,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	protected int layer = 0;
 	protected float alpha = 1;
 	private float scale = 1;
-
-	protected IEnemyAI AI;
 
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
@@ -371,14 +367,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public void setScale(float scale) {
 		// TODO Scale Body
 		this.scale = scale;
-	}
-
-	public void setAI(IEnemyAI ai) {
-		AI = ai;
-	}
-
-	public IEnemyAI getAI() {
-		return AI;
 	}
 
 	// DISPOSABLE
