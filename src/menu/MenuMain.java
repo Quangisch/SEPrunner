@@ -129,10 +129,10 @@ public class MenuMain implements Screen {
 			.push(Tween.set(buttonOption, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonHighscore, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonExit, ActorAccessor.ALPHA).target(0))
-			.push(Tween.to(heading, ActorAccessor.ALPHA, .5f).target(1))
-			.push(Tween.to(buttonPlay, ActorAccessor.ALPHA, .25f).target(1))
-			.push(Tween.to(buttonOption, ActorAccessor.ALPHA, .25f).target(1))
-			.push(Tween.to(buttonHighscore, ActorAccessor.ALPHA, .25f).target(1))
+			.push(Tween.to(heading, ActorAccessor.ALPHA, .3f).target(1))
+			.push(Tween.to(buttonPlay, ActorAccessor.ALPHA, .15f).target(1))
+			.push(Tween.to(buttonOption, ActorAccessor.ALPHA, .15f).target(1))
+			.push(Tween.to(buttonHighscore, ActorAccessor.ALPHA, .15f).target(1))
 			.push(Tween.to(buttonExit, ActorAccessor.ALPHA, .25f).target(1))
 			.end().start(tweenManager);
 		
