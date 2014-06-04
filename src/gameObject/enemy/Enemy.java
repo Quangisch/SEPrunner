@@ -3,7 +3,6 @@ package gameObject.enemy;
 import gameObject.GameObject;
 import gameObject.ObjectInteraction;
 import gameObject.Sensor;
-import gameObject.ISensorTypes.SensorTypes;
 import gameObject.enemy.ai.IEnemyAI;
 import gameObject.enemy.ai.SimplePatrolAI;
 import misc.StringFunctions;
