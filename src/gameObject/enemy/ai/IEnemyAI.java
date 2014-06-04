@@ -2,11 +2,12 @@ package gameObject.enemy.ai;
 
 import com.badlogic.gdx.utils.JsonValue;
 
+import core.ingame.IInputHandler;
 import gameObject.GameObject;
 import gameObject.Sensor;
 import gameObject.enemy.Enemy;
 
-public interface IEnemyAI extends Runnable {
+public interface IEnemyAI extends IInputHandler, Runnable {
 
 	public boolean handleCollision(boolean start, Sensor mySender, GameObject other, Sensor otherSensor);
 

@@ -1,6 +1,7 @@
-package gameObject.player;
+package core.ingame;
 
 import gameObject.IInteractionStates.InteractionState;
+import gameObject.player.Player;
 import gameWorld.Map;
 
 import java.util.Set;
@@ -19,66 +20,93 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 
-import core.ingame.Camera;
-import core.ingame.GameProperties;
+import core.ingame.KeyMap.ActionKey;
 
-public class InputHandler implements InputProcessor {
-
-	private static InputHandler handler;
+public class InputHandler implements InputProcessor, IInputHandler {
 
 	private Set<Integer> pressedKeys = new TreeSet<Integer>();
 	private Click click;
 
-	private InputHandler() {
+	protected KeyMap keyMap;
 
+	private static InputHandler instance;
+
+	public static InputHandler getInstance() {
+		if (instance == null)
+			instance = new InputHandler();
+		return instance;
 	}
 
-	public boolean isKeyDown(int[] key) {
-		for (int k : key)
-			if (isKeyDown(k)) return true;
-		return false;
+	private InputHandler() {
+		keyMap = new KeyMap();
+	}
+
+	public void addActionKey(ActionKey action, int... keys) {
+		keyMap.add(action, keys);
 	}
 
 	public boolean isKeyDown(int key) {
 		return pressedKeys.contains(key);
 	}
 
-	public static InputHandler getInstance() {
-		if (handler == null) handler = new InputHandler();
-		return handler;
+	@Override
+	public boolean isKeyDown(ActionKey action) {
+		if (keyMap != null)
+			for (int k : keyMap.get(action))
+				if (isKeyDown(k))
+					return true;
+		return false;
+	}
+
+	public boolean isKeyDown(int[] keys) {
+		for (int k : keys)
+			if (isKeyDown(k))
+				return true;
+		return false;
+	}
+
+	@Override
+	public boolean isButtonDown(ActionKey action) {
+		if (click != null)
+			for (int a : keyMap.get(action))
+				if (click.button == a)
+					return true;
+		return false;
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
 		pressedKeys.add(keycode);
 
-		//		toogle Fullscreen
+		// toogle Fullscreen
 		if (keycode == Keys.ESCAPE) {
 			if (Gdx.graphics.isFullscreen())
-				Gdx.graphics.setDisplayMode(GameProperties.width, GameProperties.height, false);
+				Gdx.graphics.setDisplayMode(GameProperties.width,
+						GameProperties.height, false);
 			else
-				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
+				Gdx.graphics.setDisplayMode(
+						Gdx.graphics.getDesktopDisplayMode().width,
 						Gdx.graphics.getDesktopDisplayMode().height, true);
 		}
 
-		//		back to menu
+		// back to menu
 		if (keycode == Keys.BACKSPACE) {
 			GameProperties.switchMode(true, false);
 			((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 		}
 
-		//		toogle debug
+		// toogle debug
 		if (keycode == Keys.TAB)
 			Debug.toogleOnOff();
-		
-		if(Debug.isOn())
-			Debug.setMode(keycode);
-			
 
-		//		tmp switchAnimationStates
+		if (Debug.isOn())
+			Debug.setMode(keycode);
+
+		// tmp switchAnimationStates
 		if (keycode == Keys.N) {
 			Player p = Map.getInstance().getPlayer();
-			p.setInteractionState(InteractionState.values()[(p.getInteractionState().ordinal() + 1)
+			p.setInteractionState(InteractionState.values()[(p
+					.getInteractionState().ordinal() + 1)
 					% InteractionState.values().length]);
 		}
 		return false;
@@ -86,14 +114,27 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean keyUp(int keycode) {
-		pressedKeys.remove(new Integer(keycode));
-		return false;
+		return pressedKeys.remove(keycode);
 	}
 
-	public boolean keyUp(int[] keycodes) {
-		for (int k : keycodes)
-			if (keyUp(k)) return true;
-		return false;
+	@Override
+	public boolean keyUp(ActionKey action) {
+		for (int k : keyMap.get(action))
+			keyUp(k);
+		return true;
+	}
+
+	@Override
+	public Click getClick() {
+		return click;
+	}
+	
+//	TODO elsewhere
+	@Override
+	public Click popClick() {
+		Click c = click;
+		click = null;
+		return c;
 	}
 
 	@Override
@@ -105,50 +146,30 @@ public class InputHandler implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		click = new Click(screenX, screenY, pointer, button);
-
-		return false;
-	}
-
-	public boolean buttonDown(int[] button) {
-		if (click == null) return false;
-		for (int b : button)
-			if (click.button == b) return true;
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		resetClick();
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public Click getClick() {
-		return click;
-	}
-
-	public void resetClick() {
-		click = null;
-	}
-
-	public class Click {
+	public static class Click {
 
 		public final int screenX, screenY, pointer, button;
 		private GeometricObject geo;
@@ -169,7 +190,8 @@ public class InputHandler implements InputProcessor {
 				break;
 			case GEOMETRIC:
 				float radius = 10;
-				geo = new GeometricObject(new Circle(vec.x - radius, vec.y - radius, radius), Color.CYAN);
+				geo = new GeometricObject(new Circle(vec.x - radius, vec.y
+						- radius, radius), Color.CYAN);
 				break;
 			default:
 				break;
@@ -177,15 +199,17 @@ public class InputHandler implements InputProcessor {
 		}
 
 		public void draw(SpriteBatch batch) {
-			if (geo != null) geo.draw(batch);
+			if (geo != null)
+				geo.draw(batch);
 		}
-
+		
 		public Click cpy() {
 			return new Click(screenX, screenY, pointer, button);
 		}
 
 		public String toString() {
-			return "Click@" + screenX + "x" + screenY + ", pointer:" + pointer + ", button:" + button;
+			return "Click@" + screenX + "x" + screenY + ", pointer:" + pointer
+					+ ", button:" + button;
 		}
 	}
 

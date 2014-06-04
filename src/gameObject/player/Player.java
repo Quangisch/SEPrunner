@@ -4,11 +4,15 @@ import gameObject.Sensor;
 import gameWorld.Map;
 import misc.Debug;
 
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 
 import core.ingame.Camera;
+import core.ingame.InputHandler;
+import core.ingame.KeyMap.ActionKey;
 
 public class Player extends PlayerCollision {
 
@@ -68,7 +72,7 @@ public class Player extends PlayerCollision {
 		// tweak gravity
 		if (baseForce.len() != 0)
 			body.setGravityScale(0.7f);
-		else if(getInteractionState().equals(InteractionState.HOOK_FLY))
+		else if(isHooking())
 			body.setGravityScale(0);
 		else
 			body.setGravityScale(1);
@@ -91,6 +95,19 @@ public class Player extends PlayerCollision {
 		
 		float[] verticesBody = {0.395f, 0.40f, 0.395f, 1.17f, 0.90f, 1.17f, 0.90f, 0.40f};
 		addSensor(new Sensor(this, Type.Polygon, verticesBody, SensorTypes.BODY, Sensor.HANDLE_SECOND));
+		
+		iHandler = InputHandler.getInstance();
+		
+		iHandler.addActionKey(ActionKey.LEFT, Keys.A, Keys.LEFT);
+		iHandler.addActionKey(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
+		iHandler.addActionKey(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
+				
+		iHandler.addActionKey(ActionKey.JUMP, Keys.SPACE, Keys.UP); 
+		iHandler.addActionKey(ActionKey.CROUCH, Keys.S, Keys.DOWN);
+				
+		iHandler.addActionKey(ActionKey.ACTION, Keys.E, Keys.ENTER);
+		iHandler.addActionKey(ActionKey.THROW, Input.Buttons.LEFT);
+		iHandler.addActionKey(ActionKey.HOOK, Input.Buttons.RIGHT);
 	}
 
 }

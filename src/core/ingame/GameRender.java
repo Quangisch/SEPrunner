@@ -1,6 +1,5 @@
 package core.ingame;
 
-import gameObject.player.InputHandler;
 import gameWorld.Map;
 
 import java.util.ArrayList;

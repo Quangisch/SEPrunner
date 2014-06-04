@@ -4,8 +4,6 @@ import misc.Debug;
 import misc.Debug.Mode;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameProperties {
@@ -21,20 +19,6 @@ public abstract class GameProperties {
 	public static float gamma = 1.0f;
 	public static float brightness = 1.0f;
 
-//	0: off, 1: boxrenderer, 2: geometricObject, 3: console
-	
-	public static int[] keyLeft = {Keys.A, Keys.LEFT}, 
-			keyRight = {Keys.D, Keys.RIGHT},
-			keyRun = {Keys.F, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT},
-			
-			keyJump = {Keys.SPACE, Keys.UP}, 
-			keyCrouch = {Keys.S, Keys.DOWN},
-			
-			keyAction = {Keys.E, Keys.ENTER}, //hide, dispose, grab - abhängig von den Umgebung
-			keyThrow = {Input.Buttons.LEFT},
-			keyHook = {Input.Buttons.RIGHT};
-		
-	
 
 	final public static float PIXELPROMETER = 100;
 

@@ -1,13 +1,13 @@
 package gameObject.enemy;
 
-import gameObject.GameObject;
+import gameObject.ObjectInteraction;
 import gameObject.Sensor;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Enemy extends GameObject {
+public class Enemy extends ObjectInteraction {
 
 	protected boolean stunned;
 
@@ -41,6 +41,15 @@ public class Enemy extends GameObject {
 	public boolean isCarriable(Vector2 position) {
 		// TODO
 		return false;
+	}
+	
+	
+	
+	public enum Pattern {
+		STAND,
+		WALK_RIGHT, WALK_LEFT,
+		RUN_RIGHT, RUN_LEFT,
+		JUMP, JUMP_LEFT, JUMP_RIGHT;
 	}
 
 }

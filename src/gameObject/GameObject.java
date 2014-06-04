@@ -1,5 +1,6 @@
 package gameObject;
 
+import gameObject.enemy.Enemy;
 import gameObject.enemy.ai.IEnemyAI;
 
 import java.io.FileNotFoundException;
@@ -344,6 +345,10 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public World getWorld() {
 		return body.getWorld();
 	}
+	
+	public Body getBody() {
+		return body;
+	}
 
 	@Override
 	public Vector2 getWorldPosition() {
@@ -374,7 +379,9 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	public void setAI(IEnemyAI ai) {
+		if(AI==ai)return;
 		AI = ai;
+		AI.setEnemy((Enemy)this);
 	}
 
 	public IEnemyAI getAI() {

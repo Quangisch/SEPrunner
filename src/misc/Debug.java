@@ -1,10 +1,9 @@
 package misc;
 
-import gameObject.player.InputHandler;
-
 import com.badlogic.gdx.Input.Keys;
 
 import core.ingame.Camera;
+import core.ingame.InputHandler;
 
 public abstract class Debug {
 
