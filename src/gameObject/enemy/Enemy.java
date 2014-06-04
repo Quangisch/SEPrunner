@@ -3,6 +3,7 @@ package gameObject.enemy;
 import gameObject.GameObject;
 import gameObject.ObjectInteraction;
 import gameObject.Sensor;
+import gameObject.ISensorTypes.SensorTypes;
 import gameObject.enemy.ai.IEnemyAI;
 import gameObject.enemy.ai.SimplePatrolAI;
 import misc.StringFunctions;
@@ -29,6 +30,9 @@ public class Enemy extends ObjectInteraction {
 		body.setLinearDamping(2.5f);
 		body.setFixedRotation(true);
 		addSensor(new Sensor(this, Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION, Sensor.HANDLE_FIRST));
+
+		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
+		addSensor(new Sensor(this, Type.Polygon, verticesFoot, SensorTypes.FOOT, Sensor.HANDLE_FIRST));
 	}
 
 	@Override
@@ -66,7 +70,8 @@ public class Enemy extends ObjectInteraction {
 
 	@Override
 	public boolean handleCollision(boolean start, Sensor sender, GameObject other, Sensor otherSensor) {
-		return getAI() != null || getAI().handleCollision(start, sender, other, otherSensor);
+		return super.handleCollision(start, sender, other, otherSensor) //
+				|| getAI() != null || getAI().handleCollision(start, sender, other, otherSensor);
 	}
 
 	public void setNewAI(JsonValue jAI) {
