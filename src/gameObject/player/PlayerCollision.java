@@ -18,20 +18,19 @@ abstract class PlayerCollision extends PlayerInteraction {
 		if(mySensor == null && other.getGameObjectType() == GameObjectTypes.GROUND 
 				&& isHooking()) {
 			System.out.println("resetHook");
-			setGrounded(true);
 			resetHook();
 			return true;
 		}
 			
 		if (mySensor != null) {
 			if (mySensor.getSensorType() == SensorTypes.FOOT && other.getGameObjectType() == GameObjectTypes.GROUND) {
-				if(isJumping())
-					setGrounded(start);
+//				if(isJumping())
+					calcGroundedContact(start);
 				return true;
 			}
 			
 			if(mySensor.getSensorType() == SensorTypes.BODY && other.getGameObjectType() == GameObjectTypes.GROUND) {
-				setBodyBlocked(start);
+				calcBodyBlockedContact(start);
 				return true;
 			}
 		}

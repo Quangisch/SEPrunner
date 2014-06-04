@@ -45,15 +45,15 @@ public interface Collisionable {
 	 * @return y */
 	public float getY();
 
-	/** Check whether body is on ground.
-	 * 
-	 * @return grounded */
-	public boolean isGrounded();
-
-	/** Set grounded for body.
-	 * 
-	 * @param grounded */
-	public void setGrounded(boolean grounded);
+//	/** Check whether body is on ground.
+//	 * 
+//	 * @return grounded */
+//	public boolean isGrounded();
+//
+//	/** Set grounded for body.
+//	 * 
+//	 * @param grounded */
+//	public void setGrounded(boolean grounded);
 
 	/** Get corresponding world.
 	 * 

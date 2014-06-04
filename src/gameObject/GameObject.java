@@ -48,7 +48,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	protected boolean flip = false;
 	protected boolean visible = true;
-	private volatile boolean grounded = true;
 	protected int layer = 0;
 	protected float alpha = 1;
 	private float scale = 1;
@@ -169,11 +168,14 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		return loadingTextures.get(path);
 	}
 
-
 	public boolean setInteractionState(InteractionState state) {
+		return setInteractionState(state, false);
+	}
+	
+	public boolean setInteractionState(InteractionState state, boolean force) {
 		if (this.currentState == state) return true;
 
-		if (isAnimationFinished()) this.currentState = state;
+		if (force || isAnimationFinished()) this.currentState = state;
 
 		Vector2 v[] = new Vector2[boundingBoxes[currentState.getAnimationIndex()].getVertexCount()];
 		for (int i = 0; i < v.length; i++) {
@@ -297,16 +299,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	@Override
 	public float getY() {
 		return GameProperties.meterToPixel(body.getPosition().y);
-	}
-
-	@Override
-	public void setGrounded(boolean grounded) {
-		this.grounded = grounded;
-	}
-
-	@Override
-	public boolean isGrounded() {
-		return grounded;
 	}
 
 	public int getGameObjectType() {

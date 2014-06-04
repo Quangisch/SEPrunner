@@ -23,7 +23,8 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	private Click click;
 	private Vector2 target;
 	private InteractionState nextState, interruptedState;
-	private boolean bodyBlocked = false;
+	private volatile int bodyBlocked = 0;
+	private volatile int grounded = 0;
 	
 	protected PlayerInteraction(World world, Vector2 position) {
 		super(world, position);
@@ -33,7 +34,6 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	protected void processInput() {
 		
 		boolean action = false;
-		
 		processHook();
 		
 //		CLICK 
@@ -74,12 +74,12 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 				} else if(getInteractionState().equals(InteractionState.CROUCH_DOWN)
 							&& isAnimationFinished())
 					nextState = InteractionState.CROUCH_STAND;
-			} else if(isCrouching())
+			} else if(isCrouching() && !isBodyBlocked())
 				nextState = InteractionState.STAND;
 		} 
 		
+//		BASIC MOVEMENT
 		if(!action) {
-			
 			if (InputHandler.getInstance().isKeyDown(GameProperties.keyRight)
 					|| InputHandler.getInstance().isKeyDown(GameProperties.keyLeft)) {
 			
@@ -183,6 +183,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	
 	private Vector2 startPoint, clickPoint;
 	
+//	CLICKPOINT
 	private void normalizeClickPoint() {
 		startPoint = GameProperties.meterToPixel(this.getLocalCenterInWorld());
 		clickPoint = new Vector2(click.screenX, click.screenY);
@@ -200,6 +201,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		}
 	}
 	
+//	THROW (SHURIKEN)
 	private boolean processThrow() {
 		if(shuriken <= 0)
 			return false;
@@ -210,13 +212,24 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		interruptedState = getInteractionState();
 		applyState(nextState = InteractionState.THROW);
 		
-//		shuriken--;
+		shuriken--;
 		new Shuriken(this, clickPoint);
 		actionTimer = 0;
 		
 		return true;
 	}
 	
+	public void addShuriken() {
+		actionTimer = ACTION_TIMER_INITIAL;
+		shuriken++;
+	}
+	
+	public void setShuriken(int shurikens) {
+		actionTimer = ACTION_TIMER_INITIAL;
+		this.shuriken = shurikens;
+	}
+	
+//	HOOK
 	private final int HOOK_RADIUS = 400;
 	
 	private boolean tryToHook() {
@@ -233,45 +246,63 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		return true;
 	}
 	
-	private void beginHook(Vector2 target) {
+	private boolean beginHook(Vector2 target) {
 		
 		if(target.x < getLocalCenterInWorld().x && !tryToFlip())
-			return;
+			return false;
 		
-		nextState = InteractionState.HOOK;
+		setInteractionState(InteractionState.HOOK, true);
+		applyAnimation();
 		body.setGravityScale(0);
+//		TODO
 //		body.setTransform(target, body.getAngle());
 		this.target = target.sub(getLocalCenterInWorld());
+		return true;
 	}
 	
 	private final int HOOK_TIME_LIMIT = 30;
 	private int hookTime = 0;
 	
-	private void processHook() {
-		if(target == null || !isHooking()) {
-			return;
+	private boolean processHook() {
+		if(target == null || !isHooking())
+			return false;
+		
+		if(getInteractionState().equals(InteractionState.HOOK) && isAnimationFinished()) {
+			setInteractionState(InteractionState.HOOK_FLY, true);
+			applyAnimation();
 		}
+		
+		if(!getInteractionState().equals(InteractionState.HOOK_FLY))
+			return true;
 		
 		body.applyLinearImpulse(target.clamp(10, 15), getLocalCenterInWorld(), true);
 		hookTime++;
 		
 		if(hookTime >= HOOK_TIME_LIMIT)
 			resetHook();
+		
+		return true;
 	}
 	
+	protected void resetHook() {
+		System.out.println("resetHook");
+		target = null;
+		hookTime = 0;
+		body.setGravityScale(1);
+		setInteractionState(InteractionState.STAND, true);
+		applyAnimation();
+	}
+	
+//	TODO
+//	ACTION
 	private boolean processAction() {
 		InputHandler.getInstance().keyUp(GameProperties.keyAction);
 		
 		return false;
 	}
-
-	private boolean tryToFlip() {
-		if(InputHandler.getInstance().isKeyDown(GameProperties.keyRight))
-			return false;
-		setFlip(true);
-		return true;
-	}
 	
+	
+//	INTERACTION WITH ENEMY
 	@Override
 	public boolean isDetectable(Enemy enemy) {
 		// TODO Auto-generated method stub
@@ -284,21 +315,21 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		
 	}
 	
+	
+//	STATES
+	public boolean isRunning() 	{ return getInteractionState().equals(InteractionState.RUN);	}
+	public boolean isHiding() 	{ return getInteractionState().equals(InteractionState.HIDE);	}
+	
+
 	public boolean isCrouching() {
 		return getInteractionState().equals(InteractionState.CROUCH_DOWN)
 				|| getInteractionState().equals(InteractionState.CROUCH_STAND)
 				|| getInteractionState().equals(InteractionState.CROUCH_SNEAK);
 	}
 	
-	public boolean isHooking() 	{ 
-		return getInteractionState().equals(InteractionState.HOOK);	
-	}
-	public boolean isRunning() 	{ 
-		return getInteractionState().equals(InteractionState.RUN);	
-	}
-	
-	public boolean isHiding() 	{ 
-		return getInteractionState().equals(InteractionState.HIDE);	
+	public boolean isHooking() { 
+		return getInteractionState().equals(InteractionState.HOOK)
+				|| getInteractionState().equals(InteractionState.HOOK_FLY);	
 	}
 	
 	public boolean isJumping() {
@@ -322,16 +353,6 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		return true;
 	}
 	
-	public void addShuriken() {
-		actionTimer = ACTION_TIMER_INITIAL;
-		shuriken++;
-	}
-	
-	public void setShuriken(int shurikens) {
-		actionTimer = ACTION_TIMER_INITIAL;
-		this.shuriken = shurikens;
-	}
-	
 	public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
 		System.out.println("---"+point.toString());
 		if(((GameObject) fixture.getBody().getUserData()).getGameObjectType() == GameObjectTypes.GROUND) {
@@ -346,21 +367,30 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		} else
 			return 1;
 	}
+
+	public boolean isBodyBlocked() 	{ return bodyBlocked > 0;	}
+	public void calcBodyBlockedContact(boolean start) {
+		bodyBlocked += start ? 1 : -1;
+	}
 	
-	protected void resetHook() {
-		target = null;
-		hookTime = 0;
-		body.setGravityScale(1);
-		setInteractionState(InteractionState.STAND);
-		applyAnimation();
+
+	public boolean isGrounded() 	{ return grounded > 0;		}
+	public void calcGroundedContact(boolean start) {
+		grounded += start ? 1 : -1;
 	}
 
-	public boolean isBodyBlocked() {
-		return bodyBlocked;
+//	HELPER
+	private boolean tryToFlip() {
+		if(InputHandler.getInstance().isKeyDown(GameProperties.keyRight))
+			return false;
+		setFlip(true);
+		return true;
 	}
-
-	public void setBodyBlocked(boolean bodyBlocked) {
-		this.bodyBlocked = bodyBlocked;
-	}
+	
+	
+//	TEMP Methods for debugging
+	protected int getGrounded() 	{ return grounded;		}
+	protected int getBodyBlocked() 	{ return bodyBlocked;	}
+	
 
 }
