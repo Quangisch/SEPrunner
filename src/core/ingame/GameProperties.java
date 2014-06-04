@@ -1,6 +1,7 @@
 package core.ingame;
 
 import misc.Debug;
+import misc.Debug.Mode;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -65,8 +66,7 @@ public abstract class GameProperties {
 		
 		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
 		
-		if(Debug.isMode(Debug.Mode.CONSOLE))
-			System.out.println(width+"x"+height);
+		Debug.println(width + "x" + height, Mode.CONSOLE);
 		
 		if(!menu && !ingame)
 			Gdx.app.exit();
