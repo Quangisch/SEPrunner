@@ -43,4 +43,8 @@ public class Enemy extends GameObject {
 		return false;
 	}
 
+	@Override
+	public boolean handleCollision(boolean start, Sensor sender, GameObject other, Sensor otherSensor) {
+		return getAI() == null || getAI().handleCollision(start, sender, other, otherSensor);
+	}
 }
