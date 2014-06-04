@@ -14,6 +14,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 
+import misc.Debug;
 import misc.StringFunctions;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -103,7 +104,7 @@ public class Map implements DrawableMap, Runnable {
 
 		// if (player != null) player.draw(batch);
 
-		if (debugRender != null && GameProperties.debugMode.equals(GameProperties.Debug.BOXRENDERER))
+		if (debugRender != null && Debug.isMode(Debug.Mode.BOXRENDERER))
 			debugRender.render(world, debugMatrix);
 
 		world.clearForces();

@@ -2,14 +2,13 @@ package gameObject.player;
 
 import gameObject.Sensor;
 import gameWorld.Map;
+import misc.Debug;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 
 import core.ingame.Camera;
-import core.ingame.GameProperties;
-import core.ingame.GameProperties.Debug;
 
 public class Player extends PlayerCollision {
 
@@ -23,10 +22,10 @@ public class Player extends PlayerCollision {
 	}
 
 	public void run() {
-		if(GameProperties.debugMode.equals(Debug.CAMERA))
+		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
 		
-		System.out.println("isBodyBlocked "+isBodyBlocked());
+//		System.out.println("isBodyBlocked "+isBodyBlocked());
 		processInput();
 		processStates();
 	}

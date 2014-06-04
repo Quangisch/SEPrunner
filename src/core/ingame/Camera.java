@@ -1,15 +1,12 @@
 package core.ingame;
 
 import gameObject.Collisionable;
-import gameObject.player.InputHandler;
+import misc.Debug;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-
-import core.ingame.GameProperties.Debug;
 
 public class Camera extends OrthographicCamera implements MoveableCamera {
 	
@@ -22,31 +19,14 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 	}
 	
 	public void update() {
-		if(GameProperties.debugMode.equals(Debug.CAMERA)) {
-			
-			int dx = 0, dy = 0;
-			
-			if(InputHandler.getInstance().isKeyDown(Keys.D))
-				dx = 1;
-			else if(InputHandler.getInstance().isKeyDown(Keys.A))
-				dx = -1;
-			else if(InputHandler.getInstance().isKeyDown(Keys.W))
-				dy = 1;
-			else if(InputHandler.getInstance().isKeyDown(Keys.S))
-				dy = -1;
-			
-			if(InputHandler.getInstance().isKeyDown(Keys.SPACE)) {
-				dx *= 10;
-				dy *= 10;
-			}
-			
-			translate(dx, dy);
-			super.update();
+
+		super.update();
+		
+		if(Debug.isMode(Debug.Mode.CAMERA)) {
+			Debug.processCamera(this);
 			return;
 		}
 		
-		
-		super.update();
 		if(follow == null)
 			return;
 		

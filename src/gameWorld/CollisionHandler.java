@@ -2,6 +2,7 @@ package gameWorld;
 
 import gameObject.GameObject;
 import gameObject.Sensor;
+import misc.Debug;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -9,14 +10,12 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import core.ingame.GameProperties;
-
 public class CollisionHandler implements ContactListener {
 
 	@Override
 	public void beginContact(Contact contact) {
 		boolean handled = handleCollision(contact, true);
-		if (!handled && GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
+		if (!handled && Debug.isMode(Debug.Mode.CONSOLE))
 			System.err.println("Unhandled Collision (" + contact.toString() + ")");
 	}
 

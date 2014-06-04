@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import misc.Debug;
 import misc.GeometricObject;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -65,7 +66,7 @@ public class GameRender implements Screen, ApplicationListener {
 		Map.getInstance().run();
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
-		if(GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
+		if(Debug.isMode(Debug.Mode.CONSOLE))	
 			log.log();
 		
 		Gdx.gl.glClearColor(255, 255, 255, 1);//(0,0,0,1)

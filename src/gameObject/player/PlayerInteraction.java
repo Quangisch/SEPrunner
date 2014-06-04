@@ -3,6 +3,7 @@ package gameObject.player;
 import gameObject.GameObject;
 import gameObject.enemy.Enemy;
 import gameObject.player.InputHandler.Click;
+import misc.Debug;
 import misc.GeometricObject;
 
 import com.badlogic.gdx.graphics.Color;
@@ -187,7 +188,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		clickPoint = new Vector2(click.screenX, click.screenY);
 		Camera.getInstance().unproject(clickPoint);
 		
-		switch(GameProperties.debugMode) {
+		switch(Debug.getMode()) {
 		case GEOMETRIC:
 			new GeometricObject(new Circle(startPoint.x, startPoint.y, 5), Color.RED);
 			break;

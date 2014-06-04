@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import misc.Debug;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -20,14 +22,12 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
-import core.ingame.GameProperties.Debug;
 
 public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates, Runnable,
 		Disposable {
@@ -106,7 +106,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 			JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation().toUpperCase());
 			if (animationFrames == null) {
-				if(GameProperties.debugMode.equals(Debug.CONSOLE))
+				if(Debug.isMode(Debug.Mode.CONSOLE))
 					System.err.println(iS.getAnimation() + " not found");
 				continue;
 			}
@@ -189,7 +189,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		aniDraw = getInteractionState().getAnimationIndex();
 		stateTime = 0;
 		
-		if(GameProperties.debugMode.equals(Debug.CONSOLE))
+		if(Debug.isMode(Debug.Mode.CONSOLE))
 			System.out.println(">>apply " + currentState.toString());
 
 		return true;
