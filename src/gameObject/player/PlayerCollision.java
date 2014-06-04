@@ -29,6 +29,10 @@ abstract class PlayerCollision extends PlayerInteraction {
 					setGrounded(start);
 				return true;
 			}
+			
+			if(mySensor.getSensorType() == SensorTypes.BODY && other.getGameObjectType() == GameObjectTypes.GROUND) {
+				setBodyBlocked(start);
+			}
 		}
 
 		return false;

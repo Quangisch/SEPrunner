@@ -136,13 +136,15 @@ public class Map implements DrawableMap, Runnable {
 
 		for (JsonValue JGround : JGrounds) {
 			ChainShape p = new ChainShape();
-			float[] vertices = new float[JGround.size];
-			for (int i = 0; i < vertices.length; i += 2) {
-				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
-//				TODO height
-				vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
+			Vector2[] vertices = new Vector2[JGround.size/2];
+			for (int i = 0; i < vertices.length; i++) {
+				vertices[i] = new Vector2(GameProperties.pixelToMeter(JGround.getFloat(i*2)),
+						GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i*2 + 1)));
+//				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
+////				TODO height
+//				vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
 			}
-			p.createChain(vertices);
+			p.createLoop(vertices);
 
 			ground.addFixture(0, 0.4f, 0, false, p, true);
 		}

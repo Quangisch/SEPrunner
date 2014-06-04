@@ -3,43 +3,49 @@ package gameObject.player;
 import gameObject.Collisionable;
 import gameObject.GameObject;
 import gameObject.Sensor;
+import gameObject.enemy.Enemy;
 import gameWorld.Map;
 
 import com.badlogic.gdx.math.Vector2;
+
+import core.ingame.GameProperties;
 
 public class Shuriken extends GameObject {
 
 	private Vector2 direction;
 	private int ttl = 70;
 
-	public Shuriken(Collisionable thrower, Vector2 direction) {
+	public Shuriken(Collisionable thrower, Vector2 clickPoint) {
 		super(thrower.getWorld(), thrower.getLocalCenterInWorld());
 
 		this.init("shuriken");
-		this.setGameObjectType(GameObjectTypes.SHURIKAN);
+		this.setGameObjectType(GameObjectTypes.SHURIKEN);
 
-		body.setGravityScale(0);
-		this.direction = direction;
-		this.direction.nor();
-		this.direction.scl(7);
-
+		direction = GameProperties.pixelToMeter(clickPoint.sub(getPosition()));
 		Map.getInstance().addGameObject(this);
 
-		System.out.println("Init Shurikan@" + getX() + "x" + getY() + " direction:" + this.direction.toString());
-		body.applyLinearImpulse(direction, getWorldPosition(), true);
+		body.setGravityScale(0);
+		body.applyLinearImpulse(direction.nor().scl(7), getWorldPosition(), true);
 	}
 
 	public void run() {
-		if (ttl <= 0)
+		if (ttl-- <= 0)
 			dispose();
-		else
-			ttl--;
 	}
 
 	@Override
 	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
 		if (start) {
-			if (other.getGameObjectType() == GameObjectTypes.GROUND) dispose();
+			
+			switch(other.getGameObjectType()) {
+			
+			case GameObjectTypes.GROUND :
+				dispose();
+				break;
+			case GameObjectTypes.ENEMY :
+				((Enemy) other).setStun();
+				break;
+			}
 		}
 
 		return false;

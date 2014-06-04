@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonReader;
@@ -57,7 +58,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	protected int aniDraw;
 
 	private InteractionState defaultState;
-	protected InteractionState currentState;
+	private InteractionState currentState;
 
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
@@ -105,7 +106,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 			JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation().toUpperCase());
 			if (animationFrames == null) {
-				System.err.println(iS.getAnimation() + " not found");
+				if(GameProperties.debugMode.equals(Debug.CONSOLE))
+					System.err.println(iS.getAnimation() + " not found");
 				continue;
 			}
 
@@ -156,7 +158,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		primaryFixture = setFixture(density, friction, restitution, sensor, boundingBoxes[defaultState.getAnimationIndex()],
 				false);
-
+		
 		setInteractionState(defaultState);
 	}
 
@@ -170,8 +172,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	public boolean setInteractionState(InteractionState state) {
 		if (this.currentState == state) return true;
-
-		if (currentState != null) System.out.println("try to set " + state.toString() + " @current " + currentState.toString());
 
 		if (isAnimationFinished()) this.currentState = state;
 

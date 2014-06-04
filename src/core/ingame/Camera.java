@@ -98,4 +98,12 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		return vec;
 	}
 	
+	public Vector2 project(Vector2 vec) {
+		Vector3 v = new Vector3(vec.x, vec.y, 0);
+		project(v);
+		vec.x = v.x;
+		vec.y = v.y;
+		return vec;
+	}
+	
 }

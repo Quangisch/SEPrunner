@@ -22,6 +22,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	private Click click;
 	private Vector2 target;
 	private InteractionState nextState, interruptedState;
+	private boolean bodyBlocked = false;
 	
 	protected PlayerInteraction(World world, Vector2 position) {
 		super(world, position);
@@ -189,7 +190,6 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		switch(GameProperties.debugMode) {
 		case GEOMETRIC:
 			new GeometricObject(new Circle(startPoint.x, startPoint.y, 5), Color.RED);
-			new GeometricObject(new Circle(clickPoint.x, clickPoint.y, 10), Color.GREEN);
 			break;
 		case CONSOLE:
 			System.out.println(startPoint.toString()+" -- "+clickPoint.toString());
@@ -203,11 +203,14 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		if(shuriken <= 0)
 			return false;
 	
+		if(clickPoint.x < startPoint.x && tryToFlip())
+			return false;
+		
 		interruptedState = getInteractionState();
 		applyState(nextState = InteractionState.THROW);
 		
 //		shuriken--;
-		new Shuriken(this, clickPoint.sub(startPoint));
+		new Shuriken(this, clickPoint);
 		actionTimer = 0;
 		
 		return true;
@@ -230,10 +233,14 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	}
 	
 	private void beginHook(Vector2 target) {
+		
+		if(target.x < getLocalCenterInWorld().x && !tryToFlip())
+			return;
+		
 		nextState = InteractionState.HOOK;
 		body.setGravityScale(0);
 //		body.setTransform(target, body.getAngle());
-		this.target = target;
+		this.target = target.sub(getLocalCenterInWorld());
 	}
 	
 	private final int HOOK_TIME_LIMIT = 30;
@@ -257,7 +264,12 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		return false;
 	}
 
-	
+	private boolean tryToFlip() {
+		if(InputHandler.getInstance().isKeyDown(GameProperties.keyRight))
+			return false;
+		setFlip(true);
+		return true;
+	}
 	
 	@Override
 	public boolean isDetectable(Enemy enemy) {
@@ -338,8 +350,16 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		target = null;
 		hookTime = 0;
 		body.setGravityScale(1);
-		currentState = InteractionState.STAND;
+		setInteractionState(InteractionState.STAND);
 		applyAnimation();
+	}
+
+	public boolean isBodyBlocked() {
+		return bodyBlocked;
+	}
+
+	public void setBodyBlocked(boolean bodyBlocked) {
+		this.bodyBlocked = bodyBlocked;
 	}
 
 }
