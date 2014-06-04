@@ -1,27 +1,9 @@
 package gameObject;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public interface Collisionable {
-
-	/** @param world Kollisionsebene
-	 * @param type Beweglichkeit
-	 * @param position Positionsvektor
-	 * @param density Dichte
-	 * @param friction Reibungskoeffizient
-	 * @param restitution Elastizitätskoeffizient
-	 * @param sensor Durchlässigkeit
-	 * @param shape geometrische Form */
-	public void initBody(BodyDef.BodyType type, float density, float friction, float restitution, boolean sensor, Shape shape,
-			boolean disposeShape);
-
-	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
-
-	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape, boolean disposeShape);
 
 	/** Handle collision on impact.
 	 * 

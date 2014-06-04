@@ -56,9 +56,21 @@
 						"position" : [200, 150],
 						"scale" : 1.0,
 						"flip" : false,
+						"isPlayer" : true,
 						"AI" : {
-							"isPlayer" : true
-							}
+						}
+					},
+					{
+						"ID" : "Enemy",
+						"json" : "ninja_full",
+						"position" : [400, 200],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [300, 450]
+						}
 					}
+					
 				]
 }

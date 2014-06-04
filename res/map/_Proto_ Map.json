@@ -18,7 +18,7 @@
 						"isPlayer" : true,
 						"AI" : {	
 							"ID" : <AI ID>,
-							"Params" : { <JSONValue direkt an AI Klasse> }
+							"Param" : { <JSONValue direkt an AI Klasse> }
 							}
 					},
 					{...}

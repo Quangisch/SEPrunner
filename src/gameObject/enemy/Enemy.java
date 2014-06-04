@@ -1,56 +1,46 @@
 package gameObject.enemy;
 
-import gameObject.player.Player;
-import gameObject.statics.Hideable;
+import gameObject.GameObject;
+import gameObject.Sensor;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Enemy extends EnemyAI implements Runnable, Stunnable {
+public class Enemy extends GameObject {
+
+	protected boolean stunned;
 
 	public Enemy(World world, Vector2 position) {
 		super(world, position);
-		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public void init(String name) {
+		super.init(name);
+		setGameObjectType(GameObjectTypes.ENEMY);
+		setLayer(3);
+		body.setLinearDamping(2.5f);
+		body.setFixedRotation(true);
+		addSensor(new Sensor(this, Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION, Sensor.HANDLE_FIRST));
+	}
+
+	@Override
 	public void run() {
-		
+		if (AI != null) AI.run();
 	}
 
-	@Override
 	public boolean isStunned() {
-		// TODO Auto-generated method stub
-		return false;
+		return stunned;
 	}
 
-	@Override
-	public boolean isCarriable(Vector2 position) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void setStun() {
-		// TODO Auto-generated method stub
+		stunned = true;
 	}
 
-	@Override
-	public void attachToCarrier(Player player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void detachFromCarrier(Player player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean disposeAndHide(Hideable hideable) {
-		// TODO Auto-generated method stub
+	public boolean isCarriable(Vector2 position) {
+		// TODO
 		return false;
 	}
 
-	
 }
