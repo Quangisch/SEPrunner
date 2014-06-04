@@ -6,18 +6,20 @@ import misc.Debug;
 import misc.Debug.Mode;
 
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactFilter;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+
+import gameObject.IGameObjectTypes.GameObjectTypes;
 
 public class CollisionHandler implements ContactListener {
 
 	@Override
 	public void beginContact(Contact contact) {
 		boolean handled = handleCollision(contact, true);
-		if (!handled)
-			Debug.println("Unhandled Collision (" + contact.toString() + ")", Mode.CONSOLE);
+		if (!handled) Debug.println("Unhandled Collision (" + contact.toString() + ")", Mode.CONSOLE);
 	}
 
 	private boolean handleCollision(Contact contact, boolean start) {
@@ -26,10 +28,10 @@ public class CollisionHandler implements ContactListener {
 
 		if (fixA == null || fixB == null || fixA.getBody() == null || fixB.getBody() == null) return false;
 
-		GameObject objectA = (fixA.getBody().getUserData() instanceof GameObject) ? (GameObject) fixA.getBody().getUserData()
-				: null;
-		GameObject objectB = (fixB.getBody().getUserData() instanceof GameObject) ? (GameObject) fixB.getBody().getUserData()
-				: null;
+		GameObject objectA = (fixA.getBody().getUserData() instanceof GameObject) ? (GameObject) fixA.getBody()
+				.getUserData() : null;
+		GameObject objectB = (fixB.getBody().getUserData() instanceof GameObject) ? (GameObject) fixB.getBody()
+				.getUserData() : null;
 		Sensor sensorA = (fixA.getUserData() instanceof Sensor) ? (Sensor) fixA.getUserData() : null;
 		Sensor sensorB = (fixB.getUserData() instanceof Sensor) ? (Sensor) fixB.getUserData() : null;
 
@@ -64,5 +66,24 @@ public class CollisionHandler implements ContactListener {
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 		// TODO Auto-generated method stub
+	}
+
+	public static class MoverContactFilter implements ContactFilter {
+
+		@Override
+		public boolean shouldCollide(Fixture fixA, Fixture fixB) {
+			GameObject objectA = (fixA.getBody().getUserData() instanceof GameObject) ? (GameObject) fixA.getBody()
+					.getUserData() : null;
+			GameObject objectB = (fixB.getBody().getUserData() instanceof GameObject) ? (GameObject) fixB.getBody()
+					.getUserData() : null;
+
+			boolean isMovableA = objectA == null || objectA.getGameObjectType() == GameObjectTypes.PLAYER
+					|| objectA.getGameObjectType() == GameObjectTypes.ENEMY;
+
+			boolean isMovableB = objectB == null || objectB.getGameObjectType() == GameObjectTypes.PLAYER
+					|| objectB.getGameObjectType() == GameObjectTypes.ENEMY;
+
+			return !(isMovableA && isMovableB);
+		}
 	}
 }
