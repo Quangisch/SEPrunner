@@ -1,6 +1,5 @@
 package gameObject;
 
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
@@ -8,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import misc.BodyFunctions;
 import misc.Debug;
 import misc.Debug.Mode;
 
@@ -172,11 +172,11 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public boolean setInteractionState(InteractionState state) {
 		return setInteractionState(state, false);
 	}
-	
+
 	public boolean setInteractionState(InteractionState state, boolean force) {
 		if (this.currentState == state) return true;
 		if (currentState != null)
-				Debug.println("try to set " + state.toString() + " @current " + currentState.toString(), Mode.CONSOLE);
+			Debug.println("try to set " + state.toString() + " @current " + currentState.toString(), Mode.CONSOLE);
 
 		if (force || isAnimationFinished()) 
 			this.currentState = state;
@@ -341,7 +341,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public World getWorld() {
 		return body.getWorld();
 	}
-	
+
 	public Body getBody() {
 		return body;
 	}
@@ -370,7 +370,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	public void setScale(float scale) {
-		// TODO Scale Body
+		// BodyFunctions.scaleShape(primaryFixture.getShape(), getLocalCenterInWorld(), scale / this.scale, true);
 		this.scale = scale;
 	}
 
