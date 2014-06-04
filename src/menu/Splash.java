@@ -19,31 +19,35 @@ public class Splash implements Screen{
 	private SpriteBatch batch;
 	private Sprite splash;
 	private TweenManager tweenManager;
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		tweenManager.update(delta);
-		
 		batch.begin();
 		splash.draw(batch);
 		batch.end();
+		
+		tweenManager.update(delta);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		
+		splash.setSize(width, height);
 	}
 
 	@Override
 	public void show() {
+		//apply preferences
+		Gdx.graphics.setVSync(MenuOption.vSync());
+		
 		batch = new SpriteBatch();
+		
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-		//Gdx.files.internal("res/GeneralForests.png")
-		Texture splashTexture = new Texture(Gdx.files.internal("res/img/splash.png"));
-		splash = new Sprite(splashTexture);
+		
+		splash = new Sprite(new Texture(Gdx.files.internal("res/img/splash.png")));
 		splash.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		Tween.set(splash, SpriteAccessor.ALPHA).target(0).start(tweenManager);
@@ -52,11 +56,13 @@ public class Splash implements Screen{
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());  //link to 2nd img
 			}
 		}).start(tweenManager);
+		
+		tweenManager.update(Float.MIN_VALUE);
 	}
 
 	@Override
 	public void hide() {
-		
+		dispose();
 	}
 
 	@Override

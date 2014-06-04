@@ -8,7 +8,7 @@ public class Project extends Game{
 	
 	@Override
 	public void create() {
-		setScreen(new Splash()); //set first img, next Z52 in splash
+		setScreen(new Splash()); //set first img, next Z56 in splash
 	}
 
 	@Override
