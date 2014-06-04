@@ -1,6 +1,5 @@
 package gameObject.enemy;
 
-
 import gameObject.GameObject;
 import gameObject.ObjectInteraction;
 import gameObject.Sensor;
@@ -35,11 +34,12 @@ public class Enemy extends ObjectInteraction {
 	@Override
 	public void run() {
 		if (AI != null) AI.run();
+		super.run();
 	}
 
 	public void setAI(IEnemyAI ai) {
 		if (AI == ai) return;
-		AI = ai;
+		iHandler = AI = ai;
 		AI.setEnemy(this);
 	}
 
@@ -59,14 +59,9 @@ public class Enemy extends ObjectInteraction {
 		// TODO
 		return false;
 	}
-	
-	
-	
+
 	public enum Pattern {
-		STAND,
-		WALK_RIGHT, WALK_LEFT,
-		RUN_RIGHT, RUN_LEFT,
-		JUMP, JUMP_LEFT, JUMP_RIGHT;
+		STAND, WALK_RIGHT, WALK_LEFT, RUN_RIGHT, RUN_LEFT, JUMP, JUMP_LEFT, JUMP_RIGHT;
 	}
 
 	@Override

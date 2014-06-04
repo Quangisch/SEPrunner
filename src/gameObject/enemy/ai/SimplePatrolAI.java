@@ -1,13 +1,11 @@
 package gameObject.enemy.ai;
 
 import gameObject.GameObject;
-import gameObject.IInteractionStates.InteractionState;
 import gameObject.ISensorTypes;
 import gameObject.Sensor;
 import misc.Debug;
 import misc.Debug.Mode;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.InputHandler.Click;
@@ -30,14 +28,6 @@ public class SimplePatrolAI extends EnemyAI {
 	public void run() {
 		if(getEnemy() == null)
 			return;
-		
-		Vector2 basicForce = new Vector2(1,0);
-
-		if(!getEnemy().getInteractionState().equals(InteractionState.WALK)) {
-			getEnemy().setInteractionState(InteractionState.WALK);
-			getEnemy().applyAnimation();
-		}
-		getEnemy().getBody().applyLinearImpulse(basicForce.scl(2), getEnemy().getLocalCenterInWorld(), true);
 	}
 
 	@Override
@@ -55,8 +45,7 @@ public class SimplePatrolAI extends EnemyAI {
 
 	@Override
 	public boolean isKeyDown(ActionKey action) {
-		// TODO Auto-generated method stub
-		return false;
+		return action == ActionKey.RIGHT;
 	}
 
 	@Override
