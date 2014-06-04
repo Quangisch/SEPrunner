@@ -89,9 +89,8 @@ public class Map implements DrawableMap, Runnable {
 		// }
 		// batch.enableBlending();
 
-		for(MapTexture mT : mapTextures)
-			if(mT.texture != null)
-				batch.draw(mT.texture, mT.x, mT.y);
+		for (MapTexture mT : mapTextures)
+			if (mT.texture != null) batch.draw(mT.texture, mT.x, mT.y);
 
 		Collections.sort(objects, new Comparator<GameObject>() {
 
@@ -106,8 +105,7 @@ public class Map implements DrawableMap, Runnable {
 
 		// if (player != null) player.draw(batch);
 
-		if (debugRender != null && Debug.isMode(Debug.Mode.BOXRENDERER))
-			debugRender.render(world, debugMatrix);
+		if (debugRender != null && Debug.isMode(Debug.Mode.BOXRENDERER)) debugRender.render(world, debugMatrix);
 
 		world.clearForces();
 	}
@@ -128,7 +126,7 @@ public class Map implements DrawableMap, Runnable {
 		JsonValue mapTextureData = root.get("mapTexture");
 		mapTextures = new MapTexture[mapTextureData.size];
 		int part = 0;
-		for(JsonValue mT : mapTextureData) {
+		for (JsonValue mT : mapTextureData) {
 			JsonValue position = mT.get("position");
 			mapTextures[part++] = new MapTexture(position.getFloat(0), position.getFloat(1), mT.getString("texture"));
 		}
@@ -139,13 +137,13 @@ public class Map implements DrawableMap, Runnable {
 
 		for (JsonValue JGround : JGrounds) {
 			ChainShape p = new ChainShape();
-			Vector2[] vertices = new Vector2[JGround.size/2];
+			Vector2[] vertices = new Vector2[JGround.size / 2];
 			for (int i = 0; i < vertices.length; i++) {
-				vertices[i] = new Vector2(GameProperties.pixelToMeter(JGround.getFloat(i*2)),
-						GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i*2 + 1)));
-//				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
-////				TODO height
-//				vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
+				vertices[i] = new Vector2(GameProperties.pixelToMeter(JGround.getFloat(i * 2)),
+						GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i * 2 + 1)));
+				//				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
+				////				TODO height
+				//				vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
 			}
 			p.createLoop(vertices);
 
@@ -158,6 +156,7 @@ public class Map implements DrawableMap, Runnable {
 			for (JsonValue o : root.get("objects"))
 				loadMapObject(o);
 
+		world.setContactFilter(new CollisionHandler.MoverContactFilter());
 		world.setContactListener(new CollisionHandler());
 	}
 
@@ -236,11 +235,12 @@ public class Map implements DrawableMap, Runnable {
 	public boolean removeGameObject(GameObject object) {
 		return objects.remove(object);
 	}
-	
+
 	private class MapTexture {
+
 		private final float x, y;
 		private final Texture texture;
-		
+
 		private MapTexture(float x, float y, String texturePath) {
 			this.x = x;
 			this.y = y;
