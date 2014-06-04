@@ -3,8 +3,6 @@ package gameWorld;
 import gameObject.GameObject;
 import gameObject.IGameObjectTypes;
 import gameObject.enemy.Enemy;
-import gameObject.enemy.ai.IEnemyAI;
-import gameObject.enemy.ai.SimplePatrolAI;
 import gameObject.player.Player;
 
 import java.io.FileNotFoundException;
@@ -173,6 +171,8 @@ public class Map implements DrawableMap, Runnable {
 			break;
 		case 1:
 			obj = new Enemy(world, pos);
+			if (root.hasChild("AI"))
+				((Enemy)obj).setNewAI(root.get("AI"));
 			break;
 		case -1:
 		default:
@@ -182,22 +182,6 @@ public class Map implements DrawableMap, Runnable {
 		obj.init(root.getString("json"));
 		obj.setScale(root.getFloat("scale", 1f));
 		obj.setFlip(root.getBoolean("flip", false));
-
-		IEnemyAI ai = null;
-		if (root.hasChild("AI"))
-			switch (StringFunctions.getMostEqualIndexIgnoreCase(root.get("AI").getString("ID", ""), new String[] //
-					{ "SimplePatrolAI" })) {
-			case 0:
-				ai = new SimplePatrolAI();
-				break;
-			case 1:
-				break;
-			case -1:
-			default:
-				break;
-			}
-		if (ai != null) ai.init(root.get("AI").get("Param"));
-		obj.setAI(ai);
 
 		objects.add(obj);
 	}

@@ -41,10 +41,11 @@ public class Shuriken extends GameObject {
 			
 			case GameObjectTypes.GROUND :
 				dispose();
-				break;
+				return true;
 			case GameObjectTypes.ENEMY :
 				((Enemy) other).setStun();
-				break;
+				dispose();
+				return true;
 			}
 		}
 

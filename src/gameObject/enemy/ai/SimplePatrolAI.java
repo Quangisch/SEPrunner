@@ -2,13 +2,16 @@ package gameObject.enemy.ai;
 
 import gameObject.GameObject;
 import gameObject.IInteractionStates.InteractionState;
+import gameObject.ISensorTypes;
 import gameObject.Sensor;
+import misc.Debug;
+import misc.Debug.Mode;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 
-import core.ingame.KeyMap;
 import core.ingame.InputHandler.Click;
+import core.ingame.KeyMap;
 import core.ingame.KeyMap.ActionKey;
 
 public class SimplePatrolAI extends EnemyAI {
@@ -38,8 +41,9 @@ public class SimplePatrolAI extends EnemyAI {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySender, GameObject other, Sensor otherSensor) {
-		// TODO Auto-generated method stub
+	public boolean handleCollision(boolean start, Sensor sender, GameObject other, Sensor otherSensor) {
+		if (sender != null && sender.getSensorType() == ISensorTypes.SensorTypes.VISION)
+			Debug.print("Seeingln", Mode.CONSOLE);
 		return false;
 	}
 

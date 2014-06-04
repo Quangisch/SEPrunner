@@ -83,7 +83,7 @@ public class CollisionHandler implements ContactListener {
 			boolean isMovableB = objectB == null || objectB.getGameObjectType() == GameObjectTypes.PLAYER
 					|| objectB.getGameObjectType() == GameObjectTypes.ENEMY;
 
-			return !(isMovableA && isMovableB);
+			return !(isMovableA && isMovableB) || fixA.isSensor() || fixB.isSensor();
 		}
 	}
 }
