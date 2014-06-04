@@ -16,6 +16,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 
+import misc.Debug;
 import misc.StringFunctions;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -33,7 +34,7 @@ import core.ingame.GameProperties;
 
 public class Map implements DrawableMap, Runnable {
 
-	protected Texture mapTexture;
+	protected MapTexture[] mapTextures;
 	protected World world;
 
 	protected List<GameObject> objects;
@@ -88,7 +89,9 @@ public class Map implements DrawableMap, Runnable {
 		// }
 		// batch.enableBlending();
 
-		if (mapTexture != null) batch.draw(mapTexture, 0, 0);
+		for(MapTexture mT : mapTextures)
+			if(mT.texture != null)
+				batch.draw(mT.texture, mT.x, mT.y);
 
 		Collections.sort(objects, new Comparator<GameObject>() {
 
@@ -103,7 +106,7 @@ public class Map implements DrawableMap, Runnable {
 
 		// if (player != null) player.draw(batch);
 
-		if (debugRender != null && GameProperties.debugMode.equals(GameProperties.Debug.BOXRENDERER))
+		if (debugRender != null && Debug.isMode(Debug.Mode.BOXRENDERER))
 			debugRender.render(world, debugMatrix);
 
 		world.clearForces();
@@ -121,7 +124,14 @@ public class Map implements DrawableMap, Runnable {
 		if (world == null)
 			world = new World(new Vector2(root.get("gravity").getFloat(0), root.get("gravity").getFloat(1)), false);
 
-		mapTexture = new Texture(root.getString("mapTexture"));
+		// TEXTURE
+		JsonValue mapTextureData = root.get("mapTexture");
+		mapTextures = new MapTexture[mapTextureData.size];
+		int part = 0;
+		for(JsonValue mT : mapTextureData) {
+			JsonValue position = mT.get("position");
+			mapTextures[part++] = new MapTexture(position.getFloat(0), position.getFloat(1), mT.getString("texture"));
+		}
 
 		// GROUND
 		JsonValue JGrounds = root.get("ground");
@@ -129,12 +139,15 @@ public class Map implements DrawableMap, Runnable {
 
 		for (JsonValue JGround : JGrounds) {
 			ChainShape p = new ChainShape();
-			float[] vertices = new float[JGround.size];
-			for (int i = 0; i < vertices.length; i += 2) {
-				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
-				vertices[i + 1] = GameProperties.pixelToMeter(mapTexture.getHeight() - JGround.getFloat(i + 1));
+			Vector2[] vertices = new Vector2[JGround.size/2];
+			for (int i = 0; i < vertices.length; i++) {
+				vertices[i] = new Vector2(GameProperties.pixelToMeter(JGround.getFloat(i*2)),
+						GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i*2 + 1)));
+//				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
+////				TODO height
+//				vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
 			}
-			p.createChain(vertices);
+			p.createLoop(vertices);
 
 			ground.addFixture(0, 0.4f, 0, false, p, true);
 		}
@@ -220,4 +233,18 @@ public class Map implements DrawableMap, Runnable {
 		return objects.add(object);
 	}
 
+	public boolean removeGameObject(GameObject object) {
+		return objects.remove(object);
+	}
+	
+	private class MapTexture {
+		private final float x, y;
+		private final Texture texture;
+		
+		private MapTexture(float x, float y, String texturePath) {
+			this.x = x;
+			this.y = y;
+			this.texture = new Texture(texturePath);
+		}
+	}
 }

@@ -3,6 +3,7 @@ package gameObject.player;
 import gameObject.GameObject;
 import gameObject.enemy.Enemy;
 import gameObject.player.InputHandler.Click;
+import misc.Debug;
 import misc.GeometricObject;
 
 import com.badlogic.gdx.graphics.Color;
@@ -22,6 +23,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	private Click click;
 	private Vector2 target;
 	private InteractionState nextState, interruptedState;
+	private boolean bodyBlocked = false;
 	
 	protected PlayerInteraction(World world, Vector2 position) {
 		super(world, position);
@@ -32,6 +34,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		
 		boolean action = false;
 		
+		processHook();
 		
 //		CLICK 
 		click = InputHandler.getInstance().getClick();
@@ -42,7 +45,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 				if(InputHandler.getInstance().buttonDown(GameProperties.keyThrow))
 					action = processThrow();
 				else if(InputHandler.getInstance().buttonDown(GameProperties.keyHook))
-					action = processHook();
+					action = tryToHook();
 				
 				InputHandler.getInstance().resetClick();
 			}
@@ -139,9 +142,7 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 			return;
 		
 		if(!nextState.equals(getInteractionState())) {
-			System.out.println("currentState@"+getInteractionState()+" nextState@"+nextState.toString());
 			setInteractionState(nextState);
-			
 			if(applyAnimation())
 				nextState = null;
 		} else
@@ -154,10 +155,6 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 	private int runTapTimer = 0;
 	
 	private boolean processRun() {
-		
-		
-		if(GameProperties.debugMode.equals(GameProperties.Debug.CONSOLE))
-			System.out.println(runTapTimer);
 		
 		switch(getInteractionState()) {
 			case WALK:
@@ -191,10 +188,9 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		clickPoint = new Vector2(click.screenX, click.screenY);
 		Camera.getInstance().unproject(clickPoint);
 		
-		switch(GameProperties.debugMode) {
+		switch(Debug.getMode()) {
 		case GEOMETRIC:
 			new GeometricObject(new Circle(startPoint.x, startPoint.y, 5), Color.RED);
-			new GeometricObject(new Circle(clickPoint.x, clickPoint.y, 10), Color.GREEN);
 			break;
 		case CONSOLE:
 			System.out.println(startPoint.toString()+" -- "+clickPoint.toString());
@@ -208,19 +204,22 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		if(shuriken <= 0)
 			return false;
 	
+		if(clickPoint.x < startPoint.x && tryToFlip())
+			return false;
+		
 		interruptedState = getInteractionState();
 		applyState(nextState = InteractionState.THROW);
 		
 //		shuriken--;
-		new Shuriken(this, clickPoint.sub(startPoint));
+		new Shuriken(this, clickPoint);
 		actionTimer = 0;
 		
 		return true;
 	}
 	
-	private final int HOOK_RADIUS = 300;
+	private final int HOOK_RADIUS = 400;
 	
-	private boolean processHook() {
+	private boolean tryToHook() {
 		Vector2 endPoint = clickPoint.cpy();
 		
 		endPoint.sub(startPoint);
@@ -234,10 +233,30 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		return true;
 	}
 	
-	private void hook(Vector2 target) {
-		nextState = InteractionState.HOOK;
+	private void beginHook(Vector2 target) {
 		
-		this.target = target;
+		if(target.x < getLocalCenterInWorld().x && !tryToFlip())
+			return;
+		
+		nextState = InteractionState.HOOK;
+		body.setGravityScale(0);
+//		body.setTransform(target, body.getAngle());
+		this.target = target.sub(getLocalCenterInWorld());
+	}
+	
+	private final int HOOK_TIME_LIMIT = 30;
+	private int hookTime = 0;
+	
+	private void processHook() {
+		if(target == null || !isHooking()) {
+			return;
+		}
+		
+		body.applyLinearImpulse(target.clamp(10, 15), getLocalCenterInWorld(), true);
+		hookTime++;
+		
+		if(hookTime >= HOOK_TIME_LIMIT)
+			resetHook();
 	}
 	
 	private boolean processAction() {
@@ -246,7 +265,12 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 		return false;
 	}
 
-	
+	private boolean tryToFlip() {
+		if(InputHandler.getInstance().isKeyDown(GameProperties.keyRight))
+			return false;
+		setFlip(true);
+		return true;
+	}
 	
 	@Override
 	public boolean isDetectable(Enemy enemy) {
@@ -316,11 +340,27 @@ abstract class PlayerInteraction extends GameObject implements Detectable, RayCa
 			Vector2 p = GameProperties.meterToPixel(point);
 			new GeometricObject(new Circle(p.x-5, p.y-5, 5), Color.BLUE);
 		
-			hook(point);
+			beginHook(point);
 			
 			return 0;
 		} else
 			return 1;
+	}
+	
+	protected void resetHook() {
+		target = null;
+		hookTime = 0;
+		body.setGravityScale(1);
+		setInteractionState(InteractionState.STAND);
+		applyAnimation();
+	}
+
+	public boolean isBodyBlocked() {
+		return bodyBlocked;
+	}
+
+	public void setBodyBlocked(boolean bodyBlocked) {
+		this.bodyBlocked = bodyBlocked;
 	}
 
 }

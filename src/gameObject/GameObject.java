@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import misc.Debug;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -108,7 +110,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 			JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation().toUpperCase());
 			if (animationFrames == null) {
-				System.err.println(iS.getAnimation() + " not found");
+				if(Debug.isMode(Debug.Mode.CONSOLE))
+					System.err.println(iS.getAnimation() + " not found");
 				continue;
 			}
 
@@ -159,7 +162,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		primaryFixture = setFixture(density, friction, restitution, sensor,
 				boundingBoxes[defaultState.getAnimationIndex()], false);
-
+		
 		setInteractionState(defaultState);
 	}
 
@@ -170,11 +173,11 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		return loadingTextures.get(path);
 	}
 
+
 	public boolean setInteractionState(InteractionState state) {
 		if (this.currentState == state) return true;
-
 		if (currentState != null)
-			System.out.println("try to set " + state.toString() + " @current " + currentState.toString());
+		if (currentState != null) System.out.println("try to set " + state.toString() + " @current " + currentState.toString());
 
 		if (isAnimationFinished()) this.currentState = state;
 
@@ -191,9 +194,10 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public boolean applyAnimation() {
 		aniDraw = getInteractionState().getAnimationIndex();
 		stateTime = 0;
+		
+		if(Debug.isMode(Debug.Mode.CONSOLE))
+			System.out.println(">>apply " + currentState.toString());
 
-		//		if(GameProperties.debugMode.equals(Debug.CONSOLE))
-		System.out.println(">>apply " + currentState.toString());
 		return true;
 	}
 
@@ -244,12 +248,12 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		fixtureDef.shape = shape;
 		fixtureDef.friction = friction;
 		fixtureDef.restitution = restitution;
-		Fixture fix = addFiture(fixtureDef);
+		Fixture fix = addFixture(fixtureDef);
 		if (disposeShape) shape.dispose();
 		return fix;
 	}
 
-	public Fixture addFiture(FixtureDef fixtureDef) {
+	public Fixture addFixture(FixtureDef fixtureDef) {
 		return body.createFixture(fixtureDef);
 	}
 
@@ -273,7 +277,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		sensors.add(sensor);
 		sensor.setGameObject(this);
 
-		addFiture(sensor.getFixtureDef()).setUserData(sensor);
+		addFixture(sensor.getFixtureDef()).setUserData(sensor);
 	}
 
 	public void removeSensor(Sensor sensor) {
@@ -377,7 +381,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		// TODO Scale Body
 		this.scale = scale;
 	}
-
+	
 	public void setAI(IEnemyAI ai) {
 		AI = ai;
 	}

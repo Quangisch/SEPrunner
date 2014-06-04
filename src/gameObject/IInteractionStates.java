@@ -13,7 +13,7 @@ public interface IInteractionStates {
 
 		HIDE_START(false, Animation.NORMAL), HIDE(true, Animation.LOOP), THROW(false, Animation.NORMAL),
 
-		FLY(true, Animation.LOOP), HOOK(false, Animation.NORMAL, "THROW"),
+		HOOK_FLY(true, Animation.LOOP), HOOK(false, Animation.NORMAL, "THROW"),
 
 		GRAB(true, Animation.NORMAL), GRAB_PULL(true, Animation.LOOP), GRAB_DISPOSE(false, Animation.NORMAL),
 

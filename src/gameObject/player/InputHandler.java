@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import menu.MenuMain;
+import misc.Debug;
 import misc.GeometricObject;
 
 import com.badlogic.gdx.Game;
@@ -67,10 +68,12 @@ public class InputHandler implements InputProcessor {
 		}
 
 		//		toogle debug
-		if (keycode == Keys.TAB) {
-			GameProperties.Debug.toNext();
-			System.out.println("DebugMode " + GameProperties.debugMode.toString());
-		}
+		if (keycode == Keys.TAB)
+			Debug.toogleOnOff();
+		
+		if(Debug.isOn())
+			Debug.setMode(keycode);
+			
 
 		//		tmp switchAnimationStates
 		if (keycode == Keys.N) {
@@ -159,7 +162,7 @@ public class InputHandler implements InputProcessor {
 			Vector3 vec = new Vector3(screenX, screenY, 0);
 			Camera.getInstance().unproject(vec);
 
-			switch (GameProperties.debugMode) {
+			switch (Debug.getMode()) {
 			case CONSOLE:
 				System.out.println("clickLocal@" + screenX + "x" + screenY);
 				System.out.println("clickReal @" + vec.x + "x" + vec.y);

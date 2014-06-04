@@ -1,5 +1,7 @@
 package core.ingame;
 
+import misc.Debug;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -19,29 +21,6 @@ public abstract class GameProperties {
 	public static float brightness = 1.0f;
 
 //	0: off, 1: boxrenderer, 2: geometricObject, 3: console
-	public static Debug debugMode = Debug.OFF;
-	
-	public enum Debug {
-		OFF,
-		BOXRENDERER,
-		GEOMETRIC,
-		CONSOLE;
-		
-		public static Debug toNext() {
-			switch(debugMode) {
-			case BOXRENDERER: 
-				return debugMode = Debug.GEOMETRIC;
-			case CONSOLE: 	
-				return debugMode = Debug.OFF;
-			case GEOMETRIC: 	
-				return debugMode = Debug.CONSOLE;
-			case OFF: 			
-				return debugMode = Debug.BOXRENDERER;
-			default:			
-				return debugMode = Debug.OFF;	
-			}
-		}
-	}
 	
 	public static int[] keyLeft = {Keys.A, Keys.LEFT}, 
 			keyRight = {Keys.D, Keys.RIGHT},
@@ -86,7 +65,7 @@ public abstract class GameProperties {
 		
 		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
 		
-		if(debugMode.equals(Debug.CONSOLE))
+		if(Debug.isMode(Debug.Mode.CONSOLE))
 			System.out.println(width+"x"+height);
 		
 		if(!menu && !ingame)
