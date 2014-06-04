@@ -179,8 +179,7 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	public boolean setInteractionState(InteractionState state, boolean force) {
 		if (this.currentState == state) return true;
 		if (currentState != null)
-			if (currentState != null)
-				System.out.println("try to set " + state.toString() + " @current " + currentState.toString());
+				Debug.println("try to set " + state.toString() + " @current " + currentState.toString(), Mode.CONSOLE);
 
 		if (force || isAnimationFinished()) this.currentState = state;
 
