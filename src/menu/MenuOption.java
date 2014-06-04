@@ -106,11 +106,21 @@ public class MenuOption implements Screen {
 		back.addListener(buttonHandler);
 		
 		//putting stuff together
-		table.add("Optionen").spaceBottom(50).colspan(3).expandX().row();
-		table.add();		table.add("level directory").uniformX();		table.add().row();
-		table.add(vSyncCheckBox).top().expandY().uniformX();
-		 table.add(levelDirectoryInput).top().fillX();
-		  table.add(back).bottom().right().uniformX();
+		 table.add("Optionen").spaceBottom(20).colspan(3).expandX().row();
+	table.add("Grafik").uniformX().left();   		 table.add().uniformX();	      			  table.add(vSyncCheckBox).uniformX().row();
+	table.add(" Kontrast").left();   				 table.add("   <------->").left();   		  table.add().row();
+	table.add(" Helligkeit").spaceBottom(30).left(); table.add("   <------->").left().spaceBottom(30); table.add().spaceBottom(30).row();
+	table.add("Audio").left();   	  				 table.add();   			      			  table.add().row();
+	table.add(" Effekte").left();   				 table.add("   <------->").left();   		  table.add().row();
+	table.add(" Musik").left().spaceBottom(30);   	 table.add("   <------->").left().spaceBottom(30); table.add().spaceBottom(30).row();
+	table.add("Steuerung").left();   				 table.add();   			      			  table.add().row();
+	table.add(" Springen").left();					 table.add("   W-Button").left(); 			  table.add().row();
+	table.add(" Links").left();						 table.add("   A-Button").left(); 			  table.add().row();
+	table.add(" Ducken").left();					 table.add("   S-Button").left(); 			  table.add().row();
+	table.add(" Rechts").left();					 table.add("   D-Button").left(); 			  table.add().row();
+	table.add(" Werfen").left();					 table.add("   L-Mouse").left();  			  table.add().row();
+	table.add(" Enterhaken").left();				 table.add("   R-Mouse").left();  			  table.add().row();
+	  table.add().expandY();   						 table.add();   			      			  table.add(back).bottom().right();
 		
 		stage.addActor(table);
 	}

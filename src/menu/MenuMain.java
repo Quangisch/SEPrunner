@@ -9,6 +9,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -21,17 +24,25 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MenuMain implements Screen {
 
+	private Texture backgroundTexture = new Texture(Gdx.files.internal("res/img/main menu.png"));
+	private Sprite backgroundSprite = new Sprite(backgroundTexture);
+	private SpriteBatch spriteBatch;
 	private Stage stage;
 	private Skin skin;
 	private Table table; //objects get organized on here
 	private TweenManager tweenManager; //tween-engine starter, stuff like fade-in/out animations
 	 //textButtonStyle pushed in json-file, put in skin
-	
+		
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);	//black background
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-				
+		
+		spriteBatch = new SpriteBatch();		//background laden
+		spriteBatch.begin();					//dispose spriteBatch and backgroundSprite.getTexture()
+		backgroundSprite.draw(spriteBatch);		//private state Texture, Sprite, SpriteBatch
+		spriteBatch.end();						//resize backgroundSprite.setSize(width, height);
+		
 		stage.act(delta); //updates table as well since thats in there
 		stage.draw();
 		
@@ -42,6 +53,7 @@ public class MenuMain implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		backgroundSprite.setSize(width, height);
 		stage.setViewport(width, height, false);
 		table.invalidateHierarchy();
 	}
@@ -150,6 +162,8 @@ public class MenuMain implements Screen {
 	public void dispose() {
 		stage.dispose();
 		skin.dispose();
+		spriteBatch.dispose();
+		backgroundSprite.getTexture().dispose();
 	}
 
 }

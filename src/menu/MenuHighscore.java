@@ -4,6 +4,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,6 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class MenuHighscore implements Screen {
 	
+	private Texture backgroundTexture = new Texture(Gdx.files.internal("res/img/Highscore.png"));
+	private Sprite backgroundSprite = new Sprite(backgroundTexture);
+	private SpriteBatch spriteBatch;
 	private Stage stage;
 	private Table table;
 	private Skin skin;
@@ -26,6 +32,11 @@ public class MenuHighscore implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1); 		//black screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		spriteBatch = new SpriteBatch();
+		spriteBatch.begin();
+		backgroundSprite.draw(spriteBatch);
+		spriteBatch.end();
+		
 		stage.act(delta);
 		stage.draw();
 		
@@ -34,6 +45,7 @@ public class MenuHighscore implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		backgroundSprite.setSize(width, height);
 		stage.setViewport(width, height, false);
 		table.invalidateHierarchy();
 	}
@@ -51,7 +63,7 @@ public class MenuHighscore implements Screen {
 		
 //table.debug();            // case debuglines needed 2/2
 																			//looks in skin for liststyle named default
-		List list = new List(new String[] {"1. Platz: ", "2. Platz: ", "..."}, skin);
+		List list = new List(new String[] {"      Zeit    Namen", "1.  01:18:39  Hans", "2.  01:31:42  Peter", ".."}, skin);
 		
 		ScrollPane scrollPane = new ScrollPane(list, skin);
 		
@@ -65,9 +77,9 @@ public class MenuHighscore implements Screen {
 		
 		//putting stuff together
 		table.add(new Label("Highscore", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
-		table.add(scrollPane).uniformX().expandY().top().left();
-		 table.add().uniformX();
-		  table.add(back).uniformX().bottom().right();
+		table.add(scrollPane).expandY().top().left();
+		 table.add();
+		  table.add(back).bottom().right();
 		
 		stage.addActor(table);
 	}
@@ -91,6 +103,8 @@ public class MenuHighscore implements Screen {
 	public void dispose() {
 		stage.dispose();
 		skin.dispose();
+		spriteBatch.dispose();
+		backgroundSprite.getTexture().dispose();
 	}
 
 }
