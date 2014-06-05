@@ -30,8 +30,10 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.Camera;
 import core.ingame.GameProperties;
+import core.ingame.GameProperties.GameState;
+import core.ingame.IPlayerInput;
 
-public class Map implements DrawableMap, Runnable {
+public class GameWorld implements DrawableMap, Runnable {
 
 	protected MapTexture[] mapTextures;
 	protected World world;
@@ -40,24 +42,25 @@ public class Map implements DrawableMap, Runnable {
 	protected Player player;
 	private float timeLimit, time = 0;
 
+	private IPlayerInput iHandler;
 	private Box2DDebugRenderer debugRender;
 	private Matrix4 debugMatrix;
 
-	// SINGLETON
-	private static Map instance;
-
-	public static Map getInstance() {
-		if (instance == null) instance = new Map();
-		return instance;
-	}
-
-	// END SINGLETON
-
-	private Map() {
+	public GameWorld(int level, IPlayerInput iHandler) {
+		this.iHandler = iHandler;
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
-	}
+		
+		switch(level) {
+		case 1:
+			loadMap("res/map/level1.json");
+			break;
 
+		default:
+			break;
+		}
+	}
+	
 	public void run() {
 		for (Iterator<GameObject> i = objects.iterator(); i.hasNext();) {
 			GameObject g = (GameObject) i.next();
@@ -87,7 +90,7 @@ public class Map implements DrawableMap, Runnable {
 				System.err.println("GAME OVER: TimeLimit");
 				timeLimit = 0;
 				
-				GameProperties.switchMode(true, false);
+				GameProperties.setGameState(GameState.INGAME_LOSE);
 			}
 		}
 		
@@ -126,7 +129,7 @@ public class Map implements DrawableMap, Runnable {
 		world.clearForces();
 	}
 
-	private void initMap(String json) {
+	private void loadMap(String json) {
 		JsonValue root;
 		try {
 			root = new JsonReader().parse(new FileReader(json));
@@ -151,7 +154,7 @@ public class Map implements DrawableMap, Runnable {
 
 		// GROUND
 		JsonValue JGrounds = root.get("ground");
-		GameObject ground = new GameObject(world, new Vector2(0, 0));
+		GameObject ground = new GameObject(this, new Vector2(0, 0));
 
 		for (JsonValue JGround : JGrounds) {
 			ChainShape p = new ChainShape();
@@ -186,16 +189,16 @@ public class Map implements DrawableMap, Runnable {
 		switch (StringFunctions.getMostEqualIndexIgnoreCase(root.getString("ID"), new String[] //
 				{ "player", "enemy", "hidable" })) {
 		case 0:
-			obj = new Player(world, pos);
+			obj = new Player(this, iHandler, pos);
 			if (root.getBoolean("isPlayer", false)) player = (Player) obj;
 			break;
 		case 1:
-			obj = new Enemy(world, pos);
+			obj = new Enemy(this, pos);
 			if (root.hasChild("AI"))
 				((Enemy)obj).setNewAI(root.get("AI"));
 			break;
 		case 2:
-			obj = new Hideout(world, pos);
+			obj = new Hideout(this, pos);
 			break;
 		case -1:
 		default:
@@ -209,29 +212,6 @@ public class Map implements DrawableMap, Runnable {
 		objects.add(obj);
 	}
 
-	public static void initMap(int level) {
-		resetMap();
-		instance = new Map();
-		switch (level) {
-		case 1:
-			instance.initMap("res/map/level1.json");
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	public static void resetMap() {
-		if (instance != null && instance.world != null) 
-			instance.world.dispose();
-		instance = null;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
 	public void step(float timeStep, int velocityIterations, int positionIterations) {
 		world.step(timeStep, velocityIterations, positionIterations);
 	}
@@ -243,7 +223,15 @@ public class Map implements DrawableMap, Runnable {
 	public boolean removeGameObject(GameObject object) {
 		return objects.remove(object);
 	}
-
+	
+	public Player getPlayer() {
+		return player;
+	}
+	
+	public World getWorld() {
+		return world;
+	}
+	
 	private class MapTexture {
 
 		private final float x, y;

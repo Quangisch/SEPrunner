@@ -1,6 +1,6 @@
 package core.ingame;
 
-import gameWorld.Map;
+import gameWorld.GameWorld;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -9,7 +9,6 @@ import java.util.List;
 import misc.Debug;
 import misc.GeometricObject;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -17,31 +16,31 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
-public class GameRender implements Screen, ApplicationListener {
+public class GameRender implements Screen {
 
-	private static GameRender render;
-	private int level = 1;
 	private SpriteBatch batch;
 	private FPSLogger log;
 	private List<GeometricObject> geometrics = new ArrayList<GeometricObject>();
 	
+	private GameWorld gameWorld;
+	private IPlayerInput iHandler;
+	
 	public GameRender(int level) {
-		this.level = level;
-		render = this;
+		loadResources();	//TODO
+		iHandler = new InputHandler();
+		gameWorld = new GameWorld(level, iHandler);
+		
+//		TMP for DebugMode.Geometric
+		GeometricObject.setRender(this);
 	}
 
-	public void create() {
+	@Override
+	public void show() {
 		batch = new SpriteBatch();
-		
 		log = new FPSLogger();
-		Gdx.input.setInputProcessor(InputHandler.getInstance());
-		
-//		TODO
-		loadResources();
-		Map.initMap(level);
-		
+		Gdx.input.setInputProcessor(iHandler);
 	}
-
+	
 	@Override
 	public void dispose() {
 		batch.dispose();
@@ -60,10 +59,9 @@ public class GameRender implements Screen, ApplicationListener {
 		return geometrics.remove(geo);
 	}
 
-	
-	public void render() {
-		
-		Map.getInstance().run();
+	@Override
+	public void render(float delta) {
+		gameWorld.run();
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
 		if(Debug.isMode(Debug.Mode.CONSOLE))	
@@ -76,11 +74,7 @@ public class GameRender implements Screen, ApplicationListener {
 		batch.setProjectionMatrix(Camera.getInstance().combined);
 		batch.begin();
 		
-		//Background -> f�hrt aber noch zu Lags
-//		Texture backTXT = new Texture(Gdx.files.internal("res/map/Rio.png"));
-//		batch.draw(backTXT, 150, 150, 1500, 309);
-		
-		Map.getInstance().draw(batch, deltaTime); //map
+		gameWorld.draw(batch, deltaTime); //map
 
 		HUD.getInstance().draw(batch); //userInterface
 		
@@ -94,7 +88,8 @@ public class GameRender implements Screen, ApplicationListener {
 
 		batch.end();
 
-		Map.getInstance().step(Gdx.graphics.getDeltaTime(), 6, 4);
+		gameWorld.step(Gdx.graphics.getDeltaTime(), 6, 4);
+		
 	}
 
 	@Override
@@ -111,29 +106,9 @@ public class GameRender implements Screen, ApplicationListener {
 	public void resume() {
 
 	}
-
-	public static GameRender getInstance() {
-		if (render == null) 
-			render = new GameRender(1);
-		return render;
-	}
-
-	@Override
-	public void render(float delta) {
-		// TODO Auto-generated method stub
-		render();
-		
-	}
-
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		create();
-	}
-
+	
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		
 	}
 	

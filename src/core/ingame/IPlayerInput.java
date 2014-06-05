@@ -1,9 +1,11 @@
 package core.ingame;
 
+import com.badlogic.gdx.InputProcessor;
+
 import core.ingame.InputHandler.Click;
 import core.ingame.KeyMap.ActionKey;
 
-public interface IInputHandler {
+public interface IPlayerInput extends InputProcessor {
 
 	void addActionKey(ActionKey action, int... keys);
 

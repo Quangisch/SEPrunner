@@ -1,10 +1,9 @@
 package gameObject.player;
 
-import gameObject.Collisionable;
 import gameObject.GameObject;
+import gameObject.ICollisionable;
 import gameObject.Sensor;
 import gameObject.enemy.Enemy;
-import gameWorld.Map;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -15,14 +14,14 @@ public class Shuriken extends GameObject {
 	private Vector2 direction;
 	private int ttl = 70;
 
-	public Shuriken(Collisionable thrower, Vector2 clickPoint) {
-		super(thrower.getWorld(), thrower.getLocalCenterInWorld());
+	public Shuriken(ICollisionable thrower, Vector2 clickPoint) {
+		super(thrower.getGameWorld(), thrower.getLocalCenterInWorld());
 
 		this.init("shuriken");
 		this.setGameObjectType(GameObjectTypes.SHURIKEN);
 
 		direction = GameProperties.pixelToMeter(clickPoint.sub(getPosition()));
-		Map.getInstance().addGameObject(this);
+		gameWorld.addGameObject(this);
 
 		body.setGravityScale(0);
 		body.applyLinearImpulse(direction.nor().scl(7), getWorldPosition(), true);

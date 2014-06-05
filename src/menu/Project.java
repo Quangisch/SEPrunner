@@ -9,11 +9,13 @@ public class Project extends Game{
 
 	public static final String TITLE = "SEPrunner", VERSION = "1.0.0";
 	
+	
+	
 	@Override
 	public void create() {
-		if(GameProperties.menu)
+		if(GameProperties.isInMenu())
 			setScreen(new Splash()); //set first img, next Z56 in splash
-		else if(GameProperties.ingame)
+		else 
 			setScreen(new GameRender(1));
 	}
 

@@ -8,11 +8,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class GameProperties {
+public class GameProperties {
 
-	public static boolean menu = false;
-	public static boolean ingame = false;
-	
 	public static int width = 1280;	//640
 	public static int height = 720; //360
 
@@ -21,9 +18,10 @@ public abstract class GameProperties {
 	public static float gamma = 1.0f;
 	public static float brightness = 1.0f;
 	
-	public static boolean gameOver = false;
-
-
+	private static GameState gameState = GameState.MENU;
+	
+	
+//	CONVERSION
 	final public static float PIXELPROMETER = 100;
 
 	public static float meterToPixel(float meter) {
@@ -42,12 +40,24 @@ public abstract class GameProperties {
 		return new Vector2(pixelToMeter(pixel.x), pixelToMeter(pixel.y));
 	}
 	
-	public static void switchMode(boolean menu, boolean ingame) {
-		GameProperties.menu = menu;
-		GameProperties.ingame = ingame;
-		
-		width = menu ? 1280 : 640;	//640
-		height = menu ? 720 : 360; 	//360
+//	GAMESTATES
+	
+	public enum GameState {
+		MENU,
+		INGAME,
+		INGAME_WIN, INGAME_LOSE, INGAME_PAUSE;
+	}
+	
+	public static void setGameState(GameState state) {
+		setGameState(state, 1);
+	}
+	
+	public static void setGameState(GameState state, int level) {
+
+		gameState = state;
+//		TODO
+		width = isInMenu() ? 1280 : 640;
+		height = isInMenu() ? 720 : 360; 
 		
 		if(Gdx.graphics == null)
 			return;
@@ -55,13 +65,16 @@ public abstract class GameProperties {
 		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
 		Debug.println(width + "x" + height, Mode.CONSOLE);
 		
-		if(menu && !ingame)
-			((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
-		else if(!menu && ingame)
-			((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(1));
-		
-		if(!menu && !ingame)
-			Gdx.app.exit();
+		if(isInMenu())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
+		else			((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
+			
 	}
+	
+	public static boolean isGameState(GameState state) {
+		return gameState.equals(state);
+	}
+	
+	public static boolean isInMenu() { return gameState.equals(GameState.MENU);	}
+	public static boolean isInGame() { return !isInMenu();						}
 
 }

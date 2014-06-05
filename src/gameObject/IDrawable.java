@@ -2,7 +2,7 @@ package gameObject;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public interface Drawable {
+public interface IDrawable {
 
 	public void draw(SpriteBatch batch, float deltaTime);
 

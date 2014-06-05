@@ -5,11 +5,11 @@ import gameObject.ObjectInteraction;
 import gameObject.Sensor;
 import gameObject.enemy.ai.IEnemyAI;
 import gameObject.enemy.ai.SimplePatrolAI;
+import gameWorld.GameWorld;
 import misc.StringFunctions;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonValue;
 
 public class Enemy extends ObjectInteraction {
@@ -17,8 +17,8 @@ public class Enemy extends ObjectInteraction {
 	protected IEnemyAI AI;
 	protected boolean stunned;
 
-	public Enemy(World world, Vector2 position) {
-		super(world, position);
+	public Enemy(GameWorld gameWorld, Vector2 position) {
+		super(gameWorld, position);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class Enemy extends ObjectInteraction {
 
 	public void setAI(IEnemyAI ai) {
 		if (AI == ai) return;
-		iHandler = AI = ai;
+		setInputHandler(AI = ai);
 		AI.setEnemy(this);
 	}
 

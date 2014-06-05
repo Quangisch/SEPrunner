@@ -1,9 +1,5 @@
 package core.ingame;
 
-import gameObject.IInteractionStates.InteractionState;
-import gameObject.player.Player;
-import gameWorld.Map;
-
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -11,32 +7,40 @@ import misc.Debug;
 import misc.GeometricObject;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 
+import core.ingame.GameProperties.GameState;
 import core.ingame.KeyMap.ActionKey;
 
-public class InputHandler implements InputProcessor, IInputHandler {
+public class InputHandler implements IPlayerInput {
 
 	private Set<Integer> pressedKeys = new TreeSet<Integer>();
 	private Click click;
+	private KeyMap keyMap;
 
-	protected KeyMap keyMap;
-
-	private static InputHandler instance;
-
-	public static InputHandler getInstance() {
-		if (instance == null)
-			instance = new InputHandler();
-		return instance;
+	public InputHandler() {
+		initKeyMap();
 	}
-
-	private InputHandler() {
+	
+	private void initKeyMap() {
+		
 		keyMap = new KeyMap();
+		
+		addActionKey(ActionKey.LEFT, Keys.A, Keys.LEFT);
+		addActionKey(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
+		addActionKey(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT);
+				
+		addActionKey(ActionKey.JUMP, Keys.SPACE, Keys.UP); 
+		addActionKey(ActionKey.CROUCH, Keys.S, Keys.DOWN);
+				
+		addActionKey(ActionKey.ACTION, Keys.E, Keys.ENTER);
+		addActionKey(ActionKey.THROW, Input.Buttons.LEFT);
+		addActionKey(ActionKey.HOOK, Input.Buttons.RIGHT);
 	}
 
 	public void addActionKey(ActionKey action, int... keys) {
@@ -89,7 +93,7 @@ public class InputHandler implements InputProcessor, IInputHandler {
 
 		// back to menu
 		if (keycode == Keys.BACKSPACE)
-			GameProperties.switchMode(true, false);
+			GameProperties.setGameState(GameState.MENU);
 
 		// toogle debug
 		if (keycode == Keys.TAB)
@@ -98,13 +102,6 @@ public class InputHandler implements InputProcessor, IInputHandler {
 		if (Debug.isOn())
 			Debug.setMode(keycode);
 
-		// tmp switchAnimationStates
-		if (keycode == Keys.N) {
-			Player p = Map.getInstance().getPlayer();
-			p.setInteractionState(InteractionState.values()[(p
-					.getInteractionState().ordinal() + 1)
-					% InteractionState.values().length]);
-		}
 		return false;
 	}
 
@@ -135,7 +132,6 @@ public class InputHandler implements InputProcessor, IInputHandler {
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

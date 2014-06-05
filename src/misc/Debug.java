@@ -1,11 +1,14 @@
 package misc;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 
 import core.ingame.Camera;
-import core.ingame.InputHandler;
 
-public abstract class Debug {
+public abstract class Debug implements InputProcessor {
 
 	private static boolean on;
 
@@ -140,30 +143,58 @@ public abstract class Debug {
 	private static void processCameraControll() {
 		if (!isMode(Mode.CAMERA)) return;
 
-		if (InputHandler.getInstance().isKeyDown(CAM_UP))
+		if (isKeyDown(CAM_UP))
 			moveY = 1;
-		else if (InputHandler.getInstance().isKeyDown(CAM_DOWN))
+		else if (isKeyDown(CAM_DOWN))
 			moveY = -1;
 		else
 			moveY = 0;
 
-		if (InputHandler.getInstance().isKeyDown(CAM_RIGHT))
+		if (isKeyDown(CAM_RIGHT))
 			moveX = 1;
-		else if (InputHandler.getInstance().isKeyDown(CAM_LEFT))
+		else if (isKeyDown(CAM_LEFT))
 			moveX = -1;
 		else
 			moveX = 0;
 
-		if (InputHandler.getInstance().isKeyDown(CAM_FAST))
+		if (isKeyDown(CAM_FAST))
 			camSpeed = CAMSPEED_INITIAL * CAMSPEED_UP;
 		else
 			camSpeed = CAMSPEED_INITIAL;
 
-		if (InputHandler.getInstance().isKeyDown(CAM_ZOOM_IN))
+		if (isKeyDown(CAM_ZOOM_IN))
 			zoom = -1;
-		else if (InputHandler.getInstance().isKeyDown(CAM_ZOOM_OUT))
+		else if (isKeyDown(CAM_ZOOM_OUT))
 			zoom = 1;
 		else
 			zoom = 0;
 	}
+	
+	private static boolean isKeyDown(int[] keys) {
+		for(int k : keys)
+			if(pressedKey.contains(k))
+				return true;
+		return false;
+	}
+	
+	private static Set<Integer> pressedKey = new HashSet<Integer>();
+
+	@Override
+	public boolean keyDown(int keycode) {
+		pressedKey.add(keycode);
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		pressedKey.remove(keycode);
+		return false;
+	}
+
+	public boolean keyTyped(char character) 									{ return false;	}
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) { return false;	}
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) 	{ return false;	}
+	public boolean touchDragged(int screenX, int screenY, int pointer) 			{ return false;	}
+	public boolean mouseMoved(int screenX, int screenY) 						{ return false;	}
+	public boolean scrolled(int amount) 										{ return false;	}
 }

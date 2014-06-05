@@ -15,6 +15,7 @@ import core.ingame.GameRender;
 
 public class GeometricObject implements Disposable {
 	
+	private static GameRender render;
 	private Texture texture;
 	private float x, y;
 	private int ttl = 20;
@@ -54,17 +55,21 @@ public class GeometricObject implements Disposable {
 		init(pixmap);
 	}
 	
-	
+	public static void setRender(GameRender r) {
+		render = r;
+	}
 	
 	private void init(Pixmap pixmap) {
 		texture = new Texture(pixmap);
 		pixmap.dispose();
-		GameRender.getInstance().addGeometricObject(this);
+		
+		if(render != null)
+			render.addGeometricObject(this);
 	}
 	
 	public void draw(SpriteBatch batch) {
 		if(ttl <= 0)
-			GameRender.getInstance().removeGeometricObject(this);
+			render.removeGeometricObject(this);
 		
 		batch.draw(texture, x, y);
 		ttl--;

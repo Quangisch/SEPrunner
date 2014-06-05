@@ -1,9 +1,10 @@
 package gameObject;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import gameWorld.GameWorld;
 
-public interface Collisionable {
+import com.badlogic.gdx.math.Vector2;
+
+public interface ICollisionable {
 
 	/** Handle collision on impact.
 	 * 
@@ -37,10 +38,11 @@ public interface Collisionable {
 //	 * @param grounded */
 //	public void setGrounded(boolean grounded);
 
-	/** Get corresponding world.
-	 * 
-	 * @return world */
-	public World getWorld();
+	/**
+	 * Get corresponding game world
+	 * @return
+	 */
+	public GameWorld getGameWorld();
 
 	/** Get Body Position in meter.
 	 * 

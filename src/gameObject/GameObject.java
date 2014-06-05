@@ -1,5 +1,7 @@
 package gameObject;
 
+import gameWorld.GameWorld;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
@@ -22,19 +24,19 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates,
+public class GameObject implements IDrawable, ICollisionable, IGameObjectTypes, ISensorTypes, IInteractionStates,
 		Runnable, Disposable {
 
 	protected String name;
 	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
 	protected float rotation = 0;
+	protected GameWorld gameWorld;
 
 	// BODY
 	protected Body body;
@@ -46,12 +48,14 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 	private List<Sensor> sensors;
 
+	// DRAW
 	protected boolean flip = false;
 	protected boolean visible = true;
 	protected int layer = 0;
 	protected float alpha = 1;
 	private float scale = 1;
 
+	// ANIMATIONS
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
 	protected int aniDraw;
@@ -59,14 +63,16 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	private InteractionState defaultState;
 	private InteractionState currentState;
 
-	public GameObject(World world, Vector2 position) {
+	public GameObject(GameWorld gameWorld, Vector2 position) {
+		
+		this.gameWorld = gameWorld;
 		sensors = new LinkedList<Sensor>();
 		aniDraw = 0;
 
 		// init bodyDef
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(position);
-		body = world.createBody(bodyDef);
+		body = gameWorld.getWorld().createBody(bodyDef);
 		body.setUserData(this);
 	}
 
@@ -336,8 +342,8 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	@Override
-	public World getWorld() {
-		return body.getWorld();
+	public GameWorld getGameWorld() {
+		return gameWorld;
 	}
 
 	public Body getBody() {

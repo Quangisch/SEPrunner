@@ -3,6 +3,7 @@ package gameObject;
 import gameObject.enemy.Enemy;
 import gameObject.player.Detectable;
 import gameObject.player.Shuriken;
+import gameWorld.GameWorld;
 import misc.Debug;
 import misc.GeometricObject;
 
@@ -11,11 +12,10 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.physics.box2d.World;
 
 import core.ingame.Camera;
 import core.ingame.GameProperties;
-import core.ingame.IInputHandler;
+import core.ingame.IPlayerInput;
 import core.ingame.InputHandler.Click;
 import core.ingame.KeyMap.ActionKey;
 
@@ -30,20 +30,21 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	private volatile int grounded = 0;
 	private volatile boolean hideable = false;
 
-//	private Set<Integer> keyPressed;
-	protected IInputHandler iHandler;
+	private IPlayerInput iHandler;
 	private Click click;
 
-	protected ObjectInteraction(World world, Vector2 position) {
-		super(world, position);
-//		keyPressed = new HashSet<Integer>();
+	protected ObjectInteraction(GameWorld gameWorld, Vector2 position) {
+		super(gameWorld, position);
 	}
 	
 	public void run() {
 		super.run();
-		processInput();
-		if(!isHooking())
-			processStates();
+		
+		if(iHandler != null) {
+			processInput();
+			if(!isHooking())
+				processStates();
+		}
 	}
 	
 	protected void processInput() {
@@ -516,8 +517,8 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 		grounded += start ? 1 : -1;
 	}
 	
-	public void setClick(Click click) {
-		this.click = click;
+	protected void setInputHandler(IPlayerInput iHandler) {
+		this.iHandler = iHandler;
 	}
 	
 	

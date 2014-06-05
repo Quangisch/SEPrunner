@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.ingame.GameProperties;
+import core.ingame.GameProperties.GameState;
 
 public class MenuLevelSelect implements Screen {
 	
@@ -60,7 +61,7 @@ public class MenuLevelSelect implements Screen {
 		TextButton play = new TextButton("Level starten", skin);
 		play.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				GameProperties.switchMode(false, true);
+				GameProperties.setGameState(GameState.INGAME);
 			}
 		});
 		play.pad(15);

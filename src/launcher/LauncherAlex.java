@@ -6,12 +6,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import core.ingame.GameProperties;
+import core.ingame.GameProperties.GameState;
 
 public class LauncherAlex {
 	
 	public static void main(String[] args) {
 
-		GameProperties.switchMode(true, false);
+		GameProperties.setGameState(GameState.MENU);
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = Project.TITLE + " v" + Project.VERSION;
