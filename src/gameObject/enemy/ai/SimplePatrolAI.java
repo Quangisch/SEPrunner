@@ -5,7 +5,6 @@ import gameObject.IGameObjectTypes;
 import gameObject.ISensorTypes;
 import gameObject.Sensor;
 import misc.Debug;
-import misc.Debug.Mode;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.JsonValue;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.ingame.GameProperties;
 import core.ingame.GameProperties.GameState;
 import core.ingame.InputHandler.Click;
-import core.ingame.KeyMap;
 import core.ingame.KeyMap.ActionKey;
 
 public class SimplePatrolAI extends EnemyAI {
@@ -69,18 +67,18 @@ public class SimplePatrolAI extends EnemyAI {
 		
 		//STUN
 		if(getEnemy().isStunned()){
-			System.out.println("stunned");
+			Debug.println("stunned");
 			currentAction = ActionKey.CROUCH;
 			//TODO enemy hat kein sichtfeld mehr
 		}
 		
 		//ALARM -> enemy verfolgt player TODO: kann aber nicht springen, kommt keine steigungen hoch
 		if(alarm && !getEnemy().isStunned()){
-			if(player.getX()>getEnemy().getX()){
-				currentAction = ActionKey.RIGHT;
-			}else{
-				currentAction = ActionKey.LEFT;
-			}
+//			if(player.getX()>getEnemy().getX()){
+//				currentAction = ActionKey.RIGHT;
+//			}else{
+//				currentAction = ActionKey.LEFT;
+//			}
 		}
 		//NILS
 	}
@@ -95,7 +93,7 @@ public class SimplePatrolAI extends EnemyAI {
 				&& getEnemy().getGameObjectType() == IGameObjectTypes.GameObjectTypes.ENEMY
 				&& sender != null
 				&& sender.getSensorType() == ISensorTypes.SensorTypes.FOOT){
-			System.out.println("GAME OVER");
+			Debug.println("Game Over");
 			GameProperties.setGameState(GameState.INGAME_LOSE);
 		}
 		
@@ -106,8 +104,7 @@ public class SimplePatrolAI extends EnemyAI {
 				&& sender.getSensorType() == ISensorTypes.SensorTypes.VISION){
 			alarm = true;
 			player = other;
-			System.out.println("ALARM");
-			Debug.print("Seeingln", Mode.CONSOLE);
+			Debug.println("Alarm");
 		}
 
 		

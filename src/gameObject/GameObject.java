@@ -12,6 +12,7 @@ import java.util.Map;
 import misc.Debug;
 import misc.Debug.Mode;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -225,6 +226,7 @@ public class GameObject implements IDrawable, ICollisionable, IGameObjectTypes, 
 		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
 				frame.getRegionWidth(), frame.getRegionHeight(), scale, scale, rotation, frame.getRegionX(),
 				frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(), flip, false);
+		batch.setColor(Color.WHITE);
 	}
 
 	@Override
