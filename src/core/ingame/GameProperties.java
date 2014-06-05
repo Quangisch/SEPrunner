@@ -43,9 +43,19 @@ public class GameProperties {
 //	GAMESTATES
 	
 	public enum GameState {
-		MENU,
-		INGAME,
-		INGAME_WIN, INGAME_LOSE, INGAME_PAUSE;
+		MENU(true),
+		INGAME(false),
+		INGAME_WIN(false), 
+		INGAME_LOSE(false), 
+		INGAME_PAUSE(false);
+		
+		private final boolean IN_MENU;
+		GameState(boolean menu) {
+			IN_MENU = menu;
+		}
+		
+		private boolean isIngame() 	{ return !IN_MENU;	}
+		private boolean isMenu() 	{ return IN_MENU;	}
 	}
 	
 	public static void setGameState(GameState state) {
@@ -54,13 +64,17 @@ public class GameProperties {
 	
 	public static void setGameState(GameState state, int level) {
 
+		final GameState prevState = gameState;
 		gameState = state;
-//		TODO
-		width = isInMenu() ? 1280 : 640;
-		height = isInMenu() ? 720 : 360; 
 		
-		if(Gdx.graphics == null)
+		if(Gdx.graphics == null 
+				|| (isInMenu() && prevState.isMenu()) 
+				|| (isInGame() && prevState.isIngame())) {
 			return;
+		}
+
+		width = state.isMenu() ? 1280 : 640;
+		height = state.isMenu() ? 720 : 360; 
 		
 		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
 		Debug.println(width + "x" + height, Mode.CONSOLE);
@@ -70,11 +84,30 @@ public class GameProperties {
 			
 	}
 	
+	public static void toogleIngamePause() {
+		if(gameState.equals(GameState.INGAME))
+			gameState = GameState.INGAME_PAUSE;
+		else if(gameState.equals(GameState.INGAME_PAUSE))
+			gameState = GameState.INGAME;
+	}
+	
+	public static void setGameOver() {
+		gameState = GameState.INGAME_LOSE;
+	}
+	
+	public static void setWin() {
+		gameState = GameState.INGAME_WIN;
+	}
+	
 	public static boolean isGameState(GameState state) {
 		return gameState.equals(state);
 	}
 	
 	public static boolean isInMenu() { return gameState.equals(GameState.MENU);	}
 	public static boolean isInGame() { return !isInMenu();						}
+
+	public static GameState getGameState() {
+		return gameState;
+	}
 
 }

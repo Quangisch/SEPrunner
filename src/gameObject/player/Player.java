@@ -8,11 +8,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 
 import core.ingame.Camera;
-import core.ingame.IPlayerInput;
+import core.ingame.IInputHandler;
 
 public class Player extends PlayerCollision {
 
-	public Player(GameWorld gameWorld, IPlayerInput iHandler, Vector2 position) {
+	public Player(GameWorld gameWorld, IInputHandler iHandler, Vector2 position) {
 		super(gameWorld, position);
 		setInputHandler(iHandler);
 		Camera.getInstance().setToFollowMoveable(this);

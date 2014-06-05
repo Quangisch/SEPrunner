@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Vector3;
 import core.ingame.GameProperties.GameState;
 import core.ingame.KeyMap.ActionKey;
 
-public class InputHandler implements IPlayerInput {
+public class InputHandler implements IInputHandler {
 
 	private Set<Integer> pressedKeys = new TreeSet<Integer>();
 	private Click click;
@@ -91,6 +91,10 @@ public class InputHandler implements IPlayerInput {
 						Gdx.graphics.getDesktopDisplayMode().height, true);
 		}
 
+		// toogle pause
+		if (keycode == Keys.P)
+			GameProperties.toogleIngamePause();
+		
 		// back to menu
 		if (keycode == Keys.BACKSPACE)
 			GameProperties.setGameState(GameState.MENU);

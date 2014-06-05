@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.ingame.Camera;
 import core.ingame.GameProperties;
-import core.ingame.IPlayerInput;
+import core.ingame.IInputHandler;
 import core.ingame.InputHandler.Click;
 import core.ingame.KeyMap.ActionKey;
 
@@ -30,7 +30,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	private volatile int grounded = 0;
 	private volatile boolean hideable = false;
 
-	private IPlayerInput iHandler;
+	private IInputHandler iHandler;
 	private Click click;
 
 	protected ObjectInteraction(GameWorld gameWorld, Vector2 position) {
@@ -517,7 +517,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 		grounded += start ? 1 : -1;
 	}
 	
-	protected void setInputHandler(IPlayerInput iHandler) {
+	protected void setInputHandler(IInputHandler iHandler) {
 		this.iHandler = iHandler;
 	}
 	

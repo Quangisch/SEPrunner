@@ -31,7 +31,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.ingame.Camera;
 import core.ingame.GameProperties;
 import core.ingame.GameProperties.GameState;
-import core.ingame.IPlayerInput;
+import core.ingame.IInputHandler;
 
 public class GameWorld implements DrawableMap, Runnable {
 
@@ -42,11 +42,11 @@ public class GameWorld implements DrawableMap, Runnable {
 	protected Player player;
 	private float timeLimit, time = 0;
 
-	private IPlayerInput iHandler;
+	private IInputHandler iHandler;
 	private Box2DDebugRenderer debugRender;
 	private Matrix4 debugMatrix;
 
-	public GameWorld(int level, IPlayerInput iHandler) {
+	public GameWorld(int level, IInputHandler iHandler) {
 		this.iHandler = iHandler;
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
@@ -74,26 +74,24 @@ public class GameWorld implements DrawableMap, Runnable {
 			for (Runnable r : objects)
 				r.run();
 		} catch (ConcurrentModificationException e) {
-			// TODO
 			// e.printStackTrace();
+		}
+	}
+	
+	private void calcTime(float deltaTime) {
+		if(time < timeLimit) {
+			time += deltaTime;
+			System.out.println("Remaining Time: "+Float.toString(timeLimit - time).substring(0, 4)+" min");
+			if(time >= timeLimit)
+				GameProperties.setGameOver();
 		}
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, float deltaTime) {
-		
-//		TODO tmp
-		if(timeLimit > 0) {
-			time += deltaTime;
-			System.out.println("Remaining Time: "+(timeLimit - time)+" min");
-			if(time >= timeLimit) {
-				System.err.println("GAME OVER: TimeLimit");
-				timeLimit = 0;
-				
-				GameProperties.setGameState(GameState.INGAME_LOSE);
-			}
-		}
-		
+
+//		TODO
+		calcTime(deltaTime);
 		
 		debugMatrix = new Matrix4(Camera.getInstance().combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
@@ -118,8 +116,6 @@ public class GameWorld implements DrawableMap, Runnable {
 
 		for (GameObject o : objects)
 			o.draw(batch, deltaTime);
-
-		// if (player != null) player.draw(batch);
 
 		if (debugRender != null && 
 				(Debug.isMode(Debug.Mode.BOXRENDERER)

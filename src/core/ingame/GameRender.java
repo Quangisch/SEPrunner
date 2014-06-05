@@ -23,7 +23,7 @@ public class GameRender implements Screen {
 	private List<GeometricObject> geometrics = new ArrayList<GeometricObject>();
 	
 	private GameWorld gameWorld;
-	private IPlayerInput iHandler;
+	private IInputHandler iHandler;
 	
 	public GameRender(int level) {
 		loadResources();	//TODO
@@ -61,8 +61,25 @@ public class GameRender implements Screen {
 
 	@Override
 	public void render(float delta) {
-		gameWorld.run();
-		float deltaTime = Gdx.graphics.getDeltaTime();
+		
+		switch(GameProperties.getGameState()) {
+		case INGAME:
+			gameWorld.run();
+			break;
+		case INGAME_LOSE:
+			System.out.println("GAME OVER");
+			break;
+		case INGAME_PAUSE:
+			System.out.println("PAUSE");
+			delta = 0;
+			break;
+		case INGAME_WIN:
+			System.out.println("WIN");
+			break;
+		default:
+			break;
+		
+		}
 		
 		if(Debug.isMode(Debug.Mode.CONSOLE))	
 			log.log();
@@ -74,7 +91,7 @@ public class GameRender implements Screen {
 		batch.setProjectionMatrix(Camera.getInstance().combined);
 		batch.begin();
 		
-		gameWorld.draw(batch, deltaTime); //map
+		gameWorld.draw(batch, delta); //map
 
 		HUD.getInstance().draw(batch); //userInterface
 		
