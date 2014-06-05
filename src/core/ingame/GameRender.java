@@ -25,8 +25,9 @@ public class GameRender implements Screen, ApplicationListener {
 	private FPSLogger log;
 	private List<GeometricObject> geometrics = new ArrayList<GeometricObject>();
 	
-	private GameRender(int level) {
+	public GameRender(int level) {
 		this.level = level;
+		render = this;
 	}
 
 	public void create() {
@@ -37,7 +38,7 @@ public class GameRender implements Screen, ApplicationListener {
 		
 //		TODO
 		loadResources();
-		Map.getInstance().initMap(level);
+		Map.initMap(level);
 		
 	}
 
@@ -111,10 +112,6 @@ public class GameRender implements Screen, ApplicationListener {
 
 	}
 
-	public static GameRender setInstance(int level) {
-		return render = new GameRender(level);
-	}
-	
 	public static GameRender getInstance() {
 		if (render == null) 
 			render = new GameRender(1);

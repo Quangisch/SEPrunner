@@ -2,13 +2,19 @@ package menu;
 
 import com.badlogic.gdx.Game;
 
+import core.ingame.GameProperties;
+import core.ingame.GameRender;
+
 public class Project extends Game{
 
 	public static final String TITLE = "SEPrunner", VERSION = "1.0.0";
 	
 	@Override
 	public void create() {
-		setScreen(new Splash()); //set first img, next Z56 in splash
+		if(GameProperties.menu)
+			setScreen(new Splash()); //set first img, next Z56 in splash
+		else if(GameProperties.ingame)
+			setScreen(new GameRender(1));
 	}
 
 	@Override

@@ -38,6 +38,7 @@ public class Map implements DrawableMap, Runnable {
 
 	protected List<GameObject> objects;
 	protected Player player;
+	private float timeLimit, time = 0;
 
 	private Box2DDebugRenderer debugRender;
 	private Matrix4 debugMatrix;
@@ -77,7 +78,20 @@ public class Map implements DrawableMap, Runnable {
 
 	@Override
 	public void draw(SpriteBatch batch, float deltaTime) {
-
+		
+//		TODO tmp
+		if(timeLimit > 0) {
+			time += deltaTime;
+			System.out.println("Remaining Time: "+(timeLimit - time)+" min");
+			if(time >= timeLimit) {
+				System.err.println("GAME OVER: TimeLimit");
+				timeLimit = 0;
+				
+				GameProperties.switchMode(true, false);
+			}
+		}
+		
+		
 		debugMatrix = new Matrix4(Camera.getInstance().combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
@@ -112,7 +126,7 @@ public class Map implements DrawableMap, Runnable {
 		world.clearForces();
 	}
 
-	public void initMap(String json) {
+	private void initMap(String json) {
 		JsonValue root;
 		try {
 			root = new JsonReader().parse(new FileReader(json));
@@ -123,6 +137,8 @@ public class Map implements DrawableMap, Runnable {
 
 		if (world == null)
 			world = new World(new Vector2(root.get("gravity").getFloat(0), root.get("gravity").getFloat(1)), false);
+		
+		timeLimit = root.getFloat("timelimit");
 
 		// TEXTURE
 		JsonValue mapTextureData = root.get("mapTexture");
@@ -193,12 +209,12 @@ public class Map implements DrawableMap, Runnable {
 		objects.add(obj);
 	}
 
-	public void initMap(int level) {
+	public static void initMap(int level) {
 		resetMap();
-
+		instance = new Map();
 		switch (level) {
 		case 1:
-			initMap("res/map/level1.json");
+			instance.initMap("res/map/level1.json");
 			break;
 
 		default:
@@ -206,9 +222,10 @@ public class Map implements DrawableMap, Runnable {
 		}
 	}
 
-	public void resetMap() {
-		if (world != null) world.dispose();
-		world = null;
+	public static void resetMap() {
+		if (instance != null && instance.world != null) 
+			instance.world.dispose();
+		instance = null;
 	}
 
 	public Player getPlayer() {

@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.ingame.GameProperties;
-import core.ingame.GameRender;
 
 public class MenuLevelSelect implements Screen {
 	
@@ -62,7 +61,6 @@ public class MenuLevelSelect implements Screen {
 		play.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				GameProperties.switchMode(false, true);
-				((Game) Gdx.app.getApplicationListener()).setScreen(GameRender.getInstance());
 			}
 		});
 		play.pad(15);

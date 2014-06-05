@@ -1,8 +1,10 @@
 package core.ingame;
 
+import menu.MenuMain;
 import misc.Debug;
 import misc.Debug.Mode;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
@@ -49,8 +51,12 @@ public abstract class GameProperties {
 			return;
 		
 		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
-		
 		Debug.println(width + "x" + height, Mode.CONSOLE);
+		
+		if(menu && !ingame)
+			((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
+		else if(!menu && ingame)
+			((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(1));
 		
 		if(!menu && !ingame)
 			Gdx.app.exit();

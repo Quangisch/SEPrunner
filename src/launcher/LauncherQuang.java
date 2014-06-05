@@ -1,10 +1,11 @@
 package launcher;
 
+import menu.Project;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import core.ingame.GameProperties;
-import core.ingame.GameRender;
 
 public class LauncherQuang {
 	
@@ -19,7 +20,6 @@ public class LauncherQuang {
 		cfg.height = GameProperties.height;
 //		cfg.fullscreen = true;
 		
-		
-		new LwjglApplication(GameRender.getInstance(), cfg);
+		new LwjglApplication(new Project(), cfg);
 		}
 }

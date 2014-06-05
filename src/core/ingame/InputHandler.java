@@ -7,11 +7,9 @@ import gameWorld.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import menu.MenuMain;
 import misc.Debug;
 import misc.GeometricObject;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
@@ -90,10 +88,8 @@ public class InputHandler implements InputProcessor, IInputHandler {
 		}
 
 		// back to menu
-		if (keycode == Keys.BACKSPACE) {
+		if (keycode == Keys.BACKSPACE)
 			GameProperties.switchMode(true, false);
-			((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
-		}
 
 		// toogle debug
 		if (keycode == Keys.TAB)

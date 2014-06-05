@@ -4,7 +4,6 @@ import gameObject.GameObject;
 import gameObject.IGameObjectTypes;
 import gameObject.ISensorTypes;
 import gameObject.Sensor;
-import gameObject.player.Shuriken;
 import misc.Debug;
 import misc.Debug.Mode;
 
