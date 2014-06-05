@@ -46,7 +46,7 @@ public class GameObject implements IDrawable, ICollisionable, IGameObjectTypes, 
 	private boolean sensor;
 	private Fixture primaryFixture;
 
-	private List<Sensor> sensors;
+	public List<Sensor> sensors;
 
 	// DRAW
 	protected boolean flip = false;

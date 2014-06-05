@@ -30,7 +30,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	private volatile int grounded = 0;
 	private volatile boolean hideable = false;
 
-	private IInputHandler iHandler;
+	protected IInputHandler iHandler;
 	private Click click;
 
 	protected ObjectInteraction(GameWorld gameWorld, Vector2 position) {

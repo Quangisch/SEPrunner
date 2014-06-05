@@ -1,5 +1,6 @@
 package gameObject.enemy;
 
+
 import gameObject.GameObject;
 import gameObject.ObjectInteraction;
 import gameObject.Sensor;
@@ -12,14 +13,18 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.utils.JsonValue;
 
+
 public class Enemy extends ObjectInteraction {
+
 
 	protected IEnemyAI AI;
 	protected boolean stunned;
 
-	public Enemy(GameWorld gameWorld, Vector2 position) {
-		super(gameWorld, position);
+
+	public Enemy(GameWorld world, Vector2 position) {
+		super(world, position);
 	}
+
 
 	@Override
 	public void init(String name) {
@@ -29,10 +34,15 @@ public class Enemy extends ObjectInteraction {
 		body.setLinearDamping(2.5f);
 		body.setFixedRotation(true);
 		addSensor(new Sensor(this, Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION, Sensor.HANDLE_FIRST));
-
+		//NILS
+		//TODO zweiter sensor --> dann flip-abfrage und einen von beiden ausblenden
+		addSensor(new Sensor(this, Type.Circle, new float[] { 1.3f, 1, 0.5f }, SensorTypes.VISION, Sensor.HANDLE_FIRST));		
+		//NILS
+		
 		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
 		addSensor(new Sensor(this, Type.Polygon, verticesFoot, SensorTypes.FOOT, Sensor.HANDLE_FIRST));
 	}
+
 
 	@Override
 	public void run() {
@@ -40,38 +50,50 @@ public class Enemy extends ObjectInteraction {
 		super.run();
 	}
 
+
 	public void setAI(IEnemyAI ai) {
 		if (AI == ai) return;
-		setInputHandler(AI = ai);
+		iHandler = AI = ai;
 		AI.setEnemy(this);
 	}
+
 
 	public IEnemyAI getAI() {
 		return AI;
 	}
 
+
 	public boolean isStunned() {
 		return stunned;
 	}
 
+
 	public void setStun() {
 		stunned = true;
 	}
+
 
 	public boolean isCarriable(Vector2 position) {
 		// TODO
 		return false;
 	}
 
+
 	public enum Pattern {
 		STAND, WALK_RIGHT, WALK_LEFT, RUN_RIGHT, RUN_LEFT, JUMP, JUMP_LEFT, JUMP_RIGHT;
 	}
 
+
 	@Override
 	public boolean handleCollision(boolean start, Sensor sender, GameObject other, Sensor otherSensor) {
-		return super.handleCollision(start, sender, other, otherSensor) //
+//		return super.handleCollision(start, sender, other, otherSensor) //
+//				|| getAI() != null || getAI().handleCollision(start, sender, other, otherSensor);
+		//NILS
+		return AI.handleCollision(start, sender, other, otherSensor) //
 				|| getAI() != null || getAI().handleCollision(start, sender, other, otherSensor);
+		//NILS
 	}
+
 
 	public void setNewAI(JsonValue jAI) {
 		IEnemyAI ai = null;
