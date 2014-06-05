@@ -1,5 +1,8 @@
-package gameObject;
+package gameObject.interaction;
 
+import gameObject.BodyObject;
+import gameObject.GameObject;
+import gameObject.Sensor;
 import gameObject.enemy.Enemy;
 import gameObject.player.Detectable;
 import gameObject.player.Shuriken;
@@ -13,7 +16,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
-import core.ingame.Camera;
 import core.ingame.GameProperties;
 import core.ingame.IInputHandler;
 import core.ingame.InputHandler.Click;
@@ -203,12 +205,12 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 
 		// tweak gravity
 		if (baseForce.len() != 0)
-			body.setGravityScale(0.7f);
+			setGravityScale(0.7f);
 		else
-			body.setGravityScale(1);
+			setGravityScale(1);
 
 		// apply impulse
-		body.applyLinearImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f), body.getWorldCenter(), true);
+		applyImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f));
 	}
 
 
@@ -263,7 +265,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	private void normalizeClickPoint() {
 		startPoint = GameProperties.meterToPixel(this.getLocalCenterInWorld());
 		clickPoint = new Vector2(click.screenX, click.screenY);
-		Camera.getInstance().unproject(clickPoint);
+		getGameWorld().getCamera().unproject(clickPoint);
 
 		switch (Debug.getMode()) {
 		case GEOMETRIC:
@@ -317,7 +319,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 		endPoint.nor().scl(HOOK_RADIUS);
 		endPoint.add(startPoint);
 
-		body.getWorld().rayCast(this, getLocalCenterInWorld(),
+		rayCast(this, getLocalCenterInWorld(),
 				GameProperties.pixelToMeter(endPoint));
 
 		actionTimer = 0;
@@ -331,7 +333,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 			return false;
 
 
-		body.setGravityScale(0);
+		setGravityScale(0);
 		setInteractionState(InteractionState.HOOK, true);
 		applyAnimation();
 		// body.setGravityScale(scale);
@@ -357,7 +359,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 		if (!getInteractionState().equals(InteractionState.HOOK_FLY))
 			return true;
 		
-		body.applyLinearImpulse(target.nor().scl(10), getLocalCenterInWorld(), true);
+		applyImpulse(target.nor().scl(10));
 		hookTime++;
 
 		System.out.println(hookTime);
@@ -370,7 +372,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	protected void resetHook() {
 		target = null;
 		hookTime = 0;
-		body.setGravityScale(1);
+		setGravityScale(1);
 		setInteractionState(InteractionState.STAND, true);
 		applyAnimation();
 	}
@@ -480,7 +482,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 		if (!enemy.isStunned() && enemyGrab == null)
 			return false;
 
-		enemy.isCarriable(body.getPosition());
+		enemy.isCarriable(getPosition());
 		this.enemyGrab = enemy;
 		nextState = InteractionState.GRAB;
 		return true;
@@ -488,7 +490,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 
 	public float reportRayFixture(Fixture fixture, Vector2 point,
 			Vector2 normal, float fraction) {
-		if (((GameObject) fixture.getBody().getUserData()).getGameObjectType() == GameObjectTypes.GROUND) {
+		if (((BodyObject) fixture.getBody().getUserData()).getGameObjectType() == GameObjectTypes.GROUND) {
 
 			if (Debug.isMode(Debug.Mode.GEOMETRIC)) {
 				Vector2 p = GameProperties.meterToPixel(point);
@@ -540,11 +542,10 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	}
 
 	// COLLISION DETECTION
-	public boolean handleCollision(boolean start, Sensor mySensor,
-			GameObject other, Sensor otherSensor) {
-		boolean handled = super.handleCollision(start, mySensor, other,
-				otherSensor);
-
+	public boolean handleCollision(boolean start, Sensor mySensor, 
+			BodyObject other, Sensor otherSensor) {
+		
+		boolean handled = super.handleCollision(start, mySensor, other, otherSensor);
 		if (handled)
 			return handled;
 

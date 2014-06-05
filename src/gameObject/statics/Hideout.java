@@ -1,7 +1,7 @@
 package gameObject.statics;
 
-import gameObject.GameObject;
 import gameObject.ICollisionable;
+import gameObject.GameObject;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;
@@ -23,7 +23,6 @@ public class Hideout extends GameObject implements Hideable {
 		super.init(name);
 		setGameObjectType(GameObjectTypes.HIDEABLE);
 		setLayer(2);
-		body.setFixedRotation(true);
 	}
 
 }

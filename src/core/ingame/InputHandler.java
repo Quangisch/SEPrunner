@@ -8,6 +8,7 @@ import misc.GeometricObject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,14 +18,16 @@ import com.badlogic.gdx.math.Vector3;
 import core.ingame.GameProperties.GameState;
 import core.ingame.KeyMap.ActionKey;
 
-public class InputHandler implements IInputHandler {
+public class InputHandler implements IInputHandler, InputProcessor {
 
 	private Set<Integer> pressedKeys = new TreeSet<Integer>();
 	private Click click;
 	private KeyMap keyMap;
+	private Camera camera;
 
-	public InputHandler() {
+	public InputHandler(Camera camera) {
 		initKeyMap();
+		this.camera = camera;	//TODO TMP: only to debug/visualize points
 	}
 	
 	private void initKeyMap() {
@@ -165,7 +168,7 @@ public class InputHandler implements IInputHandler {
 		return false;
 	}
 
-	public static class Click {
+	public class Click {
 
 		public final int screenX, screenY, pointer, button;
 		private GeometricObject geo;
@@ -177,7 +180,7 @@ public class InputHandler implements IInputHandler {
 			this.button = button;
 
 			Vector3 vec = new Vector3(screenX, screenY, 0);
-			Camera.getInstance().unproject(vec);
+			camera.unproject(vec);
 
 			switch (Debug.getMode()) {
 			case CONSOLE:

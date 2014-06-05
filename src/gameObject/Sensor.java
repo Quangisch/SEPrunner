@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Disposable;
 public class Sensor implements Disposable {
 
 	protected boolean active;
-	protected GameObject link;
+	protected BodyObject link;
 	protected Shape.Type sensorShapeType;
 	protected float[] sensorPoints;
 	protected int sensorType;
@@ -24,7 +24,7 @@ public class Sensor implements Disposable {
 	 * @param shapeType Type of Shape of Sensor
 	 * @param shapePoints Points to initianize Shape
 	 * @param eventData Data passed to Handler on collision */
-	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType) {
+	public Sensor(BodyObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType) {
 		this(parent, shapeType, shapePoints, sensorType, HANDLE_SECOND);
 	}
 
@@ -36,7 +36,7 @@ public class Sensor implements Disposable {
 	 * @param eventData Data passed to Handler on collision
 	 * @param priority Determine on Sensor-Sensor collision which Sensor is
 	 *            activated */
-	public Sensor(GameObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType, int priority) {
+	public Sensor(BodyObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType, int priority) {
 		active = true;
 		this.sensorType = sensorType;
 		this.priority = priority;
@@ -57,14 +57,14 @@ public class Sensor implements Disposable {
 	}
 
 	/** @return the GameObject linked to */
-	public GameObject getGameObject() {
+	public BodyObject getGameObject() {
 		return link;
 	}
 
 	/** Set the GameObject linked to
 	 * 
 	 * @param link the GameObject */
-	protected void setGameObject(GameObject link) {
+	protected void setGameObject(BodyObject link) {
 		if (this.link == link) return;
 		if (this.link != null) this.link.removeSensor(this);
 		this.link = link;

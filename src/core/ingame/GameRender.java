@@ -23,14 +23,17 @@ public class GameRender implements Screen {
 	private List<GeometricObject> geometrics = new ArrayList<GeometricObject>();
 	
 	private GameWorld gameWorld;
-	private IInputHandler iHandler;
+	private InputHandler iHandler;
+	private Camera camera;
 	
 	public GameRender(int level) {
 		loadResources();	//TODO
-		iHandler = new InputHandler();
-		gameWorld = new GameWorld(level, iHandler);
+		camera = new Camera();
+		iHandler = new InputHandler(camera);
+		gameWorld = new GameWorld(level, iHandler, camera);
 		
-//		TMP for DebugMode.Geometric
+//		TODO TMP for debuggin
+		Debug.init(iHandler, camera);
 		GeometricObject.setRender(this);
 	}
 
@@ -87,8 +90,8 @@ public class GameRender implements Screen {
 		Gdx.gl.glClearColor(255, 255, 255, 1);//(0,0,0,1)
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		Camera.getInstance().update();
-		batch.setProjectionMatrix(Camera.getInstance().combined);
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
 		gameWorld.draw(batch, delta); //map

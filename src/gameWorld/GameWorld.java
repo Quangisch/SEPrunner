@@ -1,5 +1,6 @@
 package gameWorld;
 
+import gameObject.BodyObject;
 import gameObject.GameObject;
 import gameObject.IGameObjectTypes;
 import gameObject.enemy.Enemy;
@@ -24,29 +25,32 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.Camera;
 import core.ingame.GameProperties;
-import core.ingame.GameProperties.GameState;
 import core.ingame.IInputHandler;
 
-public class GameWorld implements DrawableMap, Runnable {
-
-	protected MapTexture[] mapTextures;
-	protected World world;
-
-	protected List<GameObject> objects;
-	protected Player player;
-	private float timeLimit, time = 0;
+public class GameWorld implements IDrawableMap, Runnable {
 
 	private IInputHandler iHandler;
 	private Box2DDebugRenderer debugRender;
 	private Matrix4 debugMatrix;
+	
+	private MapTexture[] mapTextures;
+	private World world;
+	private Camera camera;
+	private List<GameObject> objects;
+	private Player player;
 
-	public GameWorld(int level, IInputHandler iHandler) {
+	private float timeLimit, time = 0;
+
+
+	public GameWorld(int level, IInputHandler iHandler, Camera camera) {
+		this.camera = camera;
 		this.iHandler = iHandler;
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
@@ -63,7 +67,7 @@ public class GameWorld implements DrawableMap, Runnable {
 	
 	public void run() {
 		for (Iterator<GameObject> i = objects.iterator(); i.hasNext();) {
-			GameObject g = (GameObject) i.next();
+			BodyObject g = (BodyObject) i.next();
 			if (g.willDisposed()) {
 				g.disposeUnsafe();
 				i.remove();
@@ -93,7 +97,7 @@ public class GameWorld implements DrawableMap, Runnable {
 //		TODO
 		calcTime(deltaTime);
 		
-		debugMatrix = new Matrix4(Camera.getInstance().combined);
+		debugMatrix = new Matrix4(camera.combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
 		// batch.disableBlending();
@@ -138,7 +142,8 @@ public class GameWorld implements DrawableMap, Runnable {
 			world = new World(new Vector2(root.get("gravity").getFloat(0), root.get("gravity").getFloat(1)), false);
 		
 		timeLimit = root.getFloat("timelimit");
-
+		
+		
 		// TEXTURE
 		JsonValue mapTextureData = root.get("mapTexture");
 		mapTextures = new MapTexture[mapTextureData.size];
@@ -147,10 +152,24 @@ public class GameWorld implements DrawableMap, Runnable {
 			JsonValue position = mT.get("position");
 			mapTextures[part++] = new MapTexture(position.getFloat(0), position.getFloat(1), mT.getString("texture"));
 		}
-
+		
+		
+		// GOAL
+		BodyObject goal = new BodyObject(this, new Vector2(0, 0));
+		PolygonShape g = new PolygonShape();
+		Vector2[] gVecs = new Vector2[root.get("goal").size / 2];
+		for(int i = 0; i < gVecs.length; i++) {
+			gVecs[i] = new Vector2(GameProperties.pixelToMeter(root.get("goal").getFloat(i*2)),
+					GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - root.get("goal").getFloat(i*2+1)));
+		}
+		g.set(gVecs);
+		goal.addFixture(0, 0, 0, true, g, true);
+		goal.setGameObjectType(IGameObjectTypes.GameObjectTypes.GOAL);
+		
+		
 		// GROUND
 		JsonValue JGrounds = root.get("ground");
-		GameObject ground = new GameObject(this, new Vector2(0, 0));
+		BodyObject ground = new BodyObject(this, new Vector2(0, 0));
 
 		for (JsonValue JGround : JGrounds) {
 			ChainShape p = new ChainShape();
@@ -216,7 +235,7 @@ public class GameWorld implements DrawableMap, Runnable {
 		return objects.add(object);
 	}
 
-	public boolean removeGameObject(GameObject object) {
+	public boolean removeGameObject(BodyObject object) {
 		return objects.remove(object);
 	}
 	
@@ -226,6 +245,10 @@ public class GameWorld implements DrawableMap, Runnable {
 	
 	public World getWorld() {
 		return world;
+	}
+	
+	public Camera getCamera() {
+		return camera;
 	}
 	
 	private class MapTexture {

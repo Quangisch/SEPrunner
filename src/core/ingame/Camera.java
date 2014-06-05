@@ -10,11 +10,9 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Camera extends OrthographicCamera implements MoveableCamera {
 	
-	private static Camera camera;
 	private ICollisionable follow;
 	
-	private Camera() {
-//		super.setToOrtho(false, GameProperties.pixelToMeter(Gdx.graphics.getWidth()), GameProperties.pixelToMeter(Gdx.graphics.getHeight()));
+	public Camera() {
 		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());	
 	}
 	
@@ -48,12 +46,6 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());	
 	}
 	
-	public static Camera getInstance() {
-		if(camera == null)
-			camera = new Camera();
-		return camera;
-	}
-
 	@Override
 	public void setToFollowMoveable(ICollisionable moveable) {
 		this.follow = moveable;

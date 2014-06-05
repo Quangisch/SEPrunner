@@ -9,54 +9,60 @@ public interface ICollisionable {
 	/** Handle collision on impact.
 	 * 
 	 * @param start true on new impact, false on ending collision
-	 * @param sender Sensor owned by <code>this</code> that raised the event,
+	 * @param mySensor Sensor owned by <code>this</code> that raised the event,
 	 *            maybe <code>null</code>
 	 * @param other the other Object
 	 * @param otherSensor the hit Sensor owned by <code>other</code>, maybe
 	 *            <code>null</code>
 	 * @return return whether the handling is done or should be passed to the
 	 *         other */
-	public boolean handleCollision(boolean start, Sensor mySender, GameObject other, Sensor otherSensor);
+	boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor);
 
 	/** Get x coordinate as float in pixel
 	 * 
 	 * @return x */
-	public float getX();
+	float getX();
 
 	/** Get y coordinate as float in pixel
 	 * 
 	 * @return y */
-	public float getY();
+	float getY();
 
 //	/** Check whether body is on ground.
 //	 * 
 //	 * @return grounded */
-//	public boolean isGrounded();
+//	boolean isGrounded();
 //
 //	/** Set grounded for body.
 //	 * 
 //	 * @param grounded */
-//	public void setGrounded(boolean grounded);
+//	void setGrounded(boolean grounded);
 
 	/**
 	 * Get corresponding game world
 	 * @return
 	 */
-	public GameWorld getGameWorld();
+	GameWorld getGameWorld();
 
 	/** Get Body Position in meter.
 	 * 
 	 * @return position */
-	public Vector2 getWorldPosition();
+	Vector2 getWorldPosition();
 
 	/** Get Body Position in pixel.
 	 * 
 	 * @return position */
-	public Vector2 getPosition();
+	Vector2 getPosition();
 
 	/** Get Local Center in World in meter.
 	 * 
 	 * @return position */
-	public Vector2 getLocalCenterInWorld();
+	Vector2 getLocalCenterInWorld();
+	
+	/**
+	 * Apply Impulse at Center of BodyObject.
+	 * @param impulse
+	 */
+	void applyImpulse(Vector2 impulse);
 
 }

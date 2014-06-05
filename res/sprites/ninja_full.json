@@ -1,15 +1,37 @@
 {
 	"ninja_full" :{
-		"bodyDef" :	{
-					 "density":30, "friction":0.4, "restitution":0, "sensor":false, "bodyType": 2
-					},
 		"texture" : "res/sprites/ninja_full.png",
+		
 		"defaultState" : 0,
+		
+		"bodyDef" :	{
+					 "linearDamping"	: 2.5,
+					 "density"			: 30, 
+					 "friction"			: 0.4, 
+					 "restitution"		: 0, 
+					 "sensor"			: false, 
+					 "bodyType"			: 2
+					},
+		"sensor" : [
+						{
+							"type" 	: 1,
+							"shape" : 3,
+							"priority"	: "75",
+							"vertices"	: [0.5, 0.3, 0.8, 0.3, 0.8, 0.4, 0.5, 0.4]
+						},
+						{	
+							"type" 	: 3,
+							"shape" : 3,
+							"priority"	: "50",
+							"vertices"	: [0.395, 0.40, 0.395, 1.17, 0.90, 1.17, 0.90, 0.40]
+						}
+						
+					],
 		"stateframes" :	{
 						"stand" :	{
-										"frameDuration":0.2,
-										"boundingBox" : [39.5, 35, 39.5, 117,
-														 90, 117, 90, 35],
+										"frameDuration"	:0.2,
+										"boundingBox" 	: [39.5, 35, 39.5, 117,
+														 	90, 117, 90, 35],
 										"textureMap" : [
 														[0, 0, 150, 150],
 														[0, 150, 150, 150],
@@ -67,14 +89,13 @@
 														]
 									},
 						"crouch_stand" :	{
-										"frameDuration":0.13,
+										"frameDuration":1,
 										"boundingBox" : [39.5, 35, 39.5, 80,
 														 90, 80, 90, 35],
 										"textureMap" : [
 														[450, 1050, 150, 150]
 														]
 									},
-
 						"crouch_sneak" :	{
 										"frameDuration":0.23,
 										"boundingBox" : [39.5, 35, 39.5, 100,
@@ -206,7 +227,30 @@
 														[1200, 150, 150, 150],
 														[1200, 0, 150, 150]
 														]
-									}			
+									},
+						"lose" :	{
+										"frameDuration":0.13,
+										"boundingBox" : [39.5, 35, 39.5, 80,
+														 90, 80, 90, 35],
+										"textureMap" : [
+														[450, 900, 150, 150],
+														[450, 1050, 150, 150]
+														]
+									},
+						"win" :	{
+										"frameDuration":0.15,
+										"boundingBox" : [39.5, 35, 39.5, 117,
+														 90, 117, 90, 35],
+										"textureMap" : [
+														[1200, 0, 150, 150],
+														[1200, 150, 150, 150],
+														[1200, 300, 150, 150],
+														[1200, 450, 150, 150],
+														[1200, 600, 150, 150],
+														[1200, 750, 150, 150],
+														[1200, 900, 150, 150]
+														]
+									},
 		}
 	}
 }

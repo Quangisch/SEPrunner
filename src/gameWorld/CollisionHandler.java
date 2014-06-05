@@ -1,6 +1,6 @@
 package gameWorld;
 
-import gameObject.GameObject;
+import gameObject.BodyObject;
 import gameObject.Sensor;
 import misc.Debug;
 import misc.Debug.Mode;
@@ -28,9 +28,9 @@ public class CollisionHandler implements ContactListener {
 
 		if (fixA == null || fixB == null || fixA.getBody() == null || fixB.getBody() == null) return false;
 
-		GameObject objectA = (fixA.getBody().getUserData() instanceof GameObject) ? (GameObject) fixA.getBody()
+		BodyObject objectA = (fixA.getBody().getUserData() instanceof BodyObject) ? (BodyObject) fixA.getBody()
 				.getUserData() : null;
-		GameObject objectB = (fixB.getBody().getUserData() instanceof GameObject) ? (GameObject) fixB.getBody()
+		BodyObject objectB = (fixB.getBody().getUserData() instanceof BodyObject) ? (BodyObject) fixB.getBody()
 				.getUserData() : null;
 		Sensor sensorA = (fixA.getUserData() instanceof Sensor) ? (Sensor) fixA.getUserData() : null;
 		Sensor sensorB = (fixB.getUserData() instanceof Sensor) ? (Sensor) fixB.getUserData() : null;
@@ -72,9 +72,9 @@ public class CollisionHandler implements ContactListener {
 
 		@Override
 		public boolean shouldCollide(Fixture fixA, Fixture fixB) {
-			GameObject objectA = (fixA.getBody().getUserData() instanceof GameObject) ? (GameObject) fixA.getBody()
+			BodyObject objectA = (fixA.getBody().getUserData() instanceof BodyObject) ? (BodyObject) fixA.getBody()
 					.getUserData() : null;
-			GameObject objectB = (fixB.getBody().getUserData() instanceof GameObject) ? (GameObject) fixB.getBody()
+			BodyObject objectB = (fixB.getBody().getUserData() instanceof BodyObject) ? (BodyObject) fixB.getBody()
 					.getUserData() : null;
 
 			boolean isMovableA = objectA == null || objectA.getGameObjectType() == GameObjectTypes.PLAYER

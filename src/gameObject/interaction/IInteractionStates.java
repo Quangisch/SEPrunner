@@ -1,4 +1,4 @@
-package gameObject;
+package gameObject.interaction;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 

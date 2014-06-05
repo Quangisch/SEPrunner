@@ -1,8 +1,8 @@
 package core.ingame;
 
-import com.badlogic.gdx.math.Vector2;
-
 import gameObject.ICollisionable;
+
+import com.badlogic.gdx.math.Vector2;
 
 public interface MoveableCamera {
 
@@ -11,7 +11,6 @@ public interface MoveableCamera {
 	 * @param moveable
 	 */
 	public void setToFollowMoveable(ICollisionable moveable);
-	
 	/**
 	 * Set position to jump to.
 	 * @param position

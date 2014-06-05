@@ -4,6 +4,7 @@ public interface IGameObjectTypes {
 
 	abstract class GameObjectTypes {
 
+		public static final int GOAL = -10;
 		public static final int GROUND = -1;
 		public static final int UNSPECIFIED = 0;
 		public static final int PLAYER = 1;

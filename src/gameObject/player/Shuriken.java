@@ -1,5 +1,6 @@
 package gameObject.player;
 
+import gameObject.BodyObject;
 import gameObject.GameObject;
 import gameObject.ICollisionable;
 import gameObject.Sensor;
@@ -21,10 +22,10 @@ public class Shuriken extends GameObject {
 		this.setGameObjectType(GameObjectTypes.SHURIKEN);
 
 		direction = GameProperties.pixelToMeter(clickPoint.sub(getPosition()));
-		gameWorld.addGameObject(this);
+		addToGameWorld(this);
 
-		body.setGravityScale(0);
-		body.applyLinearImpulse(direction.nor().scl(7), getWorldPosition(), true);
+		setGravityScale(0);
+		applyImpulse(direction.nor().scl(7));
 	}
 
 	public void run() {
@@ -33,7 +34,7 @@ public class Shuriken extends GameObject {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor) {
 		if (start) {
 			
 			switch(other.getGameObjectType()) {
