@@ -1,0 +1,19 @@
+{
+	"tree" :{
+		"bodyDef" :	{
+					 "density":0, "friction":0, "restitution":0, "sensor":true, "bodyType": 0
+					},
+		"texture" : "res/sprites/mapObjects.png",
+		"defaultState" : 0,
+		"animationen" : ["stand"],
+		"stateframes" :	{
+						"stand" :	{
+										"frameDuration": 1,
+										"boundingBox" : [50,10 , 92,10, 92,238 , 50, 238],
+										"textureMap" : [	
+												[0, 160, 200, 330]
+												]
+								}
+		}
+	}
+}

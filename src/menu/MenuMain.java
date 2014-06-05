@@ -1,6 +1,6 @@
 package menu;
 
-import tween.ActorAccessor;
+import menu.tween.ActorAccessor;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;

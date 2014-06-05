@@ -2,11 +2,15 @@ package gameObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
+import misc.BodyFunctions;
+import misc.Debug;
+import misc.Debug.Mode;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -21,15 +25,18 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes {
+public class GameObject implements Drawable, Collisionable, IGameObjectTypes, ISensorTypes, IInteractionStates,
+		Runnable, Disposable {
 
-	private String name;
+	protected String name;
 	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
+	protected float rotation = 0;
 
 	// BODY
 	protected Body body;
@@ -37,28 +44,26 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	private float friction;
 	private float restitution;
 	private boolean sensor;
+	private Fixture primaryFixture;
 
 	private List<Sensor> sensors;
 
 	protected boolean flip = false;
 	protected boolean visible = true;
-	private volatile boolean grounded = true;
 	protected int layer = 0;
 	protected float alpha = 1;
+	private float scale = 1;
 
-	private String[] states;
 	protected Animation[] animations;
 	protected PolygonShape[] boundingBoxes;
+	protected int aniDraw;
 
-	protected int defaultState;
-	protected int currentState;
-
-	protected enum gameObjectStates {
-		// DEFAULT
-	}
+	private InteractionState defaultState;
+	private InteractionState currentState;
 
 	public GameObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
+		aniDraw = 0;
 
 		// init bodyDef
 		BodyDef bodyDef = new BodyDef();
@@ -68,16 +73,11 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 	}
 
 	public void init(String name) {
-		init(name, gameObjectStates.class);
+		init(name, "res/sprites/" + name + ".json");
+		// init(name, "res/sprites/" + name + ".json");
 	}
 
-	@SuppressWarnings("rawtypes")
-	public void init(String name, Class<? extends Enum> stateEnum) {
-		init(name, "res/sprites/" + name + ".json", stateEnum);
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void init(String name, String jsonPath, Class<? extends Enum> stateEnum) {
+	private void init(String name, String jsonPath) {
 		JsonReader reader = new JsonReader();
 		JsonValue root;
 		try {
@@ -89,44 +89,27 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 
 		this.name = name;
 
-		// GAMEOBJECT STATE ENUM and STATES
-		try {
-			EnumSet<?> enumSet = EnumSet.allOf(stateEnum);
-			states = new String[enumSet.size()];
-			for (Enum<?> i : enumSet)
-				states[i.ordinal()] = i.toString().toUpperCase();
-
-			if (root.hasChild("animationen")) {
-				List<String> addAni = new LinkedList<String>();
-				json: for (JsonValue ani : root.get("animationen")) {
-					for (int i = 0; i < states.length; i++)
-						if (states[i].equalsIgnoreCase(ani.asString())) break json;
-					addAni.add(ani.asString());
-				}
-				String[] tmp = new String[states.length + addAni.size()];
-				System.arraycopy(states, 0, tmp, 0, states.length);
-				for (int i = 0; i < addAni.size(); i++)
-					tmp[states.length + i] = addAni.get(i);
-				states = tmp;
-			}
-		} catch (Exception e) {
-			states = null;
-			System.err.println(name + ": State initialisation error!");
-		}
-
 		// ARRAY INIT
-		if (states == null) states = new String[root.get("animationen").size];
-		animations = new Animation[states.length];
-		boundingBoxes = new PolygonShape[states.length];
+		int aniPointer = 0;
+		animations = new Animation[InteractionState.values().length];
+		boundingBoxes = new PolygonShape[animations.length];
 
-		// CORRECT CASE
-		for (JsonValue s : root.get("stateframes"))
-			s.name = s.name.toUpperCase();
+		for (JsonValue js : root.get("stateframes"))
+			js.name = js.name.toUpperCase();
 
-		for (int j = 0; j < states.length; j++) {
-			if (!root.get("stateframes").hasChild(states[j])) continue;
+		Map<String, Integer> found = new HashMap<String, Integer>();
 
-			JsonValue animationFrames = root.get("stateframes").get(states[j]);
+		for (InteractionState iS : InteractionState.values()) {
+			if (found.containsKey(iS.getAnimation())) {
+				iS.setAnimationIndex(found.get(iS.getAnimation()));
+				continue;
+			}
+
+			JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation().toUpperCase());
+			if (animationFrames == null) {
+				Debug.println(iS.getAnimation() + " not found", Mode.CONSOLE);
+				continue;
+			}
 
 			// BOUNDING BOX
 			PolygonShape boundingBox = new PolygonShape();
@@ -136,20 +119,24 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 			for (JsonValue v : bBox)
 				vertices[i++] = GameProperties.pixelToMeter(v.asFloat());
 			boundingBox.set(vertices);
-			boundingBoxes[j] = boundingBox;
+			boundingBoxes[aniPointer] = boundingBox;
 
 			// TEXTURE FRAMES
 			i = 0;
 			TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
 			for (JsonValue frame : animationFrames.get("textureMap"))
-				textureRegions[i++] = new TextureRegion(new Texture(root.get("texture").asString()), frame.getInt(0),
+				textureRegions[i++] = new TextureRegion(getTexture(root.get("texture").asString()), frame.getInt(0),
 						frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
-			animations[j] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
+			animations[aniPointer] = new Animation(animationFrames.getFloat("frameDuration"), textureRegions);
+			animations[aniPointer].setPlayMode(iS.getPlayMode());
+
+			found.put(iS.getAnimation(), aniPointer);
+			iS.setAnimationIndex(aniPointer++);
 		}
 
 		// STATUS
-		defaultState = root.getInt("defaultState");
+		currentState = defaultState = InteractionState.values()[root.getInt("defaultState")];
 
 		// BODYDEF
 		density = root.get("bodyDef").getFloat("density");
@@ -169,74 +156,71 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 			break;
 		}
 
-		// SENSORS
-		// TODO Add Sensors
+		primaryFixture = setFixture(density, friction, restitution, sensor,
+				boundingBoxes[defaultState.getAnimationIndex()], false);
 
-		setCurrentState(defaultState, true);
+		setInteractionState(defaultState);
 	}
 
-	public void setCurrentState(String state) {
-		for (int i = 0; i < states.length; i++)
-			if (states[i].equalsIgnoreCase(state)) {
-				setCurrentState(i);
-				return;
-			}
+	Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
 
-		if (String.valueOf(Integer.parseInt(state)).equals(state)) {
-			setCurrentState(Integer.parseInt(state));
-			return;
+	private Texture getTexture(String path) {
+		if (!loadingTextures.containsKey(path)) loadingTextures.put(path, new Texture(path));
+		return loadingTextures.get(path);
+	}
+
+	public boolean setInteractionState(InteractionState state) {
+		return setInteractionState(state, false);
+	}
+
+	public boolean setInteractionState(InteractionState state, boolean force) {
+		if (this.currentState == state) return true;
+		if (currentState != null)
+			Debug.println("try to set " + state.toString() + " @current " + currentState.toString(), Mode.CONSOLE);
+
+		if (force || isAnimationFinished()) 
+			this.currentState = state;
+		else 
+			return false;
+
+		Vector2 v[] = new Vector2[boundingBoxes[currentState.getAnimationIndex()].getVertexCount()];
+		for (int i = 0; i < v.length; i++) {
+			v[i] = new Vector2();
+			boundingBoxes[currentState.getAnimationIndex()].getVertex(i, v[i]);
 		}
+		((PolygonShape) primaryFixture.getShape()).set(v);
 
-		System.err.println(name + ": Unknown state '" + state + "'");
-		setCurrentState(defaultState);
+		return true;
 	}
 
-	public <T extends Enum<T>> void setCurrentState(T state) {
-		setCurrentState(state.ordinal());
+	public boolean applyAnimation() {
+		aniDraw = getInteractionState().getAnimationIndex();
+		stateTime = 0;
+
+		Debug.println(">>apply " + currentState.toString(), Mode.CONSOLE);
+
+		return true;
 	}
 
-	public void setCurrentState(int state) {
-		setCurrentState(state, false);
-	}
-
-	public void setCurrentState(int state, boolean force) {
-		if (this.currentState == state && !force) return;
-
-		if (state % states.length != state) {
-			System.err.println(name + ": Unknown state '" + state + "'");
-			setCurrentState(defaultState);
-			return;
-		}
-
-		this.currentState = state;
-
-		// TODO Solve addFixture slowdown
-		if (!force) return;
-
-		setFixture(density, friction, restitution, sensor, boundingBoxes[this.currentState], false);
-		for (Sensor s : sensors)
-			addFiture(s.getFixtureDef()).setUserData(s);
-	}
-
-	public int getCurrentState() {
-		return currentState;
+	public boolean isAnimationFinished() {
+		if (currentState.isInterruptable() || currentState == null) return true;
+		return animations[aniDraw].isAnimationFinished(stateTime);
 	}
 
 	private float stateTime = 0;
 
 	@Override
-	public void draw(SpriteBatch batch) {
+	public void draw(SpriteBatch batch, float deltaTime) {
 		if (!visible) return;
 
-		stateTime += Gdx.graphics.getDeltaTime();
+		stateTime += deltaTime;
 
-		TextureRegion frame = new TextureRegion(animations[currentState].getKeyFrame(stateTime, true));
-		frame.flip(flip, false);
+		TextureRegion frame = new TextureRegion(animations[aniDraw].getKeyFrame(stateTime));
 
-		batch.setColor(1, 1, 1, getAlpha());
-		// batch.setBlendFunction(GL11.GL_SRC0_ALPHA, org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA);
-		batch.draw(frame, getX(), getY());
-		batch.setColor(Color.WHITE);
+		batch.setColor(1, 1, 1, alpha);
+		batch.draw(frame.getTexture(), getX(), getY(), frame.getRegionWidth() / 2, frame.getRegionHeight() / 2, /* origin */
+				frame.getRegionWidth(), frame.getRegionHeight(), scale, scale, rotation, frame.getRegionX(),
+				frame.getRegionY(), frame.getRegionWidth(), frame.getRegionHeight(), flip, false);
 	}
 
 	@Override
@@ -255,7 +239,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		return flip;
 	}
 
-	@Override
 	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
 			boolean disposeShape) {
 		FixtureDef fixtureDef = new FixtureDef();
@@ -264,16 +247,15 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		fixtureDef.shape = shape;
 		fixtureDef.friction = friction;
 		fixtureDef.restitution = restitution;
-		Fixture fix = addFiture(fixtureDef);
+		Fixture fix = addFixture(fixtureDef);
 		if (disposeShape) shape.dispose();
 		return fix;
 	}
 
-	public Fixture addFiture(FixtureDef fixtureDef) {
+	public Fixture addFixture(FixtureDef fixtureDef) {
 		return body.createFixture(fixtureDef);
 	}
 
-	@Override
 	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
 			boolean disposeShape) {
 		for (Fixture f : body.getFixtureList())
@@ -294,17 +276,12 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		sensors.add(sensor);
 		sensor.setGameObject(this);
 
-		setCurrentState(currentState, true);
+		addFixture(sensor.getFixtureDef()).setUserData(sensor);
 	}
 
 	public void removeSensor(Sensor sensor) {
 		if (sensor.getGameObject() == this) sensor.setGameObject(null);
-		if (sensors.remove(sensor)) setCurrentState(currentState, true);
-	}
-
-	@Override
-	public void applyForce(Vector2 force, boolean wake) {
-		body.applyForceToCenter(force, wake);
+		if (sensors.remove(sensor)) /* TODO Remove Sensor Fixture */;
 	}
 
 	@Override
@@ -327,16 +304,6 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		return GameProperties.meterToPixel(body.getPosition().y);
 	}
 
-	@Override
-	public void setGrounded(boolean grounded) {
-		this.grounded = grounded;
-	}
-
-	@Override
-	public boolean isGrounded() {
-		return grounded;
-	}
-
 	public int getGameObjectType() {
 		return gameObjectType;
 	}
@@ -345,37 +312,104 @@ public class GameObject implements Drawable, Collisionable, IGameObjectTypes, IS
 		this.gameObjectType = gameObjectType;
 	}
 
-	/**
-	 * @return the drawing layer
-	 */
+	/** @return the drawing layer */
 	public int getLayer() {
 		return layer;
 	}
 
-	/**
-	 * @param layer set the drawing layer
-	 */
+	/** @param layer set the drawing layer */
 	protected void setLayer(int layer) {
 		this.layer = layer;
 	}
 
-	/**
-	 * @return the alpha
-	 */
+	/** @return the alpha */
 	protected float getAlpha() {
 		return alpha;
 	}
 
-	/**
-	 * @param alpha the alpha to set
-	 */
+	/** @param alpha the alpha to set */
 	protected void setAlpha(float alpha) {
-		this.alpha = Math.abs(alpha) % 1;
-		// this.alpha = (100 + alpha) % 1;
+		this.alpha = Math.abs(alpha);
 	}
 
 	@Override
-	public boolean handleCollision(Sensor sender, GameObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor sender, GameObject other, Sensor otherSensor) {
 		return false;
+	}
+
+	@Override
+	public World getWorld() {
+		return body.getWorld();
+	}
+
+	public Body getBody() {
+		return body;
+	}
+
+	@Override
+	public Vector2 getWorldPosition() {
+		return body.getPosition();
+	}
+
+	@Override
+	public Vector2 getPosition() {
+		return new Vector2(getX(), getY());
+	}
+
+	@Override
+	public Vector2 getLocalCenterInWorld() {
+		return body.getWorldPoint(body.getLocalCenter());
+	}
+
+	public InteractionState getInteractionState() {
+		return currentState;
+	}
+
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		// BodyFunctions.scaleShape(primaryFixture.getShape(), getLocalCenterInWorld(), scale / this.scale, true);
+		this.scale = scale;
+	}
+
+	// DISPOSABLE
+
+	private boolean disposeNextStep = false;
+	private boolean disposed = false;
+
+	public void dispose() {
+		disposeNextStep = true;
+	}
+
+	public boolean willDisposed() {
+		return disposeNextStep;
+	}
+
+	public void disposeUnsafe() {
+		if (disposed) return;
+		disposed = true;
+
+		body.getWorld().destroyBody(body);
+
+		for (Sensor s : sensors)
+			if (s != null) s.dispose();
+		sensors.clear();
+
+		animations = null;
+
+		for (Shape b : boundingBoxes)
+			if (b != null) b.dispose();
+		boundingBoxes = null;
+
+		defaultState = currentState = null;
+	}
+
+	// END DISPOSABLE
+
+	@Override
+	public void run() {
+		if (disposed) return;
 	}
 }

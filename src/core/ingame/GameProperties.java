@@ -1,7 +1,10 @@
 package core.ingame;
 
+import misc.Debug;
+import misc.Debug.Mode;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameProperties {
 
@@ -16,14 +19,6 @@ public abstract class GameProperties {
 	public static float gamma = 1.0f;
 	public static float brightness = 1.0f;
 
-	public static boolean debugMode = false;
-	
-	public static int[] keyLeft = {Keys.A, Keys.LEFT}, 
-			keyRight = {Keys.D, Keys.RIGHT},
-			keyRun = {Keys.F, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT},
-			keyJump = {Keys.SPACE, Keys.UP}, 
-			keyCower = {Keys.C, Keys.DOWN}, 
-			keyAction = {Keys.E, Keys.ENTER};
 
 	final public static float PIXELPROMETER = 100;
 
@@ -33,6 +28,14 @@ public abstract class GameProperties {
 
 	public static float pixelToMeter(float pixel) {
 		return pixel / PIXELPROMETER;
+	}
+	
+	public static Vector2 meterToPixel(Vector2 meter) {
+		return new Vector2(meterToPixel(meter.x), meterToPixel(meter.y));
+	}
+	
+	public static Vector2 pixelToMeter(Vector2 pixel) {
+		return new Vector2(pixelToMeter(pixel.x), pixelToMeter(pixel.y));
 	}
 	
 	public static void switchMode(boolean menu, boolean ingame) {
@@ -47,8 +50,7 @@ public abstract class GameProperties {
 		
 		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
 		
-		if(debugMode)
-			System.out.println(width+"x"+height);
+		Debug.println(width + "x" + height, Mode.CONSOLE);
 		
 		if(!menu && !ingame)
 			Gdx.app.exit();

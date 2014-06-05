@@ -1,4 +1,4 @@
-package tween;
+package menu.tween;
 
 import aurelienribon.tweenengine.TweenAccessor;
 

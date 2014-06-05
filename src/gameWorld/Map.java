@@ -2,14 +2,21 @@ package gameWorld;
 
 import gameObject.GameObject;
 import gameObject.IGameObjectTypes;
+import gameObject.enemy.Enemy;
 import gameObject.player.Player;
+import gameObject.statics.Hideout;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 import java.util.List;
+
+import misc.Debug;
+import misc.StringFunctions;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,9 +31,9 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.ingame.Camera;
 import core.ingame.GameProperties;
 
-public class Map implements DrawableMap {
+public class Map implements DrawableMap, Runnable {
 
-	protected Texture mapTexture;
+	protected MapTexture[] mapTextures;
 	protected World world;
 
 	protected List<GameObject> objects;
@@ -48,23 +55,41 @@ public class Map implements DrawableMap {
 	private Map() {
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
-
 	}
 
-	public void draw(SpriteBatch batch) {
+	public void run() {
+		for (Iterator<GameObject> i = objects.iterator(); i.hasNext();) {
+			GameObject g = (GameObject) i.next();
+			if (g.willDisposed()) {
+				g.disposeUnsafe();
+				i.remove();
+			}
+		}
 
-		player.run();
+		try {
+			for (Runnable r : objects)
+				r.run();
+		} catch (ConcurrentModificationException e) {
+			// TODO
+			// e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void draw(SpriteBatch batch, float deltaTime) {
+
 		debugMatrix = new Matrix4(Camera.getInstance().combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
-		//		batch.disableBlending();
-		//		for (Background b : backgrounds) {
-		//			batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
-		//			b.scrollFactorY * Camera.getInstance().position.y);
-		//		}
-		// 		batch.enableBlending();
+		// batch.disableBlending();
+		// for (Background b : backgrounds) {
+		//		batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
+		//		b.scrollFactorY * Camera.getInstance().position.y);
+		// }
+		// batch.enableBlending();
 
-		if (mapTexture != null) batch.draw(mapTexture, 0, 0);
+		for (MapTexture mT : mapTextures)
+			if (mT.texture != null) batch.draw(mT.texture, mT.x, mT.y);
 
 		Collections.sort(objects, new Comparator<GameObject>() {
 
@@ -75,11 +100,14 @@ public class Map implements DrawableMap {
 		});
 
 		for (GameObject o : objects)
-			o.draw(batch);
+			o.draw(batch, deltaTime);
 
-//		if (player != null) player.draw(batch);
+		// if (player != null) player.draw(batch);
 
-		if (debugRender != null && GameProperties.debugMode) debugRender.render(world, debugMatrix);
+		if (debugRender != null && 
+				(Debug.isMode(Debug.Mode.BOXRENDERER)
+						|| Debug.isMode(Debug.Mode.CAMERA))) 
+			debugRender.render(world, debugMatrix);
 
 		world.clearForces();
 	}
@@ -89,7 +117,6 @@ public class Map implements DrawableMap {
 		try {
 			root = new JsonReader().parse(new FileReader(json));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
@@ -97,7 +124,14 @@ public class Map implements DrawableMap {
 		if (world == null)
 			world = new World(new Vector2(root.get("gravity").getFloat(0), root.get("gravity").getFloat(1)), false);
 
-		mapTexture = new Texture(root.getString("mapTexture"));
+		// TEXTURE
+		JsonValue mapTextureData = root.get("mapTexture");
+		mapTextures = new MapTexture[mapTextureData.size];
+		int part = 0;
+		for (JsonValue mT : mapTextureData) {
+			JsonValue position = mT.get("position");
+			mapTextures[part++] = new MapTexture(position.getFloat(0), position.getFloat(1), mT.getString("texture"));
+		}
 
 		// GROUND
 		JsonValue JGrounds = root.get("ground");
@@ -105,26 +139,58 @@ public class Map implements DrawableMap {
 
 		for (JsonValue JGround : JGrounds) {
 			ChainShape p = new ChainShape();
-			float[] vertices = new float[JGround.size];
-			for (int i = 0; i < vertices.length; i += 2) {
-				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
-				vertices[i + 1] = GameProperties.pixelToMeter(mapTexture.getHeight() - JGround.getFloat(i + 1));
+			Vector2[] vertices = new Vector2[JGround.size / 2];
+			for (int i = 0; i < vertices.length; i++) {
+				vertices[i] = new Vector2(GameProperties.pixelToMeter(JGround.getFloat(i * 2)),
+						GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i * 2 + 1)));
+				//				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
+				////				TODO height
+				//				vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
 			}
-			p.createChain(vertices);
+			p.createLoop(vertices);
 
 			ground.addFixture(0, 0.4f, 0, false, p, true);
 		}
 
 		ground.setGameObjectType(IGameObjectTypes.GameObjectTypes.GROUND);
 
-		// TODO cleanup
-		// init player
-		player = new Player(world, new Vector2(GameProperties.pixelToMeter(200), GameProperties.pixelToMeter(150)));
-		player.init("ninja");
-		objects.add(player);
+		if (root.hasChild("objects")) //
+			for (JsonValue o : root.get("objects"))
+				loadMapObject(o);
 
-		// init gameObjects
+		world.setContactFilter(new CollisionHandler.MoverContactFilter());
 		world.setContactListener(new CollisionHandler());
+	}
+
+	private void loadMapObject(JsonValue root) {
+		Vector2 pos = GameProperties.pixelToMeter(new Vector2(root.get("position").getFloat(0), root.get("position")
+				.getFloat(1)));
+
+		GameObject obj = null;
+		switch (StringFunctions.getMostEqualIndexIgnoreCase(root.getString("ID"), new String[] //
+				{ "player", "enemy", "hidable" })) {
+		case 0:
+			obj = new Player(world, pos);
+			if (root.getBoolean("isPlayer", false)) player = (Player) obj;
+			break;
+		case 1:
+			obj = new Enemy(world, pos);
+			if (root.hasChild("AI"))
+				((Enemy)obj).setNewAI(root.get("AI"));
+			break;
+		case 2:
+			obj = new Hideout(world, pos);
+			break;
+		case -1:
+		default:
+			return;
+		}
+
+		obj.init(root.getString("json"));
+		obj.setScale(root.getFloat("scale", 1f));
+		obj.setFlip(root.getBoolean("flip", false));
+
+		objects.add(obj);
 	}
 
 	public void initMap(int level) {
@@ -151,5 +217,25 @@ public class Map implements DrawableMap {
 
 	public void step(float timeStep, int velocityIterations, int positionIterations) {
 		world.step(timeStep, velocityIterations, positionIterations);
+	}
+
+	public boolean addGameObject(GameObject object) {
+		return objects.add(object);
+	}
+
+	public boolean removeGameObject(GameObject object) {
+		return objects.remove(object);
+	}
+
+	private class MapTexture {
+
+		private final float x, y;
+		private final Texture texture;
+
+		private MapTexture(float x, float y, String texturePath) {
+			this.x = x;
+			this.y = y;
+			this.texture = new Texture(texturePath);
+		}
 	}
 }
