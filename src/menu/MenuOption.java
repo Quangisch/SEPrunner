@@ -120,7 +120,7 @@ public class MenuOption implements Screen {
 	table.add(" Rechts").left();					 table.add("   D-Button").left(); 			  table.add().row();
 	table.add(" Werfen").left();					 table.add("   L-Mouse").left();  			  table.add().row();
 	table.add(" Enterhaken").left();				 table.add("   R-Mouse").left();  			  table.add().row();
-	  table.add().expandY();   						 table.add();   			      			  table.add(back).bottom().right();
+	table.add(back).expandY().bottom().left();   	 table.add();   			      			  table.add();
 		
 		stage.addActor(table);
 	}

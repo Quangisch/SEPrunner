@@ -78,8 +78,8 @@ public class MenuHighscore implements Screen {
 		//putting stuff together
 		table.add(new Label("Highscore", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
 		table.add(scrollPane).expandY().top().left();
-		 table.add();
-		  table.add(back).bottom().right();
+		 table.add(); 					 			  table.add().row();
+		table.add(back).bottom().left(); table.add(); table.add();
 		
 		stage.addActor(table);
 	}

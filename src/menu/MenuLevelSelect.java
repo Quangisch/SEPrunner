@@ -78,8 +78,8 @@ public class MenuLevelSelect implements Screen {
 		//putting stuff together
 		table.add(new Label("Levelauswahl", skin, "big")).colspan(3).expandX().spaceBottom(50).row();
 		table.add(scrollPane).uniformX().expandY().top().left();
-		 table.add(play).uniformX();
-		  table.add(back).uniformX().bottom().right();
+		 table.add(play).uniformX();	 table.add().uniformX().row();
+		table.add(back).bottom().left(); table.add(); table.add();
 		
 		stage.addActor(table);
 	}
