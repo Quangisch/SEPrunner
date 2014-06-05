@@ -20,6 +20,8 @@ public abstract class GameProperties {
 	public static float soundVolume = 1.0f;
 	public static float gamma = 1.0f;
 	public static float brightness = 1.0f;
+	
+	public static boolean gameOver = false;
 
 
 	final public static float PIXELPROMETER = 100;
