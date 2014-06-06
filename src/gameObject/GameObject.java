@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject extends AnimatedObject {
+public class GameObject extends InteractionObject {
 	
 	private Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
 

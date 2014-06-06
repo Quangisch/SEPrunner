@@ -18,7 +18,11 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Disposable;
 
 import core.ingame.GameProperties;
-
+/**
+ * Container class for Box2d Body Object with Sensor and Shape Lists. 
+ * @author SEP SS14 GruppeA
+ *
+ */
 public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTypes,
 		Disposable, Runnable {
 

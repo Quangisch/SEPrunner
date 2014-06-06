@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-abstract class DrawableObject extends BodyObject implements IAnimatedDrawable, IInteractionStates {
+abstract class DrawableObject extends BodyObject implements IDrawable, IInteractionStates {
 
 	// DRAW
 	private boolean flip = false;
@@ -21,7 +21,7 @@ abstract class DrawableObject extends BodyObject implements IAnimatedDrawable, I
 		super(gameWorld, position);
 	}
 
-	protected void draw(SpriteBatch batch, TextureRegion textureRegion) {
+	public void draw(SpriteBatch batch, TextureRegion textureRegion) {
 		if (!visible || textureRegion == null) 
 			return;
 
