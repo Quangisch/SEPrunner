@@ -48,9 +48,7 @@ public class GameObject extends InteractionObject {
 
 		initStates(root.getString("texture"), root.get("stateframes"), root.getInt("defaultState"));
 		initBody(root.get("bodyDef"));
-		
-		if(root.hasChild("sensor"))
-			initSensors(root.get("sensor"));
+		initSensors(root.get("sensor"));
 	}
 	
 	private void initStates(String texturePath, JsonValue stateFrames, int defaultStateIndex) {
@@ -81,7 +79,7 @@ public class GameObject extends InteractionObject {
 			for (JsonValue v : bBox)
 				vertices[i++] = GameProperties.pixelToMeter(v.asFloat());
 			boundingBox.set(vertices);
-			addBoundingBox(aniPointer, boundingBox);
+			setBoundingBox(aniPointer, boundingBox);
 
 			// TEXTURE FRAMES
 			i = 0;
@@ -121,9 +119,10 @@ public class GameObject extends InteractionObject {
 	}
 	
 	private void initSensors(JsonValue sensors) {
-		for(JsonValue s : sensors) {
+		if(sensors == null)
+			return;
 			
-			//ShapeType 0:Chain, 1:Circle, 2:Edge, 3:Polygon
+		for(JsonValue s : sensors) {
 			Shape.Type sType;
 			switch(s.getInt("shape")) {
 			case 0: 
@@ -147,7 +146,6 @@ public class GameObject extends InteractionObject {
 				sensorVertices[j++] = sV.asFloat();
 			
 			addSensor(new Sensor(this, sType, sensorVertices, s.getInt("type"), s.getInt("priority")));
-			
 		}
 	}
 	

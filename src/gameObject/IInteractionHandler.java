@@ -4,7 +4,7 @@ import gameObject.interaction.IInteractionStates.InteractionState;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 
-public interface IInteractable {
+public interface IInteractionHandler {
 	
 	InteractionState getInteractionState();
 	

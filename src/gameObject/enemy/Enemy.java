@@ -4,7 +4,7 @@ import gameObject.BodyObject;
 import gameObject.Sensor;
 import gameObject.enemy.ai.IEnemyAI;
 import gameObject.enemy.ai.SimplePatrolAI;
-import gameObject.interaction.ObjectInteraction;
+import gameObject.interaction.InteractionObject;
 import gameWorld.GameWorld;
 import misc.StringFunctions;
 
@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.utils.JsonValue;
 
-public class Enemy extends ObjectInteraction {
+public class Enemy extends InteractionObject {
 
 	protected IEnemyAI AI;
 	protected boolean stunned;

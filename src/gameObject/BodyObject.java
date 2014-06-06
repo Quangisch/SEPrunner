@@ -119,7 +119,7 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		if (sensors.remove(sensor)) /* TODO Remove Sensor Fixture */;
 	}
 
-	protected void addBoundingBox(int index, PolygonShape shape) {
+	protected void setBoundingBox(int index, PolygonShape shape) {
 		boundingBoxes[index] = shape;
 	}
 	

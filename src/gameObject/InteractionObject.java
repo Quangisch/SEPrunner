@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class InteractionObject extends DrawableObject implements IInteractable, IAnimatedDrawable {
+public class InteractionObject extends DrawableObject implements IInteractionHandler, IAnimatedDrawable {
 
 	// ANIMATIONS
 	private Animation[] animations;

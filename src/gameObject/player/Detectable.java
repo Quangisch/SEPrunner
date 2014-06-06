@@ -1,8 +1,9 @@
 package gameObject.player;
 
+import gameObject.IInteractionHandler;
 import gameObject.enemy.Enemy;
 
-public interface Detectable {
+public interface Detectable extends IInteractionHandler {
 	
 	/**
 	 * Check whether Object is detectable by enemy.

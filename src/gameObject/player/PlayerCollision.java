@@ -2,14 +2,14 @@ package gameObject.player;
 
 import gameObject.BodyObject;
 import gameObject.Sensor;
-import gameObject.interaction.ObjectInteraction;
+import gameObject.interaction.InteractionObject;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;
 
 import core.ingame.GameProperties;
 
-abstract class PlayerCollision extends ObjectInteraction {
+abstract class PlayerCollision extends InteractionObject {
 
 	protected PlayerCollision(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);

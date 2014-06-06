@@ -21,7 +21,7 @@ import core.ingame.IInputHandler;
 import core.ingame.InputHandler.Click;
 import core.ingame.KeyMap.ActionKey;
 
-public abstract class ObjectInteraction extends GameObject implements
+public abstract class InteractionObject extends GameObject implements
 		Detectable, RayCastCallback, Runnable {
 
 	private Enemy enemyGrab;
@@ -36,7 +36,7 @@ public abstract class ObjectInteraction extends GameObject implements
 	private IInputHandler iHandler;
 	private Click click;
 
-	protected ObjectInteraction(GameWorld gameWorld, Vector2 position) {
+	protected InteractionObject(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
 	}
 
