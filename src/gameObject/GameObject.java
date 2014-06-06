@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject extends AnimationObject {
+public class GameObject extends AnimatedObject {
 	
 	private Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
 
@@ -46,11 +46,17 @@ public class GameObject extends AnimationObject {
 			return;
 		}
 
-		// ARRAY INIT
+		initStates(root.getString("texture"), root.get("stateframes"), root.getInt("defaultState"));
+		initBody(root.get("bodyDef"));
+		
+		if(root.hasChild("sensor"))
+			initSensors(root.get("sensor"));
+	}
+	
+	private void initStates(String texturePath, JsonValue stateFrames, int defaultStateIndex) {
 		int aniPointer = 0;
 
-
-		for (JsonValue js : root.get("stateframes"))
+		for (JsonValue js : stateFrames)
 			js.name = js.name.toUpperCase();
 
 		Map<String, Integer> found = new HashMap<String, Integer>();
@@ -61,7 +67,7 @@ public class GameObject extends AnimationObject {
 				continue;
 			}
 
-			JsonValue animationFrames = root.get("stateframes").get(iS.getAnimation().toUpperCase());
+			JsonValue animationFrames = stateFrames.get(iS.getAnimation().toUpperCase());
 			if (animationFrames == null) {
 				Debug.println(iS.getAnimation() + " not found", Mode.CONSOLE);
 				continue;
@@ -81,7 +87,7 @@ public class GameObject extends AnimationObject {
 			i = 0;
 			TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
 			for (JsonValue frame : animationFrames.get("textureMap"))
-				textureRegions[i++] = new TextureRegion(getTexture(root.get("texture").asString()), frame.getInt(0),
+				textureRegions[i++] = new TextureRegion(getTexture(texturePath), frame.getInt(0),
 						frame.getInt(1), frame.getInt(2), frame.getInt(3));
 
 			setAnimation(aniPointer, new Animation(animationFrames.getFloat("frameDuration"), textureRegions), iS.getPlayMode());
@@ -89,14 +95,13 @@ public class GameObject extends AnimationObject {
 			found.put(iS.getAnimation(), aniPointer);
 			iS.setAnimationIndex(aniPointer++);
 		}
-
-		// STATUS
 		
-		
-		// BODYDEF
-		JsonValue bDef = root.get("bodyDef");
+		setDefaultInteractionState(InteractionState.values()[defaultStateIndex]);
+	}
+	
+	private void initBody(JsonValue bodyDef) {
 		BodyType bType;
-		switch (root.get("bodyDef").get("bodyType").asInt()) {
+		switch (bodyDef.get("bodyType").asInt()) {
 		case 0:
 			bType = BodyType.StaticBody;
 			break;
@@ -109,50 +114,41 @@ public class GameObject extends AnimationObject {
 			break;
 		}
 		
-		setDefaultInteractionState(InteractionState.values()[root.getInt("defaultState")]);
-		
-		setPrimaryFixture(bType, bDef.getFloat("linearDamping"), 
-				bDef.getFloat("density"), bDef.getFloat("friction"), 
-				bDef.getFloat("restitution"), bDef.getBoolean("sensor"),
+		setPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), 
+				bodyDef.getFloat("density"), bodyDef.getFloat("friction"), 
+				bodyDef.getFloat("restitution"), bodyDef.getBoolean("sensor"),
 				getBoundingBox(getDefaultInteractionState().getAnimationIndex()), false);
-
-
-		initSensors(root);
 	}
 	
-//	SENSORS
-	private void initSensors(JsonValue root) {
-		if(root.hasChild("sensor"))
-			for(JsonValue s : root.get("sensor")) {
-				
-				//ShapeType 0:Chain, 1:Circle, 2:Edge, 3:Polygon
-				Shape.Type sType;
-				switch(s.getInt("shape")) {
-				case 0: 
-					sType = Shape.Type.Chain;
-					break;
-				case 1: 
-					sType = Shape.Type.Circle;
-					break;
-				case 2: 
-					sType = Shape.Type.Edge;
-					break;
-				case 3:
-				default:
-					sType = Shape.Type.Polygon;
-					break;
-				}
-				
-				float[] sensorVertices = new float[s.get("vertices").size];
-				int j = 0;
-				for(JsonValue sV : s.get("vertices"))
-					sensorVertices[j++] = sV.asFloat();
-				
-				System.out.println("addSensor");
-				addSensor(new Sensor(this, sType, sensorVertices, s.getInt("type"), s.getInt("priority")));
-				
+	private void initSensors(JsonValue sensors) {
+		for(JsonValue s : sensors) {
+			
+			//ShapeType 0:Chain, 1:Circle, 2:Edge, 3:Polygon
+			Shape.Type sType;
+			switch(s.getInt("shape")) {
+			case 0: 
+				sType = Shape.Type.Chain;
+				break;
+			case 1: 
+				sType = Shape.Type.Circle;
+				break;
+			case 2: 
+				sType = Shape.Type.Edge;
+				break;
+			case 3:
+			default:
+				sType = Shape.Type.Polygon;
+				break;
 			}
-		
+			
+			float[] sensorVertices = new float[s.get("vertices").size];
+			int j = 0;
+			for(JsonValue sV : s.get("vertices"))
+				sensorVertices[j++] = sV.asFloat();
+			
+			addSensor(new Sensor(this, sType, sensorVertices, s.getInt("type"), s.getInt("priority")));
+			
+		}
 	}
 	
 	private Texture getTexture(String path) {

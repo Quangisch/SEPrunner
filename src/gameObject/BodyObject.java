@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.Disposable;
 import core.ingame.GameProperties;
 
 public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTypes,
-		Runnable, Disposable {
+		Disposable, Runnable {
 
 	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
 	private GameWorld gameWorld;
@@ -199,15 +199,11 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		boundingBoxes = null;	
 	}
 	
-
-
-	// END DISPOSABLE
-
 	@Override
 	public void run() {
-		if (disposed) return;
+		
 	}
-
+	
 	@Override
 	public boolean handleCollision(boolean start, Sensor mySensor,
 			BodyObject other, Sensor otherSensor) {

@@ -21,7 +21,8 @@ import core.ingame.IInputHandler;
 import core.ingame.InputHandler.Click;
 import core.ingame.KeyMap.ActionKey;
 
-public abstract class ObjectInteraction extends GameObject implements Detectable, RayCastCallback {
+public abstract class ObjectInteraction extends GameObject implements
+		Detectable, RayCastCallback, Runnable {
 
 	private Enemy enemyGrab;
 	private int shuriken = 10;
@@ -38,17 +39,15 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	protected ObjectInteraction(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
 	}
-	
+
 	public void run() {
-		super.run();
-		
-		if(iHandler != null) {
+		if (iHandler != null) {
 			processInput();
-			if(!isHooking())
+			if (!isHooking())
 				processStates();
 		}
 	}
-	
+
 	protected void processInput() {
 
 		boolean action = false;
@@ -67,8 +66,8 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 
 				click = null;
 				iHandler.popClick();
-			} 
-			
+			}
+
 		} else
 			actionTimer++;
 
@@ -77,20 +76,18 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 			// ACTION (HIDE OR GRAB)
 			if (iHandler.isKeyDown(ActionKey.ACTION)) {
 				processAction();
-				
-			} else if(!iHandler.isKeyDown(ActionKey.ACTION)) {
+
+			} else if (!iHandler.isKeyDown(ActionKey.ACTION)) {
 				endAction();
-				
-				
-//				
-//			} else if(isGrabbing()) {
-//				nextState = InteractionState.STAND;
-//				break action;
-				
-			
-			} 
-			
-			// JUMP	
+
+				//
+				// } else if(isGrabbing()) {
+				// nextState = InteractionState.STAND;
+				// break action;
+
+			}
+
+			// JUMP
 			if (iHandler.isKeyDown(ActionKey.JUMP)) {
 				nextState = InteractionState.JUMP;
 			} else if (isJumping() && isGrounded())
@@ -114,7 +111,8 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 
 		// BASIC MOVEMENT
 		if (!action) {
-			if (iHandler.isKeyDown(ActionKey.RIGHT) || iHandler.isKeyDown(ActionKey.LEFT)) {
+			if (iHandler.isKeyDown(ActionKey.RIGHT)
+					|| iHandler.isKeyDown(ActionKey.LEFT)) {
 
 				setFlip(iHandler.isKeyDown(ActionKey.LEFT));
 
@@ -168,14 +166,14 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 		applyState(nextState);
 
 	}
-	
+
 	protected void processStates() {
-		
+
 		Vector2 baseForce;
 		switch (getInteractionState()) {
-		// case STAND: case CROUCH_STAND: case THROW: case HIDE: case GRAB: 
+		// case STAND: case CROUCH_STAND: case THROW: case HIDE: case GRAB:
 		// case GRAB_DISPOSE: case STUNNED: case HOOK_START: case HOOK_FLY:
-		//	break;
+		// break;
 		case WALK:
 			baseForce = new Vector2(1, 0);
 			break;
@@ -199,9 +197,11 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 			break;
 		}
 
-		if (!isGrounded()) baseForce.y = 0;
+		if (!isGrounded())
+			baseForce.y = 0;
 
-		if (isFlipped()) baseForce.x *= -1;
+		if (isFlipped())
+			baseForce.x *= -1;
 
 		// tweak gravity
 		if (baseForce.len() != 0)
@@ -213,14 +213,13 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 		applyImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f));
 	}
 
-
 	private void applyState(InteractionState state) {
 		if (nextState == null)
 			return;
 
 		if (!nextState.equals(getInteractionState())) {
 			boolean set = setInteractionState(nextState);
-			
+
 			if (set) {
 				applyAnimation();
 				nextState = null;
@@ -332,7 +331,6 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 		if (target.x < getLocalCenterInWorld().x && !tryToFlip())
 			return false;
 
-
 		setGravityScale(0);
 		setInteractionState(InteractionState.HOOK, true);
 		applyAnimation();
@@ -358,11 +356,11 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 
 		if (!getInteractionState().equals(InteractionState.HOOK_FLY))
 			return true;
-		
+
 		applyImpulse(target.nor().scl(10));
 		hookTime++;
 
-		System.out.println(hookTime);
+//		System.out.println(hookTime);
 		if (hookTime >= HOOK_TIME_LIMIT || (hookTime >= 5 && isGrounded()))
 			resetHook();
 
@@ -381,26 +379,26 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	private final int HIDE_LAYER = -1;
 	private float oriAlpha;
 	private final float HIDE_ALPHA = 0.5f;
-	
+
 	// ACTION
 	private boolean processAction() {
-		if(hideable)
+		if (hideable)
 			processHiding(true);
 		return false;
 	}
-	
+
 	private void endAction() {
-		if(isHiding())
+		if (isHiding())
 			processHiding(false);
 	}
-	
+
 	private void processHiding(boolean start) {
-		if(!isGrounded())
+		if (!isGrounded())
 			return;
-		
+
 		// start hiding
-		if(start) {
-			switch(getInteractionState()) {
+		if (start) {
+			switch (getInteractionState()) {
 			case STAND:
 			case WALK:
 			case CROUCH_STAND:
@@ -416,12 +414,12 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 			default:
 				break;
 			}
-		
-		// end hiding
+
+			// end hiding
 		} else {
-			if(getInteractionState().equals(InteractionState.HIDE))
+			if (getInteractionState().equals(InteractionState.HIDE))
 				nextState = InteractionState.HIDE_END;
-			if(getInteractionState().equals(InteractionState.HIDE_END))
+			if (getInteractionState().equals(InteractionState.HIDE_END))
 				nextState = InteractionState.STAND;
 			setLayer(oriLayer);
 			setAlpha(oriAlpha);
@@ -445,7 +443,7 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	public boolean isRunning() {
 		return getInteractionState().equals(InteractionState.RUN);
 	}
-	
+
 	public boolean isThrowing() {
 		return getInteractionState().equals(InteractionState.THROW);
 	}
@@ -518,12 +516,11 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	public void calcGroundedContact(boolean start) {
 		grounded += start ? 1 : -1;
 	}
-	
+
 	protected void setInputHandler(IInputHandler iHandler) {
 		this.iHandler = iHandler;
 	}
-	
-	
+
 	// HELPER
 	private boolean tryToFlip() {
 		if (iHandler.isKeyDown(ActionKey.RIGHT))
@@ -542,42 +539,44 @@ public abstract class ObjectInteraction extends GameObject implements Detectable
 	}
 
 	// COLLISION DETECTION
-	public boolean handleCollision(boolean start, Sensor mySensor, 
+	public boolean handleCollision(boolean start, Sensor mySensor,
 			BodyObject other, Sensor otherSensor) {
-		
-		boolean handled = super.handleCollision(start, mySensor, other, otherSensor);
+
+		boolean handled = super.handleCollision(start, mySensor, other,
+				otherSensor);
 		if (handled)
 			return handled;
 
 		if (mySensor != null) {
 			// CHECK GROUNDED
 			if (mySensor.getSensorType() == SensorTypes.FOOT) {
-				switch(other.getGameObjectType()) {
+				switch (other.getGameObjectType()) {
 				case GameObjectTypes.GROUND:
 					calcGroundedContact(start);
 					return true;
-				default :
+				default:
 					return false;
 				}
 			}
 
 			// CHECK BODY
 			if (mySensor.getSensorType() == SensorTypes.BODY) {
-				switch(other.getGameObjectType()) {
+				switch (other.getGameObjectType()) {
 				case GameObjectTypes.GROUND:
 					calcBodyBlockedContact(start);
 					return true;
 				case GameObjectTypes.HIDEABLE:
 					hideable = start;
 					return true;
-				default :
+				default:
 					return false;
 				}
 			}
 
 		} else {
 			// CHECK WHILE HOOKING
-			if (isHooking() && other.getGameObjectType() == GameObjectTypes.GROUND) {
+			if (isHooking()
+					&& other.getGameObjectType() == GameObjectTypes.GROUND) {
 				resetHook();
 				return true;
 			}
