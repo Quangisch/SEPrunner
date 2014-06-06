@@ -2,7 +2,7 @@ package gameWorld;
 
 import gameObject.BodyObject;
 import gameObject.GameObject;
-import gameObject.IGameObjectTypes;
+import gameObject.IGameObjectTypes.GameObjectTypes;
 import gameObject.enemy.Enemy;
 import gameObject.player.Player;
 import gameObject.statics.Hideout;
@@ -38,7 +38,7 @@ public class GameWorld implements IDrawableMap, Runnable {
 	private IInputHandler iHandler;
 	private Box2DDebugRenderer debugRender;
 	private Matrix4 debugMatrix;
-	
+
 	private MapTexture[] mapTextures;
 	private World world;
 	private Camera camera;
@@ -52,8 +52,8 @@ public class GameWorld implements IDrawableMap, Runnable {
 		this.iHandler = iHandler;
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
-		
-		switch(level) {
+
+		switch (level) {
 		case 1:
 			loadMap("res/map/level1.json");
 			break;
@@ -62,7 +62,7 @@ public class GameWorld implements IDrawableMap, Runnable {
 			break;
 		}
 	}
-	
+
 	public void run() {
 		for (Iterator<GameObject> i = objects.iterator(); i.hasNext();) {
 			BodyObject g = (BodyObject) i.next();
@@ -81,22 +81,21 @@ public class GameWorld implements IDrawableMap, Runnable {
 
 		Collections.sort(objects);
 	}
-	
+
 	private void calcTime(float deltaTime) {
-		if(time < timeLimit) {
+		if (time < timeLimit) {
 			time += deltaTime;
-			System.out.println("Remaining Time: "+Float.toString(timeLimit - time).substring(0, 4)+" min");
-			if(time >= timeLimit)
-				GameProperties.setGameOver();
+			System.out.println("Remaining Time: " + Float.toString(timeLimit - time).substring(0, 4) + " min");
+			if (time >= timeLimit) GameProperties.setGameOver();
 		}
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, float deltaTime) {
 
-//		TODO
+		//		TODO
 		calcTime(deltaTime);
-		
+
 		debugMatrix = new Matrix4(camera.combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
@@ -113,15 +112,13 @@ public class GameWorld implements IDrawableMap, Runnable {
 		for (GameObject o : objects)
 			o.draw(batch, deltaTime);
 
-		if (debugRender != null && 
-				(Debug.isMode(Debug.Mode.BOXRENDERER)
-						|| Debug.isMode(Debug.Mode.CAMERA))) 
+		if (debugRender != null && (Debug.isMode(Debug.Mode.BOXRENDERER) || Debug.isMode(Debug.Mode.CAMERA)))
 			debugRender.render(world, debugMatrix);
 
 		world.clearForces();
 	}
 
-	private void loadMap(String json) {
+	private void loadMap(String json) throws NullPointerException {
 		JsonValue root;
 		try {
 			root = new JsonReader().parse(new FileReader(json));
@@ -132,10 +129,9 @@ public class GameWorld implements IDrawableMap, Runnable {
 
 		if (world == null)
 			world = new World(new Vector2(root.get("gravity").getFloat(0), root.get("gravity").getFloat(1)), false);
-		
+
 		timeLimit = root.getFloat("timelimit");
-		
-		
+
 		// TEXTURE
 		JsonValue mapTextureData = root.get("mapTexture");
 		mapTextures = new MapTexture[mapTextureData.size];
@@ -144,21 +140,19 @@ public class GameWorld implements IDrawableMap, Runnable {
 			JsonValue position = mT.get("position");
 			mapTextures[part++] = new MapTexture(position.getFloat(0), position.getFloat(1), mT.getString("texture"));
 		}
-		
-		
+
 		// GOAL
 		BodyObject goal = new BodyObject(this, new Vector2(0, 0));
 		PolygonShape g = new PolygonShape();
 		Vector2[] gVecs = new Vector2[root.get("goal").size / 2];
-		for(int i = 0; i < gVecs.length; i++) {
-			gVecs[i] = new Vector2(GameProperties.pixelToMeter(root.get("goal").getFloat(i*2)),
-					GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - root.get("goal").getFloat(i*2+1)));
-		}
+		for (int i = 0; i < gVecs.length; i++)
+			gVecs[i] = GameProperties.pixelToMeter(new Vector2(root.get("goal").getFloat(i * 2), //
+					mapTextures[0].texture.getHeight() - root.get("goal").getFloat(i * 2 + 1)));
+
 		g.set(gVecs);
 		goal.addFixture(0, 0, 0, true, g, true);
-		goal.setGameObjectType(IGameObjectTypes.GameObjectTypes.GOAL);
-		
-		
+		goal.setGameObjectType(GameObjectTypes.GOAL);
+
 		// GROUND
 		JsonValue JGrounds = root.get("ground");
 		BodyObject ground = new BodyObject(this, new Vector2(0, 0));
@@ -167,8 +161,8 @@ public class GameWorld implements IDrawableMap, Runnable {
 			ChainShape p = new ChainShape();
 			Vector2[] vertices = new Vector2[JGround.size / 2];
 			for (int i = 0; i < vertices.length; i++) {
-				vertices[i] = new Vector2(GameProperties.pixelToMeter(JGround.getFloat(i * 2)),
-						GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i * 2 + 1)));
+				vertices[i] = GameProperties.pixelToMeter(new Vector2(JGround.getFloat(i * 2), //
+						mapTextures[0].texture.getHeight() - JGround.getFloat(i * 2 + 1)));
 				//		vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
 				////		TODO height
 				//		vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
@@ -178,7 +172,7 @@ public class GameWorld implements IDrawableMap, Runnable {
 			ground.addFixture(0, 0.4f, 0, false, p, true);
 		}
 
-		ground.setGameObjectType(IGameObjectTypes.GameObjectTypes.GROUND);
+		ground.setGameObjectType(GameObjectTypes.GROUND);
 
 		if (root.hasChild("objects")) //
 			for (JsonValue o : root.get("objects"))
@@ -188,7 +182,7 @@ public class GameWorld implements IDrawableMap, Runnable {
 		world.setContactListener(new CollisionHandler());
 	}
 
-	private void loadMapObject(JsonValue root) {
+	private void loadMapObject(JsonValue root) throws NullPointerException {
 		Vector2 pos = GameProperties.pixelToMeter(new Vector2(root.get("position").getFloat(0), root.get("position")
 				.getFloat(1)));
 
@@ -201,8 +195,7 @@ public class GameWorld implements IDrawableMap, Runnable {
 			break;
 		case 1:
 			obj = new Enemy(this, pos);
-			if (root.hasChild("AI"))
-				((Enemy)obj).setNewAI(root.get("AI"));
+			if (root.hasChild("AI")) ((Enemy) obj).setNewAI(root.get("AI"));
 			break;
 		case 2:
 			obj = new Hideout(this, pos);
@@ -230,20 +223,20 @@ public class GameWorld implements IDrawableMap, Runnable {
 	public boolean removeGameObject(BodyObject object) {
 		return objects.remove(object);
 	}
-	
+
 	public Player getPlayer() {
 		return player;
 	}
-	
+
 	public World getWorld() {
 		return world;
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}
-	
-	private class MapTexture {
+
+	private static class MapTexture {
 
 		private final float x, y;
 		private final Texture texture;
