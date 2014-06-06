@@ -13,10 +13,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.utils.JsonValue;
 
+import core.ingame.input.InteractionHandler;
+
 public class Enemy extends GameObject {
 
 	protected IEnemyAI AI;
 	protected boolean stunned;
+	private InteractionHandler interactionHandler;
 
 	public Enemy(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
@@ -28,7 +31,7 @@ public class Enemy extends GameObject {
 		setGameObjectType(GameObjectType.Enemy);
 		setLayer(3);
 		
-		addSensor(new Sensor(this, Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION, Sensor.HANDLE_FIRST));
+		addSensor(new Sensor(this, Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST));
 
 //		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
 //		addSensor(new Sensor(this, Type.Polygon, verticesFoot, SensorTypes.FOOT, Sensor.HANDLE_FIRST));
@@ -38,12 +41,20 @@ public class Enemy extends GameObject {
 	public void run() {
 		if (AI != null) AI.run();
 		super.run();
+		
+		if(interactionHandler != null)
+			interactionHandler.run();
+		
 	}
 
 	public void setAI(IEnemyAI ai) {
 		if (AI == ai) return;
-		setInputHandler(AI = ai);
-		AI.setEnemy(this);
+		
+		if(interactionHandler == null || !interactionHandler.equals(ai)) {
+			AI = ai;
+			interactionHandler = new InteractionHandler(ai, this);
+			AI.setEnemy(this);
+		}
 	}
 
 	public IEnemyAI getAI() {

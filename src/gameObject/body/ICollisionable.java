@@ -125,5 +125,11 @@ public interface ICollisionable {
 	 * @param gameObjectType
 	 */
 	void setGameObjectType(GameObjectType gameObjectType);
+	
+	/**
+	 * Set Gravity Scale in relation to the world gravity.
+	 * @param scale
+	 */
+	void setGravityScale(float scale);
 
 }

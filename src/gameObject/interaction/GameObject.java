@@ -1,5 +1,7 @@
 package gameObject.interaction;
 
+import gameObject.body.BodyObject;
+import gameObject.body.GameObjectType;
 import gameObject.body.Sensor;
 import gameWorld.GameWorld;
 
@@ -23,9 +25,13 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject extends InteractionObject implements Comparable<GameObject> {
-
-	private Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
+public class GameObject extends InteractionObject implements IMoveableGameObject, Comparable<GameObject> {
+	
+	private int shuriken = 10;
+	
+//	TODO -> texture loading to ResourceManager
+	private static Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
+	private int grounded, bodyBlocked;
 
 	public GameObject(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
@@ -85,7 +91,7 @@ public class GameObject extends InteractionObject implements Comparable<GameObje
 			addAnimation(iS, new Animation(animationFrames.getFloat("frameDuration"), textureRegions));
 		}
 		
-		String defaultStateName = stateFrames.getString(defaultStateIndex);
+		String defaultStateName = stateFrames.get(defaultStateIndex).name();
 		InteractionState defaultState = null;
 		for(InteractionState iS : InteractionState.values()) {
 			if(iS.toString().compareToIgnoreCase(defaultStateName) == 0) {
@@ -159,4 +165,61 @@ public class GameObject extends InteractionObject implements Comparable<GameObje
 		return this.getLayer() - other.getLayer();
 	}
 
+	
+	@Override
+	public boolean isBodyBlocked() {
+		return bodyBlocked > 0;
+	}
+
+	@Override
+	public boolean isGrounded() {
+		return grounded > 0;
+	}
+
+	private void calcBodyBlockedContact(boolean start) {
+		bodyBlocked += start ? 1 : -1;
+	}
+	
+	private void calcGroundedContact(boolean start) {
+		grounded += start ? 1 : -1;
+	}
+	
+	@Override
+	public boolean handleCollision(boolean start, Sensor mySensor,
+			BodyObject other, Sensor otherSensor) {
+		boolean handled = super.handleCollision(start, mySensor, other, otherSensor);
+		
+		if(!handled && mySensor != null 
+				&& other.getGameObjectType().equals(GameObjectType.Ground)) {
+			
+			switch(mySensor.getSensorType()) {
+			case SensorTypes.BODY :
+				calcBodyBlockedContact(start);
+				return true;
+			case SensorTypes.FOOT :
+				calcGroundedContact(start);
+				return true;
+				
+			default:
+				break;
+			}
+			
+		}
+		
+		return handled;
+	}
+	
+	public boolean decShuriken() {
+		if(shuriken <= 0)
+			return false;
+			
+		shuriken--;
+		return true;
+	}
+	
+	@Override
+	public int compare(GameObject arg0, GameObject arg1) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

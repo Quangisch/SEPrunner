@@ -2,6 +2,7 @@ package core.ingame;
 
 import gameObject.IAnimatedDrawable;
 import gameObject.body.BodyObject;
+import gameObject.body.GameObjectType;
 import gameObject.body.ICollisionable;
 import gameObject.body.Sensor;
 import gameObject.interaction.InteractionState;
@@ -14,6 +15,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Shape;
 
 public class HUD implements IAnimatedDrawable {
 
@@ -116,6 +120,58 @@ public class HUD implements IAnimatedDrawable {
 
 		@Override
 		public void applyImpulse(Vector2 impulse) {}
+
+		@Override
+		public Fixture setFixture(float density, float friction,
+				float restitution, boolean sensor, Shape shape,
+				boolean disposeShape) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Fixture addFixture(float density, float friction,
+				float restitution, boolean sensor, Shape shape,
+				boolean disposeShape) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Fixture addFixture(FixtureDef fixtureDef) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void addSensor(Sensor sensor) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public boolean removeSensor(Sensor sensor) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public GameObjectType getGameObjectType() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setGameObjectType(GameObjectType gameObjectType) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void setGravityScale(float scale) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	@Override
@@ -186,12 +242,6 @@ public class HUD implements IAnimatedDrawable {
 
 	@Override
 	public void setScale(float scale) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setAnimation(int index, Animation animation, int playMode) {
 		// TODO Auto-generated method stub
 		
 	}

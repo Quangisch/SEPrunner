@@ -11,13 +11,11 @@ import core.ingame.input.InteractionHandler;
 
 public class Player extends PlayerCollision {
 
-	private InteractionHandler iHandler;
+	private InteractionHandler interactionHandler;
 	
-	public Player(GameWorld gameWorld, Vector2 position) {
+	public Player(IInputHandler inputHandler, GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
-		
-		iHandler = new Interac
-		setInputHandler(iHandler);
+		interactionHandler = new InteractionHandler(inputHandler, this);
 		getGameWorld().getCamera().setToFollowMoveable(this);
 	}
 
@@ -25,6 +23,8 @@ public class Player extends PlayerCollision {
 		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
 		super.run();
+		
+		interactionHandler.run();
 	}
 
 	

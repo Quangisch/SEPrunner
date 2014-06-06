@@ -2,7 +2,7 @@ package gameObject.body;
 
 public interface ISensorTypes {
 
-	abstract class SensorTypes {
+	public abstract class SensorTypes {
 
 		// MISC
 		public static final int DEFAULT = 0;

@@ -22,6 +22,7 @@ public class InteractionObject extends AnimationObject implements IInteractable 
 			this.defaultState = defaultState;
 			if(currentState == null)
 				this.currentState = defaultState;
+	
 		} else
 			System.err.println(this.getClass()+"@setDefaultInteractionState(...) Invalid Argument : defaultState == null");
 		

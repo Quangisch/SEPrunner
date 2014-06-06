@@ -16,7 +16,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -104,12 +103,9 @@ public class BodyObject implements ICollisionable, ISensorTypes,
 		setFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 	
-	protected void setGravityScale(float scale) {
+	@Override
+	public void setGravityScale(float scale) {
 		body.setGravityScale(scale);
-	}
-	
-	protected void rayCast(RayCastCallback callback, Vector2 point1, Vector2 point2) {
-		body.getWorld().rayCast(callback, point1, point2);
 	}
 
 	@Override

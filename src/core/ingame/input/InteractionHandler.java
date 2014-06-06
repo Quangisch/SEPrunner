@@ -2,8 +2,8 @@ package core.ingame.input;
 
 import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
-import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
+import gameObject.interaction.InteractionState;
 import gameObject.interaction.enemy.Enemy;
 import gameObject.interaction.player.Detectable;
 import gameObject.interaction.player.Shuriken;
@@ -17,28 +17,33 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.ingame.GameProperties;
+import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
-public class InteractionHandler extends InputHandler implements
-		Detectable, RayCastCallback, Runnable {
+public class InteractionHandler implements
+		Detectable, Runnable, RayCastCallback {
 
+	private IInputHandler iHandler;
+	private GameObject gameObject;
+	
 	private Enemy enemyGrab;
-	private int shuriken = 10;
 
 	private Vector2 target;
-	private InteractionMap nextState, interruptedState;
+	private InteractionState nextState, interruptedState;
+	
 	private volatile boolean hideable = false;
 
 	private Click click;
 
-	public InteractionHandler(GameObject gameObject) {
-		
+	public InteractionHandler(IInputHandler iHandler, GameObject gameObject) {
+		this.iHandler = iHandler;
+		this.gameObject = gameObject;
 	}
 
 	public void run() {
 		if (iHandler != null) {
 			processInput();
-			if (!isHooking())
+			if (!gameObject.isHooking())
 				processStates();
 		}
 	}
@@ -49,8 +54,8 @@ public class InteractionHandler extends InputHandler implements
 		processHook();
 
 		// CLICK
-		if (actionTimer >= ACTION_TIMER_INITIAL && !isCrouching()
-				&& getInteractionState().isInterruptable()) {
+		if (actionTimer >= ACTION_TIMER_INITIAL && !gameObject.isCrouching()
+				&& gameObject.isInteractionFinished()) {
 			click = iHandler.getClick();
 			if (click != null) {
 				normalizeClickPoint();
@@ -66,7 +71,7 @@ public class InteractionHandler extends InputHandler implements
 		} else
 			actionTimer++;
 
-		if (!action && isGrounded()) {
+		if (!action && gameObject.isGrounded()) {
 
 			// ACTION (HIDE OR GRAB)
 			if (iHandler.isKeyDown(ActionKey.ACTION)) {
@@ -84,24 +89,24 @@ public class InteractionHandler extends InputHandler implements
 
 			// JUMP
 			if (iHandler.isKeyDown(ActionKey.JUMP)) {
-				nextState = InteractionMap.JUMP;
-			} else if (isJumping() && isGrounded())
-				nextState = getInteractionState().equals(InteractionMap.JUMP) ? InteractionMap.STAND
-						: InteractionMap.WALK;
+				nextState = InteractionState.JUMP;
+			} else if (gameObject.isJumping() && gameObject.isGrounded())
+				nextState = gameObject.getInteractionState().equals(InteractionState.JUMP) ? InteractionState.STAND
+						: InteractionState.WALK;
 
 			// CROUCH
 			else if (iHandler.isKeyDown(ActionKey.CROUCH)) {
-				if (!isCrouching()) {
-					if (getInteractionState().equals(InteractionMap.STAND))
-						nextState = InteractionMap.CROUCH_DOWN;
+				if (!gameObject.isCrouching()) {
+					if (gameObject.getInteractionState().equals(InteractionState.STAND))
+						nextState = InteractionState.CROUCH_DOWN;
 					else
-						nextState = InteractionMap.CROUCH_STAND;
-				} else if (getInteractionState().equals(
-						InteractionMap.CROUCH_DOWN)
-						&& isAnimationFinished())
-					nextState = InteractionMap.CROUCH_STAND;
-			} else if (isCrouching() && !isBodyBlocked())
-				nextState = InteractionMap.STAND;
+						nextState = InteractionState.CROUCH_STAND;
+				} else if (gameObject.getInteractionState().equals(
+						InteractionState.CROUCH_DOWN)
+						&& gameObject.isInteractionFinished())
+					nextState = InteractionState.CROUCH_STAND;
+			} else if (gameObject.isCrouching() && !gameObject.isBodyBlocked())
+				nextState = InteractionState.STAND;
 		}
 
 		// BASIC MOVEMENT
@@ -109,40 +114,40 @@ public class InteractionHandler extends InputHandler implements
 			if (iHandler.isKeyDown(ActionKey.RIGHT)
 					|| iHandler.isKeyDown(ActionKey.LEFT)) {
 
-				setFlip(iHandler.isKeyDown(ActionKey.LEFT));
+				gameObject.setFlip(iHandler.isKeyDown(ActionKey.LEFT));
 
-				switch (getInteractionState()) {
+				switch (gameObject.getInteractionState()) {
 				case CROUCH_DOWN:
 				case CROUCH_STAND:
-					nextState = InteractionMap.CROUCH_SNEAK;
+					nextState = InteractionState.CROUCH_SNEAK;
 					break;
 				case GRAB:
-					nextState = InteractionMap.GRAB_PULL;
+					nextState = InteractionState.GRAB_PULL;
 					break;
 				case STAND:
-					nextState = InteractionMap.WALK;
+					nextState = InteractionState.WALK;
 					break;
 				case JUMP:
-					nextState = InteractionMap.JUMP_MOVE;
+					nextState = InteractionState.JUMP_MOVE;
 					break;
 				default:
 					break;
 				}
 			} else {
 
-				switch (getInteractionState()) {
+				switch (gameObject.getInteractionState()) {
 				case RUN:
 				case WALK:
-					nextState = InteractionMap.STAND;
+					nextState = InteractionState.STAND;
 					break;
 				case CROUCH_SNEAK:
-					nextState = InteractionMap.CROUCH_STAND;
+					nextState = InteractionState.CROUCH_STAND;
 					break;
 				case GRAB_PULL:
-					nextState = InteractionMap.GRAB;
+					nextState = InteractionState.GRAB;
 					break;
 				case JUMP_MOVE:
-					nextState = InteractionMap.JUMP;
+					nextState = InteractionState.JUMP;
 					break;
 				default:
 					break;
@@ -153,7 +158,7 @@ public class InteractionHandler extends InputHandler implements
 		if (!action)
 			processRun();
 
-		if (interruptedState != null && isAnimationFinished()) {
+		if (interruptedState != null && gameObject.isInteractionFinished()) {
 			nextState = interruptedState;
 			interruptedState = null;
 		}
@@ -165,7 +170,7 @@ public class InteractionHandler extends InputHandler implements
 	protected void processStates() {
 
 		Vector2 baseForce;
-		switch (getInteractionState()) {
+		switch (gameObject.getInteractionState()) {
 		// case STAND: case CROUCH_STAND: case THROW: case HIDE: case GRAB:
 		// case GRAB_DISPOSE: case STUNNED: case HOOK_START: case HOOK_FLY:
 		// break;
@@ -192,31 +197,31 @@ public class InteractionHandler extends InputHandler implements
 			break;
 		}
 
-		if (!isGrounded())
+		if (!gameObject.isGrounded())
 			baseForce.y = 0;
 
-		if (isFlipped())
+		if (gameObject.isFlipped())
 			baseForce.x *= -1;
 
 		// tweak gravity
 		if (baseForce.len() != 0)
-			setGravityScale(0.7f);
+			gameObject.setGravityScale(0.7f);
 		else
-			setGravityScale(1);
+			gameObject.setGravityScale(1);
 
 		// apply impulse
-		applyImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f));
+		gameObject.applyImpulse(baseForce.scl(gameObject.isGrounded() ? 2 : 1.5f));
 	}
 
-	private void applyState(InteractionMap state) {
+	private void applyState(InteractionState state) {
 		if (nextState == null)
 			return;
 
-		if (!nextState.equals(getInteractionState())) {
-			boolean set = setInteractionState(nextState);
+		if (!nextState.equals(gameObject.getInteractionState())) {
+			boolean set = gameObject.tryToSetInteractionState(nextState);
 
 			if (set) {
-				applyAnimation();
+				gameObject.applyInteraction();
 				nextState = null;
 			}
 		} else
@@ -228,11 +233,11 @@ public class InteractionHandler extends InputHandler implements
 
 	private boolean processRun() {
 
-		switch (getInteractionState()) {
+		switch (gameObject.getInteractionState()) {
 		case WALK:
 			if (runTapTimer < TAP_TIMER_LIMIT_HIGH
 					&& runTapTimer > TAP_TIMER_LIMIT_LOW)
-				nextState = InteractionMap.RUN;
+				nextState = InteractionState.RUN;
 			else
 				runTapTimer = 0;
 			break;
@@ -257,9 +262,9 @@ public class InteractionHandler extends InputHandler implements
 
 	// CLICKPOINT
 	private void normalizeClickPoint() {
-		startPoint = GameProperties.meterToPixel(this.getLocalCenterInWorld());
+		startPoint = GameProperties.meterToPixel(gameObject.getLocalCenterInWorld());
 		clickPoint = new Vector2(click.screenX, click.screenY);
-		getGameWorld().getCamera().unproject(clickPoint);
+		gameObject.getGameWorld().getCamera().unproject(clickPoint);
 
 		switch (Debug.getMode()) {
 		case GEOMETRIC:
@@ -277,30 +282,19 @@ public class InteractionHandler extends InputHandler implements
 
 	// THROW (SHURIKEN)
 	private boolean processThrow() {
-		if (shuriken <= 0)
+		if (!gameObject.decShuriken())
 			return false;
 
 		if (clickPoint.x < startPoint.x && tryToFlip())
 			return false;
 
-		interruptedState = getInteractionState();
-		applyState(nextState = InteractionMap.THROW);
+		interruptedState = gameObject.getInteractionState();
+		applyState(nextState = InteractionState.THROW);
 
-		shuriken--;
-		new Shuriken(this, clickPoint);
+		new Shuriken(gameObject, clickPoint);
 		actionTimer = 0;
 
 		return true;
-	}
-
-	public void addShuriken() {
-		actionTimer = ACTION_TIMER_INITIAL;
-		shuriken++;
-	}
-
-	public void setShuriken(int shurikens) {
-		actionTimer = ACTION_TIMER_INITIAL;
-		this.shuriken = shurikens;
 	}
 
 	// HOOK
@@ -313,7 +307,7 @@ public class InteractionHandler extends InputHandler implements
 		endPoint.nor().scl(HOOK_RADIUS);
 		endPoint.add(startPoint);
 
-		rayCast(this, getLocalCenterInWorld(),
+		gameObject.getGameWorld().getWorld().rayCast(this, gameObject.getLocalCenterInWorld(),
 				GameProperties.pixelToMeter(endPoint));
 
 		actionTimer = 0;
@@ -323,16 +317,16 @@ public class InteractionHandler extends InputHandler implements
 
 	private boolean beginHook(Vector2 target) {
 
-		if (target.x < getLocalCenterInWorld().x && !tryToFlip())
+		if (target.x < gameObject.getLocalCenterInWorld().x && !tryToFlip())
 			return false;
 
-		setGravityScale(0);
-		setInteractionState(InteractionMap.HOOK, true);
-		applyAnimation();
+		gameObject.setGravityScale(0);
+		gameObject.setInteractionState(InteractionState.HOOK, true);
+		gameObject.applyInteraction();
 		// body.setGravityScale(scale);
 		// TODO
 		// body.setTransform(target, body.getAngle());
-		this.target = target.sub(getLocalCenterInWorld());
+		this.target = target.sub(gameObject.getLocalCenterInWorld());
 		return true;
 	}
 
@@ -340,23 +334,23 @@ public class InteractionHandler extends InputHandler implements
 	private int hookTime = 0;
 
 	private boolean processHook() {
-		if (target == null || !isHooking())
+		if (target == null || !gameObject.isHooking())
 			return false;
 
-		if (getInteractionState().equals(InteractionMap.HOOK)
-				&& isAnimationFinished()) {
-			setInteractionState(InteractionMap.HOOK_FLY, true);
-			applyAnimation();
+		if (gameObject.getInteractionState().equals(InteractionState.HOOK)
+				&& gameObject.isInteractionFinished()) {
+			gameObject.setInteractionState(InteractionState.HOOK_FLY, true);
+			gameObject.applyInteraction();
 		}
 
-		if (!getInteractionState().equals(InteractionMap.HOOK_FLY))
+		if (!gameObject.getInteractionState().equals(InteractionState.HOOK_FLY))
 			return true;
 
-		applyImpulse(target.nor().scl(10));
+		gameObject.applyImpulse(target.nor().scl(10));
 		hookTime++;
 
 //		System.out.println(hookTime);
-		if (hookTime >= HOOK_TIME_LIMIT || (hookTime >= 5 && isGrounded()))
+		if (hookTime >= HOOK_TIME_LIMIT || (hookTime >= 5 && gameObject.isGrounded()))
 			resetHook();
 
 		return true;
@@ -365,9 +359,9 @@ public class InteractionHandler extends InputHandler implements
 	protected void resetHook() {
 		target = null;
 		hookTime = 0;
-		setGravityScale(1);
-		setInteractionState(InteractionMap.STAND, true);
-		applyAnimation();
+		gameObject.setGravityScale(1);
+		gameObject.setInteractionState(InteractionState.STAND, true);
+		gameObject.applyInteraction();
 	}
 
 	private int oriLayer;
@@ -383,41 +377,41 @@ public class InteractionHandler extends InputHandler implements
 	}
 
 	private void endAction() {
-		if (isHiding())
+		if (gameObject.isHiding())
 			processHiding(false);
 	}
 
 	private void processHiding(boolean start) {
-		if (!isGrounded())
+		if (!gameObject.isGrounded())
 			return;
 
 		// start hiding
 		if (start) {
-			switch (getInteractionState()) {
+			switch (gameObject.getInteractionState()) {
 			case STAND:
 			case WALK:
 			case CROUCH_STAND:
 			case CROUCH_SNEAK:
-				nextState = InteractionMap.HIDE_START;
-				oriAlpha = getAlpha();
-				oriLayer = getLayer();
-				setLayer(HIDE_LAYER);
-				setAlpha(HIDE_ALPHA);
+				nextState = InteractionState.HIDE_START;
+				oriAlpha = gameObject.getAlpha();
+				oriLayer = gameObject.getLayer();
+				gameObject.setLayer(HIDE_LAYER);
+				gameObject.setAlpha(HIDE_ALPHA);
 				break;
 			case HIDE_START:
-				nextState = InteractionMap.HIDE;
+				nextState = InteractionState.HIDE;
 			default:
 				break;
 			}
 
 			// end hiding
 		} else {
-			if (getInteractionState().equals(InteractionMap.HIDE))
-				nextState = InteractionMap.HIDE_END;
-			if (getInteractionState().equals(InteractionMap.HIDE_END))
-				nextState = InteractionMap.STAND;
-			setLayer(oriLayer);
-			setAlpha(oriAlpha);
+			if (gameObject.getInteractionState().equals(InteractionState.HIDE))
+				nextState = InteractionState.HIDE_END;
+			if (gameObject.getInteractionState().equals(InteractionState.HIDE_END))
+				nextState = InteractionState.STAND;
+			gameObject.setLayer(oriLayer);
+			gameObject.setAlpha(oriAlpha);
 		}
 	}
 
@@ -441,15 +435,18 @@ public class InteractionHandler extends InputHandler implements
 		if (!enemy.isStunned() && enemyGrab == null)
 			return false;
 
-		enemy.isCarriable(getPosition());
+		enemy.isCarriable(gameObject.getPosition());
 		this.enemyGrab = enemy;
-		nextState = InteractionMap.GRAB;
+		nextState = InteractionState.GRAB;
 		return true;
 	}
 
+
+	@Override
 	public float reportRayFixture(Fixture fixture, Vector2 point,
 			Vector2 normal, float fraction) {
-		if (((BodyObject) fixture.getBody().getUserData()).getGameObjectType() == GameObjectType.GROUND) {
+		
+		if (((BodyObject) fixture.getBody().getUserData()).getGameObjectType().equals(GameObjectType.Ground)) {
 
 			if (Debug.isMode(Debug.Mode.GEOMETRIC)) {
 				Vector2 p = GameProperties.meterToPixel(point);
@@ -461,51 +458,23 @@ public class InteractionHandler extends InputHandler implements
 		} else
 			return 1;
 	}
-
-	public boolean isBodyBlocked() {
-		return bodyBlocked > 0;
+	
+	public boolean equals(Object object) {
+		if(object == null || !(object instanceof InteractionHandler))
+			return false;
+		
+//		TODO equals for GameObject and IIHandler
+		InteractionHandler other = (InteractionHandler) object;
+		return this.gameObject.equals(other.gameObject) && this.iHandler.equals(other.iHandler);
 	}
-
-	public void calcBodyBlockedContact(boolean start) {
-		bodyBlocked += start ? 1 : -1;
-	}
-
-	public boolean isGrounded() {
-		return grounded > 0;
-	}
-
-	public void calcGroundedContact(boolean start) {
-		grounded += start ? 1 : -1;
-	}
-
-	protected void setInputHandler(IInputHandler iHandler) {
-		this.iHandler = iHandler;
-	}
+	
 
 	// HELPER
 	private boolean tryToFlip() {
 		if (iHandler.isKeyDown(ActionKey.RIGHT))
 			return false;
-		setFlip(true);
+		gameObject.setFlip(true);
 		return true;
-	}
-
-	// TEMP Methods for debugging
-	protected int getGrounded() {
-		return grounded;
-	}
-
-	protected int getBodyBlocked() {
-		return bodyBlocked;
-	}
-
-	// COLLISION DETECTION
-	public boolean handleCollision(boolean start, Sensor mySensor,
-			BodyObject other, Sensor otherSensor) {
-
-		
-
-		return false;
 	}
 
 }

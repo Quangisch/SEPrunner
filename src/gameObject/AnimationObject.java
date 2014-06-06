@@ -28,6 +28,9 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 	
 	@Override
 	public void draw(SpriteBatch batch, float deltaTime) {
+		if(animation == null)
+			return;
+		
 		stateTime += deltaTime;
 		draw(batch, animation.getKeyFrame(stateTime));
 	}
@@ -52,7 +55,7 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 	}
 
 	protected boolean isAnimationFinished() {
-		return animation.isAnimationFinished(stateTime);
+		return animation == null || animation.isAnimationFinished(stateTime);
 	}
 	
 	@Override
