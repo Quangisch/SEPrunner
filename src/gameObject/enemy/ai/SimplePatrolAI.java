@@ -43,23 +43,16 @@ public class SimplePatrolAI extends EnemyAI {
 			getEnemy().flip();
 			currentAction = ActionKey.RIGHT;
 			getEnemy().sensors.get(0).setActive(false);//deaktiviert linken sensor
+			getEnemy().sensors.get(1).setActive(true);
 		}
 		if(getEnemy().getX()>=rightX){
 			getEnemy().flip();
 			currentAction = ActionKey.LEFT;
 			getEnemy().sensors.get(1).setActive(false);//deaktiviert rechten sensor
+			getEnemy().sensors.get(0).setActive(true);
 		}
 		if(getEnemy().getX()>leftX && getEnemy().getX()<rightX && !getEnemy().isFlipped()){
-			currentAction = ActionKey.RIGHT;
-			
-////			if(!enemy.isFlipped()){
-//				Texture sichtfeld = new Texture(Gdx.files.internal("res/sprites/sichtfeld.png"));
-//				batch.draw(sichtfeld,getEnemy().getX()+100,getEnemy().getY()+30,200,100);
-////			}else{
-////				Texture sichtfeld = new Texture(Gdx.files.internal("res/sprites/sichtfeld180.png"));
-////				batch.draw(sichtfeld,enemy.getX()-sichtfeldX+60+30,enemy.getY()+30,sichtfeldX-50,sichtfeldY);
-////			}
-		
+			currentAction = ActionKey.RIGHT;		
 		}
 		if(getEnemy().getX()>leftX && getEnemy().getX()<rightX && getEnemy().isFlipped()){
 			currentAction = ActionKey.LEFT;
@@ -74,11 +67,11 @@ public class SimplePatrolAI extends EnemyAI {
 		
 		//ALARM -> enemy verfolgt player TODO: kann aber nicht springen, kommt keine steigungen hoch
 		if(alarm && !getEnemy().isStunned()){
-//			if(player.getX()>getEnemy().getX()){
-//				currentAction = ActionKey.RIGHT;
-//			}else{
-//				currentAction = ActionKey.LEFT;
-//			}
+			if(player.getX()>getEnemy().getX()){
+				currentAction = ActionKey.RIGHT;
+			}else{
+				currentAction = ActionKey.LEFT;
+			}
 		}
 		//NILS
 	}
@@ -92,7 +85,7 @@ public class SimplePatrolAI extends EnemyAI {
 		if(other.getGameObjectType() == IGameObjectTypes.GameObjectTypes.PLAYER 
 				&& getEnemy().getGameObjectType() == IGameObjectTypes.GameObjectTypes.ENEMY
 				&& sender != null
-				&& sender.getSensorType() == ISensorTypes.SensorTypes.FOOT){
+				&& sender.getSensorType() == ISensorTypes.SensorTypes.FOOT){//TODO: hier einfügen: && other.isDetectable
 			Debug.println("Game Over");
 			GameProperties.setGameState(GameState.INGAME_LOSE);
 		}
@@ -101,7 +94,7 @@ public class SimplePatrolAI extends EnemyAI {
 		if(other.getGameObjectType() == IGameObjectTypes.GameObjectTypes.PLAYER 
 				&& getEnemy().getGameObjectType() == IGameObjectTypes.GameObjectTypes.ENEMY
 				&& sender != null
-				&& sender.getSensorType() == ISensorTypes.SensorTypes.VISION){
+				&& sender.getSensorType() == ISensorTypes.SensorTypes.VISION){//TODO: hier einfügen: && other.isDetectable
 			alarm = true;
 			player = other;
 			Debug.println("Alarm");

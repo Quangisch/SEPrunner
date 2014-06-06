@@ -18,7 +18,7 @@ public class Enemy extends ObjectInteraction {
 
 	protected IEnemyAI AI;
 	protected boolean stunned;
-	Texture sichtfeld;
+	protected Texture sichtfeld;
 	
 	public Enemy(GameWorld world, Vector2 position) {
 		super(world, position);
@@ -51,20 +51,23 @@ public class Enemy extends ObjectInteraction {
 		super.run();
 	}
 
-//	@Override
-//	public void draw(SpriteBatch batch, float deltaTime) {
-//		super.draw(batch, deltaTime);
-//		float x,y;
-//		if(this.isFlipped()){
-//			x = this.getX();
-//			y = this.getY();//this.getLocalCenterInWorld().y;
-//			batch.draw(sichtfeld, x, y, 100, 100, 0, 0, sichtfeld.getWidth(), sichtfeld.getHeight(), true, false);
-//		}else{
-//			x = this.getX()+2*(this.getLocalCenterInWorld().x-this.getX());
-//			y = this.getY();//this.getLocalCenterInWorld().y;
-//			batch.draw(sichtfeld, x, y, 100, 100, 0, 0, sichtfeld.getWidth(), sichtfeld.getHeight(), false, false);
-//		}
-//	}
+	@Override
+	//TODO: sichtfeld darf player nicht überdecken
+	public void draw(SpriteBatch batch, float deltaTime) {
+		float x,y;
+		if(!stunned){
+			if(this.isFlipped()){
+				x = this.getX()-55;
+				y = this.getY()+50;
+				batch.draw(sichtfeld, x, y, 100, 100, 0, 0, sichtfeld.getWidth(), sichtfeld.getHeight(), true, false);
+			}else{
+				x = this.getX()+105;
+				y = this.getY()+50;
+				batch.draw(sichtfeld, x, y, 100, 100, 0, 0, sichtfeld.getWidth(), sichtfeld.getHeight(), false, false);
+			}
+		}
+		super.draw(batch, deltaTime);
+	}
 
 	public void setAI(IEnemyAI ai) {
 		if (AI == ai)

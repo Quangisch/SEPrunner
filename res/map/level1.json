@@ -83,12 +83,12 @@
 					{
 						"ID" : "enemy",
 						"json" : "ninja_full",
-						"position" : [400, 200],
+						"position" : [900, 300],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
 							"ID" : "SimplePatrolAI",
-							"Param" : [300, 450]
+							"Param" : [900, 1200]
 						}
 					},
 					{
