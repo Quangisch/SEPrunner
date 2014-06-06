@@ -1,5 +1,7 @@
 package gameObject;
 
+import gameObject.body.Sensor;
+import gameObject.interaction.InteractionObject;
 import gameWorld.GameWorld;
 
 import java.io.FileNotFoundException;

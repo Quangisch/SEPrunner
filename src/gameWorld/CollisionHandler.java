@@ -1,7 +1,8 @@
 package gameWorld;
 
-import gameObject.BodyObject;
-import gameObject.Sensor;
+import gameObject.body.BodyObject;
+import gameObject.body.GameObjectType;
+import gameObject.body.Sensor;
 import misc.Debug;
 import misc.Debug.Mode;
 
@@ -11,8 +12,6 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-
-import gameObject.IGameObjectTypes.GameObjectTypes;
 
 public class CollisionHandler implements ContactListener {
 
@@ -77,11 +76,11 @@ public class CollisionHandler implements ContactListener {
 			BodyObject objectB = (fixB.getBody().getUserData() instanceof BodyObject) ? (BodyObject) fixB.getBody()
 					.getUserData() : null;
 
-			boolean isMovableA = objectA == null || objectA.getGameObjectType() == GameObjectTypes.PLAYER
-					|| objectA.getGameObjectType() == GameObjectTypes.ENEMY;
+			boolean isMovableA = objectA == null || objectA.getGameObjectType() == GameObjectType.Player
+					|| objectA.getGameObjectType() == GameObjectType.Enemy;
 
-			boolean isMovableB = objectB == null || objectB.getGameObjectType() == GameObjectTypes.PLAYER
-					|| objectB.getGameObjectType() == GameObjectTypes.ENEMY;
+			boolean isMovableB = objectB == null || objectB.getGameObjectType() == GameObjectType.Player
+					|| objectB.getGameObjectType() == GameObjectType.Enemy;
 
 			return !(isMovableA && isMovableB) || fixA.isSensor() || fixB.isSensor();
 		}

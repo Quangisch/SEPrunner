@@ -1,5 +1,6 @@
 package gameObject;
 
+import gameObject.body.BodyObject;
 import gameObject.interaction.IInteractionStates;
 import gameWorld.GameWorld;
 
@@ -8,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-abstract class DrawableObject extends BodyObject implements IDrawable, IInteractionStates {
+abstract class DrawableObject extends BodyObject implements IDrawableObject, IInteractionStates {
 
 	// DRAW
 	private boolean flip = false;

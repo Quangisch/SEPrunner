@@ -1,4 +1,4 @@
-package core.ingame;
+package core.ingame.input;
 
 import java.util.HashMap;
 import java.util.HashSet;

@@ -1,9 +1,15 @@
 package gameObject;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import gameObject.interaction.IInteractionStates.InteractionState;
 
-public interface IAnimatedDrawable {
+import com.badlogic.gdx.graphics.g2d.Animation;
 
-	public void draw(SpriteBatch batch, float deltaTime);
+import core.ingame.IDrawable;
 
+public interface IAnimatedDrawable extends IDrawable, IDrawableObject {
+
+	public void setAnimation(int index, Animation animation, int playMode);
+	
+	public boolean applyAnimation(InteractionState currentState); 
+	
 }

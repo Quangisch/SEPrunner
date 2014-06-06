@@ -3,7 +3,7 @@ package misc;
 import com.badlogic.gdx.Input.Keys;
 
 import core.ingame.Camera;
-import core.ingame.InputHandler;
+import core.ingame.input.InputHandler;
 
 public abstract class Debug {
 

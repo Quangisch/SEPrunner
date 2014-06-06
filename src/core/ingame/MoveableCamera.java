@@ -1,6 +1,6 @@
 package core.ingame;
 
-import gameObject.ICollisionable;
+import gameObject.body.ICollisionable;
 
 import com.badlogic.gdx.math.Vector2;
 

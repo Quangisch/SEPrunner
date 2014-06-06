@@ -1,6 +1,6 @@
 package gameObject.statics;
 
-import gameObject.ICollisionable;
+import gameObject.body.ICollisionable;
 
 public interface Hideable {
 	

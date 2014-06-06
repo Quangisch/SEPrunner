@@ -1,5 +1,6 @@
-package gameObject;
+package gameObject.body;
 
+import gameObject.GameObject;
 import gameObject.interaction.IInteractionStates.InteractionState;
 import gameWorld.GameWorld;
 
@@ -23,10 +24,10 @@ import core.ingame.GameProperties;
  * @author SEP SS14 GruppeA
  *
  */
-public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTypes,
+public class BodyObject implements ICollisionable, ISensorTypes,
 		Disposable, Runnable {
 
-	private int gameObjectType = GameObjectTypes.UNSPECIFIED;
+	private GameObjectType gameObjectType = GameObjectType.Unspecified;
 	private GameWorld gameWorld;
 
 	// BODY
@@ -48,7 +49,16 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		body.setUserData(this);
 		body.setFixedRotation(true);
 	}
+	
+	@Override
+	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
+			boolean disposeShape) {
+		for (Fixture f : body.getFixtureList())
+			body.destroyFixture(f);
+		return addFixture(density, friction, restitution, sensor, shape, disposeShape);
+	}
 
+	@Override
 	public Fixture addFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
 			boolean disposeShape) {
 		FixtureDef fixtureDef = new FixtureDef();
@@ -61,16 +71,10 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		if (disposeShape) shape.dispose();
 		return fix;
 	}
-
+	
+	@Override
 	public Fixture addFixture(FixtureDef fixtureDef) {
 		return body.createFixture(fixtureDef);
-	}
-
-	public Fixture setFixture(float density, float friction, float restitution, boolean sensor, Shape shape,
-			boolean disposeShape) {
-		for (Fixture f : body.getFixtureList())
-			body.destroyFixture(f);
-		return addFixture(density, friction, restitution, sensor, shape, disposeShape);
 	}
 	
 	protected void setFixture(InteractionState state) {
@@ -104,8 +108,9 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 	protected void rayCast(RayCastCallback callback, Vector2 point1, Vector2 point2) {
 		body.getWorld().rayCast(callback, point1, point2);
 	}
-	
-	protected void addSensor(Sensor sensor) {
+
+	@Override
+	public void addSensor(Sensor sensor) {
 		if (sensors.contains(sensor)) return;
 
 		sensors.add(sensor);
@@ -114,9 +119,15 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		addFixture(sensor.getFixtureDef()).setUserData(sensor);
 	}
 
-	protected void removeSensor(Sensor sensor) {
-		if (sensor.getGameObject() == this) sensor.setGameObject(null);
-		if (sensors.remove(sensor)) /* TODO Remove Sensor Fixture -> dispose?*/;
+	@Override
+	public boolean removeSensor(Sensor sensor) {
+		if (sensor.getGameObject() == this) 
+			sensor.setGameObject(null);
+		
+//		TODO Remove Sensor Fixture
+		if (sensors.remove(sensor)) 
+			;
+		return false;
 	}
 
 	protected void setBoundingBox(int index, PolygonShape shape) {
@@ -141,11 +152,13 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		return GameProperties.meterToPixel(body.getPosition().y);
 	}
 
-	public int getGameObjectType() {
+	@Override
+	public GameObjectType getGameObjectType() {
 		return gameObjectType;
 	}
 
-	public void setGameObjectType(int gameObjectType) {
+	@Override
+	public void setGameObjectType(GameObjectType gameObjectType) {
 		this.gameObjectType = gameObjectType;
 	}
 

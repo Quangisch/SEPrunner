@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
+import core.ingame.input.InputHandler;
+
 public class GameRender implements Screen {
 
 	private SpriteBatch batch;

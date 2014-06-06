@@ -1,15 +1,18 @@
 package core.ingame;
 
-import gameObject.BodyObject;
 import gameObject.IAnimatedDrawable;
-import gameObject.ICollisionable;
-import gameObject.Sensor;
+import gameObject.body.BodyObject;
+import gameObject.body.ICollisionable;
+import gameObject.body.Sensor;
+import gameObject.interaction.IInteractionStates.InteractionState;
 import gameObject.player.Shuriken;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class HUD implements IAnimatedDrawable {
@@ -113,5 +116,89 @@ public class HUD implements IAnimatedDrawable {
 
 		@Override
 		public void applyImpulse(Vector2 impulse) {}
+	}
+
+	@Override
+	public void draw(SpriteBatch batch, TextureRegion textureRegion) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isVisible() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void flip() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFlip(boolean flip) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isFlipped() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getLayer() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setLayer(int layer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float getAlpha() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setAlpha(float alpha) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float getScale() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setScale(float scale) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setAnimation(int index, Animation animation, int playMode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean applyAnimation(InteractionState currentState) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

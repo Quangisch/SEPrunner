@@ -1,4 +1,4 @@
-package gameObject;
+package gameObject.body;
 
 import misc.BodyFunctions;
 

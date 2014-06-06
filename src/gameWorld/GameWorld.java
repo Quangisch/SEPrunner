@@ -1,10 +1,8 @@
 package gameWorld;
 
-import gameObject.BodyObject;
 import gameObject.GameObject;
-import gameObject.IGameObjectTypes.GameObjectTypes;
-import gameObject.enemy.Enemy;
-import gameObject.player.Player;
+import gameObject.body.BodyObject;
+import gameObject.body.GameObjectType;
 import gameObject.statics.Hideout;
 
 import java.io.FileNotFoundException;
@@ -31,9 +29,10 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.Camera;
 import core.ingame.GameProperties;
-import core.ingame.IInputHandler;
+import core.ingame.IDrawable;
+import core.ingame.input.IInputHandler;
 
-public class GameWorld implements IDrawableMap, Runnable {
+public class GameWorld implements IDrawable, Runnable {
 
 	private IInputHandler iHandler;
 	private Box2DDebugRenderer debugRender;
@@ -151,8 +150,9 @@ public class GameWorld implements IDrawableMap, Runnable {
 
 		g.set(gVecs);
 		goal.addFixture(0, 0, 0, true, g, true);
-		goal.setGameObjectType(GameObjectTypes.GOAL);
 
+		goal.setGameObjectType(GameObjectType.Goal);
+		
 		// GROUND
 		JsonValue JGrounds = root.get("ground");
 		BodyObject ground = new BodyObject(this, new Vector2(0, 0));
@@ -172,7 +172,7 @@ public class GameWorld implements IDrawableMap, Runnable {
 			ground.addFixture(0, 0.4f, 0, false, p, true);
 		}
 
-		ground.setGameObjectType(GameObjectTypes.GROUND);
+		ground.setGameObjectType(GameObjectType.Ground);
 
 		if (root.hasChild("objects")) //
 			for (JsonValue o : root.get("objects"))

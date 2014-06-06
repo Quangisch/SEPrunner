@@ -1,7 +1,7 @@
 package gameObject.statics;
 
-import gameObject.ICollisionable;
 import gameObject.GameObject;
+import gameObject.body.ICollisionable;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;
@@ -21,7 +21,7 @@ public class Hideout extends GameObject implements Hideable {
 	@Override
 	public void init(String name) {
 		super.init(name);
-		setGameObjectType(GameObjectTypes.HIDEABLE);
+		setGameObjectType(GameObjectType.HIDEABLE);
 		setLayer(2);
 	}
 

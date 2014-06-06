@@ -1,18 +1,33 @@
 package gameObject.interaction;
 
-import gameObject.IInteractionHandler;
+import gameObject.interaction.IInteractionStates.InteractionState;
 
-public interface IInteractable extends IInteractionHandler {
+import com.badlogic.gdx.graphics.g2d.Animation;
 
+public interface IInteractable {
+	
+	void setDefaultInteractionState(InteractionState defaultState);
+	
+	InteractionState getInteractionState();
+	
+	InteractionState getDefaultInteractionState();
+	
+	void setAnimation(int index, Animation animation, int playMode);
+
+	boolean isInteractionFinished();
+	
+	boolean applyInteraction();
+	
+	boolean tryToSetInteractionState(InteractionState state);
+	
+	boolean setInteractionState(InteractionState state, boolean force);
+	
+	
+//	InteractionState Getter
 	boolean isRunning();
 
 	boolean isThrowing();
 
-	/**
-	 * Check whether Player is hiding.
-	 * 
-	 * @return hiding as boolean
-	 */
 	boolean isHiding();
 
 	boolean isCrouching();
@@ -22,5 +37,4 @@ public interface IInteractable extends IInteractionHandler {
 	boolean isJumping();
 
 	boolean isGrabbing();
-
 }

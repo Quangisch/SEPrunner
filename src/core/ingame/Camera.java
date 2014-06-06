@@ -1,6 +1,6 @@
 package core.ingame;
 
-import gameObject.ICollisionable;
+import gameObject.body.ICollisionable;
 import misc.Debug;
 
 import com.badlogic.gdx.Gdx;

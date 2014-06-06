@@ -3,7 +3,7 @@ package gameObject;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-interface IDrawable {
+interface IDrawableObject {
 
 	/**
 	 * Draw textureRegion with given SpriteBatch.
