@@ -55,6 +55,8 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 		initStates(root.getString("texture"), root.get("stateframes"), root.getInt("defaultState"));
 		initBody(root.get("bodyDef"));
 		initSensors(root.get("sensor"));
+		
+		applyInteraction();
 	}
 
 	private void initStates(String texturePath, JsonValue stateFrames, int defaultStateIndex) {
