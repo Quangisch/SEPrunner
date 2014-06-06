@@ -1,7 +1,6 @@
-package gameObject;
+package gameObject.interaction;
 
 import gameObject.body.Sensor;
-import gameObject.interaction.InteractionObject;
 import gameWorld.GameWorld;
 
 import java.io.FileNotFoundException;
@@ -53,22 +52,16 @@ public class GameObject extends InteractionObject implements Comparable<GameObje
 	}
 
 	private void initStates(String texturePath, JsonValue stateFrames, int defaultStateIndex) {
-		int aniPointer = 0;
-
+		
+//		TODO necessary?
 		for (JsonValue js : stateFrames)
 			js.name = js.name.toUpperCase();
 
-		Map<String, Integer> found = new HashMap<String, Integer>();
-
 		for (InteractionState iS : InteractionState.values()) {
-			if (found.containsKey(iS.getAnimation())) {
-				iS.setAnimationIndex(found.get(iS.getAnimation()));
-				continue;
-			}
-
-			JsonValue animationFrames = stateFrames.get(iS.getAnimation().toUpperCase());
+		
+			JsonValue animationFrames = stateFrames.get(iS.getAnimationAsString().toUpperCase());
 			if (animationFrames == null) {
-				Debug.println(iS.getAnimation() + " not found", Mode.CONSOLE);
+				Debug.println(iS.getAnimationAsString() + " not found", Mode.CONSOLE);
 				continue;
 			}
 
@@ -80,7 +73,7 @@ public class GameObject extends InteractionObject implements Comparable<GameObje
 			for (JsonValue v : bBox)
 				vertices[i++] = GameProperties.pixelToMeter(v.asFloat());
 			boundingBox.set(vertices);
-			setBoundingBox(aniPointer, boundingBox);
+			addBoundingBox(iS, boundingBox);
 
 			// TEXTURE FRAMES
 			i = 0;
@@ -89,14 +82,20 @@ public class GameObject extends InteractionObject implements Comparable<GameObje
 				textureRegions[i++] = new TextureRegion(getTexture(texturePath), frame.getInt(0), frame.getInt(1),
 						frame.getInt(2), frame.getInt(3));
 
-			setAnimation(aniPointer, new Animation(animationFrames.getFloat("frameDuration"), textureRegions),
-					iS.getPlayMode());
-
-			found.put(iS.getAnimation(), aniPointer);
-			iS.setAnimationIndex(aniPointer++);
+			addAnimation(iS, new Animation(animationFrames.getFloat("frameDuration"), textureRegions));
 		}
-
-		setDefaultInteractionState(InteractionState.values()[defaultStateIndex]);
+		
+		String defaultStateName = stateFrames.getString(defaultStateIndex);
+		InteractionState defaultState = null;
+		for(InteractionState iS : InteractionState.values()) {
+			if(iS.toString().compareToIgnoreCase(defaultStateName) == 0) {
+				defaultState = iS;
+				break;
+			}
+		}
+		
+		setDefaultInteractionState(defaultState);
+		
 	}
 
 	private void initBody(JsonValue bodyDef) {
@@ -114,9 +113,10 @@ public class GameObject extends InteractionObject implements Comparable<GameObje
 			break;
 		}
 
-		resetToPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), bodyDef.getFloat("density"),
-				bodyDef.getFloat("friction"), bodyDef.getFloat("restitution"), bodyDef.getBoolean("sensor"),
-				getBoundingBox(getDefaultInteractionState().getAnimationIndex()), false);
+		setPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), 
+				bodyDef.getFloat("density"), bodyDef.getFloat("friction"), 
+				bodyDef.getFloat("restitution"), bodyDef.getBoolean("sensor"),
+				getBoundingBox(getDefaultInteractionState()), false);
 	}
 
 	private void initSensors(JsonValue sensors) {

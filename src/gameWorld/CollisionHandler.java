@@ -76,11 +76,11 @@ public class CollisionHandler implements ContactListener {
 			BodyObject objectB = (fixB.getBody().getUserData() instanceof BodyObject) ? (BodyObject) fixB.getBody()
 					.getUserData() : null;
 
-			boolean isMovableA = objectA == null || objectA.getGameObjectType() == GameObjectType.Player
-					|| objectA.getGameObjectType() == GameObjectType.Enemy;
+			boolean isMovableA = objectA == null || objectA.getGameObjectType().equals(GameObjectType.Player)
+					|| objectA.getGameObjectType().equals(GameObjectType.Enemy);
 
-			boolean isMovableB = objectB == null || objectB.getGameObjectType() == GameObjectType.Player
-					|| objectB.getGameObjectType() == GameObjectType.Enemy;
+			boolean isMovableB = objectB == null || objectB.getGameObjectType().equals(GameObjectType.Player)
+					|| objectB.getGameObjectType().equals(GameObjectType.Enemy);
 
 			return !(isMovableA && isMovableB) || fixA.isSensor() || fixB.isSensor();
 		}

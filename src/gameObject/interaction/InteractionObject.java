@@ -18,11 +18,13 @@ public class InteractionObject extends AnimationObject implements IInteractable 
 	
 	@Override
 	public void setDefaultInteractionState(InteractionState defaultState) {
-		this.defaultState = defaultState;
+		if(defaultState != null) {
+			this.defaultState = defaultState;
+			if(currentState == null)
+				this.currentState = defaultState;
+		} else
+			System.err.println(this.getClass()+"@setDefaultInteractionState(...) Invalid Argument : defaultState == null");
 		
-		if(currentState == null)
-			this.currentState = defaultState;
-
 	}
 	
 	@Override
@@ -73,45 +75,45 @@ public class InteractionObject extends AnimationObject implements IInteractable 
 	
 	@Override
 	public boolean isRunning() {
-		return getInteractionState() == InteractionState.RUN;
+		return currentState.equals(InteractionState.RUN);
 	}
 
 	@Override
 	public boolean isThrowing() {
-		return getInteractionState() == InteractionState.THROW;
+		return currentState.equals(InteractionState.THROW);
 	}
 
 
 	@Override
 	public boolean isHiding() {
-		return getInteractionState().equals(InteractionState.HIDE_START)
-				|| getInteractionState().equals(InteractionState.HIDE)
-				|| getInteractionState().equals(InteractionState.HIDE_END);
+		return currentState.equals(InteractionState.HIDE_START)
+				|| currentState.equals(InteractionState.HIDE)
+				|| currentState.equals(InteractionState.HIDE_END);
 	}
 
 	@Override
 	public boolean isCrouching() {
-		return getInteractionState().equals(InteractionState.CROUCH_DOWN)
-				|| getInteractionState().equals(InteractionState.CROUCH_STAND)
-				|| getInteractionState().equals(InteractionState.CROUCH_SNEAK);
+		return currentState.equals(InteractionState.CROUCH_DOWN)
+				|| currentState.equals(InteractionState.CROUCH_STAND)
+				|| currentState.equals(InteractionState.CROUCH_SNEAK);
 	}
 
 	@Override
 	public boolean isHooking() {
-		return getInteractionState().equals(InteractionState.HOOK)
-				|| getInteractionState().equals(InteractionState.HOOK_FLY);
+		return currentState.equals(InteractionState.HOOK)
+				|| currentState.equals(InteractionState.HOOK_FLY);
 	}
 
 	@Override
 	public boolean isJumping() {
-		return getInteractionState().equals(InteractionState.JUMP)
-				|| getInteractionState().equals(InteractionState.JUMP_MOVE);
+		return currentState.equals(InteractionState.JUMP)
+				|| currentState.equals(InteractionState.JUMP_MOVE);
 	}
 
 	@Override
 	public boolean isGrabbing() {
-		return getInteractionState().equals(InteractionState.GRAB) 
-				|| getInteractionState().equals(InteractionState.GRAB_PULL);
+		return currentState.equals(InteractionState.GRAB) 
+				|| currentState.equals(InteractionState.GRAB_PULL);
 	}
 
 	@Override

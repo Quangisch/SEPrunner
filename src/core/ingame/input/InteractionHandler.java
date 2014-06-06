@@ -1,12 +1,12 @@
 package core.ingame.input;
 
-import gameObject.GameObject;
 import gameObject.body.BodyObject;
+import gameObject.body.GameObjectType;
 import gameObject.body.Sensor;
-import gameObject.enemy.Enemy;
-import gameObject.player.Detectable;
-import gameObject.player.Shuriken;
-import gameWorld.GameWorld;
+import gameObject.interaction.GameObject;
+import gameObject.interaction.enemy.Enemy;
+import gameObject.interaction.player.Detectable;
+import gameObject.interaction.player.Shuriken;
 import misc.Debug;
 import misc.GeometricObject;
 
@@ -17,22 +17,22 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.ingame.GameProperties;
+import core.ingame.input.KeyMap.ActionKey;
 
-public abstract class InteractionObject extends GameObject implements
+public class InteractionHandler extends InputHandler implements
 		Detectable, RayCastCallback, Runnable {
 
 	private Enemy enemyGrab;
 	private int shuriken = 10;
 
 	private Vector2 target;
-	private InteractionState nextState, interruptedState;
+	private InteractionMap nextState, interruptedState;
 	private volatile boolean hideable = false;
 
-	private IInputHandler iHandler;
 	private Click click;
 
-	protected InteractionObject(GameWorld gameWorld, Vector2 position) {
-		super(gameWorld, position);
+	public InteractionHandler(GameObject gameObject) {
+		
 	}
 
 	public void run() {
@@ -84,24 +84,24 @@ public abstract class InteractionObject extends GameObject implements
 
 			// JUMP
 			if (iHandler.isKeyDown(ActionKey.JUMP)) {
-				nextState = InteractionState.JUMP;
+				nextState = InteractionMap.JUMP;
 			} else if (isJumping() && isGrounded())
-				nextState = getInteractionState().equals(InteractionState.JUMP) ? InteractionState.STAND
-						: InteractionState.WALK;
+				nextState = getInteractionState().equals(InteractionMap.JUMP) ? InteractionMap.STAND
+						: InteractionMap.WALK;
 
 			// CROUCH
 			else if (iHandler.isKeyDown(ActionKey.CROUCH)) {
 				if (!isCrouching()) {
-					if (getInteractionState().equals(InteractionState.STAND))
-						nextState = InteractionState.CROUCH_DOWN;
+					if (getInteractionState().equals(InteractionMap.STAND))
+						nextState = InteractionMap.CROUCH_DOWN;
 					else
-						nextState = InteractionState.CROUCH_STAND;
+						nextState = InteractionMap.CROUCH_STAND;
 				} else if (getInteractionState().equals(
-						InteractionState.CROUCH_DOWN)
+						InteractionMap.CROUCH_DOWN)
 						&& isAnimationFinished())
-					nextState = InteractionState.CROUCH_STAND;
+					nextState = InteractionMap.CROUCH_STAND;
 			} else if (isCrouching() && !isBodyBlocked())
-				nextState = InteractionState.STAND;
+				nextState = InteractionMap.STAND;
 		}
 
 		// BASIC MOVEMENT
@@ -114,16 +114,16 @@ public abstract class InteractionObject extends GameObject implements
 				switch (getInteractionState()) {
 				case CROUCH_DOWN:
 				case CROUCH_STAND:
-					nextState = InteractionState.CROUCH_SNEAK;
+					nextState = InteractionMap.CROUCH_SNEAK;
 					break;
 				case GRAB:
-					nextState = InteractionState.GRAB_PULL;
+					nextState = InteractionMap.GRAB_PULL;
 					break;
 				case STAND:
-					nextState = InteractionState.WALK;
+					nextState = InteractionMap.WALK;
 					break;
 				case JUMP:
-					nextState = InteractionState.JUMP_MOVE;
+					nextState = InteractionMap.JUMP_MOVE;
 					break;
 				default:
 					break;
@@ -133,16 +133,16 @@ public abstract class InteractionObject extends GameObject implements
 				switch (getInteractionState()) {
 				case RUN:
 				case WALK:
-					nextState = InteractionState.STAND;
+					nextState = InteractionMap.STAND;
 					break;
 				case CROUCH_SNEAK:
-					nextState = InteractionState.CROUCH_STAND;
+					nextState = InteractionMap.CROUCH_STAND;
 					break;
 				case GRAB_PULL:
-					nextState = InteractionState.GRAB;
+					nextState = InteractionMap.GRAB;
 					break;
 				case JUMP_MOVE:
-					nextState = InteractionState.JUMP;
+					nextState = InteractionMap.JUMP;
 					break;
 				default:
 					break;
@@ -208,7 +208,7 @@ public abstract class InteractionObject extends GameObject implements
 		applyImpulse(baseForce.scl(isGrounded() ? 2 : 1.5f));
 	}
 
-	private void applyState(InteractionState state) {
+	private void applyState(InteractionMap state) {
 		if (nextState == null)
 			return;
 
@@ -232,7 +232,7 @@ public abstract class InteractionObject extends GameObject implements
 		case WALK:
 			if (runTapTimer < TAP_TIMER_LIMIT_HIGH
 					&& runTapTimer > TAP_TIMER_LIMIT_LOW)
-				nextState = InteractionState.RUN;
+				nextState = InteractionMap.RUN;
 			else
 				runTapTimer = 0;
 			break;
@@ -284,7 +284,7 @@ public abstract class InteractionObject extends GameObject implements
 			return false;
 
 		interruptedState = getInteractionState();
-		applyState(nextState = InteractionState.THROW);
+		applyState(nextState = InteractionMap.THROW);
 
 		shuriken--;
 		new Shuriken(this, clickPoint);
@@ -327,7 +327,7 @@ public abstract class InteractionObject extends GameObject implements
 			return false;
 
 		setGravityScale(0);
-		setInteractionState(InteractionState.HOOK, true);
+		setInteractionState(InteractionMap.HOOK, true);
 		applyAnimation();
 		// body.setGravityScale(scale);
 		// TODO
@@ -343,13 +343,13 @@ public abstract class InteractionObject extends GameObject implements
 		if (target == null || !isHooking())
 			return false;
 
-		if (getInteractionState().equals(InteractionState.HOOK)
+		if (getInteractionState().equals(InteractionMap.HOOK)
 				&& isAnimationFinished()) {
-			setInteractionState(InteractionState.HOOK_FLY, true);
+			setInteractionState(InteractionMap.HOOK_FLY, true);
 			applyAnimation();
 		}
 
-		if (!getInteractionState().equals(InteractionState.HOOK_FLY))
+		if (!getInteractionState().equals(InteractionMap.HOOK_FLY))
 			return true;
 
 		applyImpulse(target.nor().scl(10));
@@ -366,7 +366,7 @@ public abstract class InteractionObject extends GameObject implements
 		target = null;
 		hookTime = 0;
 		setGravityScale(1);
-		setInteractionState(InteractionState.STAND, true);
+		setInteractionState(InteractionMap.STAND, true);
 		applyAnimation();
 	}
 
@@ -398,24 +398,24 @@ public abstract class InteractionObject extends GameObject implements
 			case WALK:
 			case CROUCH_STAND:
 			case CROUCH_SNEAK:
-				nextState = InteractionState.HIDE_START;
+				nextState = InteractionMap.HIDE_START;
 				oriAlpha = getAlpha();
 				oriLayer = getLayer();
 				setLayer(HIDE_LAYER);
 				setAlpha(HIDE_ALPHA);
 				break;
 			case HIDE_START:
-				nextState = InteractionState.HIDE;
+				nextState = InteractionMap.HIDE;
 			default:
 				break;
 			}
 
 			// end hiding
 		} else {
-			if (getInteractionState().equals(InteractionState.HIDE))
-				nextState = InteractionState.HIDE_END;
-			if (getInteractionState().equals(InteractionState.HIDE_END))
-				nextState = InteractionState.STAND;
+			if (getInteractionState().equals(InteractionMap.HIDE))
+				nextState = InteractionMap.HIDE_END;
+			if (getInteractionState().equals(InteractionMap.HIDE_END))
+				nextState = InteractionMap.STAND;
 			setLayer(oriLayer);
 			setAlpha(oriAlpha);
 		}
@@ -443,7 +443,7 @@ public abstract class InteractionObject extends GameObject implements
 
 		enemy.isCarriable(getPosition());
 		this.enemyGrab = enemy;
-		nextState = InteractionState.GRAB;
+		nextState = InteractionMap.GRAB;
 		return true;
 	}
 
@@ -503,45 +503,7 @@ public abstract class InteractionObject extends GameObject implements
 	public boolean handleCollision(boolean start, Sensor mySensor,
 			BodyObject other, Sensor otherSensor) {
 
-		boolean handled = super.handleCollision(start, mySensor, other,
-				otherSensor);
-		if (handled)
-			return handled;
-
-		if (mySensor != null) {
-			// CHECK GROUNDED
-			if (mySensor.getSensorType() == SensorTypes.FOOT) {
-				switch (other.getGameObjectType()) {
-				case GameObjectType.GROUND:
-					calcGroundedContact(start);
-					return true;
-				default:
-					return false;
-				}
-			}
-
-			// CHECK BODY
-			if (mySensor.getSensorType() == SensorTypes.BODY) {
-				switch (other.getGameObjectType()) {
-				case GameObjectType.GROUND:
-					calcBodyBlockedContact(start);
-					return true;
-				case GameObjectType.HIDEABLE:
-					hideable = start;
-					return true;
-				default:
-					return false;
-				}
-			}
-
-		} else {
-			// CHECK WHILE HOOKING
-			if (isHooking()
-					&& other.getGameObjectType() == GameObjectType.GROUND) {
-				resetHook();
-				return true;
-			}
-		}
+		
 
 		return false;
 	}

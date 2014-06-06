@@ -1,6 +1,6 @@
 package gameObject;
 
-import gameObject.interaction.IInteractionStates.InteractionState;
+import gameObject.interaction.InteractionState;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 
@@ -8,7 +8,7 @@ import core.ingame.IDrawable;
 
 public interface IAnimatedDrawable extends IDrawable, IDrawableObject {
 
-	public void setAnimation(int index, Animation animation, int playMode);
+	public void addAnimation(InteractionState state, Animation animation);
 	
 	public boolean applyAnimation(InteractionState currentState); 
 	

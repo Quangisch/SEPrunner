@@ -1,8 +1,10 @@
 package gameWorld;
 
-import gameObject.GameObject;
 import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
+import gameObject.interaction.GameObject;
+import gameObject.interaction.enemy.Enemy;
+import gameObject.interaction.player.Player;
 import gameObject.statics.Hideout;
 
 import java.io.FileNotFoundException;
@@ -150,7 +152,6 @@ public class GameWorld implements IDrawable, Runnable {
 
 		g.set(gVecs);
 		goal.addFixture(0, 0, 0, true, g, true);
-
 		goal.setGameObjectType(GameObjectType.Goal);
 		
 		// GROUND
@@ -190,7 +191,7 @@ public class GameWorld implements IDrawable, Runnable {
 		switch (StringFunctions.getMostEqualIndexIgnoreCase(root.getString("ID"), new String[] //
 				{ "player", "enemy", "hidable" })) {
 		case 0:
-			obj = new Player(this, iHandler, pos);
+			obj = new Player(iHandler, this, pos);
 			if (root.getBoolean("isPlayer", false)) player = (Player) obj;
 			break;
 		case 1:

@@ -1,11 +1,13 @@
 package gameObject.body;
 
-import gameObject.GameObject;
-import gameObject.interaction.IInteractionStates.InteractionState;
+import gameObject.interaction.GameObject;
+import gameObject.interaction.InteractionState;
 import gameWorld.GameWorld;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -35,12 +37,13 @@ public class BodyObject implements ICollisionable, ISensorTypes,
 	private Fixture primaryFixture;
 
 	private List<Sensor> sensors;
-	private PolygonShape[] boundingBoxes;
+	private Map<InteractionState, PolygonShape> boundingBoxMap;
 
 	public BodyObject(GameWorld gameWorld, Vector2 position) {		
 		this.gameWorld = gameWorld;
+		
 		sensors = new LinkedList<Sensor>();
-		boundingBoxes = new PolygonShape[InteractionState.values().length];
+		boundingBoxMap = new HashMap<InteractionState, PolygonShape>();
 
 		// init bodyDef
 		BodyDef bodyDef = new BodyDef();
@@ -78,11 +81,11 @@ public class BodyObject implements ICollisionable, ISensorTypes,
 	}
 	
 	protected void setFixture(InteractionState state) {
-		// TODO Clean
-		Vector2 v[] = new Vector2[boundingBoxes[state.getAnimationIndex()].getVertexCount()];
+		PolygonShape shape = boundingBoxMap.get(state);
+		Vector2 v[] = new Vector2[shape.getVertexCount()];
 		for (int i = 0; i < v.length; i++) {
 			v[i] = new Vector2();
-			boundingBoxes[state.getAnimationIndex()].getVertex(i, v[i]);
+			shape.getVertex(i, v[i]);
 		}
 		((PolygonShape) primaryFixture.getShape()).set(v);
 	}
@@ -130,12 +133,15 @@ public class BodyObject implements ICollisionable, ISensorTypes,
 		return false;
 	}
 
-	protected void setBoundingBox(int index, PolygonShape shape) {
-		boundingBoxes[index] = shape;
+	protected void addBoundingBox(InteractionState state, PolygonShape shape) {
+		if(shape != null)
+			boundingBoxMap.put(state, shape);
+		else
+			System.err.println(this.getClass()+"@addBoundingBox(...) : shape == null");
 	}
 	
-	protected PolygonShape getBoundingBox(int index) {
-		return boundingBoxes[index];
+	protected PolygonShape getBoundingBox(InteractionState state) {
+		return boundingBoxMap.get(state);
 	}
 	
 	protected boolean addToGameWorld(GameObject gameObject) {
@@ -210,9 +216,14 @@ public class BodyObject implements ICollisionable, ISensorTypes,
 			if (s != null) s.dispose();
 		sensors.clear();
 
-		for (Shape b : boundingBoxes)
-			if (b != null) b.dispose();
-		boundingBoxes = null;	
+		try{
+			for (InteractionState iS : boundingBoxMap.keySet())
+				boundingBoxMap.get(iS).dispose();
+		} catch (NullPointerException e) {
+//			e.printStackTrace(); TODO
+		} finally {
+			boundingBoxMap.clear();
+		}
 	}
 	
 	@Override

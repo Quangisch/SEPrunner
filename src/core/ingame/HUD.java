@@ -4,8 +4,8 @@ import gameObject.IAnimatedDrawable;
 import gameObject.body.BodyObject;
 import gameObject.body.ICollisionable;
 import gameObject.body.Sensor;
-import gameObject.interaction.IInteractionStates.InteractionState;
-import gameObject.player.Shuriken;
+import gameObject.interaction.InteractionState;
+import gameObject.interaction.player.Shuriken;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.Gdx;
@@ -200,5 +200,11 @@ public class HUD implements IAnimatedDrawable {
 	public boolean applyAnimation(InteractionState currentState) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void addAnimation(InteractionState state, Animation animation) {
+		// TODO Auto-generated method stub
+		
 	}
 }
