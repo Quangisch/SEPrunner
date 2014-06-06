@@ -32,7 +32,7 @@ public class GameRender implements Screen {
 		camera = new Camera();
 		iHandler = new InputHandler(camera);
 		gameWorld = new GameWorld(level, iHandler, camera);
-		hud = new HUD();
+		hud = new HUD(gameWorld);
 
 		// TODO TMP for debugging
 		Debug.init(iHandler, camera);

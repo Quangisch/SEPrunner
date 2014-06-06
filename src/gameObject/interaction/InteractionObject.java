@@ -309,6 +309,10 @@ public abstract class InteractionObject extends GameObject implements
 		this.shuriken = shurikens;
 	}
 
+	public int getShuriken() {
+		return shuriken;
+	}
+	
 	// HOOK
 	private final int HOOK_RADIUS = 400;
 
