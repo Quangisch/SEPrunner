@@ -27,20 +27,20 @@ public class InputHandler implements IInputHandler, InputProcessor {
 
 	public InputHandler(Camera camera) {
 		initKeyMap();
-		this.camera = camera;	//TODO TMP: only to debug/visualize points
+		this.camera = camera; //TODO TMP: only to debug/visualize points
 	}
-	
+
 	private void initKeyMap() {
-		
+
 		keyMap = new KeyMap();
-		
+
 		addActionKey(ActionKey.LEFT, Keys.A, Keys.LEFT);
 		addActionKey(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
 		addActionKey(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT);
-				
-		addActionKey(ActionKey.JUMP, Keys.SPACE, Keys.UP); 
+
+		addActionKey(ActionKey.JUMP, Keys.SPACE, Keys.UP);
 		addActionKey(ActionKey.CROUCH, Keys.S, Keys.DOWN);
-				
+
 		addActionKey(ActionKey.ACTION, Keys.E, Keys.ENTER);
 		addActionKey(ActionKey.THROW, Input.Buttons.LEFT);
 		addActionKey(ActionKey.HOOK, Input.Buttons.RIGHT);
@@ -56,26 +56,21 @@ public class InputHandler implements IInputHandler, InputProcessor {
 
 	@Override
 	public boolean isKeyDown(ActionKey action) {
-		if (keyMap != null)
-			for (int k : keyMap.get(action))
-				if (isKeyDown(k))
-					return true;
+		if (keyMap != null) for (int k : keyMap.get(action))
+			if (isKeyDown(k)) return true;
 		return false;
 	}
 
 	public boolean isKeyDown(int[] keys) {
 		for (int k : keys)
-			if (isKeyDown(k))
-				return true;
+			if (isKeyDown(k)) return true;
 		return false;
 	}
 
 	@Override
 	public boolean isButtonDown(ActionKey action) {
-		if (click != null)
-			for (int a : keyMap.get(action))
-				if (click.button == a)
-					return true;
+		if (click != null) for (int a : keyMap.get(action))
+			if (click.button == a) return true;
 		return false;
 	}
 
@@ -83,31 +78,33 @@ public class InputHandler implements IInputHandler, InputProcessor {
 	public boolean keyDown(int keycode) {
 		pressedKeys.add(keycode);
 
+		switch (keycode) {
 		// toogle Fullscreen
-		if (keycode == Keys.ESCAPE) {
+		case Keys.ESCAPE:
 			if (Gdx.graphics.isFullscreen())
-				Gdx.graphics.setDisplayMode(GameProperties.width,
-						GameProperties.height, false);
+				Gdx.graphics.setDisplayMode(GameProperties.width, GameProperties.height, false);
 			else
-				Gdx.graphics.setDisplayMode(
-						Gdx.graphics.getDesktopDisplayMode().width,
+				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
 						Gdx.graphics.getDesktopDisplayMode().height, true);
-		}
+			break;
 
 		// toogle pause
-		if (keycode == Keys.P)
+		case Keys.P:
 			GameProperties.toogleIngamePause();
-		
+			break;
+
 		// back to menu
-		if (keycode == Keys.BACKSPACE)
+		case Keys.BACKSPACE:
 			GameProperties.setGameState(GameState.MENU);
+			break;
 
 		// toogle debug
-		if (keycode == Keys.TAB)
+		case Keys.TAB:
 			Debug.toogleOnOff();
+			break;
+		}
 
-		if (Debug.isOn())
-			Debug.setMode(keycode);
+		Debug.setMode(keycode);
 
 		return false;
 	}
@@ -128,8 +125,8 @@ public class InputHandler implements IInputHandler, InputProcessor {
 	public Click getClick() {
 		return click;
 	}
-	
-//	TODO elsewhere
+
+	//	TODO elsewhere
 	@Override
 	public Click popClick() {
 		Click c = click;
@@ -189,8 +186,7 @@ public class InputHandler implements IInputHandler, InputProcessor {
 				break;
 			case GEOMETRIC:
 				float radius = 10;
-				geo = new GeometricObject(new Circle(vec.x - radius, vec.y
-						- radius, radius), Color.CYAN);
+				geo = new GeometricObject(new Circle(vec.x - radius, vec.y - radius, radius), Color.CYAN);
 				break;
 			default:
 				break;
@@ -198,17 +194,15 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		}
 
 		public void draw(SpriteBatch batch) {
-			if (geo != null)
-				geo.draw(batch);
+			if (geo != null) geo.draw(batch);
 		}
-		
+
 		public Click cpy() {
 			return new Click(screenX, screenY, pointer, button);
 		}
 
 		public String toString() {
-			return "Click@" + screenX + "x" + screenY + ", pointer:" + pointer
-					+ ", button:" + button;
+			return "Click@" + screenX + "x" + screenY + ", pointer:" + pointer + ", button:" + button;
 		}
 	}
 

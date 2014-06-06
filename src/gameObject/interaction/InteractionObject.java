@@ -228,6 +228,7 @@ public abstract class InteractionObject extends GameObject implements
 			nextState = null;
 	}
 
+	// TODO Move To Preferences
 	private final int TAP_TIMER_LIMIT_HIGH = 10, TAP_TIMER_LIMIT_LOW = 1;
 	private int runTapTimer = 0;
 
@@ -375,6 +376,7 @@ public abstract class InteractionObject extends GameObject implements
 		applyAnimation();
 	}
 
+	// TODO Move finals to Preferences/Drawing class
 	private int oriLayer;
 	private final int HIDE_LAYER = -1;
 	private float oriAlpha;
@@ -436,18 +438,18 @@ public abstract class InteractionObject extends GameObject implements
 	@Override
 	public void setCaptured(Enemy enemy) {
 		// TODO Auto-generated method stub
-
 	}
 
 	// STATES
 	public boolean isRunning() {
-		return getInteractionState().equals(InteractionState.RUN);
+		return getInteractionState() == InteractionState.RUN;
 	}
 
 	public boolean isThrowing() {
-		return getInteractionState().equals(InteractionState.THROW);
+		return getInteractionState() == InteractionState.THROW;
 	}
 
+	// TODO Replace equals with ==
 	public boolean isHiding() {
 		return getInteractionState().equals(InteractionState.HIDE_START)
 				|| getInteractionState().equals(InteractionState.HIDE)

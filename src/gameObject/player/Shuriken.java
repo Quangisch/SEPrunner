@@ -13,7 +13,7 @@ import core.ingame.GameProperties;
 public class Shuriken extends GameObject {
 
 	private Vector2 direction;
-	private int ttl = 70;
+	private int ttl = 70; // Time To Live
 
 	public Shuriken(ICollisionable thrower, Vector2 clickPoint) {
 		super(thrower.getGameWorld(), thrower.getLocalCenterInWorld());

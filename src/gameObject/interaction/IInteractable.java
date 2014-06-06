@@ -1,14 +1,16 @@
 package gameObject.interaction;
 
+import gameObject.IInteractionHandler;
 
-public interface IInteractable {
+public interface IInteractable extends IInteractionHandler {
 
 	boolean isRunning();
 
 	boolean isThrowing();
-	
+
 	/**
 	 * Check whether Player is hiding.
+	 * 
 	 * @return hiding as boolean
 	 */
 	boolean isHiding();
@@ -20,5 +22,5 @@ public interface IInteractable {
 	boolean isJumping();
 
 	boolean isGrabbing();
-	
+
 }

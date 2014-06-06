@@ -27,7 +27,7 @@ public class Enemy extends InteractionObject {
 		setGameObjectType(GameObjectTypes.ENEMY);
 		setLayer(3);
 		
-		addSensor(new Sensor(this, Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION, Sensor.HANDLE_FIRST));
+		addSensor(new Sensor(this, Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST));
 
 //		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
 //		addSensor(new Sensor(this, Type.Polygon, verticesFoot, SensorTypes.FOOT, Sensor.HANDLE_FIRST));
@@ -60,10 +60,6 @@ public class Enemy extends InteractionObject {
 	public boolean isCarriable(Vector2 position) {
 		// TODO
 		return false;
-	}
-
-	public enum Pattern {
-		STAND, WALK_RIGHT, WALK_LEFT, RUN_RIGHT, RUN_LEFT, JUMP, JUMP_LEFT, JUMP_RIGHT;
 	}
 
 	@Override

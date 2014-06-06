@@ -13,7 +13,6 @@ abstract class PlayerCollision extends InteractionObject {
 
 	protected PlayerCollision(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override

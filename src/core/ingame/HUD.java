@@ -1,23 +1,15 @@
 package core.ingame;
 
+import gameObject.IAnimatedDrawable;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class HUD {
+public class HUD implements IAnimatedDrawable {
 
-	private static HUD ui;
-	
-	private HUD() {
-		
+	@Override
+	public void draw(SpriteBatch batch, float deltaTime) {
+		// TODO Auto-generated method stub
+
 	}
-	
-	public static HUD getInstance() {
-		if(ui == null)
-			ui = new HUD();
-		return ui;
-	}
-	
-	public void draw(SpriteBatch batch) {
-		
-	}
-	
+
 }

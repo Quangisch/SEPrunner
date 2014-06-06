@@ -3,6 +3,7 @@ package gameObject;
 import gameObject.interaction.IInteractionStates;
 import gameWorld.GameWorld;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -29,6 +30,7 @@ abstract class DrawableObject extends BodyObject implements IDrawable, IInteract
 		batch.draw(textureRegion.getTexture(), getX(), getY(), textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2, /* origin */
 				textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), scale, scale, rotation, textureRegion.getRegionX(),
 				textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
+		batch.setColor(Color.WHITE);
 	}
 	
 	@Override
@@ -84,6 +86,7 @@ abstract class DrawableObject extends BodyObject implements IDrawable, IInteract
 
 	@Override
 	public void setScale(float scale) {
+		// TODO
 		// BodyFunctions.scaleShape(primaryFixture.getShape(), getLocalCenterInWorld(), scale / this.scale, true);
 		this.scale = scale;
 	}

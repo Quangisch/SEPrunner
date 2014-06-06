@@ -74,6 +74,7 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 	}
 	
 	protected void setFixture(InteractionState state) {
+		// TODO Clean
 		Vector2 v[] = new Vector2[boundingBoxes[state.getAnimationIndex()].getVertexCount()];
 		for (int i = 0; i < v.length; i++) {
 			v[i] = new Vector2();
@@ -82,7 +83,7 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		((PolygonShape) primaryFixture.getShape()).set(v);
 	}
 	
-	protected void setPrimaryFixture(BodyType bodyType, float linearDamping, float density, float friction, float restitution, boolean sensor, Shape shape,
+	protected void resetToPrimaryFixture(BodyType bodyType, float linearDamping, float density, float friction, float restitution, boolean sensor, Shape shape,
 			boolean disposeShape) {
 		body.setType(bodyType);
 		body.setLinearDamping(linearDamping);
@@ -104,7 +105,6 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		body.getWorld().rayCast(callback, point1, point2);
 	}
 	
-
 	protected void addSensor(Sensor sensor) {
 		if (sensors.contains(sensor)) return;
 
@@ -116,7 +116,7 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 
 	protected void removeSensor(Sensor sensor) {
 		if (sensor.getGameObject() == this) sensor.setGameObject(null);
-		if (sensors.remove(sensor)) /* TODO Remove Sensor Fixture */;
+		if (sensors.remove(sensor)) /* TODO Remove Sensor Fixture -> dispose?*/;
 	}
 
 	protected void setBoundingBox(int index, PolygonShape shape) {
@@ -174,7 +174,6 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 		return body.getWorldPoint(body.getLocalCenter());
 	}
 
-	
 
 	// DISPOSABLE
 	private boolean disposeNextStep = false;
@@ -205,12 +204,11 @@ public class BodyObject implements  ICollisionable, IGameObjectTypes, ISensorTyp
 	
 	@Override
 	public void run() {
-		
+
 	}
 	
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor,
-			BodyObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor) {
 		return false;
 	}
 	

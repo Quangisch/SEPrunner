@@ -22,10 +22,9 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject extends InteractionObject {
-	
-	private Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
+public class GameObject extends InteractionObject implements Comparable<GameObject> {
 
+	private Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
 
 	public GameObject(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
@@ -50,7 +49,7 @@ public class GameObject extends InteractionObject {
 		initBody(root.get("bodyDef"));
 		initSensors(root.get("sensor"));
 	}
-	
+
 	private void initStates(String texturePath, JsonValue stateFrames, int defaultStateIndex) {
 		int aniPointer = 0;
 
@@ -85,18 +84,19 @@ public class GameObject extends InteractionObject {
 			i = 0;
 			TextureRegion[] textureRegions = new TextureRegion[animationFrames.get("textureMap").size];
 			for (JsonValue frame : animationFrames.get("textureMap"))
-				textureRegions[i++] = new TextureRegion(getTexture(texturePath), frame.getInt(0),
-						frame.getInt(1), frame.getInt(2), frame.getInt(3));
+				textureRegions[i++] = new TextureRegion(getTexture(texturePath), frame.getInt(0), frame.getInt(1),
+						frame.getInt(2), frame.getInt(3));
 
-			setAnimation(aniPointer, new Animation(animationFrames.getFloat("frameDuration"), textureRegions), iS.getPlayMode());
-			
+			setAnimation(aniPointer, new Animation(animationFrames.getFloat("frameDuration"), textureRegions),
+					iS.getPlayMode());
+
 			found.put(iS.getAnimation(), aniPointer);
 			iS.setAnimationIndex(aniPointer++);
 		}
-		
+
 		setDefaultInteractionState(InteractionState.values()[defaultStateIndex]);
 	}
-	
+
 	private void initBody(JsonValue bodyDef) {
 		BodyType bType;
 		switch (bodyDef.get("bodyType").asInt()) {
@@ -111,27 +111,25 @@ public class GameObject extends InteractionObject {
 			bType = BodyType.DynamicBody;
 			break;
 		}
-		
-		setPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), 
-				bodyDef.getFloat("density"), bodyDef.getFloat("friction"), 
-				bodyDef.getFloat("restitution"), bodyDef.getBoolean("sensor"),
+
+		resetToPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), bodyDef.getFloat("density"),
+				bodyDef.getFloat("friction"), bodyDef.getFloat("restitution"), bodyDef.getBoolean("sensor"),
 				getBoundingBox(getDefaultInteractionState().getAnimationIndex()), false);
 	}
-	
+
 	private void initSensors(JsonValue sensors) {
-		if(sensors == null)
-			return;
-			
-		for(JsonValue s : sensors) {
+		if (sensors == null) return;
+
+		for (JsonValue s : sensors) {
 			Shape.Type sType;
-			switch(s.getInt("shape")) {
-			case 0: 
+			switch (s.getInt("shape")) {
+			case 0:
 				sType = Shape.Type.Chain;
 				break;
-			case 1: 
+			case 1:
 				sType = Shape.Type.Circle;
 				break;
-			case 2: 
+			case 2:
 				sType = Shape.Type.Edge;
 				break;
 			case 3:
@@ -139,19 +137,24 @@ public class GameObject extends InteractionObject {
 				sType = Shape.Type.Polygon;
 				break;
 			}
-			
+
 			float[] sensorVertices = new float[s.get("vertices").size];
 			int j = 0;
-			for(JsonValue sV : s.get("vertices"))
+			for (JsonValue sV : s.get("vertices"))
 				sensorVertices[j++] = sV.asFloat();
-			
+
 			addSensor(new Sensor(this, sType, sensorVertices, s.getInt("type"), s.getInt("priority")));
 		}
 	}
-	
+
 	private Texture getTexture(String path) {
 		if (!loadingTextures.containsKey(path)) loadingTextures.put(path, new Texture(path));
 		return loadingTextures.get(path);
 	}
-	
+
+	@Override
+	public int compareTo(GameObject other) {
+		return this.getLayer() - other.getLayer();
+	}
+
 }

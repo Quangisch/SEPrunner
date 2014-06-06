@@ -13,7 +13,7 @@ public class Project extends Game{
 	
 	@Override
 	public void create() {
-		if(GameProperties.isInMenu())
+		if(GameProperties.isInMenuState())
 			setScreen(new Splash()); //set first img, next Z56 in splash
 		else 
 			setScreen(new GameRender(1));

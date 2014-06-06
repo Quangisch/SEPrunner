@@ -14,63 +14,60 @@ import com.badlogic.gdx.utils.Disposable;
 import core.ingame.GameRender;
 
 public class GeometricObject implements Disposable {
-	
+
 	private static GameRender render;
 	private Texture texture;
 	private float x, y;
 	private int ttl = 20;
 
 	public GeometricObject(Rectangle rect, Color color) {
-		Pixmap pixmap = new Pixmap((int)rect.width, (int)rect.height, Format.RGBA8888 );
+		Pixmap pixmap = new Pixmap((int) rect.width, (int) rect.height, Format.RGBA8888);
 		pixmap.setColor(color);
-		pixmap.fillRectangle(0, 0, (int)rect.width, (int)rect.height);
-		
+		pixmap.fillRectangle(0, 0, (int) rect.width, (int) rect.height);
+
 		this.x = rect.x;
 		this.y = rect.y;
 		init(pixmap);
-		
 	}
-	
+
 	public GeometricObject(Circle circle, Color color) {
-		Pixmap pixmap = new Pixmap((int)circle.radius*2, (int)circle.radius*2, Format.RGBA8888 );
+		Pixmap pixmap = new Pixmap((int) circle.radius * 2, (int) circle.radius * 2, Format.RGBA8888);
 		pixmap.setColor(color);
-		pixmap.fillCircle((int)circle.radius, (int)circle.radius, (int)circle.radius);
-		
+		pixmap.fillCircle((int) circle.radius, (int) circle.radius, (int) circle.radius);
+
 		this.x = circle.x;
 		this.y = circle.y;
 		init(pixmap);
 	}
-	
-//	TODO 
+
+	//	TODO 
 	public GeometricObject(Line2D line, Color color) {
-		Pixmap pixmap = new Pixmap((int) Math.abs(line.getX1() - line.getX2()), 
-				(int) Math.abs(line.getY1() - line.getY2()), Format.RGBA8888);
-		System.out.println(Math.abs(line.getX1() - line.getX2())+"---"+Math.abs(line.getY1() - line.getY2()));
-		System.out.println(line.getX1()+"x"+ line.getY1()+" - "+ line.getX2()+"x"+ line.getY2());
+		Pixmap pixmap = new Pixmap((int) Math.abs(line.getX1() - line.getX2()), (int) Math.abs(line.getY1()
+				- line.getY2()), Format.RGBA8888);
+		System.out.println(Math.abs(line.getX1() - line.getX2()) + "---" + Math.abs(line.getY1() - line.getY2()));
+		System.out.println(line.getX1() + "x" + line.getY1() + " - " + line.getX2() + "x" + line.getY2());
 		pixmap.setColor(color);
 		pixmap.drawLine((int) line.getX1(), (int) line.getY1(), (int) line.getX2(), (int) line.getY2());
-	
+
 		this.x = (float) Math.min(line.getX1(), line.getX2());
 		this.y = (float) Math.min(line.getY1(), line.getY2());
 		init(pixmap);
 	}
-	
+
 	public static void setRender(GameRender r) {
 		render = r;
 	}
-	
+
 	private void init(Pixmap pixmap) {
 		texture = new Texture(pixmap);
 		pixmap.dispose();
-		
-		if(render != null)
-			render.addGeometricObject(this);
+
+		if (render != null) render.addGeometricObject(this);
 	}
-	
+
 	public void draw(SpriteBatch batch) {
-		if(ttl <= 0)
-			render.removeGeometricObject(this);
-		
+		if (ttl <= 0) render.removeGeometricObject(this);
+
 		batch.draw(texture, x, y);
 		ttl--;
 	}

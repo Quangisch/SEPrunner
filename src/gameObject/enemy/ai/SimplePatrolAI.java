@@ -33,7 +33,7 @@ public class SimplePatrolAI extends EnemyAI {
 
 	@Override
 	public boolean handleCollision(boolean start, Sensor sender, BodyObject other, Sensor otherSensor) {
-		if (sender != null && sender.getSensorType() == ISensorTypes.SensorTypes.VISION)
+		if (sender != null && sender.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT)
 			Debug.print("Seeingln", Mode.CONSOLE);
 		if(other.getGameObjectType() == IGameObjectTypes.GameObjectTypes.SHURIKEN)
 			Debug.println("hit by Shuriken");

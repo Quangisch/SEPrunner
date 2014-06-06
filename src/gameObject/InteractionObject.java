@@ -30,7 +30,6 @@ public class InteractionObject extends DrawableObject implements IInteractionHan
 		draw(batch, animations[animationIndex].getKeyFrame(stateTime));
 	}
 	
-
 	@Override
 	public void setAnimation(int index, Animation animation, int playMode) {
 		animation.setPlayMode(playMode);
@@ -77,11 +76,10 @@ public class InteractionObject extends DrawableObject implements IInteractionHan
 
 	@Override
 	public boolean isAnimationFinished() {
-		if (currentState.isInterruptable() || currentState == null) return true;
-		return animations[animationIndex].isAnimationFinished(stateTime);
+		return currentState == null || currentState.isInterruptable() //
+				|| animations[animationIndex].isAnimationFinished(stateTime);
 	}
 	
-
 	protected void setDefaultInteractionState(InteractionState defaultState) {
 		this.defaultState = defaultState;
 		this.currentState = defaultState;

@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
@@ -48,7 +47,6 @@ public class GameWorld implements IDrawableMap, Runnable {
 
 	private float timeLimit, time = 0;
 
-
 	public GameWorld(int level, IInputHandler iHandler, Camera camera) {
 		this.camera = camera;
 		this.iHandler = iHandler;
@@ -80,6 +78,8 @@ public class GameWorld implements IDrawableMap, Runnable {
 		} catch (ConcurrentModificationException e) {
 			// e.printStackTrace();
 		}
+
+		Collections.sort(objects);
 	}
 	
 	private void calcTime(float deltaTime) {
@@ -109,14 +109,6 @@ public class GameWorld implements IDrawableMap, Runnable {
 
 		for (MapTexture mT : mapTextures)
 			if (mT.texture != null) batch.draw(mT.texture, mT.x, mT.y);
-
-		Collections.sort(objects, new Comparator<GameObject>() {
-
-			@Override
-			public int compare(GameObject a, GameObject b) {
-				return a.getLayer() - b.getLayer();
-			}
-		});
 
 		for (GameObject o : objects)
 			o.draw(batch, deltaTime);
@@ -177,9 +169,9 @@ public class GameWorld implements IDrawableMap, Runnable {
 			for (int i = 0; i < vertices.length; i++) {
 				vertices[i] = new Vector2(GameProperties.pixelToMeter(JGround.getFloat(i * 2)),
 						GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i * 2 + 1)));
-				//				vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
-				////				TODO height
-				//				vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
+				//		vertices[i] = GameProperties.pixelToMeter(JGround.getFloat(i));
+				////		TODO height
+				//		vertices[i + 1] = GameProperties.pixelToMeter(mapTextures[0].texture.getHeight() - JGround.getFloat(i + 1));
 			}
 			p.createLoop(vertices);
 

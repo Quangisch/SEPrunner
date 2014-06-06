@@ -15,7 +15,7 @@ public interface ISensorTypes {
 		public static final int RIGHT = 7;
 
 		// ENEMY
-		public static final int VISION = 11;
-
+		public static final int VISION_LEFT = 11;
+		public static final int VISION_RIGHT = 12;
 	}
 }

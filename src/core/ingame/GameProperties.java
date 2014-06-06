@@ -49,13 +49,13 @@ public class GameProperties {
 		INGAME_LOSE(false), 
 		INGAME_PAUSE(false);
 		
-		private final boolean IN_MENU;
+		private final boolean inMenu;
 		GameState(boolean menu) {
-			IN_MENU = menu;
+			inMenu = menu;
 		}
 		
-		private boolean isIngame() 	{ return !IN_MENU;	}
-		private boolean isMenu() 	{ return IN_MENU;	}
+		private boolean isInGame() 	{ return !inMenu;	}
+		private boolean isMenu() 	{ return inMenu;	}
 	}
 	
 	public static void setGameState(GameState state) {
@@ -68,8 +68,8 @@ public class GameProperties {
 		gameState = state;
 		
 		if(Gdx.graphics == null 
-				|| (isInMenu() && prevState.isMenu()) 
-				|| (isInGame() && prevState.isIngame())) {
+				|| (isInMenuState() && prevState.isMenu()) 
+				|| (isInGameState() && prevState.isInGame())) {
 			return;
 		}
 
@@ -79,7 +79,7 @@ public class GameProperties {
 		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
 		Debug.println(width + "x" + height, Mode.CONSOLE);
 		
-		if(isInMenu())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
+		if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 		else			((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
 			
 	}
@@ -103,8 +103,8 @@ public class GameProperties {
 		return gameState.equals(state);
 	}
 	
-	public static boolean isInMenu() { return gameState.equals(GameState.MENU);	}
-	public static boolean isInGame() { return !isInMenu();						}
+	public static boolean isInMenuState() { return gameState.equals(GameState.MENU);	}
+	public static boolean isInGameState() { return !isInMenuState();						}
 
 	public static GameState getGameState() {
 		return gameState;

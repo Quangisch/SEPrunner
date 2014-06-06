@@ -17,7 +17,6 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 	}
 	
 	public void update() {
-
 		super.update();
 		
 		if(Debug.isMode(Debug.Mode.CAMERA)) {
@@ -39,7 +38,6 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 //			if(GameProperties.debugMode)
 //				System.out.println("Camera@"+position.x+"x"+position.y);
 		}
-			
 	}
 	
 	public void updateOrtho() {
@@ -64,7 +62,7 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 	 */
 	public Vector2 unproject(Vector2 vec) {
 		Vector3 v = new Vector3(vec.x, vec.y, 0);
-		unproject(v);
+		super.unproject(v);
 		vec.x = v.x;
 		vec.y = v.y;
 		return vec;
@@ -72,7 +70,7 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 	
 	public Vector2 project(Vector2 vec) {
 		Vector3 v = new Vector3(vec.x, vec.y, 0);
-		project(v);
+		super.project(v);
 		vec.x = v.x;
 		vec.y = v.y;
 		return vec;
