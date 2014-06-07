@@ -42,7 +42,7 @@ public class HUD implements IAnimatedDrawable {
 				Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		b.begin();
 
-		font.draw(b, String.valueOf(world.getPlayer().getShuriken()), 30, Gdx.graphics.getHeight() - 5);
+		font.draw(b, String.valueOf(world.getPlayer().getShurikenQuantity()), 30, Gdx.graphics.getHeight() - 5);
 		shu.draw2(b, deltaTime);
 
 		b.end();

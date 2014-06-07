@@ -121,7 +121,7 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 			break;
 		}
 
-		setPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), 
+		resetToPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), 
 				bodyDef.getFloat("density"), bodyDef.getFloat("friction"), 
 				bodyDef.getFloat("restitution"), bodyDef.getBoolean("sensor"),
 				getBoundingBox(getDefaultInteractionState()), false);
@@ -219,9 +219,8 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 		return true;
 	}
 	
-	@Override
-	public int compare(GameObject arg0, GameObject arg1) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getShurikenQuantity() {
+		return shuriken;
 	}
+	
 }
