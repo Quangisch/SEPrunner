@@ -46,12 +46,15 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 	}
 	
 	@Override
-	public boolean applyAnimation(InteractionState currentState) {
-		animation = animationMap.get(currentState);
+	public boolean applyAnimation(InteractionState state) {
+		if(animation == animationMap.get(state))
+			return true;
+		
+		animation = animationMap.get(state);
 		stateTime = 0;
 
-		Debug.println(">>apply " + currentState.toString(), Mode.CONSOLE);
-		setFixture(currentState);
+		Debug.println(">>apply " + state.toString(), Mode.CONSOLE);
+		setFixture(state);
 		return true;
 	}
 

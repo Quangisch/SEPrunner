@@ -39,7 +39,7 @@ public class InteractionObject extends AnimationObject implements IInteractable 
 		if (currentState != null)
 			Debug.println("try to set " + state.toString() + " @current " + currentState.toString(), Mode.CONSOLE);
 
-		if (force || isAnimationFinished()) 
+		if (force || isInteractionFinished()) 
 			this.currentState = state;
 		else 
 			return false;
@@ -48,15 +48,15 @@ public class InteractionObject extends AnimationObject implements IInteractable 
 	
 	@Override
 	public boolean applyInteraction() {
-		return super.applyAnimation(currentState);
+		if(isInteractionFinished())
+			return applyAnimation(currentState);
+		return false;
 	}
 	
 
 	@Override
 	public boolean isInteractionFinished() {
-		return currentState.isInterruptable() 
-				|| currentState == null
-				|| isAnimationFinished();
+		return currentState == null || currentState.isInterruptable();
 		
 	}
 	

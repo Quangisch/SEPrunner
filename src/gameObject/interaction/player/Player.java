@@ -22,8 +22,8 @@ public class Player extends PlayerCollision {
 	public void run() {
 		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
-		super.run();
 		
+		super.run();
 		interactionHandler.run();
 	}
 
