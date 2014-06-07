@@ -38,9 +38,10 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 
 	@Override
 	public void addAnimation(InteractionState state, Animation animation) {
-		if(animation != null)
+		if(animation != null) {
+			animation.setPlayMode(state.getPlayMode());
 			animationMap.put(state, animation);
-		else
+		} else
 			System.err.println(this.getClass()+"@addAnimation(...)  Invalid Argument : animation == null");
 	}
 	
