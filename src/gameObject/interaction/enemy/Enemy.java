@@ -1,6 +1,5 @@
 package gameObject.interaction.enemy;
 
-import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
@@ -30,7 +29,7 @@ public class Enemy extends GameObject implements Runnable {
 	public void init(String name) {
 		super.init(name);
 		
-		getBodyObject().setGameObjectType(GameObjectType.Enemy);
+		setGameObjectType(GameObjectType.Enemy);
 		getBodyObject().addSensor(Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
 		getAnimationObject().setLayer(3);
 
@@ -41,6 +40,7 @@ public class Enemy extends GameObject implements Runnable {
 	@Override
 	public void run() {
 		if (AI != null) AI.run();
+		super.run();
 		
 		if(interactionHandler != null)
 			interactionHandler.run();
@@ -79,7 +79,7 @@ public class Enemy extends GameObject implements Runnable {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
 		return super.handleCollision(start, mySensor, other, otherSensor) //
 				|| getAI() != null || getAI().handleCollision(start, mySensor, other, otherSensor);
 	}

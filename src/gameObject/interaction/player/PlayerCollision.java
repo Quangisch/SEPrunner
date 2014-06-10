@@ -1,6 +1,5 @@
 package gameObject.interaction.player;
 
-import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
@@ -20,7 +19,7 @@ abstract class PlayerCollision extends GameObject {
 	
 	@Override
 	public boolean handleCollision(boolean start, Sensor mySensor,
-			BodyObject other, Sensor otherSensor) {
+			GameObject other, Sensor otherSensor) {
 		boolean handled = super.handleCollision(start, mySensor, other, otherSensor);
 		if(handled)
 			return true;

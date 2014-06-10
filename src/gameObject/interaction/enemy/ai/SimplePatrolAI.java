@@ -1,10 +1,9 @@
 package gameObject.interaction.enemy.ai;
 
-import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
-import gameObject.body.ISensorTypes;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
+import gameObject.interaction.GameObject;
 import misc.Debug;
 import misc.Debug.Mode;
 
@@ -33,12 +32,12 @@ public class SimplePatrolAI extends EnemyAI {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor sender, BodyObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor sender, GameObject other, Sensor otherSensor) {
 		if (sender != null 
 				&& sender.getSensorType() == SensorTypes.VISION_LEFT
 				&& sender.getSensorType() == SensorTypes.VISION_RIGHT)
 			Debug.print("Seeingln", Mode.CONSOLE);
-		if(other.getGameObjectType().equals(GameObjectType.Shuriken))
+		if(other.equals(GameObjectType.Shuriken))
 			Debug.println("hit by Shuriken");
 		return false;
 	}

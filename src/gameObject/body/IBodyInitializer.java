@@ -135,18 +135,6 @@ public interface IBodyInitializer {
 	void applyImpulse(Vector2 impulse);
 	
 	/**
-	 * Get GameObjectType. Relevant for Collision Handling and Callbacks.
-	 * @return gameObjectType
-	 */
-	GameObjectType getGameObjectType();
-
-	/**
-	 * Set GameObjectType. Relevant Relevant for Collision Handling and Callbacks.
-	 * @param gameObjectType
-	 */
-	void setGameObjectType(GameObjectType gameObjectType);
-	
-	/**
 	 * Set Gravity Scale in relation to the world gravity.
 	 * @param scale
 	 */

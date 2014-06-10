@@ -22,7 +22,7 @@ public class Player extends PlayerCollision {
 	public void run() {
 		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
-		
+		super.run();
 		interactionHandler.run();
 	}
 
@@ -30,7 +30,7 @@ public class Player extends PlayerCollision {
 	@Override
 	public void init(String name) {
 		super.init(name);
-		getBodyObject().setGameObjectType(GameObjectType.Player);
+		setGameObjectType(GameObjectType.Player);
 		getAnimationObject().setLayer(3);
 		
 	}

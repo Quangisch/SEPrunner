@@ -26,9 +26,8 @@ import core.ingame.GameProperties;
  *
  */
 public class BodyObject implements IBodyInitializer, ISensorTypes, 
-		Disposable, Runnable, ICollisionable {
+		Disposable, Runnable, IIdentifiable {
 
-	private GameObjectType gameObjectType = GameObjectType.Unspecified;
 	private GameWorld gameWorld;
 
 	// BODY
@@ -37,9 +36,14 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 
 	private List<Sensor> sensors;
 	private Map<InteractionState, PolygonShape> boundingBoxMap;
+	
+	private GameObject parent;
+	private GameObjectType gameObjectType = GameObjectType.Unspecified; 
 
-	public BodyObject(GameWorld gameWorld, Vector2 position, Object parent) {		
+	public BodyObject(GameWorld gameWorld, Vector2 position, GameObject parent) {		
 		this(gameWorld, position);
+
+		this.parent = parent;
 		body.setUserData(parent);
 	}
 	
@@ -54,6 +58,8 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 		bodyDef.position.set(position);
 		body = gameWorld.getWorld().createBody(bodyDef);
 		body.setFixedRotation(true);
+		
+		body.setUserData(this);
 	}
 	
 	@Override
@@ -129,15 +135,15 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 		if (sensors.contains(sensor)) return;
 
 		sensors.add(sensor);
-		sensor.setGameObject(this);
+		sensor.setBodyObject(this);
 		
 		addFixture(sensor.getFixtureDef()).setUserData(sensor);
 	}
 
 	@Override
 	public boolean removeSensor(Sensor sensor) {
-		if (sensor.getGameObject() == this) 
-			sensor.setGameObject(null);
+		if (sensor.getBodyObject() == this) 
+			sensor.setBodyObject(null);
 		
 //		TODO Remove Sensor Fixture
 		if (sensors.remove(sensor)) 
@@ -171,16 +177,6 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	@Override
 	public float getY() {
 		return GameProperties.meterToPixel(body.getPosition().y);
-	}
-
-	@Override
-	public GameObjectType getGameObjectType() {
-		return gameObjectType;
-	}
-
-	@Override
-	public void setGameObjectType(GameObjectType gameObjectType) {
-		this.gameObjectType = gameObjectType;
 	}
 
 	@Override
@@ -246,9 +242,15 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 
 	}
 	
+//	TODO dirty
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor) {
-		return false;
+	public GameObjectType getGameObjectType() {
+		return parent != null ? parent.getGameObjectType() : gameObjectType;
+	}
+
+	@Override
+	public void setGameObjectType(GameObjectType gameObjectType) {
+		this.gameObjectType = gameObjectType;
 	}
 	
 }

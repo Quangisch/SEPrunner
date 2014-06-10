@@ -7,7 +7,7 @@ import core.ingame.input.InputHandler;
 
 public abstract class Debug {
 
-	private static boolean on;
+	private static boolean on = true;
 	private static InputHandler iHandler;
 	private static Camera camera;
 	

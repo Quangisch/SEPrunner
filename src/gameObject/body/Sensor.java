@@ -18,9 +18,9 @@ public class Sensor implements Disposable {
 
 	public static final int HANDLE_FIRST = 75, HANDLE_SECOND = 50, HANDLE_LAST = 25;
 
-	/** Create Sensor linked to the GameObject
+	/** Create Sensor linked to the BodyObject
 	 * 
-	 * @param parent GameObject linked to
+	 * @param parent BodyObject linked to
 	 * @param shapeType Type of Shape of Sensor
 	 * @param shapePoints Points to initianize Shape
 	 * @param eventData Data passed to Handler on collision */
@@ -28,9 +28,9 @@ public class Sensor implements Disposable {
 		this(parent, shapeType, shapePoints, sensorType, HANDLE_SECOND);
 	}
 
-	/** Create Sensor linked to the GameObject
+	/** Create Sensor linked to the BodyObject
 	 * 
-	 * @param parent GameObject linked to
+	 * @param parent BodyObject linked to
 	 * @param shapeType Type of Shape of Sensor
 	 * @param shapePoints Points to initianize Shape
 	 * @param eventData Data passed to Handler on collision
@@ -41,7 +41,7 @@ public class Sensor implements Disposable {
 		this.sensorType = sensorType;
 		this.priority = priority;
 		setShape(shapeType, shapePoints);
-		setGameObject(parent);
+		setBodyObject(parent);
 	}
 
 	/** @return true if collision is handled */
@@ -56,15 +56,15 @@ public class Sensor implements Disposable {
 		this.active = active;
 	}
 
-	/** @return the GameObject linked to */
-	public BodyObject getGameObject() {
+	/** @return the BodyObject linked to */
+	public BodyObject getBodyObject() {
 		return link;
 	}
 
-	/** Set the GameObject linked to
+	/** Set the BodyObject linked to
 	 * 
-	 * @param link the GameObject */
-	protected void setGameObject(BodyObject link) {
+	 * @param link the BodyObject */
+	protected void setBodyObject(BodyObject link) {
 		if (this.link == link) return;
 		if (this.link != null) this.link.removeSensor(this);
 		this.link = link;

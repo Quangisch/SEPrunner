@@ -2,11 +2,8 @@ package gameObject.interaction;
 
 import gameObject.body.BodyObject;
 import gameObject.drawable.AnimationObject;
-import gameWorld.GameWorld;
 
-import com.badlogic.gdx.math.Vector2;
-
-public class InteractionObject implements IInteractable {
+public abstract class InteractionObject implements IInteractable {
 	
 	private AnimationObject aniObject;
 	private BodyObject bodyObject;
@@ -14,9 +11,13 @@ public class InteractionObject implements IInteractable {
 	private InteractionState defaultState;
 	private InteractionState currentState;
 	
-	public InteractionObject(GameWorld gameWorld, Vector2 position) {
-		bodyObject = new BodyObject(gameWorld, position);
-		aniObject = new AnimationObject(position);
+	protected InteractionObject() {
+		
+	}
+	
+	protected void iniLink(AnimationObject aniObject, BodyObject bodyObject) {
+		this.aniObject = aniObject;
+		this.bodyObject = bodyObject;
 	}
 	
 	@Override

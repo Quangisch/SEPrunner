@@ -4,6 +4,5 @@ public interface IMoveableGameObject {
 
 	boolean isBodyBlocked();
 	boolean isGrounded();
-
 	
 }

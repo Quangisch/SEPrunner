@@ -3,8 +3,10 @@ package gameObject.interaction;
 import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
 import gameObject.body.ICollisionable;
+import gameObject.body.IIdentifiable;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
+import gameObject.drawable.AnimationObject;
 import gameWorld.GameWorld;
 
 import java.io.FileNotFoundException;
@@ -29,16 +31,18 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.ingame.GameProperties;
 
 public class GameObject extends InteractionObject 
-	implements IMoveableGameObject, ICollisionable, Runnable, Disposable, Comparable<GameObject> {
+	implements IMoveableGameObject, ICollisionable, Runnable, Disposable, Comparable<GameObject>, IIdentifiable {
 	
 	private int shuriken = 10;
 	
 //	TODO -> texture loading to ResourceManager
 	private static Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
 	private int grounded, bodyBlocked;
+	private GameObjectType gameObjectType = GameObjectType.Unspecified;
 
 	public GameObject(GameWorld gameWorld, Vector2 position) {
-		super(gameWorld, position);
+		iniLink(new AnimationObject(position), 
+				new BodyObject(gameWorld, position, this));
 	}
 	
 	public void run() {
@@ -195,13 +199,11 @@ public class GameObject extends InteractionObject
 	
 	@Override
 	public boolean handleCollision(boolean start, Sensor mySensor,
-			BodyObject other, Sensor otherSensor) {
+			GameObject other, Sensor otherSensor) {
 		boolean handled = false;
 		
-		handled = getBodyObject().handleCollision(start, mySensor, other, otherSensor);
-		
 		if(!handled && mySensor != null 
-				&& other.getGameObjectType().equals(GameObjectType.Ground)) {
+				&& other.equals(GameObjectType.Ground)) {
 			
 			switch(mySensor.getSensorType()) {
 			case SensorTypes.BODY :
@@ -240,6 +242,16 @@ public class GameObject extends InteractionObject
 	
 	public void dispose() {
 		getBodyObject().dispose();
+	}
+
+	@Override
+	public GameObjectType getGameObjectType() {
+		return gameObjectType;
+	}
+
+	@Override
+	public void setGameObjectType(GameObjectType gameObjectType) {
+		this.gameObjectType = gameObjectType;
 	}
 	
 }

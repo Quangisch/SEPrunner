@@ -22,7 +22,7 @@ public class Hideout extends GameObject implements Hideable {
 	@Override
 	public void init(String name) {
 		super.init(name);
-		getBodyObject().setGameObjectType(GameObjectType.Hideable);
+		setGameObjectType(GameObjectType.Hideable);
 		getAnimationObject().setLayer(2);
 	}
 
