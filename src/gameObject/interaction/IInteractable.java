@@ -1,6 +1,5 @@
 package gameObject.interaction;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 
 public interface IInteractable {
 
@@ -10,15 +9,12 @@ public interface IInteractable {
 
 	InteractionState getDefaultInteractionState();
 
-	void addAnimation(InteractionState state, Animation animation);
 
 	boolean isInteractionFinished();
 
-	boolean applyInteraction();
-
-	boolean tryToSetInteractionState(InteractionState state);
-
-	boolean setInteractionState(InteractionState state, boolean force);
+	void applyInteraction(InteractionState state);
+	
+	boolean tryToApplyInteraction(InteractionState state);
 
 	// InteractionState Getter
 	boolean isRunning();

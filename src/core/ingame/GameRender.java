@@ -34,7 +34,7 @@ public class GameRender implements Screen {
 		camera = new Camera();
 		iHandler = new InputHandler(camera);
 		gameWorld = new GameWorld(level, iHandler, camera);
-		hud = new HUD(gameWorld);
+//		hud = new HUD(gameWorld);
 
 		// TODO TMP for debugging
 		Debug.init(iHandler, camera);
@@ -99,7 +99,7 @@ public class GameRender implements Screen {
 
 		gameWorld.draw(batch, delta); //map
 
-		hud.draw(batch, delta); //userInterface
+//		hud.draw(batch, delta); //userInterface
 
 		try {
 			for (GeometricObject g : geometrics)

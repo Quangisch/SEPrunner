@@ -1,7 +1,7 @@
 package gameObject.statics;
 
 import gameObject.body.GameObjectType;
-import gameObject.body.ICollisionable;
+import gameObject.body.IBodyInitializer;
 import gameObject.interaction.GameObject;
 import gameWorld.GameWorld;
 
@@ -14,7 +14,7 @@ public class Hideout extends GameObject implements Hideable {
 	}
 
 	@Override
-	public boolean canHide(ICollisionable moveableObject) {
+	public boolean canHide(IBodyInitializer moveableObject) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -22,8 +22,8 @@ public class Hideout extends GameObject implements Hideable {
 	@Override
 	public void init(String name) {
 		super.init(name);
-		setGameObjectType(GameObjectType.Hideable);
-		setLayer(2);
+		getBodyObject().setGameObjectType(GameObjectType.Hideable);
+		getAnimationObject().setLayer(2);
 	}
 
 }

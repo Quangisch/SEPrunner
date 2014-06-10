@@ -1,7 +1,8 @@
-package gameObject;
+package gameObject.drawable;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 interface IDrawableObject {
 
@@ -12,6 +13,12 @@ interface IDrawableObject {
 	 */
 	public void draw(SpriteBatch batch, TextureRegion textureRegion);
 
+	/**
+	 * Set Position.
+	 * @param position
+	 */
+	public void setPosition(Vector2 position);
+	
 	/**
 	 * Set Visibility.
 	 * @param visible
@@ -77,5 +84,5 @@ interface IDrawableObject {
 	 * @param scale factor as float
 	 */
 	void setScale(float scale);
-	
+
 }

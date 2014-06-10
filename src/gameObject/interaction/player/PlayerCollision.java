@@ -2,6 +2,7 @@ package gameObject.interaction.player;
 
 import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
+import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import gameWorld.GameWorld;

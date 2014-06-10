@@ -2,6 +2,8 @@ package gameObject.interaction;
 
 import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
+import gameObject.body.ICollisionable;
+import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameWorld.GameWorld;
 
@@ -20,12 +22,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
 
-public class GameObject extends InteractionObject implements IMoveableGameObject, Comparable<GameObject> {
+public class GameObject extends InteractionObject 
+	implements IMoveableGameObject, ICollisionable, Runnable, Disposable, Comparable<GameObject> {
 	
 	private int shuriken = 10;
 	
@@ -35,6 +39,11 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 
 	public GameObject(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
+	}
+	
+	public void run() {
+		// update position, where to draw depending on position of bodyObject
+		getAnimationObject().setPosition(getBodyObject().getPosition());
 	}
 
 	public void init(String name) {
@@ -56,7 +65,7 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 		initBody(root.get("bodyDef"));
 		initSensors(root.get("sensor"));
 		
-		applyInteraction();
+		applyInteraction(getDefaultInteractionState());
 	}
 
 	private void initStates(String texturePath, JsonValue stateFrames, int defaultStateIndex) {
@@ -81,7 +90,8 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 			for (JsonValue v : bBox)
 				vertices[i++] = GameProperties.pixelToMeter(v.asFloat());
 			boundingBox.set(vertices);
-			addBoundingBox(iS, boundingBox);
+			getBodyObject().addBoundingBox(iS, boundingBox);
+			
 
 			// TEXTURE FRAMES
 			i = 0;
@@ -90,7 +100,7 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 				textureRegions[i++] = new TextureRegion(getTexture(texturePath), frame.getInt(0), frame.getInt(1),
 						frame.getInt(2), frame.getInt(3));
 
-			addAnimation(iS, new Animation(animationFrames.getFloat("frameDuration"), textureRegions));
+			getAnimationObject().addAnimation(iS, new Animation(animationFrames.getFloat("frameDuration"), textureRegions));
 		}
 		
 		String defaultStateName = stateFrames.get(defaultStateIndex).name();
@@ -121,10 +131,10 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 			break;
 		}
 
-		resetToPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), 
+		getBodyObject().resetToPrimaryFixture(bType, bodyDef.getFloat("linearDamping"), 
 				bodyDef.getFloat("density"), bodyDef.getFloat("friction"), 
 				bodyDef.getFloat("restitution"), bodyDef.getBoolean("sensor"),
-				getBoundingBox(getDefaultInteractionState()), false);
+				getBodyObject().getBoundingBox(getDefaultInteractionState()), false);
 	}
 
 	private void initSensors(JsonValue sensors) {
@@ -153,7 +163,7 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 			for (JsonValue sV : s.get("vertices"))
 				sensorVertices[j++] = sV.asFloat();
 
-			addSensor(new Sensor(this, sType, sensorVertices, s.getInt("type"), s.getInt("priority")));
+			getBodyObject().addSensor(sType, sensorVertices, s.getInt("type"), s.getInt("priority"));
 		}
 	}
 
@@ -162,10 +172,7 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 		return loadingTextures.get(path);
 	}
 
-	@Override
-	public int compareTo(GameObject other) {
-		return this.getLayer() - other.getLayer();
-	}
+	
 
 	
 	@Override
@@ -189,7 +196,9 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 	@Override
 	public boolean handleCollision(boolean start, Sensor mySensor,
 			BodyObject other, Sensor otherSensor) {
-		boolean handled = super.handleCollision(start, mySensor, other, otherSensor);
+		boolean handled = false;
+		
+		handled = getBodyObject().handleCollision(start, mySensor, other, otherSensor);
 		
 		if(!handled && mySensor != null 
 				&& other.getGameObjectType().equals(GameObjectType.Ground)) {
@@ -211,6 +220,12 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 		return handled;
 	}
 	
+	@Override
+	public int compareTo(GameObject other) {
+		return this.getAnimationObject().getLayer() - other.getAnimationObject().getLayer();
+	}
+	
+	
 	public boolean decShuriken() {
 		if(shuriken <= 0)
 			return false;
@@ -221,6 +236,10 @@ public class GameObject extends InteractionObject implements IMoveableGameObject
 	
 	public int getShurikenQuantity() {
 		return shuriken;
+	}
+	
+	public void dispose() {
+		getBodyObject().dispose();
 	}
 	
 }

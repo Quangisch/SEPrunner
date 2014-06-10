@@ -1,19 +1,22 @@
 package gameObject.interaction;
 
-import gameObject.AnimationObject;
+import gameObject.body.BodyObject;
+import gameObject.drawable.AnimationObject;
 import gameWorld.GameWorld;
-import misc.Debug;
-import misc.Debug.Mode;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class InteractionObject extends AnimationObject implements IInteractable {
+public class InteractionObject implements IInteractable {
+	
+	private AnimationObject aniObject;
+	private BodyObject bodyObject;
 	
 	private InteractionState defaultState;
 	private InteractionState currentState;
 	
 	public InteractionObject(GameWorld gameWorld, Vector2 position) {
-		super(gameWorld, position);
+		bodyObject = new BodyObject(gameWorld, position);
+		aniObject = new AnimationObject(position);
 	}
 	
 	@Override
@@ -29,27 +32,18 @@ public class InteractionObject extends AnimationObject implements IInteractable 
 	}
 	
 	@Override
-	public boolean tryToSetInteractionState(InteractionState state) {
-		return setInteractionState(state, false);
+	public void applyInteraction(InteractionState state) {
+		this.currentState = state;
+		bodyObject.setFixture(state);
+		aniObject.applyAnimation(state);
 	}
 	
 	@Override
-	public boolean setInteractionState(InteractionState state, boolean force) {
-		if (this.currentState == state) return true;
-		if (currentState != null)
-			Debug.println("try to set " + state.toString() + " @current " + currentState.toString(), Mode.CONSOLE);
-
-		if (force || isInteractionFinished()) 
-			this.currentState = state;
-		else 
-			return false;
-		return true;
-	}
-	
-	@Override
-	public boolean applyInteraction() {
-		if(isInteractionFinished())
-			return applyAnimation(currentState);
+	public boolean tryToApplyInteraction(InteractionState state) {
+		if(isInteractionFinished()) {
+			applyInteraction(state);
+			return true;
+		}
 		return false;
 	}
 	
@@ -69,6 +63,14 @@ public class InteractionObject extends AnimationObject implements IInteractable 
 
 	public InteractionState getDefaultInteractionState() {
 		return defaultState;
+	}
+	
+	public AnimationObject getAnimationObject() {
+		return aniObject;
+	}
+	
+	public BodyObject getBodyObject() {
+		return bodyObject;
 	}
 	
 	
@@ -115,12 +117,6 @@ public class InteractionObject extends AnimationObject implements IInteractable 
 	public boolean isGrabbing() {
 		return currentState.equals(InteractionState.GRAB) 
 				|| currentState.equals(InteractionState.GRAB_PULL);
-	}
-
-	@Override
-	public void disposeUnsafe() {
-		super.disposeUnsafe();
-		defaultState = currentState = null;
 	}
 
 }

@@ -2,6 +2,7 @@ package gameObject.interaction.enemy;
 
 import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
+import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.enemy.ai.IEnemyAI;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.input.InteractionHandler;
 
-public class Enemy extends GameObject {
+public class Enemy extends GameObject implements Runnable {
 
 	protected IEnemyAI AI;
 	protected boolean stunned;
@@ -28,10 +29,10 @@ public class Enemy extends GameObject {
 	@Override
 	public void init(String name) {
 		super.init(name);
-		setGameObjectType(GameObjectType.Enemy);
-		setLayer(3);
 		
-		addSensor(new Sensor(this, Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST));
+		getBodyObject().setGameObjectType(GameObjectType.Enemy);
+		getBodyObject().addSensor(Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
+		getAnimationObject().setLayer(3);
 
 //		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
 //		addSensor(new Sensor(this, Type.Polygon, verticesFoot, SensorTypes.FOOT, Sensor.HANDLE_FIRST));
@@ -40,7 +41,6 @@ public class Enemy extends GameObject {
 	@Override
 	public void run() {
 		if (AI != null) AI.run();
-		super.run();
 		
 		if(interactionHandler != null)
 			interactionHandler.run();

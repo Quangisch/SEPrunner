@@ -1,26 +1,8 @@
 package core.ingame;
 
-import gameObject.IAnimatedDrawable;
-import gameObject.body.BodyObject;
-import gameObject.body.GameObjectType;
-import gameObject.body.ICollisionable;
-import gameObject.body.Sensor;
-import gameObject.interaction.InteractionState;
-import gameObject.interaction.player.Shuriken;
-import gameWorld.GameWorld;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Shape;
-
-public class HUD implements IAnimatedDrawable {
-
+public class HUD /*implements IAnimatedDrawable*/ {
+/*
 	private GameWorld world;
 	private SpriteBatch b;
 	BitmapFont font;
@@ -75,7 +57,7 @@ public class HUD implements IAnimatedDrawable {
 		public void applyImpulse(Vector2 impulse) {}
 	}
 
-	private class Dummy implements ICollisionable {
+	private class Dummy implements IBodyInitializer {
 
 		private Vector2 pos;
 
@@ -257,4 +239,5 @@ public class HUD implements IAnimatedDrawable {
 		// TODO Auto-generated method stub
 		
 	}
+	*/
 }

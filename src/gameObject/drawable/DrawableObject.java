@@ -1,14 +1,11 @@
-package gameObject;
-
-import gameObject.body.BodyObject;
-import gameWorld.GameWorld;
+package gameObject.drawable;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-abstract class DrawableObject extends BodyObject implements IDrawableObject {
+abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObject> {
 
 	// DRAW
 	private boolean flip = false;
@@ -18,8 +15,10 @@ abstract class DrawableObject extends BodyObject implements IDrawableObject {
 	private float scale = 1;
 	private float rotation = 0;
 	
-	public DrawableObject(GameWorld gameWorld, Vector2 position) {
-		super(gameWorld, position);
+	private Vector2 position;
+	
+	public DrawableObject(Vector2 position) {
+		this.position = position;
 	}
 
 	public void draw(SpriteBatch batch, TextureRegion textureRegion) {
@@ -27,10 +26,16 @@ abstract class DrawableObject extends BodyObject implements IDrawableObject {
 			return;
 
 		batch.setColor(1, 1, 1, alpha);
-		batch.draw(textureRegion.getTexture(), getX(), getY(), textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2, /* origin */
+		
+		batch.draw(textureRegion.getTexture(), position.x, position.y, textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2, /* origin */
 				textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), scale, scale, rotation, textureRegion.getRegionX(),
 				textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
 		batch.setColor(Color.WHITE);
+	}
+	
+	@Override
+	public void setPosition(Vector2 position) {
+		this.position = position;
 	}
 	
 	@Override
@@ -83,6 +88,11 @@ abstract class DrawableObject extends BodyObject implements IDrawableObject {
 	public float getScale() {
 		return scale;
 	}
+	
+	@Override
+	public int compareTo(DrawableObject other) {
+		return this.getLayer() - other.getLayer();
+	}
 
 	@Override
 	public void setScale(float scale) {
@@ -90,5 +100,4 @@ abstract class DrawableObject extends BodyObject implements IDrawableObject {
 		// BodyFunctions.scaleShape(primaryFixture.getShape(), getLocalCenterInWorld(), scale / this.scale, true);
 		this.scale = scale;
 	}
-
 }

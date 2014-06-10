@@ -1,15 +1,15 @@
 package gameObject.statics;
 
-import gameObject.body.ICollisionable;
+import gameObject.body.IBodyInitializer;
 
 public interface Hideable {
 	
 	/**
 	 * Check whether MoveableObject is in position to hide.
-	 * @param ICollisionable
+	 * @param IBodyInitializer
 	 * @return hideable
 	 */
-	public boolean canHide(ICollisionable moveableObject);
+	public boolean canHide(IBodyInitializer moveableObject);
 	
 	
 	

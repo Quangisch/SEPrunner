@@ -114,7 +114,7 @@ public class InteractionHandler implements
 			if (iHandler.isKeyDown(ActionKey.RIGHT)
 					|| iHandler.isKeyDown(ActionKey.LEFT)) {
 
-				gameObject.setFlip(iHandler.isKeyDown(ActionKey.LEFT));
+				gameObject.getAnimationObject().setFlip(iHandler.isKeyDown(ActionKey.LEFT));
 
 				switch (gameObject.getInteractionState()) {
 				case CROUCH_DOWN:
@@ -200,17 +200,17 @@ public class InteractionHandler implements
 		if (!gameObject.isGrounded())
 			baseForce.y = 0;
 
-		if (gameObject.isFlipped())
+		if (gameObject.getAnimationObject().isFlipped())
 			baseForce.x *= -1;
 
 		// tweak gravity
 		if (baseForce.len() != 0)
-			gameObject.setGravityScale(0.7f);
+			gameObject.getBodyObject().setGravityScale(0.7f);
 		else
-			gameObject.setGravityScale(1);
+			gameObject.getBodyObject().setGravityScale(1);
 
 		// apply impulse
-		gameObject.applyImpulse(baseForce.scl(gameObject.isGrounded() ? 2 : 1.5f));
+		gameObject.getBodyObject().applyImpulse(baseForce.scl(gameObject.isGrounded() ? 2 : 1.5f));
 	}
 
 	private void applyState(InteractionState state) {
@@ -218,12 +218,10 @@ public class InteractionHandler implements
 			return;
 
 		if (!nextState.equals(gameObject.getInteractionState())) {
-			boolean set = gameObject.tryToSetInteractionState(nextState);
+			boolean set = gameObject.tryToApplyInteraction(nextState);
 
-			if (set) {
-				gameObject.applyInteraction();
+			if (set)
 				nextState = null;
-			}
 		} else
 			nextState = null;
 	}
@@ -262,9 +260,9 @@ public class InteractionHandler implements
 
 	// CLICKPOINT
 	private void normalizeClickPoint() {
-		startPoint = GameProperties.meterToPixel(gameObject.getLocalCenterInWorld());
+		startPoint = GameProperties.meterToPixel(gameObject.getBodyObject().getLocalCenterInWorld());
 		clickPoint = new Vector2(click.screenX, click.screenY);
-		gameObject.getGameWorld().getCamera().unproject(clickPoint);
+		gameObject.getBodyObject().getGameWorld().getCamera().unproject(clickPoint);
 
 		switch (Debug.getMode()) {
 		case GEOMETRIC:
@@ -307,7 +305,7 @@ public class InteractionHandler implements
 		endPoint.nor().scl(HOOK_RADIUS);
 		endPoint.add(startPoint);
 
-		gameObject.getGameWorld().getWorld().rayCast(this, gameObject.getLocalCenterInWorld(),
+		gameObject.getBodyObject().getGameWorld().getWorld().rayCast(this, gameObject.getBodyObject().getLocalCenterInWorld(),
 				GameProperties.pixelToMeter(endPoint));
 
 		actionTimer = 0;
@@ -317,16 +315,15 @@ public class InteractionHandler implements
 
 	private boolean beginHook(Vector2 target) {
 
-		if (target.x < gameObject.getLocalCenterInWorld().x && !tryToFlip())
+		if (target.x < gameObject.getBodyObject().getLocalCenterInWorld().x && !tryToFlip())
 			return false;
 
-		gameObject.setGravityScale(0);
-		gameObject.setInteractionState(InteractionState.HOOK, true);
-		gameObject.applyInteraction();
+		gameObject.getBodyObject().setGravityScale(0);
+		gameObject.applyInteraction(InteractionState.HOOK);
 		// body.setGravityScale(scale);
 		// TODO
 		// body.setTransform(target, body.getAngle());
-		this.target = target.sub(gameObject.getLocalCenterInWorld());
+		this.target = target.sub(gameObject.getBodyObject().getLocalCenterInWorld());
 		return true;
 	}
 
@@ -338,15 +335,13 @@ public class InteractionHandler implements
 			return false;
 
 		if (gameObject.getInteractionState().equals(InteractionState.HOOK)
-				&& gameObject.isInteractionFinished()) {
-			gameObject.setInteractionState(InteractionState.HOOK_FLY, true);
-			gameObject.applyInteraction();
-		}
+				&& gameObject.isInteractionFinished())
+			gameObject.applyInteraction(InteractionState.HOOK_FLY);
 
 		if (!gameObject.getInteractionState().equals(InteractionState.HOOK_FLY))
 			return true;
 
-		gameObject.applyImpulse(target.nor().scl(10));
+		gameObject.getBodyObject().applyImpulse(target.nor().scl(10));
 		hookTime++;
 
 //		System.out.println(hookTime);
@@ -359,9 +354,8 @@ public class InteractionHandler implements
 	protected void resetHook() {
 		target = null;
 		hookTime = 0;
-		gameObject.setGravityScale(1);
-		gameObject.setInteractionState(InteractionState.STAND, true);
-		gameObject.applyInteraction();
+		gameObject.getBodyObject().setGravityScale(1);
+		gameObject.applyInteraction(InteractionState.STAND);
 	}
 
 	private int oriLayer;
@@ -393,10 +387,10 @@ public class InteractionHandler implements
 			case CROUCH_STAND:
 			case CROUCH_SNEAK:
 				nextState = InteractionState.HIDE_START;
-				oriAlpha = gameObject.getAlpha();
-				oriLayer = gameObject.getLayer();
-				gameObject.setLayer(HIDE_LAYER);
-				gameObject.setAlpha(HIDE_ALPHA);
+				oriAlpha = gameObject.getAnimationObject().getAlpha();
+				oriLayer = gameObject.getAnimationObject().getLayer();
+				gameObject.getAnimationObject().setLayer(HIDE_LAYER);
+				gameObject.getAnimationObject().setAlpha(HIDE_ALPHA);
 				break;
 			case HIDE_START:
 				nextState = InteractionState.HIDE;
@@ -410,8 +404,8 @@ public class InteractionHandler implements
 				nextState = InteractionState.HIDE_END;
 			if (gameObject.getInteractionState().equals(InteractionState.HIDE_END))
 				nextState = InteractionState.STAND;
-			gameObject.setLayer(oriLayer);
-			gameObject.setAlpha(oriAlpha);
+			gameObject.getAnimationObject().setLayer(oriLayer);
+			gameObject.getAnimationObject().setAlpha(oriAlpha);
 		}
 	}
 
@@ -435,7 +429,7 @@ public class InteractionHandler implements
 		if (!enemy.isStunned() && enemyGrab == null)
 			return false;
 
-		enemy.isCarriable(gameObject.getPosition());
+		enemy.isCarriable(gameObject.getBodyObject().getPosition());
 		this.enemyGrab = enemy;
 		nextState = InteractionState.GRAB;
 		return true;
@@ -473,7 +467,7 @@ public class InteractionHandler implements
 	private boolean tryToFlip() {
 		if (iHandler.isKeyDown(ActionKey.RIGHT))
 			return false;
-		gameObject.setFlip(true);
+		gameObject.getAnimationObject().setFlip(true);
 		return true;
 	}
 

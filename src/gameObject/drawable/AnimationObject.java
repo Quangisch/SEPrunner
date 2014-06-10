@@ -1,7 +1,6 @@
-package gameObject;
+package gameObject.drawable;
 
 import gameObject.interaction.InteractionState;
-import gameWorld.GameWorld;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +18,8 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 	private Animation animation;
 	private float stateTime;
 
-	public AnimationObject(GameWorld gameWorld, Vector2 position) {
-		super(gameWorld, position);
+	public AnimationObject(Vector2 position) {
+		super(position);
 		
 		animationMap = new HashMap<InteractionState, Animation>();
 		stateTime = 0;
@@ -54,20 +53,12 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 		stateTime = 0;
 
 		Debug.println(">>apply " + state.toString(), Mode.CONSOLE);
-		setFixture(state);
+		
 		return true;
 	}
 
 	protected boolean isAnimationFinished() {
 		return animation == null || animation.isAnimationFinished(stateTime);
 	}
-	
-	@Override
-	public void disposeUnsafe() {
-		super.disposeUnsafe();
-		animationMap.clear();
-		animation = null;
-	}
-	
 
 }

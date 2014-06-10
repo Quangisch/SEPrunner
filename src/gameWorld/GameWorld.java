@@ -66,9 +66,9 @@ public class GameWorld implements IDrawable, Runnable {
 
 	public void run() {
 		for (Iterator<GameObject> i = objects.iterator(); i.hasNext();) {
-			BodyObject g = (BodyObject) i.next();
-			if (g.willDisposed()) {
-				g.disposeUnsafe();
+			GameObject g = (GameObject) i.next();
+			if (g.getBodyObject().willDisposed()) {
+				g.getBodyObject().disposeUnsafe();
 				i.remove();
 			}
 		}
@@ -111,7 +111,7 @@ public class GameWorld implements IDrawable, Runnable {
 			if (mT.texture != null) batch.draw(mT.texture, mT.x, mT.y);
 
 		for (GameObject o : objects)
-			o.draw(batch, deltaTime);
+			o.getAnimationObject().draw(batch, deltaTime);
 
 		if (debugRender != null && (Debug.isMode(Debug.Mode.BOXRENDERER) || Debug.isMode(Debug.Mode.CAMERA)))
 			debugRender.render(world, debugMatrix);
@@ -207,8 +207,8 @@ public class GameWorld implements IDrawable, Runnable {
 		}
 
 		obj.init(root.getString("json"));
-		obj.setScale(root.getFloat("scale", 1f));
-		obj.setFlip(root.getBoolean("flip", false));
+		obj.getAnimationObject().setScale(root.getFloat("scale", 1f));
+		obj.getAnimationObject().setFlip(root.getBoolean("flip", false));
 
 		objects.add(obj);
 	}

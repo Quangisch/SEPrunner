@@ -2,7 +2,6 @@ package gameObject.interaction.player;
 
 import gameObject.body.BodyObject;
 import gameObject.body.GameObjectType;
-import gameObject.body.ICollisionable;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.enemy.Enemy;
@@ -16,17 +15,17 @@ public class Shuriken extends GameObject {
 	private Vector2 direction;
 	private int ttl = 70;
 
-	public Shuriken(ICollisionable thrower, Vector2 clickPoint) {
-		super(thrower.getGameWorld(), thrower.getLocalCenterInWorld());
+	public Shuriken(GameObject thrower, Vector2 clickPoint) {
+		super(thrower.getBodyObject().getGameWorld(), thrower.getBodyObject().getLocalCenterInWorld());
 
 		this.init("shuriken");
-		this.setGameObjectType(GameObjectType.Shuriken);
+		getBodyObject().setGameObjectType(GameObjectType.Shuriken);
 
-		direction = GameProperties.pixelToMeter(clickPoint.sub(getPosition()));
-		addToGameWorld(this);
+		direction = GameProperties.pixelToMeter(clickPoint.sub(getBodyObject().getPosition()));
+		getBodyObject().addToGameWorld(this);
 
-		setGravityScale(0);
-		applyImpulse(direction.nor().scl(7));
+		getBodyObject().setGravityScale(0);
+		getBodyObject().applyImpulse(direction.nor().scl(7));
 	}
 
 	public void run() {
@@ -44,7 +43,7 @@ public class Shuriken extends GameObject {
 				ttl = 5;
 				return true;
 			case Enemy :
-				((Enemy) other).setStun();
+				((Enemy) other.getParent()).setStun();
 				dispose();
 				return true;
 			default:
