@@ -26,4 +26,11 @@ public interface IGameObject {
 	
 	int getShurikenQuantity();
 	
+	boolean isInAction();
+	
+	boolean canHide();
+	
+	boolean canPull();
+	
+	boolean canDispose();
 }

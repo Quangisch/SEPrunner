@@ -27,4 +27,6 @@ public interface IInteractable {
 	boolean isJumping();
 
 	boolean isGrabbing();
+	
+	boolean isStunned();
 }

@@ -20,6 +20,8 @@ public class GameObject extends ObjectInitializer
 	
 //	TODO -> texture loading to ResourceManager
 	private int grounded, bodyBlocked;
+	private boolean canHide;
+	private GameObject canPull, canDispose;
 	private GameWorld gameWorld;
 
 	public GameObject(GameWorld gameWorld, Vector2 position) {
@@ -51,22 +53,35 @@ public class GameObject extends ObjectInitializer
 			BodyObject other, Sensor otherSensor) {
 		boolean handled = false;
 		
-		if(!handled && mySensor != null 
-				&& other.getBodyObjectType().equals(BodyObjectType.Ground)) {
+		if(!handled && mySensor != null) {
 			
-			switch(mySensor.getSensorType()) {
-			case SensorTypes.BODY :
-				calcBodyBlockedContact(start);
-				return true;
-			case SensorTypes.FOOT :
-				calcGroundedContact(start);
-				return true;
+			if(other.getBodyObjectType().equals(BodyObjectType.Ground)) {
+				switch(mySensor.getSensorType()) {
+				case SensorTypes.BODY :
+					calcBodyBlockedContact(start);
+					return true;
+				case SensorTypes.FOOT :
+					calcGroundedContact(start);
+					return true;
+					
+				default:
+					break;
+				}
+			
+//				TODO testing
+			} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
+					&& other.getParent().isStunned() && !isGrabbing()) {
+				canPull = start ? other.getParent() : null;
 				
-			default:
-				break;
+//				TODO testing
+			} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
+					&& canPull != null && isGrabbing()) {
+				canDispose = start ? other.getParent() : null;
 			}
+				
 			
 		}
+		
 		
 		return handled;
 	}
@@ -128,6 +143,28 @@ public class GameObject extends ObjectInitializer
 	@Override
 	public BodyObject getBodyObject() {
 		return super.getBodyObject();
+	}
+	
+	@Override
+	public boolean isInAction() {
+		if(isGrabbing() || isHiding() || isHooking() || isThrowing())
+			return true;
+		return false;
+	}
+	
+	@Override
+	public boolean canHide() {
+		return canHide;
+	}
+	
+	@Override
+	public boolean canPull() {
+		return canPull != null;
+	}
+	
+	@Override
+	public boolean canDispose() {
+		return canPull() && canDispose != null;
 	}
 	
 }

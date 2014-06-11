@@ -119,5 +119,10 @@ public abstract class InteractionObject implements IInteractable {
 		return currentState.equals(InteractionState.GRAB) 
 				|| currentState.equals(InteractionState.GRAB_PULL);
 	}
+	
+	@Override
+	public boolean isStunned() {
+		return currentState.equals(InteractionState.STUNNED);
+	}
 
 }

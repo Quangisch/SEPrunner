@@ -12,7 +12,6 @@ public class LauncherQuang {
 	
 	public static void main(String[] args) {
 
-
 		GameProperties.setGameState(GameState.INGAME);
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
@@ -24,5 +23,5 @@ public class LauncherQuang {
 
 		new LwjglApplication(new Project(), cfg);
 		
-		}
+	}
 }
