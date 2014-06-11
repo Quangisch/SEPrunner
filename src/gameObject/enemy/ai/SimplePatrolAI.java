@@ -6,7 +6,6 @@ import gameObject.ISensorTypes;
 import gameObject.Sensor;
 import misc.Debug;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.GameProperties;
@@ -20,7 +19,6 @@ public class SimplePatrolAI extends EnemyAI {
 	private ActionKey currentAction;
 	private boolean alarm;
 	private gameObject.GameObject player;
-	SpriteBatch batch = new SpriteBatch();
 	//NILS
 
 	float leftX, rightX;
@@ -29,9 +27,6 @@ public class SimplePatrolAI extends EnemyAI {
 	public void init(JsonValue jsonValue) {
 		leftX = jsonValue.getFloat(0);
 		rightX = jsonValue.getFloat(1);
-		//NILS
-		batch.begin();
-		//NILS
 	}
 
 	@Override
@@ -67,11 +62,11 @@ public class SimplePatrolAI extends EnemyAI {
 		
 		//ALARM -> enemy verfolgt player TODO: kann aber nicht springen, kommt keine steigungen hoch
 		if(alarm && !getEnemy().isStunned()){
-			if(player.getX()>getEnemy().getX()){
-				currentAction = ActionKey.RIGHT;
-			}else{
-				currentAction = ActionKey.LEFT;
-			}
+//			if(player.getX()>getEnemy().getX()){
+//				currentAction = ActionKey.RIGHT;
+//			}else{
+//				currentAction = ActionKey.LEFT;
+//			}		
 		}
 		//NILS
 	}
@@ -85,7 +80,7 @@ public class SimplePatrolAI extends EnemyAI {
 		if(other.getGameObjectType() == IGameObjectTypes.GameObjectTypes.PLAYER 
 				&& getEnemy().getGameObjectType() == IGameObjectTypes.GameObjectTypes.ENEMY
 				&& sender != null
-				&& sender.getSensorType() == ISensorTypes.SensorTypes.FOOT){//TODO: hier einfügen: && other.isDetectable
+				&& sender.getSensorType() == ISensorTypes.SensorTypes.BODY){//TODO: hier einfügen: && other.isDetectable
 			Debug.println("Game Over");
 			GameProperties.setGameState(GameState.INGAME_LOSE);
 		}
@@ -102,7 +97,9 @@ public class SimplePatrolAI extends EnemyAI {
 
 		
 		//Enemy berührt shuriken -> stunned
-		if(other.getGameObjectType() == IGameObjectTypes.GameObjectTypes.SHURIKEN){
+		if(other.getGameObjectType() == IGameObjectTypes.GameObjectTypes.SHURIKEN
+				&& sender != null
+				&& sender.getSensorType() == ISensorTypes.SensorTypes.BODY){
 			//NILS
 			getEnemy().setStun();
 			//NILS

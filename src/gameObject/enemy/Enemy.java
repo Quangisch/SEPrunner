@@ -36,6 +36,9 @@ public class Enemy extends ObjectInteraction {
 		// NILS
 		addSensor(new Sensor(this, Type.Circle, new float[] { 1.3f, 1, 0.5f },
 				SensorTypes.VISION, Sensor.HANDLE_FIRST));
+		float[] verticesBody = { 0.4f, 0.3f, 0.9f, 0.3f, 0.9f, 1.15f, 0.4f, 1.15f };
+		addSensor(new Sensor(this, Type.Polygon, verticesBody,
+				SensorTypes.BODY, Sensor.HANDLE_FIRST));
 		// NILS
 
 		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
