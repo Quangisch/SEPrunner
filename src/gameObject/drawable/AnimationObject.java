@@ -57,7 +57,8 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 		return true;
 	}
 
-	protected boolean isAnimationFinished() {
+	@Override
+	public boolean isAnimationFinished() {
 		return animation == null || animation.isAnimationFinished(stateTime);
 	}
 

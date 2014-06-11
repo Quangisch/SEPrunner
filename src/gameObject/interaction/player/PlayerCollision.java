@@ -1,5 +1,6 @@
 package gameObject.interaction.player;
 
+import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
@@ -19,7 +20,7 @@ abstract class PlayerCollision extends GameObject {
 	
 	@Override
 	public boolean handleCollision(boolean start, Sensor mySensor,
-			GameObject other, Sensor otherSensor) {
+			BodyObject other, Sensor otherSensor) {
 		boolean handled = super.handleCollision(start, mySensor, other, otherSensor);
 		if(handled)
 			return true;
@@ -28,8 +29,7 @@ abstract class PlayerCollision extends GameObject {
 			GameProperties.setWin();
 		
 		if(mySensor != null) {
-			if(mySensor.getSensorType() == SensorTypes.BODY 
-					&& other != null
+			if(mySensor.getSensorType() == SensorTypes.BODY
 					&& other.getBodyObjectType().equals(BodyObjectType.Enemy)
 //					&& otherSensor != null
 //					&& otherSensor.getSensorType() == SensorTypes.BODY

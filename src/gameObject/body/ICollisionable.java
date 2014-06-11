@@ -1,8 +1,5 @@
 package gameObject.body;
 
-import gameObject.interaction.GameObject;
-
-
 public interface ICollisionable {
 	
 	/** 
@@ -16,6 +13,6 @@ public interface ICollisionable {
 	 *            <code>null</code>
 	 * @return return whether the handling is done or should be passed to the
 	 *         other */
-	boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor);
+	boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor);
 
 }

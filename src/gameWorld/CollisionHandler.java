@@ -3,7 +3,6 @@ package gameWorld;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.Sensor;
-import gameObject.interaction.GameObject;
 import misc.Debug;
 import misc.Debug.Mode;
 
@@ -27,27 +26,30 @@ public class CollisionHandler implements ContactListener {
 		Fixture fixA = contact.getFixtureA();
 		Fixture fixB = contact.getFixtureB();
 
-		if (fixA == null || fixB == null || fixA.getBody() == null || fixB.getBody() == null) return false;
+		if (fixA == null || fixB == null || fixA.getBody() == null || fixB.getBody() == null) 
+			return false;
 
-		GameObject objectA = ((BodyObject)fixA.getBody().getUserData()).getParent();
-		GameObject objectB = ((BodyObject)fixB.getBody().getUserData()).getParent();
+		BodyObject bodyA = (BodyObject)fixA.getBody().getUserData();
+		BodyObject bodyB = (BodyObject)fixB.getBody().getUserData();
 				
 		Sensor sensorA = (fixA.getUserData() instanceof Sensor) ? (Sensor) fixA.getUserData() : null;
 		Sensor sensorB = (fixB.getUserData() instanceof Sensor) ? (Sensor) fixB.getUserData() : null;
 
-		if(objectA != null && objectB != null) {
+		if(bodyA.getParent() != null && bodyB.getParent() != null) {
 			if(sensorA != null && sensorB != null)
 				return sensorA.getPriority() >= sensorB.getPriority()
-							? objectA.handleCollision(start, sensorA, objectB, sensorB)
-							: objectB.handleCollision(start, sensorB, objectA, sensorA);
+							? bodyA.getParent().handleCollision(start, sensorA, bodyB, sensorB)
+							: bodyB.getParent().handleCollision(start, sensorB, bodyA, sensorA);
 			else if(sensorA == null && sensorB != null)
-				return objectB.handleCollision(start, sensorB, objectA, sensorA);
+				return bodyB.getParent().handleCollision(start, sensorB, bodyA, sensorA);
 			else
-				return objectA.handleCollision(start, sensorA, objectB, sensorB);
-		} else if(objectA != null && objectB == null) {
-			return objectA.handleCollision(start, sensorA, objectB, sensorB);
-		} else if(objectA == null && objectB != null) {
-			return objectB.handleCollision(start, sensorB, objectA, sensorA);
+				return bodyA.getParent().handleCollision(start, sensorA, bodyB, sensorB);
+			
+		} else if(bodyA.getParent() != null && bodyB.getParent() == null) {
+			return bodyA.getParent().handleCollision(start, sensorA, bodyB, sensorB);
+			
+		} else if(bodyA.getParent() == null && bodyB.getParent() != null) {
+			return bodyB.getParent().handleCollision(start, sensorB, bodyA, sensorA);
 		}
 		
 //		unhandled collision			

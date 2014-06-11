@@ -1,5 +1,6 @@
 package gameObject.interaction.enemy;
 
+import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
@@ -79,7 +80,7 @@ public class Enemy extends GameObject implements Runnable {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor) {
 		return super.handleCollision(start, mySensor, other, otherSensor) //
 				|| getAI() != null || getAI().handleCollision(start, mySensor, other, otherSensor);
 	}

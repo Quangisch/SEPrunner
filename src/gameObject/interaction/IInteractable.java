@@ -3,12 +3,9 @@ package gameObject.interaction;
 
 public interface IInteractable {
 
-	void setDefaultInteractionState(InteractionState defaultState);
-
 	InteractionState getInteractionState();
 
 	InteractionState getDefaultInteractionState();
-
 
 	boolean isInteractionFinished();
 

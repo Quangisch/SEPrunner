@@ -1,9 +1,9 @@
 package gameObject.interaction.enemy.ai;
 
+import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
-import gameObject.interaction.GameObject;
 import misc.Debug;
 import misc.Debug.Mode;
 
@@ -32,7 +32,7 @@ public class SimplePatrolAI extends EnemyAI {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor sender, GameObject other, Sensor otherSensor) {
+	public boolean handleCollision(boolean start, Sensor sender, BodyObject other, Sensor otherSensor) {
 		if (sender != null 
 				&& sender.getSensorType() == SensorTypes.VISION_LEFT
 				&& sender.getSensorType() == SensorTypes.VISION_RIGHT)

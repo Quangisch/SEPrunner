@@ -5,7 +5,7 @@ import gameObject.body.BodyObjectType;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 import gameObject.interaction.enemy.Enemy;
-import gameObject.interaction.player.Detectable;
+import gameObject.interaction.player.IDetectable;
 import gameObject.interaction.player.Shuriken;
 import misc.Debug;
 import misc.GeometricObject;
@@ -21,7 +21,7 @@ import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
 public class InteractionHandler implements
-		Detectable, Runnable, RayCastCallback {
+		IDetectable, Runnable, RayCastCallback {
 
 	private IInputHandler iHandler;
 	private GameObject gameObject;
@@ -161,6 +161,7 @@ public class InteractionHandler implements
 		if (interruptedState != null && gameObject.isInteractionFinished()) {
 			nextState = interruptedState;
 			interruptedState = null;
+			
 		}
 
 		applyState(nextState);

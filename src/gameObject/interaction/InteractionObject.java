@@ -1,5 +1,6 @@
 package gameObject.interaction;
 
+import misc.Debug;
 import gameObject.body.BodyObject;
 import gameObject.drawable.AnimationObject;
 
@@ -20,8 +21,7 @@ public abstract class InteractionObject implements IInteractable {
 		this.bodyObject = bodyObject;
 	}
 	
-	@Override
-	public void setDefaultInteractionState(InteractionState defaultState) {
+	protected void setDefaultInteractionState(InteractionState defaultState) {
 		if(defaultState != null) {
 			this.defaultState = defaultState;
 			if(currentState == null)
@@ -33,14 +33,8 @@ public abstract class InteractionObject implements IInteractable {
 	}
 	
 	@Override
-	public void applyInteraction(InteractionState state) {
-		this.currentState = state;
-		bodyObject.setFixture(state);
-		aniObject.applyAnimation(state);
-	}
-	
-	@Override
 	public boolean tryToApplyInteraction(InteractionState state) {
+		Debug.print("tryToApply "+state+" @current "+currentState, Debug.Mode.CONSOLE);
 		if(isInteractionFinished()) {
 			applyInteraction(state);
 			return true;
@@ -48,11 +42,19 @@ public abstract class InteractionObject implements IInteractable {
 		return false;
 	}
 	
+	@Override
+	public void applyInteraction(InteractionState state) {
+		Debug.print(">>apply state "+state, Debug.Mode.CONSOLE);
+		this.currentState = state;
+		bodyObject.setFixture(state);
+		aniObject.applyAnimation(state);
+	}
 
 	@Override
 	public boolean isInteractionFinished() {
-		return currentState == null || currentState.isInterruptable();
-		
+		return currentState == null 
+				|| currentState.isInterruptable() 
+				|| getAnimationObject().isAnimationFinished();
 	}
 	
 	@Override
@@ -61,7 +63,6 @@ public abstract class InteractionObject implements IInteractable {
 	}
 	
 	@Override
-
 	public InteractionState getDefaultInteractionState() {
 		return defaultState;
 	}
@@ -73,7 +74,6 @@ public abstract class InteractionObject implements IInteractable {
 	public BodyObject getBodyObject() {
 		return bodyObject;
 	}
-	
 	
 //	GETTER-Methods
 	

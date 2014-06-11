@@ -2,7 +2,7 @@ package gameObject.interaction.player;
 
 import gameObject.interaction.enemy.Enemy;
 
-public interface Detectable {
+public interface IDetectable {
 	
 	/**
 	 * Check whether Object is detectable by enemy.

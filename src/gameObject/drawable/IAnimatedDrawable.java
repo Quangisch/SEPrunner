@@ -12,4 +12,6 @@ public interface IAnimatedDrawable extends IDrawable, IDrawableObject {
 	
 	boolean applyAnimation(InteractionState currentState); 
 	
+	boolean isAnimationFinished();
+	
 }
