@@ -1,6 +1,6 @@
 package gameObject.interaction.player;
 
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.enemy.Enemy;
@@ -15,13 +15,13 @@ public class Shuriken extends GameObject {
 	private int ttl = 70;
 
 	public Shuriken(GameObject thrower, Vector2 clickPoint) {
-		super(thrower.getBodyObject().getGameWorld(), thrower.getBodyObject().getLocalCenterInWorld());
+		super(thrower.getGameWorld(), thrower.getBodyObject().getLocalCenterInWorld());
 
 		this.init("shuriken");
-		getBodyObject().setGameObjectType(GameObjectType.Shuriken);
+		getBodyObject().setBodyObjectType(BodyObjectType.Shuriken);
 
 		direction = GameProperties.pixelToMeter(clickPoint.sub(getBodyObject().getPosition()));
-		getBodyObject().addToGameWorld(this);
+		getGameWorld().addGameObject(this);
 
 		getBodyObject().setGravityScale(0);
 		getBodyObject().applyImpulse(direction.nor().scl(7));
@@ -37,7 +37,7 @@ public class Shuriken extends GameObject {
 	public boolean handleCollision(boolean start, Sensor mySensor, GameObject other, Sensor otherSensor) {
 		if (start) {
 			
-			switch(other.getGameObjectType()) {
+			switch(other.getBodyObjectType()) {
 			
 			case Ground :
 				ttl = 5;

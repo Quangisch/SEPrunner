@@ -1,7 +1,7 @@
 package gameObject.interaction;
 
 import gameObject.body.BodyObject;
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameObject.body.ICollisionable;
 import gameObject.body.IIdentifiable;
 import gameObject.body.ISensorTypes.SensorTypes;
@@ -31,18 +31,21 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.ingame.GameProperties;
 
 public class GameObject extends InteractionObject 
-	implements IMoveableGameObject, ICollisionable, Runnable, Disposable, Comparable<GameObject>, IIdentifiable {
+	implements IMoveableGameObject, ICollisionable, 
+	Runnable, Disposable, Comparable<GameObject>, IIdentifiable,
+	IGameObject, IInitializable {
 	
 	private int shuriken = 10;
 	
 //	TODO -> texture loading to ResourceManager
 	private static Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
 	private int grounded, bodyBlocked;
-	private GameObjectType gameObjectType = GameObjectType.Unspecified;
+	private GameWorld gameWorld;
 
 	public GameObject(GameWorld gameWorld, Vector2 position) {
 		iniLink(new AnimationObject(position), 
-				new BodyObject(gameWorld, position, this));
+				new BodyObject(gameWorld.getWorld(), position, this));
+		this.gameWorld = gameWorld;
 	}
 	
 	public void run() {
@@ -176,19 +179,6 @@ public class GameObject extends InteractionObject
 		return loadingTextures.get(path);
 	}
 
-	
-
-	
-	@Override
-	public boolean isBodyBlocked() {
-		return bodyBlocked > 0;
-	}
-
-	@Override
-	public boolean isGrounded() {
-		return grounded > 0;
-	}
-
 	private void calcBodyBlockedContact(boolean start) {
 		bodyBlocked += start ? 1 : -1;
 	}
@@ -202,8 +192,8 @@ public class GameObject extends InteractionObject
 			GameObject other, Sensor otherSensor) {
 		boolean handled = false;
 		
-		if(!handled && mySensor != null 
-				&& other.equals(GameObjectType.Ground)) {
+		if(!handled && mySensor != null && other != null
+				&& other.getBodyObjectType().equals(BodyObjectType.Ground)) {
 			
 			switch(mySensor.getSensorType()) {
 			case SensorTypes.BODY :
@@ -228,6 +218,37 @@ public class GameObject extends InteractionObject
 	}
 	
 	
+	
+	public void dispose() {
+		getBodyObject().dispose();
+	}
+	
+	@Override
+	public boolean isBodyBlocked() {
+		return bodyBlocked > 0;
+	}
+
+	@Override
+	public boolean isGrounded() {
+		return grounded > 0;
+	}
+
+	@Override
+	public BodyObjectType getBodyObjectType() {
+		return getBodyObject().getBodyObjectType();
+	}
+
+	@Override
+	public void setBodyObjectType(BodyObjectType bodyObjectType) {
+		getBodyObject().setBodyObjectType(bodyObjectType);
+	}
+	
+	@Override
+	public GameWorld getGameWorld() {
+		return gameWorld;
+	}
+	
+	@Override
 	public boolean decShuriken() {
 		if(shuriken <= 0)
 			return false;
@@ -236,22 +257,9 @@ public class GameObject extends InteractionObject
 		return true;
 	}
 	
+	@Override
 	public int getShurikenQuantity() {
 		return shuriken;
-	}
-	
-	public void dispose() {
-		getBodyObject().dispose();
-	}
-
-	@Override
-	public GameObjectType getGameObjectType() {
-		return gameObjectType;
-	}
-
-	@Override
-	public void setGameObjectType(GameObjectType gameObjectType) {
-		this.gameObjectType = gameObjectType;
 	}
 	
 }

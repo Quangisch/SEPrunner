@@ -1,7 +1,7 @@
 package gameWorld;
 
 import gameObject.body.BodyObject;
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.enemy.Enemy;
 import gameObject.interaction.player.Player;
@@ -143,7 +143,7 @@ public class GameWorld implements IDrawable, Runnable {
 		}
 
 		// GOAL
-		BodyObject goal = new BodyObject(this, new Vector2(0, 0));
+		BodyObject goal = new BodyObject(world, new Vector2(0, 0));
 		PolygonShape g = new PolygonShape();
 		Vector2[] gVecs = new Vector2[root.get("goal").size / 2];
 		for (int i = 0; i < gVecs.length; i++)
@@ -152,11 +152,11 @@ public class GameWorld implements IDrawable, Runnable {
 
 		g.set(gVecs);
 		goal.addFixture(0, 0, 0, true, g, true);
-		goal.setGameObjectType(GameObjectType.Goal);
+		goal.setBodyObjectType(BodyObjectType.Goal);
 		
 		// GROUND
 		JsonValue JGrounds = root.get("ground");
-		BodyObject ground = new BodyObject(this, new Vector2(0, 0));
+		BodyObject ground = new BodyObject(world, new Vector2(0, 0));
 
 		for (JsonValue JGround : JGrounds) {
 			ChainShape p = new ChainShape();
@@ -173,7 +173,7 @@ public class GameWorld implements IDrawable, Runnable {
 			ground.addFixture(0, 0.4f, 0, false, p, true);
 		}
 
-		ground.setGameObjectType(GameObjectType.Ground);
+		ground.setBodyObjectType(BodyObjectType.Ground);
 
 		if (root.hasChild("objects")) //
 			for (JsonValue o : root.get("objects"))
@@ -217,6 +217,7 @@ public class GameWorld implements IDrawable, Runnable {
 		world.step(timeStep, velocityIterations, positionIterations);
 	}
 
+	
 	public boolean addGameObject(GameObject object) {
 		return objects.add(object);
 	}

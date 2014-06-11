@@ -2,7 +2,6 @@ package gameObject.body;
 
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
-import gameWorld.GameWorld;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
 import core.ingame.GameProperties;
@@ -28,7 +28,7 @@ import core.ingame.GameProperties;
 public class BodyObject implements IBodyInitializer, ISensorTypes, 
 		Disposable, Runnable, IIdentifiable {
 
-	private GameWorld gameWorld;
+//	private GameWorld gameWorld;
 
 	// BODY
 	private Body body;
@@ -38,25 +38,21 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	private Map<InteractionState, PolygonShape> boundingBoxMap;
 	
 	private GameObject parent;
-	private GameObjectType gameObjectType = GameObjectType.Unspecified; 
+	private BodyObjectType bodyObjectType = BodyObjectType.Unspecified; 
 
-	public BodyObject(GameWorld gameWorld, Vector2 position, GameObject parent) {		
-		this(gameWorld, position);
-
+	public BodyObject(World world, Vector2 position, GameObject parent) {		
+		this(world, position);
 		this.parent = parent;
-		body.setUserData(parent);
 	}
 	
-	public BodyObject(GameWorld gameWorld, Vector2 position) {
-		this.gameWorld = gameWorld;
-		
+	public BodyObject(World world, Vector2 position) {
 		sensors = new LinkedList<Sensor>();
 		boundingBoxMap = new HashMap<InteractionState, PolygonShape>();
 
 		// init bodyDef
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(position);
-		body = gameWorld.getWorld().createBody(bodyDef);
+		body = world.createBody(bodyDef);
 		body.setFixedRotation(true);
 		
 		body.setUserData(this);
@@ -117,8 +113,8 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	}
 	
 	@Override
-	public Object getParent() {
-		return body.getUserData();
+	public GameObject getParent() {
+		return parent;
 	}
 	
 	@Override
@@ -165,11 +161,6 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	}
 	
 	@Override
-	public boolean addToGameWorld(GameObject gameObject) {
-		return gameWorld.addGameObject(gameObject);
-	}
-
-	@Override
 	public float getX() {
 		return GameProperties.meterToPixel(body.getPosition().x);
 	}
@@ -177,11 +168,6 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	@Override
 	public float getY() {
 		return GameProperties.meterToPixel(body.getPosition().y);
-	}
-
-	@Override
-	public GameWorld getGameWorld() {
-		return gameWorld;
 	}
 
 	@Override
@@ -244,13 +230,13 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	
 //	TODO dirty
 	@Override
-	public GameObjectType getGameObjectType() {
-		return parent != null ? parent.getGameObjectType() : gameObjectType;
+	public BodyObjectType getBodyObjectType() {
+		return bodyObjectType;
 	}
 
 	@Override
-	public void setGameObjectType(GameObjectType gameObjectType) {
-		this.gameObjectType = gameObjectType;
+	public void setBodyObjectType(BodyObjectType bodyObjectType) {
+		this.bodyObjectType = bodyObjectType;
 	}
-	
+
 }

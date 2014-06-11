@@ -1,6 +1,6 @@
 package gameObject.interaction.enemy.ai;
 
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
@@ -37,7 +37,7 @@ public class SimplePatrolAI extends EnemyAI {
 				&& sender.getSensorType() == SensorTypes.VISION_LEFT
 				&& sender.getSensorType() == SensorTypes.VISION_RIGHT)
 			Debug.print("Seeingln", Mode.CONSOLE);
-		if(other.equals(GameObjectType.Shuriken))
+		if(other.equals(BodyObjectType.Shuriken))
 			Debug.println("hit by Shuriken");
 		return false;
 	}

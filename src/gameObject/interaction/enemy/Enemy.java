@@ -1,6 +1,6 @@
 package gameObject.interaction.enemy;
 
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
@@ -29,7 +29,7 @@ public class Enemy extends GameObject implements Runnable {
 	public void init(String name) {
 		super.init(name);
 		
-		setGameObjectType(GameObjectType.Enemy);
+		setBodyObjectType(BodyObjectType.Enemy);
 		getBodyObject().addSensor(Type.Circle, new float[] { 0, 1, 0.5f }, SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
 		getAnimationObject().setLayer(3);
 

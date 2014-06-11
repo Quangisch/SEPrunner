@@ -1,7 +1,7 @@
 package gameWorld;
 
 import gameObject.body.BodyObject;
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import misc.Debug;
@@ -29,23 +29,29 @@ public class CollisionHandler implements ContactListener {
 
 		if (fixA == null || fixB == null || fixA.getBody() == null || fixB.getBody() == null) return false;
 
-		GameObject objectA = (fixA.getBody().getUserData() instanceof GameObject) ? (GameObject) fixA.getBody()
-				.getUserData() : null;
-		GameObject objectB = (fixB.getBody().getUserData() instanceof GameObject) ? (GameObject) fixB.getBody()
-				.getUserData() : null;
+		GameObject objectA = ((BodyObject)fixA.getBody().getUserData()).getParent();
+		GameObject objectB = ((BodyObject)fixB.getBody().getUserData()).getParent();
+				
 		Sensor sensorA = (fixA.getUserData() instanceof Sensor) ? (Sensor) fixA.getUserData() : null;
 		Sensor sensorB = (fixB.getUserData() instanceof Sensor) ? (Sensor) fixB.getUserData() : null;
 
-		boolean handled = false;
-		if(sensorA != null && sensorB != null)
-			handled = sensorA.getPriority() >= sensorB.getPriority()
-				? objectA.handleCollision(start, sensorA, objectB, sensorB)
-				: objectB.handleCollision(start, sensorB, objectA, sensorA);
+		if(objectA != null && objectB != null) {
+			if(sensorA != null && sensorB != null)
+				return sensorA.getPriority() >= sensorB.getPriority()
+							? objectA.handleCollision(start, sensorA, objectB, sensorB)
+							: objectB.handleCollision(start, sensorB, objectA, sensorA);
+			else if(sensorA == null && sensorB != null)
+				return objectB.handleCollision(start, sensorB, objectA, sensorA);
+			else
+				return objectA.handleCollision(start, sensorA, objectB, sensorB);
+		} else if(objectA != null && objectB == null) {
+			return objectA.handleCollision(start, sensorA, objectB, sensorB);
+		} else if(objectA == null && objectB != null) {
+			return objectB.handleCollision(start, sensorB, objectA, sensorA);
+		}
 		
-		handled = handled || objectA == null || objectA.handleCollision(start, sensorA, objectB, sensorB);
-		handled = handled || objectB == null || objectB.handleCollision(start, sensorB, objectA, sensorA);
-				
-		return handled;
+//		unhandled collision			
+		return false;
 	}
 
 	@Override
@@ -77,8 +83,8 @@ public class CollisionHandler implements ContactListener {
 		
 		private boolean isMovable(BodyObject object) {
 			return object == null 
-					|| object.getGameObjectType().equals(GameObjectType.Player)
-					|| object.getGameObjectType().equals(GameObjectType.Enemy);
+					|| object.getBodyObjectType().equals(BodyObjectType.Player)
+					|| object.getBodyObjectType().equals(BodyObjectType.Enemy);
 		}
 	}
 }

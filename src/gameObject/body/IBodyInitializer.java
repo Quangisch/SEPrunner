@@ -2,15 +2,14 @@ package gameObject.body;
 
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
-import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public interface IBodyInitializer {
 
@@ -42,9 +41,6 @@ public interface IBodyInitializer {
 	
 	PolygonShape getBoundingBox(InteractionState state);
 	
-	boolean addToGameWorld(GameObject gameObject);
-	
-	
 	/**
 	 * Add Fixture to body.
 	 * 
@@ -73,10 +69,10 @@ public interface IBodyInitializer {
 	Fixture addFixture(FixtureDef fixtureDef);
 	
 	/**
-	 * Get User-Data from Body.
+	 * Get GameObject parent.
 	 * @return parent
 	 */
-	Object getParent();
+	GameObject getParent();
 	
 	/**
 	 * Create new Sensor and add it to body.
@@ -108,12 +104,6 @@ public interface IBodyInitializer {
 	 */
 	float getY();
 	
-	/**
-	 * Get corresponding game world
-	 * @return
-	 */
-	GameWorld getGameWorld();
-
 	/** Get Body Position in meter.
 	 * 
 	 * @return position */

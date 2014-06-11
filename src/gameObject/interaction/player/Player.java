@@ -1,6 +1,6 @@
 package gameObject.interaction.player;
 
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameWorld.GameWorld;
 import misc.Debug;
 
@@ -16,7 +16,7 @@ public class Player extends PlayerCollision {
 	public Player(IInputHandler inputHandler, GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
 		interactionHandler = new InteractionHandler(inputHandler, this);
-		getBodyObject().getGameWorld().getCamera().setToFollowMoveable(getBodyObject());
+		getGameWorld().getCamera().setToFollowMoveable(getBodyObject());
 	}
 
 	public void run() {
@@ -30,7 +30,7 @@ public class Player extends PlayerCollision {
 	@Override
 	public void init(String name) {
 		super.init(name);
-		setGameObjectType(GameObjectType.Player);
+		setBodyObjectType(BodyObjectType.Player);
 		getAnimationObject().setLayer(3);
 		
 	}

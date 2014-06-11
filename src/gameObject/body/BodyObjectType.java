@@ -1,6 +1,6 @@
 package gameObject.body;
 
-public enum GameObjectType {
+public enum BodyObjectType {
 
 	Goal, 
 	Ground, 

@@ -1,6 +1,6 @@
 package gameObject.statics;
 
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameObject.body.IBodyInitializer;
 import gameObject.interaction.GameObject;
 import gameWorld.GameWorld;
@@ -22,7 +22,7 @@ public class Hideout extends GameObject implements Hideable {
 	@Override
 	public void init(String name) {
 		super.init(name);
-		setGameObjectType(GameObjectType.Hideable);
+		setBodyObjectType(BodyObjectType.Hideable);
 		getAnimationObject().setLayer(2);
 	}
 

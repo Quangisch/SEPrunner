@@ -1,7 +1,7 @@
 package core.ingame.input;
 
 import gameObject.body.BodyObject;
-import gameObject.body.GameObjectType;
+import gameObject.body.BodyObjectType;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 import gameObject.interaction.enemy.Enemy;
@@ -262,7 +262,7 @@ public class InteractionHandler implements
 	private void normalizeClickPoint() {
 		startPoint = GameProperties.meterToPixel(gameObject.getBodyObject().getLocalCenterInWorld());
 		clickPoint = new Vector2(click.screenX, click.screenY);
-		gameObject.getBodyObject().getGameWorld().getCamera().unproject(clickPoint);
+		gameObject.getGameWorld().getCamera().unproject(clickPoint);
 
 		switch (Debug.getMode()) {
 		case GEOMETRIC:
@@ -305,7 +305,7 @@ public class InteractionHandler implements
 		endPoint.nor().scl(HOOK_RADIUS);
 		endPoint.add(startPoint);
 
-		gameObject.getBodyObject().getGameWorld().getWorld().rayCast(this, gameObject.getBodyObject().getLocalCenterInWorld(),
+		gameObject.getGameWorld().getWorld().rayCast(this, gameObject.getBodyObject().getLocalCenterInWorld(),
 				GameProperties.pixelToMeter(endPoint));
 
 		actionTimer = 0;
@@ -440,7 +440,7 @@ public class InteractionHandler implements
 	public float reportRayFixture(Fixture fixture, Vector2 point,
 			Vector2 normal, float fraction) {
 		
-		if (((BodyObject) fixture.getBody().getUserData()).getGameObjectType().equals(GameObjectType.Ground)) {
+		if (((BodyObject) fixture.getBody().getUserData()).getBodyObjectType().equals(BodyObjectType.Ground)) {
 
 			if (Debug.isMode(Debug.Mode.GEOMETRIC)) {
 				Vector2 p = GameProperties.meterToPixel(point);

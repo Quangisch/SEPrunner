@@ -6,12 +6,12 @@ public interface IIdentifiable {
 	 * Get GameObjectType. Relevant for Collision Handling and Callbacks.
 	 * @return gameObjectType
 	 */
-	GameObjectType getGameObjectType();
+	BodyObjectType getBodyObjectType();
 
 	/**
 	 * Set GameObjectType. Relevant Relevant for Collision Handling and Callbacks.
-	 * @param gameObjectType
+	 * @param bodyObjectType
 	 */
-	void setGameObjectType(GameObjectType gameObjectType);
+	void setBodyObjectType(BodyObjectType bodyObjectType);
 	
 }
