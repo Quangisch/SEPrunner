@@ -12,36 +12,39 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
+import core.ingame.input.IInputHandler;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
 public class ActionMovement implements RayCastCallback {
 	
+	private IInputHandler iHandler;
 	private GameObject gameObject;
 	
-	protected ActionMovement(GameObject gameObject) {
+	protected ActionMovement(IInputHandler iHandler, GameObject gameObject) {
+		this.iHandler = iHandler;
 		this.gameObject = gameObject;
 	}
 	
-	protected InteractionState process(Set<ActionKey> actions, Click click) {
+	protected InteractionState process(Set<ActionKey> actions) {
 		InteractionState nextState = null;
 		nextState = end(actions);
 		if(nextState == null)
-			nextState = begin(actions, click);
+			nextState = begin(actions);
 		return nextState;
 	}
 	
 //	BEGIN
-	private InteractionState begin(Set<ActionKey> actions, Click click) {
+	private InteractionState begin(Set<ActionKey> actions) {
 		boolean inAction = gameObject.isInAction();
 		InteractionState nextState = null;
 		
 		if(!inAction){
-			if(click != null) {
+			if(iHandler.getClick() != null) {
 				if(actions.contains(ActionKey.HOOK))
-					nextState = processHook(click);
-				if(nextState == null && actions.contains(ActionKey.THROW))
-					nextState = processThrow(click);
+					nextState = processHook(iHandler.popClick());
+				else if(actions.contains(ActionKey.THROW))
+					nextState = processThrow(iHandler.popClick());
 			}
 			
 			if(nextState == null && actions.contains(ActionKey.ACTION))
@@ -81,10 +84,15 @@ public class ActionMovement implements RayCastCallback {
 	
 //	THROW
 	private InteractionState processThrow(Click click) {
+		Vector2 clickPoint = getClickPoint(click);
+		// can't throw if click and directionActionKey are in opposite direction (pov gameObject)
+		if((clickPoint.x < gameObject.getBodyObject().getX() && iHandler.isKeyDown(ActionKey.RIGHT))
+				|| (clickPoint.x > gameObject.getBodyObject().getX() && iHandler.isKeyDown(ActionKey.LEFT)))
+				return null;
+		
 		if(gameObject.decShuriken()) {
-			Vector2 clickPoint = getClickPoint(click);
 			new Shuriken(gameObject, clickPoint);
-			gameObject.getAnimationObject().setFlip(click.screenX < gameObject.getBodyObject().getX());
+			gameObject.getAnimationObject().setFlip(clickPoint.x < gameObject.getBodyObject().getX());
 			return InteractionState.THROW;
 		}
 		return null;

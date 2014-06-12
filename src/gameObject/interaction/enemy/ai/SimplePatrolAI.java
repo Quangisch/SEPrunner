@@ -78,4 +78,10 @@ public class SimplePatrolAI extends EnemyAI {
 		return null;
 	}
 
+	@Override
+	public void keyDown(ActionKey action) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

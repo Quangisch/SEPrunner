@@ -65,7 +65,7 @@ public class InteractionToWorld {
 		return baseForce;
 	}
 	
-	private float runMul = 2, sneakMul = 0.8f, pullMul = 2;
+	private float runMul = 1.5f, sneakMul = 0.8f, pullMul = 2;
 	
 	private Vector2 applyForceMultiplier(Vector2 baseForce) {
 		Vector2 multipliedForce = baseForce.scl(2.5f);

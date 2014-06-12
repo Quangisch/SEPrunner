@@ -22,6 +22,7 @@ public interface IGameObject {
 	
 	boolean isGrounded();
 	
+	
 	boolean decShuriken();
 	
 	int getShurikenQuantity();

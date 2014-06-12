@@ -1,4 +1,4 @@
-package core.ingame.input;
+package core.ingame.input.interaction;
 
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
@@ -17,10 +17,11 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.ingame.GameProperties;
+import core.ingame.input.IInputHandler;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
-public class InteractionHandlerOld implements
+public class InteractionHandlerOLD implements
 		IDetectable, Runnable, RayCastCallback {
 
 	private IInputHandler iHandler;
@@ -35,7 +36,7 @@ public class InteractionHandlerOld implements
 
 	private Click click;
 
-	public InteractionHandlerOld(IInputHandler iHandler, GameObject gameObject) {
+	public InteractionHandlerOLD(IInputHandler iHandler, GameObject gameObject) {
 		this.iHandler = iHandler;
 		this.gameObject = gameObject;
 	}
@@ -455,11 +456,11 @@ public class InteractionHandlerOld implements
 	}
 	
 	public boolean equals(Object object) {
-		if(object == null || !(object instanceof InteractionHandlerOld))
+		if(object == null || !(object instanceof InteractionHandlerOLD))
 			return false;
 		
 //		TODO equals for GameObject and IIHandler
-		InteractionHandlerOld other = (InteractionHandlerOld) object;
+		InteractionHandlerOLD other = (InteractionHandlerOLD) object;
 		return this.gameObject.equals(other.gameObject) && this.iHandler.equals(other.iHandler);
 	}
 	

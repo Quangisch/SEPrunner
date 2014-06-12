@@ -122,6 +122,12 @@ public class InputHandler implements IInputHandler, InputProcessor {
 			keyUp(k);
 		return true;
 	}
+	
+	@Override
+	public void keyDown(ActionKey action) {
+		for(int k : keyMap.get(action))
+			keyDown(k);
+	}
 
 	@Override
 	public Click getClick() {

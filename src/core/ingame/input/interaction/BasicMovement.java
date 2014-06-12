@@ -5,13 +5,16 @@ import gameObject.interaction.InteractionState;
 
 import java.util.Set;
 
+import core.ingame.input.IInputHandler;
 import core.ingame.input.KeyMap.ActionKey;
 
 public class BasicMovement {
 
+	private IInputHandler iHandler;
 	private GameObject gameObject;
 	
-	protected BasicMovement(GameObject gameObject) {
+	protected BasicMovement(IInputHandler iHandler, GameObject gameObject) {
+		this.iHandler = iHandler;
 		this.gameObject = gameObject;
 	}
 	
@@ -32,29 +35,44 @@ public class BasicMovement {
 			nextState = processJump();
 		if(!inAction && nextState == null && actions.contains(ActionKey.CROUCH))
 			nextState = processCrouch();
-		if(nextState == null && (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT))) {
+		if(nextState == null && (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
 			nextState = processMovement();
-			
-			if(nextState != null && nextState.equals(InteractionState.WALK) && actions.contains(ActionKey.RUN))
-				nextState = InteractionState.RUN;
-		}
 		
-		if(triggerRun(nextState))
+		if(triggerRun(nextState) || (nextState != null && nextState.equals(InteractionState.WALK) && actions.contains(ActionKey.RUN)))
 			nextState = InteractionState.RUN;
 			
 		return nextState;
 	}
 	
+	private boolean autoCrouch;
 //	END
 	private InteractionState end(Set<ActionKey> actions) {
 		switch(gameObject.getInteractionState()) {
 		case CROUCH_DOWN:
 		case CROUCH_SNEAK:
 		case CROUCH_STAND:
-			if(!gameObject.isBodyBlocked() && !actions.contains(ActionKey.CROUCH))
+			if(!gameObject.isBodyBlocked() && (autoCrouch || !actions.contains(ActionKey.CROUCH))) {
+				autoCrouch = false;
+				iHandler.keyUp(ActionKey.CROUCH);
 				return InteractionState.STAND;
-			else
-				return null;
+			}
+			
+			if(gameObject.isBodyBlocked() && !actions.contains(ActionKey.CROUCH)) {
+				autoCrouch = true;
+				iHandler.keyDown(ActionKey.CROUCH);
+				return InteractionState.CROUCH_STAND;
+			}
+			
+			if(autoCrouch) {
+				if(!iHandler.isKeyDown(ActionKey.CROUCH))
+					iHandler.keyDown(ActionKey.CROUCH);
+				if(iHandler.isKeyDown(ActionKey.LEFT) || iHandler.isKeyDown(ActionKey.RIGHT))
+					processMovement();
+				else
+					return InteractionState.CROUCH_STAND;
+			}
+			return null;
+			
 			
 		case WALK:
 		case RUN:
@@ -90,8 +108,6 @@ public class BasicMovement {
 	
 //	MOVEMENT
 	private InteractionState processMovement() {
-
-		
 		switch(gameObject.getInteractionState()) {
 		case CROUCH_STAND:
 		case CROUCH_DOWN:
@@ -112,20 +128,30 @@ public class BasicMovement {
 			RUN_TAP_TIMER_MIN = 5;
 	private int runTapTimer = 0;
 	private boolean triggerRun(InteractionState nextState) {
+		
+		if(gameObject.isJumping())
+			return false;
+		
+		boolean trigger = false;
 
-		System.out.println(runTapTimer);
 		if(nextState != null && nextState.equals(InteractionState.WALK) && runTapTimer == 0)
 			runTapTimer++;
-		else if(nextState == null && runTapTimer >= 1 && runTapTimer <= RUN_TAP_TIMER_MAX)
+		else if(nextState == null && runTapTimer >= 1 && runTapTimer < RUN_TAP_TIMER_MAX) {
 			runTapTimer++;
-		else if(nextState != null && nextState.equals(InteractionState.WALK) && runTapTimer > RUN_TAP_TIMER_MIN) {
-			runTapTimer = 0;
-			return true;
+		} else if(nextState != null && nextState.equals(InteractionState.WALK) && runTapTimer > RUN_TAP_TIMER_MIN) {
+			runTapTimer = RUN_TAP_TIMER_MAX;
+			trigger = true;
+			iHandler.keyDown(ActionKey.RUN);
 		}
 		
-		if(runTapTimer >= RUN_TAP_TIMER_MAX)
+		if((runTapTimer >= RUN_TAP_TIMER_MAX 
+				&& !(iHandler.isKeyDown(ActionKey.LEFT) || iHandler.isKeyDown(ActionKey.RIGHT)))
+				|| gameObject.isCrouching() || gameObject.isInAction()) {
 			runTapTimer = 0;
-		
-		return false;
+			iHandler.keyUp(ActionKey.RUN);
+		}
+
+		return trigger;
 	}
+	
 }

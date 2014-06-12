@@ -2,6 +2,7 @@ package core.ingame.input.interaction;
 
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
+import core.ingame.input.IInputHandler;
 
 public class InputToInteraction {
 	
@@ -12,12 +13,12 @@ public class InputToInteraction {
 	private GameObject gameObject;
 	private InteractionState nextState, interruptedState;
 	
-	protected InputToInteraction(InteractionHandler interactionHandler) {
+	protected InputToInteraction(InteractionHandler interactionHandler, IInputHandler inputHandler) {
 		this.interactionHandler = interactionHandler;
 		this.gameObject = interactionHandler.getGameObject();
 		
-		actionMovement = new ActionMovement(gameObject);
-		basicMovement = new BasicMovement(gameObject);
+		actionMovement = new ActionMovement(inputHandler, gameObject);
+		basicMovement = new BasicMovement(inputHandler, gameObject);
 	}
 	
 	protected void process() {
@@ -29,7 +30,7 @@ public class InputToInteraction {
 	private void mapInputToState() {
 		nextState = processInteractionTransition();
 		if(nextState == null)
-			nextState = actionMovement.process(interactionHandler.getPressedActionKeys(), interactionHandler.popClick());
+			nextState = actionMovement.process(interactionHandler.getPressedActionKeys());
 		if(nextState == null)
 			nextState = basicMovement.process(interactionHandler.getPressedActionKeys());
 	}

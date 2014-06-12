@@ -12,6 +12,8 @@ public interface IInputHandler {
 	boolean isButtonDown(ActionKey action);
 
 	boolean keyUp(ActionKey action);
+	
+	void keyDown(ActionKey action);
 
 	Click popClick();
 	

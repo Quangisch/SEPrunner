@@ -22,7 +22,7 @@ public class InteractionHandler implements Runnable {
 		this.iHandler = iHandler;
 		this.gameObject = gameObject;
 		
-		inputToInteraction = new InputToInteraction(this);
+		inputToInteraction = new InputToInteraction(this, iHandler);
 		interactionToWorld = new InteractionToWorld(this, iHandler);
 		
 		pressedActionKeys = new HashSet<ActionKey>();
@@ -37,7 +37,10 @@ public class InteractionHandler implements Runnable {
 	}
 	
 	private void processFlip() {
-		gameObject.getAnimationObject().setFlip(pressedActionKeys.contains(ActionKey.LEFT));
+		if(pressedActionKeys.contains(ActionKey.LEFT))
+			gameObject.getAnimationObject().setFlip(true);
+		else if(pressedActionKeys.contains(ActionKey.RIGHT))
+			gameObject.getAnimationObject().setFlip(false);
 	}
 
 	
