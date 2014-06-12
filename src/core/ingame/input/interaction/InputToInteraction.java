@@ -1,5 +1,6 @@
 package core.ingame.input.interaction;
 
+import misc.Debug;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 import core.ingame.input.IInputHandler;
@@ -70,7 +71,7 @@ public class InputToInteraction {
 			final InteractionState currentState = gameObject.getInteractionState();
 			
 			if(gameObject.tryToApplyInteraction(nextState)) {
-				System.out.println(gameObject.getInteractionState());
+				Debug.println(">>"+gameObject.getInteractionState(), Debug.Mode.CONSOLE);
 				
 				if(nextState.equals(InteractionState.THROW))
 					interruptedState = currentState;

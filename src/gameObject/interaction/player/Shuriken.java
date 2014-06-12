@@ -2,6 +2,7 @@ package gameObject.interaction.player;
 
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
+import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.enemy.Enemy;
@@ -35,20 +36,22 @@ public class Shuriken extends GameObject {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor) {
-		if (start) {
-			
-			switch(other.getBodyObjectType()) {
-			
-			case Ground :
-				ttl = 5;
-				return true;
-			case Enemy :
-				((Enemy) other.getParent()).setStun();
-				dispose();
-				return true;
-			default:
-				break;
+	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor, BodyObject other, Sensor otherSensor) {
+		if(!postSolve) {
+			if (start) {
+				switch(other.getBodyObjectType()) {
+				case Ground :
+					ttl = 5;
+					return true;
+				case Enemy :
+					if(otherSensor != null && otherSensor.getSensorType() == SensorTypes.CORE) {
+						((Enemy) other.getParent()).setStun();
+						dispose();
+						return true;
+					}
+				default:
+					break;
+				}
 			}
 		}
 

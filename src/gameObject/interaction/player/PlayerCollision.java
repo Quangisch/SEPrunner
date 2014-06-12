@@ -18,23 +18,27 @@ abstract class PlayerCollision extends GameObject {
 	}
 	
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor,
+	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor,
 			BodyObject other, Sensor otherSensor) {
-		boolean handled = super.handleCollision(start, mySensor, other, otherSensor);
-		if(handled)
-			return true;
+		boolean handled = super.handleCollision(start, postSolve, mySensor, other, otherSensor);
 		
-		if(other != null && other.getBodyObjectType().equals(BodyObjectType.Goal))
-			GameProperties.setWin();
-//	TODO	
-		if(mySensor != null) {
-//			if(mySensor.getSensorType() == SensorTypes.BODY
-//					&& other.getBodyObjectType().equals(BodyObjectType.Enemy)
-//					&& otherSensor != null
-//					&& otherSensor.getSensorType() == SensorTypes.BODY
-//					)
-//				GameProperties.setGameOver();
+		if(!postSolve) {
+			if(handled)
+				return true;
+			
+			if(other != null && other.getBodyObjectType().equals(BodyObjectType.Goal))
+				GameProperties.setWin();
+//		TODO	
+			if(mySensor != null) {
+//				if(mySensor.getSensorType() == SensorTypes.BODY
+//						&& other.getBodyObjectType().equals(BodyObjectType.Enemy)
+//						&& otherSensor != null
+//						&& otherSensor.getSensorType() == SensorTypes.BODY
+//						)
+//					GameProperties.setGameOver();
+			}
 		}
+		
 		
 		return false;
 	}

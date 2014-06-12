@@ -16,29 +16,9 @@ public interface IGameObject {
 	
 	BodyObject getBodyObject();
 	
-	
-	
-	boolean isBodyBlocked();
-	
-	boolean isGrounded();
-	
-	
-	boolean decShuriken();
-	
-	int getShurikenQuantity();
-	
-	boolean isInAction();
-	
-	boolean canHide();
-	
-	boolean canGrab();
-	
-	boolean canDispose();
-	
-	
-	boolean startGrab();
-	
-	boolean endGrab();
-	
 	void removeFromGameWorld();
+	
+	
+	
+	
 }

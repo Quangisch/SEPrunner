@@ -41,6 +41,11 @@ public class InteractionHandler implements Runnable {
 			gameObject.getAnimationObject().setFlip(true);
 		else if(pressedActionKeys.contains(ActionKey.RIGHT))
 			gameObject.getAnimationObject().setFlip(false);
+		
+		if(gameObject.isGrabbing() && 
+				(pressedActionKeys.contains(ActionKey.LEFT) 
+						||pressedActionKeys.contains(ActionKey.RIGHT)))
+			gameObject.getAnimationObject().flip();
 	}
 
 	

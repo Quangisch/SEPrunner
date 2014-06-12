@@ -19,14 +19,11 @@ public class InteractionToWorld {
 		
 	}
 	
-	
-	
 	protected void process() {
 	
 		applyForce(applyForceMultiplier(processBaseForce()));
 	}
 	
-
 	private Vector2 processBaseForce() {
 		Vector2 baseForce = new Vector2();
 		
@@ -42,9 +39,14 @@ public class InteractionToWorld {
 		case GRAB:
 		case GRAB_DISPOSE:
 		case HOOK:
-		case HOOK_FLY:	//force applied in ActionMovement
 			return new Vector2();
-			
+		case HOOK_FLY:
+			if(gameObject.getHookPoint() != null) {
+				Vector2 hP = gameObject.getHookPoint().cpy();
+				Vector2 sP = gameObject.getBodyObject().getLocalCenterInWorld().cpy();
+				return hP.sub(sP).clamp(5, 5);
+			}
+			return new Vector2();
 		
 		case JUMP:
 			baseForce.add(0, 1);
@@ -53,6 +55,7 @@ public class InteractionToWorld {
 			baseForce.add(1, 1);
 			break;
 		
+		case GRAB_PULL:
 		case RUN:
 		case CROUCH_SNEAK:
 		case WALK:
@@ -65,7 +68,7 @@ public class InteractionToWorld {
 		return baseForce;
 	}
 	
-	private float runMul = 1.5f, sneakMul = 0.8f, pullMul = 2;
+	private float runMul = 1.5f, sneakMul = 0.8f, pullMul = 1.5f;
 	
 	private Vector2 applyForceMultiplier(Vector2 baseForce) {
 		Vector2 multipliedForce = baseForce.scl(2.5f);
@@ -78,7 +81,7 @@ public class InteractionToWorld {
 			multipliedForce = baseForce.scl(sneakMul, 0);
 			break;
 		case GRAB_PULL:
-			multipliedForce = baseForce.scl(pullMul, 0);
+			multipliedForce = baseForce.scl(-pullMul, 0);
 			break;
 		case JUMP:
 		case JUMP_MOVE:
@@ -88,7 +91,7 @@ public class InteractionToWorld {
 			multipliedForce = baseForce;
 		}
 		
-		if(gameObject.getAnimationObject().isFlipped())
+		if(gameObject.getAnimationObject().isFlipped() && !gameObject.isHooking())
 			multipliedForce.scl(-1, 1);
 
 		return multipliedForce;
@@ -116,8 +119,5 @@ public class InteractionToWorld {
 		
 		return baseForce;
 	}
-	
-//	public void setMultiplier() {
-//		
-//	}
+
 }

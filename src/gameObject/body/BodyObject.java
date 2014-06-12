@@ -257,7 +257,9 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	
 	@Override
 	public void uncoupleBodies() {
-		parent.getGameWorld().getWorld().destroyJoint(joint);
+		if(joint != null)
+			parent.getGameWorld().getWorld().destroyJoint(joint);
+		
 		joint = null;
 	}
 	

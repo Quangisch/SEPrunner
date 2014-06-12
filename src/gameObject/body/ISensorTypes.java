@@ -13,6 +13,7 @@ public interface ISensorTypes {
 		public static final int BODY = 3;
 		public static final int LEFT = 6;
 		public static final int RIGHT = 7;
+		public static final int CORE = 10;
 
 		// ENEMY
 		public static final int VISION_LEFT = 11;

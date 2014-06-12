@@ -1,5 +1,7 @@
 package gameObject.interaction;
 
+import gameWorld.GameWorld;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
@@ -11,9 +13,9 @@ import misc.Debug.Mode;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -22,6 +24,11 @@ import core.ingame.GameProperties;
 abstract class ObjectInitializer extends InteractionObject {
 
 	private static Map<String, Texture> loadingTextures = new HashMap<String, Texture>();
+	
+	protected ObjectInitializer(GameWorld gameWorld) {
+		super(gameWorld);
+	}
+	
 	
 	protected void init(String name, String jsonPath) {
 		JsonReader reader = new JsonReader();

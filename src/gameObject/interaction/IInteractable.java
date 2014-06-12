@@ -1,32 +1,40 @@
 package gameObject.interaction;
 
+import com.badlogic.gdx.math.Vector2;
 
 public interface IInteractable {
 
-	InteractionState getInteractionState();
-
-	InteractionState getDefaultInteractionState();
-
-	boolean isInteractionFinished();
-
-	void applyInteraction(InteractionState state);
+boolean isBodyBlocked();
 	
-	boolean tryToApplyInteraction(InteractionState state);
-
-	// InteractionState Getter
-	boolean isRunning();
-
-	boolean isThrowing();
-
-	boolean isHiding();
-
-	boolean isCrouching();
-
-	boolean isHooking();
-
-	boolean isJumping();
-
-	boolean isGrabbing();
+	boolean isGrounded();
 	
-	boolean isStunned();
+	
+	boolean decShuriken();
+	
+	int getShurikenQuantity();
+	
+	
+	
+	boolean canHide();
+	
+	boolean canGrab();
+	
+	boolean canDispose();
+	
+	
+	boolean startGrab();
+	
+	boolean endGrab();
+	
+	boolean disposeGrab();
+	
+	
+	int getHookRadius();
+	
+	void setHookRadius(int hookRadius);
+	
+	Vector2 getHookPoint();
+	
+	boolean tryToHook(Vector2 clickPoint);
+	
 }

@@ -32,13 +32,16 @@ public class SimplePatrolAI extends EnemyAI {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor sender, BodyObject other, Sensor otherSensor) {
-		if (sender != null 
-				&& sender.getSensorType() == SensorTypes.VISION_LEFT
-				&& sender.getSensorType() == SensorTypes.VISION_RIGHT)
-			Debug.print("Seeingln", Mode.CONSOLE);
-		if(other.equals(BodyObjectType.Shuriken))
-			Debug.println("hit by Shuriken");
+	public boolean handleCollision(boolean start, boolean postSolve, Sensor sender, BodyObject other, Sensor otherSensor) {
+		if(!postSolve) {
+			if (sender != null 
+					&& (sender.getSensorType() == SensorTypes.VISION_LEFT
+					|| sender.getSensorType() == SensorTypes.VISION_RIGHT))
+				Debug.print("Seeingln", Mode.CONSOLE);
+			if(other.equals(BodyObjectType.Shuriken))
+				Debug.println("hit by Shuriken");
+		}
+		
 		return false;
 	}
 

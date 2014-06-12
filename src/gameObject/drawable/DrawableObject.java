@@ -81,7 +81,7 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 
 	@Override
 	public void setAlpha(float alpha) {
-		this.alpha = Math.abs(alpha);
+		this.alpha = Math.abs(alpha > 1 ? 1 : alpha < 0 ? 0 : alpha);
 	}
 
 	@Override

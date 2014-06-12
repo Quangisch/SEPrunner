@@ -5,6 +5,7 @@ import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
+import gameObject.interaction.InteractionState;
 import gameObject.interaction.enemy.ai.IEnemyAI;
 import gameObject.interaction.enemy.ai.SimplePatrolAI;
 import gameWorld.GameWorld;
@@ -19,7 +20,6 @@ import core.ingame.input.interaction.InteractionHandlerOLD;
 public class Enemy extends GameObject implements Runnable {
 
 	protected IEnemyAI AI;
-	protected boolean stunned;
 	private InteractionHandlerOLD interactionHandler;
 
 	public Enemy(GameWorld gameWorld, Vector2 position) {
@@ -62,12 +62,9 @@ public class Enemy extends GameObject implements Runnable {
 		return AI;
 	}
 
-	public boolean isStunned() {
-		return stunned;
-	}
 
 	public void setStun() {
-		stunned = true;
+		applyInteraction(InteractionState.STUNNED);
 	}
 
 	public boolean isCarriable(Vector2 position) {
@@ -80,9 +77,10 @@ public class Enemy extends GameObject implements Runnable {
 	}
 
 	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor, BodyObject other, Sensor otherSensor) {
-		return super.handleCollision(start, mySensor, other, otherSensor) //
-				|| getAI() != null || getAI().handleCollision(start, mySensor, other, otherSensor);
+	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor, BodyObject other, Sensor otherSensor) {
+		return false;
+//		return super.handleCollision(start, postSolve, mySensor, other, otherSensor) //
+//				|| getAI() != null || getAI().handleCollision(start, postSolve, mySensor, other, otherSensor);
 	}
 
 	public void setNewAI(JsonValue jAI) {

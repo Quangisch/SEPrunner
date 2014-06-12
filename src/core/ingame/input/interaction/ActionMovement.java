@@ -1,7 +1,6 @@
 package core.ingame.input.interaction;
 
-import gameObject.body.BodyObject;
-import gameObject.body.BodyObjectType;
+import gameObject.drawable.AnimationObject;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 import gameObject.interaction.player.Shuriken;
@@ -9,14 +8,12 @@ import gameObject.interaction.player.Shuriken;
 import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.ingame.input.IInputHandler;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
-public class ActionMovement implements RayCastCallback {
+public class ActionMovement  {
 	
 	private IInputHandler iHandler;
 	private GameObject gameObject;
@@ -39,17 +36,23 @@ public class ActionMovement implements RayCastCallback {
 		boolean inAction = gameObject.isInAction();
 		InteractionState nextState = null;
 		
-		if(!inAction){
-			if(iHandler.getClick() != null) {
-				if(actions.contains(ActionKey.HOOK))
-					nextState = processHook(iHandler.popClick());
-				else if(actions.contains(ActionKey.THROW))
-					nextState = processThrow(iHandler.popClick());
-			}
+		if(!inAction){	
+			if(actions.contains(ActionKey.HOOK))
+				nextState = processHookStart(iHandler.popClick());
+			
+			if(nextState == null && actions.contains(ActionKey.THROW) && iHandler.getClass() != null)
+				nextState = processThrow(iHandler.popClick());
 			
 			if(nextState == null && actions.contains(ActionKey.ACTION))
 				nextState = processActionKey();
 		}
+
+		
+		if(gameObject.isHooking())
+			nextState = processHooking();
+		if(gameObject.isGrabbing())
+			nextState = processGrabbing();
+		processHiding();
 		
 		return nextState;
 	}
@@ -57,13 +60,16 @@ public class ActionMovement implements RayCastCallback {
 //	END
 	private InteractionState end(Set<ActionKey> actions) {
 		switch(gameObject.getInteractionState()) {	
-		case GRAB:
+		
 		case GRAB_PULL:
-			if(!actions.contains(ActionKey.ACTION))
-				return InteractionState.CROUCH_STAND;
-			else
-				return null;
-			
+			if(!(actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
+				return InteractionState.GRAB;
+			return null;
+		case GRAB_DISPOSE:
+//			if(gameObject.isInteractionFinished())
+			System.out.println("disposeStand");
+				gameObject.applyInteraction(InteractionState.STAND);
+//			return null;
 		case HIDE:
 			if(!actions.contains(ActionKey.ACTION))
 				return InteractionState.HIDE_END;
@@ -77,40 +83,88 @@ public class ActionMovement implements RayCastCallback {
 	}
 	
 //	HOOK
-	private InteractionState processHook(Click click) {
+	private InteractionState processHookStart(Click click) {
+		if(click != null && !gameObject.isInAction() && !gameObject.isCrouching()) {
+			if(gameObject.getHookPoint() == null && click != null)
+				gameObject.tryToHook(getClickPoint(click));
+			
+			if(gameObject.getHookPoint() != null)
+				return InteractionState.HOOK;
+			
+		} 
 		
+		return null;
+	}
+	
+	private InteractionState processHooking() {
+		if(gameObject.getInteractionState().equals(InteractionState.HOOK)
+				&& gameObject.isInteractionFinished()) {
+			return InteractionState.HOOK_FLY;	
+		}
+		
+		if(gameObject.getInteractionState().equals(InteractionState.HOOK_FLY)
+				&& (gameObject.getHookPoint() == null))
+			return InteractionState.JUMP;
 		return null;
 	}
 	
 //	THROW
 	private InteractionState processThrow(Click click) {
-		Vector2 clickPoint = getClickPoint(click);
-		// can't throw if click and directionActionKey are in opposite direction (pov gameObject)
-		if((clickPoint.x < gameObject.getBodyObject().getX() && iHandler.isKeyDown(ActionKey.RIGHT))
-				|| (clickPoint.x > gameObject.getBodyObject().getX() && iHandler.isKeyDown(ActionKey.LEFT)))
-				return null;
-		
-		if(gameObject.decShuriken()) {
-			new Shuriken(gameObject, clickPoint);
-			gameObject.getAnimationObject().setFlip(clickPoint.x < gameObject.getBodyObject().getX());
-			return InteractionState.THROW;
+		if(click != null) {
+			final Vector2 clickPoint = getClickPoint(click);
+			final boolean left = clickPoint.x < gameObject.getBodyObject().getX();
+			
+			// can't throw if click and directionActionKey are in opposite direction (pov gameObject)
+			if((left && iHandler.isKeyDown(ActionKey.RIGHT))
+					|| (!left && iHandler.isKeyDown(ActionKey.LEFT)))
+					return null;
+			
+			if(gameObject.decShuriken()) {
+				gameObject.getAnimationObject().setFlip(left);
+				new Shuriken(gameObject, clickPoint);
+				return InteractionState.THROW;
+			}
 		}
 		return null;
 	}
 	
 //	ACTIONKEY
 	private InteractionState processActionKey() {
-		if(gameObject.canHide() && !(gameObject.isHiding() || gameObject.isHiding()))
+		if(!gameObject.isInAction() && gameObject.canHide() && !gameObject.isHiding())
 			return InteractionState.HIDE_START;
 		
 		if(gameObject.canGrab() && !gameObject.isGrabbing() && gameObject.startGrab())
 			return InteractionState.GRAB;
 		
-		if(gameObject.isGrabbing() && !gameObject.canDispose() && gameObject.endGrab())
-			return InteractionState.STAND;
+		return null;
+	}
 	
-		if(gameObject.canDispose() && gameObject.isGrabbing() && gameObject.disposeGrab())
-			return InteractionState.GRAB_DISPOSE;
+	private void processHiding() {
+		AnimationObject ani = gameObject.getAnimationObject();
+		if(gameObject.isHiding()) {
+			if(gameObject.getInteractionState().equals(InteractionState.HIDE_START)) {
+				ani.setAlpha(ani.getAlpha()-0.01f);
+				ani.setLayer(-1);
+			} else if(gameObject.getInteractionState().equals(InteractionState.HIDE_END)) {
+				ani.setAlpha(ani.getAlpha()+0.01f);
+				ani.setLayer(3);
+			}
+				
+		} else
+			ani.setAlpha(1);
+	}
+	
+	private InteractionState processGrabbing() {
+		if(iHandler.isKeyDown(ActionKey.ACTION)) {
+			if(gameObject.isGrabbing() && !gameObject.canDispose() && gameObject.endGrab()) {
+				return InteractionState.STAND;
+			}
+		
+			if(gameObject.canDispose() && gameObject.isGrabbing() && gameObject.disposeGrab()) {
+				System.out.println("disposeStand");
+				return InteractionState.STAND;
+			}
+		}
 		
 		return null;
 	}
@@ -121,22 +175,5 @@ public class ActionMovement implements RayCastCallback {
 		gameObject.getGameWorld().getCamera().unproject(clickPoint);
 		return clickPoint;
 	}	
-	
-	
-	@Override
-	public float reportRayFixture(Fixture fixture, Vector2 point,
-			Vector2 normal, float fraction) {
-		
-		if (((BodyObject) fixture.getBody().getUserData()).getBodyObjectType().equals(BodyObjectType.Ground)) {
-
-//			if (Debug.isMode(Debug.Mode.GEOMETRIC)) {
-//				Vector2 p = GameProperties.meterToPixel(point);
-//				new GeometricObject(new Circle(p.x - 5, p.y - 5, 5), Color.BLUE);
-//			}
-
-			return 0;
-		} else
-			return 1;
-	}
 
 }

@@ -2,10 +2,7 @@ package gameObject.interaction;
 
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
-import gameObject.body.ICollisionable;
 import gameObject.body.IIdentifiable;
-import gameObject.body.ISensorTypes.SensorTypes;
-import gameObject.body.Sensor;
 import gameObject.drawable.AnimationObject;
 import gameWorld.GameWorld;
 
@@ -13,21 +10,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
 public class GameObject extends ObjectInitializer 
-	implements ICollisionable, Runnable, Disposable, 
-	Comparable<GameObject>, IIdentifiable, IGameObject{
-	
-	private int shuriken = 10;
+	implements  IIdentifiable, IGameObject,
+	Comparable<GameObject>, Runnable, Disposable {
+
 	
 //	TODO -> texture loading to ResourceManager
-	private int grounded, bodyBlocked;
-	private boolean canHide;
-	private GameObject canGrab, canDispose;
-	private GameWorld gameWorld;
 
 	public GameObject(GameWorld gameWorld, Vector2 position) {
+		super(gameWorld);
 		iniLink(new AnimationObject(position), 
 				new BodyObject(gameWorld.getWorld(), position, this));
-		this.gameWorld = gameWorld;
 	}
 	
 	public void run() {
@@ -39,14 +31,6 @@ public class GameObject extends ObjectInitializer
 	public void init(String name) {
 		init(name, "res/sprites/" + name + ".json");
 	}
-
-	private void calcBodyBlockedContact(boolean start) {
-		bodyBlocked += start ? 1 : -1;
-	}
-	
-	private void calcGroundedContact(boolean start) {
-		grounded += start ? 1 : -1;
-	}
 	
 	@Override
 	public int compareTo(GameObject other) {
@@ -55,18 +39,14 @@ public class GameObject extends ObjectInitializer
 	
 	public void dispose() {
 		getBodyObject().dispose();
-//		disposeTextures();
+		getGameWorld().removeGameObject(this);
+//		disposeTextures(); TODO
 	}
 
-//	GETTER GENERAL
+	
 	@Override
-	public BodyObjectType getBodyObjectType() {
-		return getBodyObject().getBodyObjectType();
-	}
-
-	@Override
-	public void setBodyObjectType(BodyObjectType bodyObjectType) {
-		getBodyObject().setBodyObjectType(bodyObjectType);
+	public GameWorld getGameWorld() {
+		return super.getGameWorld();
 	}
 	
 	@Override
@@ -80,129 +60,19 @@ public class GameObject extends ObjectInitializer
 	}
 	
 	@Override
-	public GameWorld getGameWorld() {
-		return gameWorld;
+	public BodyObjectType getBodyObjectType() {
+		return getBodyObject().getBodyObjectType();
+	}
+
+	@Override
+	public void setBodyObjectType(BodyObjectType bodyObjectType) {
+		getBodyObject().setBodyObjectType(bodyObjectType);
 	}
 	
 	@Override
 	public void removeFromGameWorld() {
-		gameWorld.removeGameObject(this);
+		super.getGameWorld().removeGameObject(this);
 		getBodyObject().destroyBody();
 	}
-	
-	
-//	GETTER INTERACTION
-	@Override
-	public boolean isBodyBlocked() {
-		return bodyBlocked > 0;
-	}
 
-	@Override
-	public boolean isGrounded() {
-		return grounded > 0;
-	}
-	
-	@Override
-	public boolean decShuriken() {
-		if(shuriken <= 0)
-			return false;
-			
-		shuriken--;
-		return true;
-	}
-	
-	@Override
-	public int getShurikenQuantity() {
-		return shuriken;
-	}
-	
-	@Override
-	public boolean isInAction() {
-		if(isGrabbing() || isHiding() || isHooking() || isThrowing())
-			return true;
-		return false;
-	}
-	
-	@Override
-	public boolean canHide() {
-		return canHide;
-	}
-	
-	@Override
-	public boolean canGrab() {
-		return canGrab != null;
-	}
-	
-	@Override
-	public boolean canDispose() {
-		return canGrab() && canDispose != null;
-	}
-	
-	@Override
-	public boolean startGrab() {
-		if(canGrab()) {
-			getBodyObject().joinBodies(canGrab.getBodyObject());
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean endGrab() {
-		if(isGrabbing()) {
-			getBodyObject().uncoupleBodies();
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean disposeGrab() {
-		if(isGrabbing() && canDispose()) {
-//			TODO
-			endGrab();
-			canGrab.removeFromGameWorld();
-		}
-		return false;
-	}
-	
-//	COLLISION HANDLING
-	@Override
-	public boolean handleCollision(boolean start, Sensor mySensor,
-			BodyObject other, Sensor otherSensor) {
-		boolean handled = false;
-		
-		if(!handled && mySensor != null) {
-			
-			if(other.getBodyObjectType().equals(BodyObjectType.Ground)) {
-				switch(mySensor.getSensorType()) {
-				case SensorTypes.BODY :
-					calcBodyBlockedContact(start);
-					return true;
-				case SensorTypes.FOOT :
-					calcGroundedContact(start);
-					return true;
-					
-				default:
-					break;
-				}
-			
-//				TODO testing
-			} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
-					&& other.getParent().isStunned() && !isGrabbing()) {
-				canGrab = start ? other.getParent() : null;
-				return true;
-				
-//				TODO testing
-			} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
-					&& canGrab != null && isGrabbing()) {
-				canDispose = start ? other.getParent() : null;
-				return true;
-			}
-				
-			
-		}
-
-		return handled;
-	}
-	
 }
