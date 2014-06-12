@@ -1,5 +1,7 @@
 package core.ingame.input.interaction;
 
+import gameObject.body.BodyObject;
+import gameObject.body.BodyObjectType;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 import gameObject.interaction.player.Shuriken;
@@ -7,11 +9,13 @@ import gameObject.interaction.player.Shuriken;
 import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
-public class ActionMovement {
+public class ActionMovement implements RayCastCallback {
 	
 	private GameObject gameObject;
 	
@@ -27,6 +31,7 @@ public class ActionMovement {
 		return nextState;
 	}
 	
+//	BEGIN
 	private InteractionState begin(Set<ActionKey> actions, Click click) {
 		boolean inAction = gameObject.isInAction();
 		InteractionState nextState = null;
@@ -46,6 +51,7 @@ public class ActionMovement {
 		return nextState;
 	}
 	
+//	END
 	private InteractionState end(Set<ActionKey> actions) {
 		switch(gameObject.getInteractionState()) {	
 		case GRAB:
@@ -89,12 +95,14 @@ public class ActionMovement {
 		if(gameObject.canHide() && !(gameObject.isHiding() || gameObject.isHiding()))
 			return InteractionState.HIDE_START;
 		
-		if(gameObject.canPull() && !gameObject.isGrabbing())
+		if(gameObject.canGrab() && !gameObject.isGrabbing() && gameObject.startGrab())
 			return InteractionState.GRAB;
 		
-		if(gameObject.canDispose() && gameObject.isGrabbing())
+		if(gameObject.isGrabbing() && !gameObject.canDispose() && gameObject.endGrab())
+			return InteractionState.STAND;
+	
+		if(gameObject.canDispose() && gameObject.isGrabbing() && gameObject.disposeGrab())
 			return InteractionState.GRAB_DISPOSE;
-		
 		
 		return null;
 	}
@@ -104,6 +112,23 @@ public class ActionMovement {
 		Vector2 clickPoint = new Vector2(click.screenX, click.screenY);
 		gameObject.getGameWorld().getCamera().unproject(clickPoint);
 		return clickPoint;
-	}		
+	}	
+	
+	
+	@Override
+	public float reportRayFixture(Fixture fixture, Vector2 point,
+			Vector2 normal, float fraction) {
+		
+		if (((BodyObject) fixture.getBody().getUserData()).getBodyObjectType().equals(BodyObjectType.Ground)) {
+
+//			if (Debug.isMode(Debug.Mode.GEOMETRIC)) {
+//				Vector2 p = GameProperties.meterToPixel(point);
+//				new GeometricObject(new Circle(p.x - 5, p.y - 5, 5), Color.BLUE);
+//			}
+
+			return 0;
+		} else
+			return 1;
+	}
 
 }

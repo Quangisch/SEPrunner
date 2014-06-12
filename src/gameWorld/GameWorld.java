@@ -222,7 +222,7 @@ public class GameWorld implements IDrawable, Runnable {
 		return objects.add(object);
 	}
 
-	public boolean removeGameObject(BodyObject object) {
+	public boolean removeGameObject(GameObject object) {
 		return objects.remove(object);
 	}
 

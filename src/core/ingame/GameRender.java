@@ -27,7 +27,7 @@ public class GameRender implements Screen {
 	private GameWorld gameWorld;
 	private InputHandler iHandler;
 	private Camera camera;
-	private HUD hud;
+//	private HUD hud;
 
 	public GameRender(int level) {
 		loadResources(); //TODO

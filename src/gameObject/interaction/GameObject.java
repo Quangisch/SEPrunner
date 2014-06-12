@@ -21,7 +21,7 @@ public class GameObject extends ObjectInitializer
 //	TODO -> texture loading to ResourceManager
 	private int grounded, bodyBlocked;
 	private boolean canHide;
-	private GameObject canPull, canDispose;
+	private GameObject canGrab, canDispose;
 	private GameWorld gameWorld;
 
 	public GameObject(GameWorld gameWorld, Vector2 position) {
@@ -49,6 +49,124 @@ public class GameObject extends ObjectInitializer
 	}
 	
 	@Override
+	public int compareTo(GameObject other) {
+		return this.getAnimationObject().getLayer() - other.getAnimationObject().getLayer();
+	}
+	
+	public void dispose() {
+		getBodyObject().dispose();
+//		disposeTextures();
+	}
+
+//	GETTER GENERAL
+	@Override
+	public BodyObjectType getBodyObjectType() {
+		return getBodyObject().getBodyObjectType();
+	}
+
+	@Override
+	public void setBodyObjectType(BodyObjectType bodyObjectType) {
+		getBodyObject().setBodyObjectType(bodyObjectType);
+	}
+	
+	@Override
+	public AnimationObject getAnimationObject() {
+		return super.getAnimationObject();
+	}
+	
+	@Override
+	public BodyObject getBodyObject() {
+		return super.getBodyObject();
+	}
+	
+	@Override
+	public GameWorld getGameWorld() {
+		return gameWorld;
+	}
+	
+	@Override
+	public void removeFromGameWorld() {
+		gameWorld.removeGameObject(this);
+		getBodyObject().destroyBody();
+	}
+	
+	
+//	GETTER INTERACTION
+	@Override
+	public boolean isBodyBlocked() {
+		return bodyBlocked > 0;
+	}
+
+	@Override
+	public boolean isGrounded() {
+		return grounded > 0;
+	}
+	
+	@Override
+	public boolean decShuriken() {
+		if(shuriken <= 0)
+			return false;
+			
+		shuriken--;
+		return true;
+	}
+	
+	@Override
+	public int getShurikenQuantity() {
+		return shuriken;
+	}
+	
+	@Override
+	public boolean isInAction() {
+		if(isGrabbing() || isHiding() || isHooking() || isThrowing())
+			return true;
+		return false;
+	}
+	
+	@Override
+	public boolean canHide() {
+		return canHide;
+	}
+	
+	@Override
+	public boolean canGrab() {
+		return canGrab != null;
+	}
+	
+	@Override
+	public boolean canDispose() {
+		return canGrab() && canDispose != null;
+	}
+	
+	@Override
+	public boolean startGrab() {
+		if(canGrab()) {
+			getBodyObject().joinBodies(canGrab.getBodyObject());
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean endGrab() {
+		if(isGrabbing()) {
+			getBodyObject().uncoupleBodies();
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean disposeGrab() {
+		if(isGrabbing() && canDispose()) {
+//			TODO
+			endGrab();
+			canGrab.removeFromGameWorld();
+		}
+		return false;
+	}
+	
+//	COLLISION HANDLING
+	@Override
 	public boolean handleCollision(boolean start, Sensor mySensor,
 			BodyObject other, Sensor otherSensor) {
 		boolean handled = false;
@@ -71,100 +189,20 @@ public class GameObject extends ObjectInitializer
 //				TODO testing
 			} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
 					&& other.getParent().isStunned() && !isGrabbing()) {
-				canPull = start ? other.getParent() : null;
+				canGrab = start ? other.getParent() : null;
+				return true;
 				
 //				TODO testing
 			} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
-					&& canPull != null && isGrabbing()) {
+					&& canGrab != null && isGrabbing()) {
 				canDispose = start ? other.getParent() : null;
+				return true;
 			}
 				
 			
 		}
-		
-		
+
 		return handled;
-	}
-	
-	@Override
-	public int compareTo(GameObject other) {
-		return this.getAnimationObject().getLayer() - other.getAnimationObject().getLayer();
-	}
-	
-	public void dispose() {
-		getBodyObject().dispose();
-//		disposeTextures();
-	}
-	
-	@Override
-	public boolean isBodyBlocked() {
-		return bodyBlocked > 0;
-	}
-
-	@Override
-	public boolean isGrounded() {
-		return grounded > 0;
-	}
-
-	@Override
-	public BodyObjectType getBodyObjectType() {
-		return getBodyObject().getBodyObjectType();
-	}
-
-	@Override
-	public void setBodyObjectType(BodyObjectType bodyObjectType) {
-		getBodyObject().setBodyObjectType(bodyObjectType);
-	}
-	
-	@Override
-	public GameWorld getGameWorld() {
-		return gameWorld;
-	}
-	
-	@Override
-	public boolean decShuriken() {
-		if(shuriken <= 0)
-			return false;
-			
-		shuriken--;
-		return true;
-	}
-	
-	@Override
-	public int getShurikenQuantity() {
-		return shuriken;
-	}
-	
-	@Override
-	public AnimationObject getAnimationObject() {
-		return super.getAnimationObject();
-	}
-	
-	@Override
-	public BodyObject getBodyObject() {
-		return super.getBodyObject();
-	}
-	
-	@Override
-	public boolean isInAction() {
-		if(isGrabbing() || isHiding() || isHooking() || isThrowing())
-			return true;
-		return false;
-	}
-	
-	@Override
-	public boolean canHide() {
-		return canHide;
-	}
-	
-	@Override
-	public boolean canPull() {
-		return canPull != null;
-	}
-	
-	@Override
-	public boolean canDispose() {
-		return canPull() && canDispose != null;
 	}
 	
 }

@@ -23,6 +23,7 @@ public class BasicMovement {
 		return nextState;
 	}
 	
+//	BEGIN
 	private InteractionState begin(Set<ActionKey> actions) {
 		boolean inAction = gameObject.isInAction();
 		InteractionState nextState = null;
@@ -31,12 +32,20 @@ public class BasicMovement {
 			nextState = processJump();
 		if(!inAction && nextState == null && actions.contains(ActionKey.CROUCH))
 			nextState = processCrouch();
-		if(nextState == null && (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
+		if(nextState == null && (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT))) {
 			nextState = processMovement();
+			
+			if(nextState != null && nextState.equals(InteractionState.WALK) && actions.contains(ActionKey.RUN))
+				nextState = InteractionState.RUN;
+		}
 		
+		if(triggerRun(nextState))
+			nextState = InteractionState.RUN;
+			
 		return nextState;
 	}
 	
+//	END
 	private InteractionState end(Set<ActionKey> actions) {
 		switch(gameObject.getInteractionState()) {
 		case CROUCH_DOWN:
@@ -49,16 +58,16 @@ public class BasicMovement {
 			
 		case WALK:
 		case RUN:
-			if(!(actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
+			if(!(actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)) && gameObject.isGrounded())
 				return InteractionState.STAND;
 			else
 				return null;
 			
 		case JUMP:
 		case JUMP_MOVE:
-			if(gameObject.isGrounded())
+			if(!actions.contains(ActionKey.JUMP) && gameObject.isGrounded())
 				return InteractionState.STAND;
-			
+
 		default:
 			return null;
 		
@@ -82,6 +91,7 @@ public class BasicMovement {
 //	MOVEMENT
 	private InteractionState processMovement() {
 
+		
 		switch(gameObject.getInteractionState()) {
 		case CROUCH_STAND:
 		case CROUCH_DOWN:
@@ -94,6 +104,28 @@ public class BasicMovement {
 			return InteractionState.WALK;
 		default:
 			return null;
+		}	
+	}
+	
+//	RUN
+	private int RUN_TAP_TIMER_MAX = 20,
+			RUN_TAP_TIMER_MIN = 5;
+	private int runTapTimer = 0;
+	private boolean triggerRun(InteractionState nextState) {
+
+		System.out.println(runTapTimer);
+		if(nextState != null && nextState.equals(InteractionState.WALK) && runTapTimer == 0)
+			runTapTimer++;
+		else if(nextState == null && runTapTimer >= 1 && runTapTimer <= RUN_TAP_TIMER_MAX)
+			runTapTimer++;
+		else if(nextState != null && nextState.equals(InteractionState.WALK) && runTapTimer > RUN_TAP_TIMER_MIN) {
+			runTapTimer = 0;
+			return true;
 		}
+		
+		if(runTapTimer >= RUN_TAP_TIMER_MAX)
+			runTapTimer = 0;
+		
+		return false;
 	}
 }

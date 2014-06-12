@@ -3,54 +3,35 @@ package core.ingame.input.interaction;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import core.ingame.input.IInputHandler;
-import core.ingame.input.KeyMap.ActionKey;
-
-public class InputToInteraction implements Runnable{
+public class InputToInteraction {
 	
-	private IInputHandler iHandler;
-	private GameObject gameObject;
+	private InteractionHandler interactionHandler;
 	private ActionMovement actionMovement;
 	private BasicMovement basicMovement;
 	
+	private GameObject gameObject;
 	private InteractionState nextState, interruptedState;
-
-	private Set<ActionKey> pressedActionKeys;
 	
-	public InputToInteraction(IInputHandler iHandler, GameObject gameObject) {
-		this.iHandler = iHandler;
-		this.gameObject = gameObject;
+	protected InputToInteraction(InteractionHandler interactionHandler) {
+		this.interactionHandler = interactionHandler;
+		this.gameObject = interactionHandler.getGameObject();
 		
-		pressedActionKeys = new HashSet<ActionKey>();
 		actionMovement = new ActionMovement(gameObject);
 		basicMovement = new BasicMovement(gameObject);
 	}
 	
-	public void run() {
-		
-		processInput();
+	protected void process() {
 		mapInputToState();
 		tryToSetState();
 	}
 	
-	private void processInput() {
-		for(ActionKey aK : ActionKey.values()) {
-			if(iHandler.isKeyDown(aK) || iHandler.isButtonDown(aK))
-				pressedActionKeys.add(aK);
-			else
-				pressedActionKeys.remove(aK);
-		}
-	}
 	
 	private void mapInputToState() {
 		nextState = processInteractionTransition();
 		if(nextState == null)
-			nextState = actionMovement.process(pressedActionKeys, iHandler.popClick());
+			nextState = actionMovement.process(interactionHandler.getPressedActionKeys(), interactionHandler.popClick());
 		if(nextState == null)
-			nextState = basicMovement.process(pressedActionKeys);
+			nextState = basicMovement.process(interactionHandler.getPressedActionKeys());
 	}
 	
 	private InteractionState processInteractionTransition() {
@@ -88,7 +69,7 @@ public class InputToInteraction implements Runnable{
 			final InteractionState currentState = gameObject.getInteractionState();
 			
 			if(gameObject.tryToApplyInteraction(nextState)) {
-//				System.out.println(gameObject.getInteractionState());
+				System.out.println(gameObject.getInteractionState());
 				
 				if(nextState.equals(InteractionState.THROW))
 					interruptedState = currentState;

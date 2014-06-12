@@ -14,9 +14,11 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.Disposable;
 
 import core.ingame.GameProperties;
@@ -38,7 +40,8 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	private Map<InteractionState, PolygonShape> boundingBoxMap;
 	
 	private GameObject parent;
-	private BodyObjectType bodyObjectType = BodyObjectType.Unspecified; 
+	private BodyObjectType bodyObjectType = BodyObjectType.Unspecified;
+	private Joint joint;
 
 	public BodyObject(World world, Vector2 position, GameObject parent) {		
 		this(world, position);
@@ -237,6 +240,30 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	@Override
 	public void setBodyObjectType(BodyObjectType bodyObjectType) {
 		this.bodyObjectType = bodyObjectType;
+	}
+
+	@Override
+	public void joinBodies(BodyObject bodyObject) {
+		if(joint != null)
+			uncoupleBodies();
+			
+		DistanceJointDef jointDef = new DistanceJointDef();
+		jointDef.bodyA = body;
+		jointDef.bodyB = bodyObject.body;
+		joint = parent.getGameWorld().getWorld().createJoint(jointDef);
+			
+		
+	}
+	
+	@Override
+	public void uncoupleBodies() {
+		parent.getGameWorld().getWorld().destroyJoint(joint);
+		joint = null;
+	}
+	
+	@Override
+	public void destroyBody() {
+		parent.getGameWorld().getWorld().destroyBody(body);
 	}
 
 }

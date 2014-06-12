@@ -129,5 +129,11 @@ public interface IBodyInitializer {
 	 * @param scale
 	 */
 	void setGravityScale(float scale);
+	
+	void joinBodies(BodyObject bodyObject);
+	
+	void uncoupleBodies();
+	
+	void destroyBody();
 
 }

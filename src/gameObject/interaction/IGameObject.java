@@ -30,7 +30,14 @@ public interface IGameObject {
 	
 	boolean canHide();
 	
-	boolean canPull();
+	boolean canGrab();
 	
 	boolean canDispose();
+	
+	
+	boolean startGrab();
+	
+	boolean endGrab();
+	
+	void removeFromGameWorld();
 }

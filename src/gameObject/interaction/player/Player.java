@@ -7,18 +7,17 @@ import misc.Debug;
 import com.badlogic.gdx.math.Vector2;
 
 import core.ingame.input.IInputHandler;
-import core.ingame.input.InteractionHandler;
-import core.ingame.input.interaction.InputToInteraction;
+import core.ingame.input.interaction.InteractionHandler;
 
 public class Player extends PlayerCollision {
 
 //	private InteractionHandler interactionHandler;
-	private InputToInteraction inputInteraction;
+	private InteractionHandler interactionHandler;
 	
 	public Player(IInputHandler inputHandler, GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
 //		interactionHandler = new InteractionHandler(inputHandler, this);
-		inputInteraction = new InputToInteraction(inputHandler, this);
+		interactionHandler = new InteractionHandler(inputHandler, this);
 		getGameWorld().getCamera().setToFollowMoveable(getBodyObject());
 	}
 
@@ -27,7 +26,7 @@ public class Player extends PlayerCollision {
 			return;
 		super.run();
 //		interactionHandler.run();
-		inputInteraction.run();
+		interactionHandler.run();
 	}
 
 	

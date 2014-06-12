@@ -20,7 +20,7 @@ import core.ingame.GameProperties;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
-public class InteractionHandler implements
+public class InteractionHandlerOld implements
 		IDetectable, Runnable, RayCastCallback {
 
 	private IInputHandler iHandler;
@@ -35,7 +35,7 @@ public class InteractionHandler implements
 
 	private Click click;
 
-	public InteractionHandler(IInputHandler iHandler, GameObject gameObject) {
+	public InteractionHandlerOld(IInputHandler iHandler, GameObject gameObject) {
 		this.iHandler = iHandler;
 		this.gameObject = gameObject;
 	}
@@ -455,11 +455,11 @@ public class InteractionHandler implements
 	}
 	
 	public boolean equals(Object object) {
-		if(object == null || !(object instanceof InteractionHandler))
+		if(object == null || !(object instanceof InteractionHandlerOld))
 			return false;
 		
 //		TODO equals for GameObject and IIHandler
-		InteractionHandler other = (InteractionHandler) object;
+		InteractionHandlerOld other = (InteractionHandlerOld) object;
 		return this.gameObject.equals(other.gameObject) && this.iHandler.equals(other.iHandler);
 	}
 	

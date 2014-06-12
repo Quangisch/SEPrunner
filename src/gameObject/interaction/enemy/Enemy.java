@@ -14,13 +14,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.utils.JsonValue;
 
-import core.ingame.input.InteractionHandler;
+import core.ingame.input.InteractionHandlerOld;
 
 public class Enemy extends GameObject implements Runnable {
 
 	protected IEnemyAI AI;
 	protected boolean stunned;
-	private InteractionHandler interactionHandler;
+	private InteractionHandlerOld interactionHandler;
 
 	public Enemy(GameWorld gameWorld, Vector2 position) {
 		super(gameWorld, position);
@@ -53,7 +53,7 @@ public class Enemy extends GameObject implements Runnable {
 		
 		if(interactionHandler == null || !interactionHandler.equals(ai)) {
 			AI = ai;
-			interactionHandler = new InteractionHandler(ai, this);
+			interactionHandler = new InteractionHandlerOld(ai, this);
 			AI.setEnemy(this);
 		}
 	}
