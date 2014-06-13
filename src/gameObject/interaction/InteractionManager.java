@@ -5,7 +5,7 @@ import gameObject.body.BodyObject;
 import gameObject.drawable.AnimationObject;
 import gameWorld.GameWorld;
 
-public abstract class InteractionManager implements IInteractionStateHandler {
+public abstract class InteractionManager implements IInteractionManageable {
 	
 	private GameWorld gameWorld;
 	private AnimationObject aniObject;

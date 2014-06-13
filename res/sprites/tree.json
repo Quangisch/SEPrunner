@@ -14,7 +14,7 @@
 		"stateframes" :	{
 							"stand" :	{
 										"frameDuration": 1,
-										"boundingBox" : [50,10 , 92,10, 92,238 , 50, 238],
+										"boundingBox" : [65,10 , 85,10, 85,238 , 65, 238],
 										"textureMap" : [	
 														[0, 160, 200, 330]
 														]

@@ -15,8 +15,12 @@ public enum InteractionState {
 	HOOK_FLY(true, true, Animation.LOOP), HOOK(false, true, Animation.NORMAL, "THROW"), THROW(false, true, Animation.NORMAL),
 
 	GRAB(true, true, Animation.NORMAL), GRAB_PULL(true, true, Animation.LOOP), GRAB_DISPOSE(false, true, Animation.NORMAL, "GRAB"),
+	
+	GRAB_START(false, true, Animation.NORMAL), GRAB_END(false, true, Animation.NORMAL),
 
-	STUNNED(true, true, Animation.LOOP);
+	STUNNED(true, true, Animation.LOOP), PULLED(true, false, Animation.LOOP),
+	
+	WIN(true, false, Animation.LOOP), LOSE(true, false, Animation.LOOP);
 	
 	private String animation;
 	private final boolean interruptable, action;

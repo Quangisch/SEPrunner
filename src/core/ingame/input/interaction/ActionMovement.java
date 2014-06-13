@@ -33,10 +33,9 @@ public class ActionMovement  {
 	
 //	BEGIN
 	private InteractionState begin(Set<ActionKey> actions) {
-		boolean inAction = gameObject.isInAction();
 		InteractionState nextState = null;
 		
-		if(!inAction){	
+		if(!gameObject.isInAction()){	
 			if(actions.contains(ActionKey.HOOK))
 				nextState = processHookStart(iHandler.popClick());
 			
@@ -54,22 +53,28 @@ public class ActionMovement  {
 			nextState = processGrabbing();
 		processHiding();
 		
+
+		
+		
 		return nextState;
 	}
 	
 //	END
 	private InteractionState end(Set<ActionKey> actions) {
 		switch(gameObject.getInteractionState()) {	
-		
+		case GRAB_START:
+			return InteractionState.GRAB;
+		case GRAB_END:
+			return InteractionState.STAND;
 		case GRAB_PULL:
 			if(!(actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
 				return InteractionState.GRAB;
 			return null;
 		case GRAB_DISPOSE:
 //			if(gameObject.isInteractionFinished())
-			System.out.println("disposeStand");
-				gameObject.applyInteraction(InteractionState.STAND);
-//			return null;
+//			System.out.println("disposeStand");
+//				gameObject.applyInteraction(InteractionState.STAND);
+			return null;
 		case HIDE:
 			if(!actions.contains(ActionKey.ACTION))
 				return InteractionState.HIDE_END;
@@ -90,7 +95,6 @@ public class ActionMovement  {
 			
 			if(gameObject.getHookPoint() != null)
 				return InteractionState.HOOK;
-			
 		} 
 		
 		return null;
@@ -130,11 +134,13 @@ public class ActionMovement  {
 	
 //	ACTIONKEY
 	private InteractionState processActionKey() {
+		if(gameObject.canGrab() && !gameObject.isGrabbing() && gameObject.startGrab()) {
+			iHandler.keyUp(ActionKey.ACTION);
+			return InteractionState.GRAB_START;
+		}
+		
 		if(!gameObject.isInAction() && gameObject.canHide() && !gameObject.isHiding())
 			return InteractionState.HIDE_START;
-		
-		if(gameObject.canGrab() && !gameObject.isGrabbing() && gameObject.startGrab())
-			return InteractionState.GRAB;
 		
 		return null;
 	}
@@ -144,11 +150,11 @@ public class ActionMovement  {
 		if(gameObject.isHiding()) {
 			if(gameObject.getInteractionState().equals(InteractionState.HIDE_START)) {
 				ani.setAlpha(ani.getAlpha()-0.01f);
-				ani.setLayer(-1);
 			} else if(gameObject.getInteractionState().equals(InteractionState.HIDE_END)) {
 				ani.setAlpha(ani.getAlpha()+0.01f);
 				ani.setLayer(3);
-			}
+			} else
+				ani.setLayer(-1);
 				
 		} else
 			ani.setAlpha(1);
@@ -157,11 +163,12 @@ public class ActionMovement  {
 	private InteractionState processGrabbing() {
 		if(iHandler.isKeyDown(ActionKey.ACTION)) {
 			if(gameObject.isGrabbing() && !gameObject.canDispose() && gameObject.endGrab()) {
-				return InteractionState.STAND;
+				iHandler.keyUp(ActionKey.ACTION);
+				return InteractionState.GRAB_END;
 			}
 		
 			if(gameObject.canDispose() && gameObject.isGrabbing() && gameObject.disposeGrab()) {
-				System.out.println("disposeStand");
+				iHandler.keyUp(ActionKey.ACTION);
 				return InteractionState.STAND;
 			}
 		}

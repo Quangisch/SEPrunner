@@ -1,7 +1,7 @@
 package gameObject.interaction;
 
 
-public interface IInteractionStateHandler {
+public interface IInteractionManageable {
 
 	InteractionState getInteractionState();
 

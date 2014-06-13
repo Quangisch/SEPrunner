@@ -130,10 +130,17 @@ public interface IBodyInitializer {
 	 */
 	void setGravityScale(float scale);
 	
+	/**
+	 * Creates a DistanceJoint between both bodies.
+	 * @param bodyObject
+	 */
+	
 	void joinBodies(BodyObject bodyObject);
 	
-	void uncoupleBodies();
-	
-	void destroyBody();
+	/**
+	 * Uncouples and destroys Joint.
+	 * @return uncoupled GameObject
+	 */
+	GameObject uncoupleBodies();
 
 }

@@ -39,7 +39,7 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	private List<Sensor> sensors;
 	private Map<InteractionState, PolygonShape> boundingBoxMap;
 	
-	private GameObject parent;
+	private GameObject parent, jointObject;
 	private BodyObjectType bodyObjectType = BodyObjectType.Unspecified;
 	private Joint joint;
 
@@ -243,29 +243,31 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	}
 
 	@Override
-	public void joinBodies(BodyObject bodyObject) {
+	public void joinBodies(final BodyObject bodyObject) {
 		if(joint != null)
 			uncoupleBodies();
 			
 		DistanceJointDef jointDef = new DistanceJointDef();
 		jointDef.bodyA = body;
 		jointDef.bodyB = bodyObject.body;
+		jointDef.length = 0.5f;
 		joint = parent.getGameWorld().getWorld().createJoint(jointDef);
-			
-		
+		jointObject = bodyObject.getParent();
+	}
+	
+	public GameObject getJointGameObject() {
+		return jointObject;
 	}
 	
 	@Override
-	public void uncoupleBodies() {
-		if(joint != null)
+	public GameObject uncoupleBodies() {
+		if(joint != null) {
+			final GameObject g = jointObject;
 			parent.getGameWorld().getWorld().destroyJoint(joint);
-		
-		joint = null;
+			joint = null;
+			jointObject = null;
+			return g;
+		}
+		return null;
 	}
-	
-	@Override
-	public void destroyBody() {
-		parent.getGameWorld().getWorld().destroyBody(body);
-	}
-
 }

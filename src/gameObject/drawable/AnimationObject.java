@@ -7,6 +7,7 @@ import java.util.Map;
 
 import misc.Debug;
 import misc.Debug.Mode;
+import box2dLight.RayHandler;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,11 +19,14 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 	private Animation animation;
 	private float stateTime;
 
-	public AnimationObject(Vector2 position) {
-		super(position);
-		
+	public AnimationObject(RayHandler rayHandler, Vector2 position) {
+		super(rayHandler, position);
 		animationMap = new HashMap<InteractionState, Animation>();
 		stateTime = 0;
+	}
+	
+	public AnimationObject(Vector2 position) {
+		this(null, position);
 	}
 	
 	@Override

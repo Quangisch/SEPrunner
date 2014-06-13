@@ -35,7 +35,8 @@ public class BasicMovement {
 			nextState = processJump();
 		if(!inAction && nextState == null && actions.contains(ActionKey.CROUCH))
 			nextState = processCrouch();
-		if(nextState == null && (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
+		if(nextState == null && gameObject.isInteractionFinished() 
+				&& (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
 			nextState = processMovement();
 		
 		if(triggerRun(nextState) || (nextState != null && nextState.equals(InteractionState.WALK) && actions.contains(ActionKey.RUN)))
@@ -113,7 +114,11 @@ public class BasicMovement {
 		case CROUCH_DOWN:
 			return InteractionState.CROUCH_SNEAK;
 		case GRAB:
-			return InteractionState.GRAB_PULL;
+			if((!gameObject.getAnimationObject().isFlipped() && iHandler.isKeyDown(ActionKey.LEFT))
+					|| (gameObject.getAnimationObject().isFlipped() && iHandler.isKeyDown(ActionKey.RIGHT)))
+				return InteractionState.GRAB_PULL;
+			
+			return null;
 		case JUMP:
 			return InteractionState.JUMP_MOVE;
 		case STAND:

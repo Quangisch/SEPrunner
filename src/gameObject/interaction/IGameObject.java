@@ -7,18 +7,11 @@ import gameWorld.GameWorld;
 public interface IGameObject {
 
 	void init(String name);
-	
-	
-	
+
 	GameWorld getGameWorld();
 	
 	AnimationObject getAnimationObject();
 	
-	BodyObject getBodyObject();
-	
-	void removeFromGameWorld();
-	
-	
-	
+	BodyObject getBodyObject();	
 	
 }

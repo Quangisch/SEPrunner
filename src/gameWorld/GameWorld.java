@@ -17,6 +17,7 @@ import java.util.List;
 
 import misc.Debug;
 import misc.StringFunctions;
+import box2dLight.RayHandler;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -45,6 +47,7 @@ public class GameWorld implements IDrawable, Runnable {
 	private Camera camera;
 	private List<GameObject> objects;
 	private Player player;
+	private RayHandler rayHandler;
 
 	private float timeLimit, time = 0;
 
@@ -53,7 +56,7 @@ public class GameWorld implements IDrawable, Runnable {
 		this.iHandler = iHandler;
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
-
+		
 		switch (level) {
 		case 1:
 			loadMap("res/map/level1.json");
@@ -115,8 +118,13 @@ public class GameWorld implements IDrawable, Runnable {
 
 		if (debugRender != null && (Debug.isMode(Debug.Mode.BOXRENDERER) || Debug.isMode(Debug.Mode.CAMERA)))
 			debugRender.render(world, debugMatrix);
+		
+//		TODO
+//		if(rayHandler != null) {
+//			rayHandler.setCombinedMatrix(camera.combined);
+//			rayHandler.updateAndRender();
+//		}
 
-		world.clearForces();
 	}
 
 	private void loadMap(String json) throws NullPointerException {
@@ -181,6 +189,8 @@ public class GameWorld implements IDrawable, Runnable {
 
 		world.setContactFilter(new CollisionHandler.MoverContactFilter());
 		world.setContactListener(new CollisionHandler());
+		world.setAutoClearForces(true);
+		rayHandler = new RayHandler(world);
 	}
 
 	private void loadMapObject(JsonValue root) throws NullPointerException {
@@ -199,7 +209,7 @@ public class GameWorld implements IDrawable, Runnable {
 			if (root.hasChild("AI")) ((Enemy) obj).setNewAI(root.get("AI"));
 			break;
 		case 2:
-			obj = new Hideout(this, pos);
+			obj = new Hideout(this, rayHandler, pos);
 			break;
 		case -1:
 		default:
@@ -223,6 +233,7 @@ public class GameWorld implements IDrawable, Runnable {
 	}
 
 	public boolean removeGameObject(GameObject object) {
+		object.dispose();
 		return objects.remove(object);
 	}
 
@@ -236,6 +247,10 @@ public class GameWorld implements IDrawable, Runnable {
 
 	public Camera getCamera() {
 		return camera;
+	}
+	
+	public RayHandler getRayHandler() {
+		return rayHandler;
 	}
 
 	private static class MapTexture {

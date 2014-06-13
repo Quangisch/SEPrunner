@@ -1,5 +1,8 @@
 package gameObject.drawable;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -14,22 +17,37 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 	private float alpha = 1;
 	private float scale = 1;
 	private float rotation = 0;
-	
 	private Vector2 position;
+	private RayHandler rayHandler;
+	
+	public DrawableObject(RayHandler rayHandler, Vector2 position) {
+		this.rayHandler = rayHandler;
+		this.position = position;
+		if(rayHandler != null)
+			iniLight();
+	}
+	
+	PointLight p;
+	private void iniLight() {
+		p = new PointLight(rayHandler, 32, Color.GREEN, 1, 0, 0);
+	}
 	
 	public DrawableObject(Vector2 position) {
-		this.position = position;
+		this(null, position);
 	}
 
 	public void draw(SpriteBatch batch, TextureRegion textureRegion) {
 		if (!visible || textureRegion == null) 
 			return;
 
-		batch.setColor(1, 1, 1, alpha);
 		
+		batch.setColor(1, 1, 1, alpha);
 		batch.draw(textureRegion.getTexture(), position.x, position.y, textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2, /* origin */
 				textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), scale, scale, rotation, textureRegion.getRegionX(),
 				textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
+		if(p != null)
+			p.setPosition(position);
+		
 		batch.setColor(Color.WHITE);
 	}
 	

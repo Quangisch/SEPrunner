@@ -45,6 +45,22 @@ public abstract class InteractionObject
 		grounded += start ? 1 : -1;
 	}
 	
+	protected void manageGrabTarget() {
+		if(isGrabbing()) {
+//			TODO hack
+			if(grabTarget == null && getBodyObject().getJointGameObject() != null)
+				grabTarget = getBodyObject().getJointGameObject();
+			
+			if(getInteractionState().equals(InteractionState.GRAB_PULL) 
+					&& !grabTarget.getInteractionState().equals(InteractionState.PULLED))
+				grabTarget.applyInteraction(InteractionState.PULLED);
+			
+			if(!getInteractionState().equals(InteractionState.GRAB_PULL)
+					&& !grabTarget.getInteractionState().equals(InteractionState.STUNNED))
+				grabTarget.applyInteraction(InteractionState.STUNNED);
+		}
+	}
+	
 	@Override
 	public boolean isBodyBlocked() {
 		return bodyBlocked > 0;
@@ -97,17 +113,21 @@ public abstract class InteractionObject
 	@Override
 	public boolean endGrab() {
 		if(isGrabbing()) {
-			getBodyObject().uncoupleBodies();
+			grabTarget = getBodyObject().uncoupleBodies();
 			return true;
 		}
 		return false;
 	}
+	
+
 	
 	@Override
 	public boolean disposeGrab() {
 		if(isGrabbing() && canDispose()) {
 			endGrab();
 			grabTarget.dispose();
+			grabTarget = null;
+			return true;
 		}
 		return false;
 	}
@@ -213,12 +233,12 @@ public abstract class InteractionObject
 						&& other.getParent().isStunned() && !isGrabbing()) {
 					grabTarget = start ? other.getParent() : null;
 					return true;
-					
-//					TODO testing
+
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& grabTarget != null && isGrabbing()) {
 					disposeTarget = start ? other.getParent() : null;
 					return true;
+					
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& !isInAction()) {
 					canHide = start ? other.getParent() : null;
