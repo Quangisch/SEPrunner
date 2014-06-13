@@ -129,12 +129,12 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		if (debugRender != null && (Debug.isMode(Debug.Mode.BOXRENDERER) || Debug.isMode(Debug.Mode.CAMERA)))
 			debugRender.render(world, debugMatrix);
 
-//		if(!Debug.isOn()) {
+		if(!Debug.isMode(Debug.Mode.LIGHTS_OFF)) {
 			rayHandler.setCombinedMatrix(camera.combined);
 			rayHandler.updateAndRender();
-			batch.begin();
-//		}
-			
+		}
+		
+		batch.begin();
 		
 	}
 
@@ -198,10 +198,8 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 										l.getFloat("directionDegree"), l.getFloat("coneDegree"));
 					break;
 				case 1: new DirectionalLight(rayHandler, rays, color, l.getFloat("directionDegree"));
-					System.out.println("newDirectionLight");
 					break;
 				case 2: new PointLight(rayHandler, rays, color, l.getFloat("distance"), l.getFloat("x"), mapTextures[0].texture.getHeight() - l.getFloat("y"));
-					System.out.println("newPointLight");
 					break;
 				}
 			}

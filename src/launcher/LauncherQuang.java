@@ -11,6 +11,7 @@ import core.ingame.GameProperties.GameState;
 public class LauncherQuang {
 	
 	public static void main(String[] args) {
+		
 
 		GameProperties.setGameState(GameState.INGAME);
 		

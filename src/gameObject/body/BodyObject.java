@@ -272,7 +272,7 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	}
 	
 	@Override
-	public Body getBody() {
-		return body;
+	public List<Sensor> getSensors() {
+		return sensors;
 	}
 }
