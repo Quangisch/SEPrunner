@@ -12,7 +12,7 @@ import misc.GeometricObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -52,10 +52,9 @@ public class GameRender implements Screen {
 	public void dispose() {
 		batch.dispose();
 		ResourceManager.getInstance().dispose();
-
+		gameWorld.dispose();
 		for (Disposable d : geometrics)
 			d.dispose();
-
 	}
 
 	public boolean addGeometricObject(GeometricObject geo) {
@@ -90,8 +89,8 @@ public class GameRender implements Screen {
 
 		if (Debug.isMode(Debug.Mode.CONSOLE)) log.log();
 
-		Gdx.gl.glClearColor(255, 255, 255, 1);//(0,0,0,1)
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(0,0,0, 1);//(0,0,0,1)
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);

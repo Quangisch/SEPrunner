@@ -5,7 +5,6 @@ import gameObject.body.BodyObjectType;
 import gameObject.body.IIdentifiable;
 import gameObject.drawable.AnimationObject;
 import gameWorld.GameWorld;
-import box2dLight.RayHandler;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -15,23 +14,19 @@ public class GameObject extends ObjectInitializer
 	Comparable<GameObject>, Runnable, Disposable {
 
 //	TODO -> texture loading to ResourceManager
-
-	public GameObject(GameWorld gameWorld, RayHandler rayHandler, Vector2 position) {
-		super(gameWorld);
-		iniLink(new AnimationObject(rayHandler, position), 
-				new BodyObject(gameWorld.getWorld(), position, this));
-	}
-	
 	public GameObject(GameWorld gameWorld, Vector2 position) {
-		this(gameWorld, null, position);
+		super(gameWorld);
+		iniLink(new AnimationObject(gameWorld.getRayHandler(), position), 
+				new BodyObject(gameWorld.getWorld(), position, this));
 	}
 
 	public void run() {
 		// update drawPosition depending on bodyObjectPosition
 		getAnimationObject().setPosition(getBodyObject().getPosition());
 		
-		// update grabTarget Position depending on own InteractionState 
-		manageGrabTarget();
+		// update visuals/transitions
+		processInteractionTransitions();
+
 	}
 
 	@Override

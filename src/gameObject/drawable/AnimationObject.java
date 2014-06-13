@@ -18,15 +18,11 @@ public class AnimationObject extends DrawableObject implements IAnimatedDrawable
 	private Map<InteractionState, Animation> animationMap;
 	private Animation animation;
 	private float stateTime;
-
+	
 	public AnimationObject(RayHandler rayHandler, Vector2 position) {
 		super(rayHandler, position);
 		animationMap = new HashMap<InteractionState, Animation>();
 		stateTime = 0;
-	}
-	
-	public AnimationObject(Vector2 position) {
-		this(null, position);
 	}
 	
 	@Override

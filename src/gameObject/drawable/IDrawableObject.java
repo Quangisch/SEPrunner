@@ -84,5 +84,9 @@ interface IDrawableObject {
 	 * @param scale factor as float
 	 */
 	void setScale(float scale);
+	
+	boolean isActive();
+	
+	void setActive(boolean active);
 
 }

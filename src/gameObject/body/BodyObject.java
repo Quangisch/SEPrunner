@@ -270,4 +270,9 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 		}
 		return null;
 	}
+	
+	@Override
+	public Body getBody() {
+		return body;
+	}
 }

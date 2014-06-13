@@ -1,9 +1,9 @@
 package gameObject.interaction;
 
-import misc.Debug;
 import gameObject.body.BodyObject;
 import gameObject.drawable.AnimationObject;
 import gameWorld.GameWorld;
+import misc.Debug;
 
 public abstract class InteractionManager implements IInteractionManageable {
 	
@@ -14,11 +14,10 @@ public abstract class InteractionManager implements IInteractionManageable {
 	private InteractionState defaultState;
 	private InteractionState currentState;
 	
-	
 	protected InteractionManager(GameWorld gameWorld) {
 		this.gameWorld = gameWorld;
 	}
-	
+
 	protected void iniLink(AnimationObject aniObject, BodyObject bodyObject) {
 		this.aniObject = aniObject;
 		this.bodyObject = bodyObject;
@@ -35,8 +34,6 @@ public abstract class InteractionManager implements IInteractionManageable {
 	protected BodyObject getBodyObject() {
 		return bodyObject;
 	}
-	
-	
 	
 	protected void setDefaultInteractionState(InteractionState defaultState) {
 		if(defaultState != null) {

@@ -17,8 +17,12 @@ import java.util.List;
 
 import misc.Debug;
 import misc.StringFunctions;
+import box2dLight.ConeLight;
+import box2dLight.DirectionalLight;
+import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
@@ -26,8 +30,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -36,7 +40,7 @@ import core.ingame.GameProperties;
 import core.ingame.IDrawable;
 import core.ingame.input.IInputHandler;
 
-public class GameWorld implements IDrawable, Runnable {
+public class GameWorld implements IDrawable, Runnable, Disposable {
 
 	private IInputHandler iHandler;
 	private Box2DDebugRenderer debugRender;
@@ -99,6 +103,8 @@ public class GameWorld implements IDrawable, Runnable {
 
 		//		TODO
 		calcTime(deltaTime);
+		
+		
 
 		debugMatrix = new Matrix4(camera.combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
@@ -116,15 +122,20 @@ public class GameWorld implements IDrawable, Runnable {
 		for (GameObject o : objects)
 			o.getAnimationObject().draw(batch, deltaTime);
 
+
+		
+		batch.end();
+		
 		if (debugRender != null && (Debug.isMode(Debug.Mode.BOXRENDERER) || Debug.isMode(Debug.Mode.CAMERA)))
 			debugRender.render(world, debugMatrix);
-		
-//		TODO
-//		if(rayHandler != null) {
-//			rayHandler.setCombinedMatrix(camera.combined);
-//			rayHandler.updateAndRender();
-//		}
 
+//		if(!Debug.isOn()) {
+			rayHandler.setCombinedMatrix(camera.combined);
+			rayHandler.updateAndRender();
+			batch.begin();
+//		}
+			
+		
 	}
 
 	private void loadMap(String json) throws NullPointerException {
@@ -140,6 +151,8 @@ public class GameWorld implements IDrawable, Runnable {
 			world = new World(new Vector2(root.get("gravity").getFloat(0), root.get("gravity").getFloat(1)), false);
 
 		timeLimit = root.getFloat("timelimit");
+		
+
 
 		// TEXTURE
 		JsonValue mapTextureData = root.get("mapTexture");
@@ -162,11 +175,43 @@ public class GameWorld implements IDrawable, Runnable {
 		goal.addFixture(0, 0, 0, true, g, true);
 		goal.setBodyObjectType(BodyObjectType.Goal);
 		
+		
+		// LIGHTS
+		rayHandler = new RayHandler(world);
+		rayHandler.setCulling(true);	
+		rayHandler.setBlur(true);
+		rayHandler.setShadows(true);
+		rayHandler.setAmbientLight(1,1,1,0.1f);
+		
+		JsonValue jLights = root.get("light");
+		if(jLights != null) {
+			for(JsonValue l : jLights) {
+				
+				int rays = l.getInt("rays");
+				JsonValue c = l.get("color");
+				Color color = new Color(c.getFloat(0), c.getFloat(1), c.getFloat(2), c.getFloat(3));
+				
+				switch (StringFunctions.getMostEqualIndexIgnoreCase(l.getString("type"), 
+						new String[] { "coneLight", "directionalLight", "pointLight" })) {
+				
+				case 0: new ConeLight(rayHandler, rays, color, l.getFloat("distance"), l.getFloat("x"), mapTextures[0].texture.getHeight() - l.getFloat("y"), 
+										l.getFloat("directionDegree"), l.getFloat("coneDegree"));
+					break;
+				case 1: new DirectionalLight(rayHandler, rays, color, l.getFloat("directionDegree"));
+					System.out.println("newDirectionLight");
+					break;
+				case 2: new PointLight(rayHandler, rays, color, l.getFloat("distance"), l.getFloat("x"), mapTextures[0].texture.getHeight() - l.getFloat("y"));
+					System.out.println("newPointLight");
+					break;
+				}
+			}
+		}		
+		
 		// GROUND
-		JsonValue JGrounds = root.get("ground");
+		JsonValue jGrounds = root.get("ground");
 		BodyObject ground = new BodyObject(world, new Vector2(0, 0));
 
-		for (JsonValue JGround : JGrounds) {
+		for (JsonValue JGround : jGrounds) {
 			ChainShape p = new ChainShape();
 			Vector2[] vertices = new Vector2[JGround.size / 2];
 			for (int i = 0; i < vertices.length; i++) {
@@ -190,7 +235,7 @@ public class GameWorld implements IDrawable, Runnable {
 		world.setContactFilter(new CollisionHandler.MoverContactFilter());
 		world.setContactListener(new CollisionHandler());
 		world.setAutoClearForces(true);
-		rayHandler = new RayHandler(world);
+		
 	}
 
 	private void loadMapObject(JsonValue root) throws NullPointerException {
@@ -209,7 +254,7 @@ public class GameWorld implements IDrawable, Runnable {
 			if (root.hasChild("AI")) ((Enemy) obj).setNewAI(root.get("AI"));
 			break;
 		case 2:
-			obj = new Hideout(this, rayHandler, pos);
+			obj = new Hideout(this, pos);
 			break;
 		case -1:
 		default:
@@ -263,5 +308,16 @@ public class GameWorld implements IDrawable, Runnable {
 			this.y = y;
 			this.texture = new Texture(texturePath);
 		}
+	}
+
+	@Override
+	public void dispose() {
+		debugRender.dispose();
+		for(MapTexture t : mapTextures)
+			t.texture.dispose();
+		world.dispose();
+		for(GameObject g : objects)
+			g.dispose();
+		rayHandler.dispose();
 	}
 }

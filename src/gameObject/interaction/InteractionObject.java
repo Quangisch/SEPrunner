@@ -27,7 +27,8 @@ public abstract class InteractionObject
 	
 	private int shuriken = 10;
 	private int grounded, bodyBlocked;
-	private GameObject grabTarget, disposeTarget, canHide;
+	private boolean hookable;
+	private GameObject grabTarget, disposeTarget, hideTarget;
 
 	private Vector2 hookPoint;
 	private List<Vector2> hookPoints = new LinkedList<Vector2>();
@@ -45,7 +46,12 @@ public abstract class InteractionObject
 		grounded += start ? 1 : -1;
 	}
 	
-	protected void manageGrabTarget() {
+	protected void processInteractionTransitions() {
+		processGrabTarget();
+		processHideTarget();
+	}
+	
+	private void processGrabTarget() {
 		if(isGrabbing()) {
 //			TODO hack
 			if(grabTarget == null && getBodyObject().getJointGameObject() != null)
@@ -58,6 +64,14 @@ public abstract class InteractionObject
 			if(!getInteractionState().equals(InteractionState.GRAB_PULL)
 					&& !grabTarget.getInteractionState().equals(InteractionState.STUNNED))
 				grabTarget.applyInteraction(InteractionState.STUNNED);
+		}
+	}
+	
+	private void processHideTarget() {
+		if(isHiding()) {
+			hideTarget.getAnimationObject().setActive(false);
+			if(getInteractionState().equals(InteractionState.HIDE_END))
+				hideTarget.getAnimationObject().setActive(true);
 		}
 	}
 	
@@ -88,7 +102,7 @@ public abstract class InteractionObject
 	
 	@Override
 	public boolean canHide() {
-		return canHide != null;
+		return hideTarget != null;
 	}
 	
 	@Override
@@ -146,9 +160,12 @@ public abstract class InteractionObject
 	public Vector2 getHookPoint() {
 		return hookPoint;
 	}
-	
+
 	@Override
 	public boolean tryToHook(Vector2 clickPoint) {
+		if(!hookable)
+			return false;
+		
 		Vector2 endPoint = clickPoint.cpy();
 		endPoint = GameProperties.pixelToMeter(endPoint);
 		Vector2 startPoint = getBodyObject().getLocalCenterInWorld();
@@ -169,6 +186,7 @@ public abstract class InteractionObject
 //				System.out.println("hookPoint @"+hookPoint.toString());
 				getBodyObject().applyImpulse(new Vector2(0,7));
 				getBodyObject().setGravityScale(0);
+				hookable = false;
 				return true;
 			}
 		} 
@@ -223,6 +241,8 @@ public abstract class InteractionObject
 						return true;
 					case SensorTypes.FOOT :
 						calcGroundedContact(start);
+						if(!hookable && isGrounded())
+							hookable = true;
 						return true;
 					default:
 						break;
@@ -232,16 +252,19 @@ public abstract class InteractionObject
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
 						&& other.getParent().isStunned() && !isGrabbing()) {
 					grabTarget = start ? other.getParent() : null;
+					other.getParent().getAnimationObject().setActive(canGrab());
 					return true;
 
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& grabTarget != null && isGrabbing()) {
 					disposeTarget = start ? other.getParent() : null;
+					other.getParent().getAnimationObject().setActive(canDispose());
 					return true;
 					
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& !isInAction()) {
-					canHide = start ? other.getParent() : null;
+					hideTarget = start ? other.getParent() : null;
+					other.getParent().getAnimationObject().setActive(canHide());
 					return true;
 					
 				} 

@@ -58,6 +58,67 @@
 
 
 				],
+				
+	"light" : 	[
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	600,
+						"y"			:	800,
+						"directionDegree"	:	270,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	1480,
+						"y"			:	1150,
+						"directionDegree"	:	200,
+						"coneDegree"		:	13
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	1620,
+						"y"			:	900
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 1, 0.7, 0.5],
+						"distance"	:	1000,
+						"x"			:	2400,
+						"y"			:	1500
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	3770,
+						"y"			:	930,
+						"directionDegree"	:	230,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	3970,
+						"y"			:	880,
+						"directionDegree"	:	270,
+						"coneDegree"		:	40
+					}
+	
+	
+				],
 	"music" : "map1.mp3",
 	"shurikans" : 10,
 	"objects" :	[

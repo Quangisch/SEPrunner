@@ -39,7 +39,8 @@ public class ActionMovement  {
 			if(actions.contains(ActionKey.HOOK))
 				nextState = processHookStart(iHandler.popClick());
 			
-			if(nextState == null && actions.contains(ActionKey.THROW) && iHandler.getClass() != null)
+			if(nextState == null && !gameObject.isCrouching()
+					&& actions.contains(ActionKey.THROW) && iHandler.getClick() != null)
 				nextState = processThrow(iHandler.popClick());
 			
 			if(nextState == null && actions.contains(ActionKey.ACTION))
@@ -86,6 +87,7 @@ public class ActionMovement  {
 		
 		}
 	}
+
 	
 //	HOOK
 	private InteractionState processHookStart(Click click) {
