@@ -65,13 +65,14 @@ public class MenuMain implements Screen {
 	@Override
 	public void show() {
 		stage = new Stage();
-		
+		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
 		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		
 		table = new Table(skin);
 		table.setFillParent(true);
+		
 		
 		//creating heading
 		Label heading = new Label(Project.TITLE, skin, "big"); //menu.Project	size-values in res/ui.menu.Skin.json

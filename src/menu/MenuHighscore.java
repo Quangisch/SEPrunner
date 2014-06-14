@@ -18,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import core.ingame.GameProperties;
+
 public class MenuHighscore implements Screen {
 	
 	private Texture backgroundTexture = new Texture(Gdx.files.internal("res/img/Highscore.png"));
@@ -53,7 +55,7 @@ public class MenuHighscore implements Screen {
 	@Override
 	public void show() {
 		stage = new Stage();
-		
+		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));

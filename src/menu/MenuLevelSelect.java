@@ -44,7 +44,7 @@ public class MenuLevelSelect implements Screen {
 	@Override
 	public void show() {
 		stage = new Stage();
-		
+		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
