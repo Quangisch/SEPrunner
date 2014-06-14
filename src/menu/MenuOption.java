@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import core.ingame.GameProperties;
+
 public class MenuOption implements Screen {
 	
 	private Stage stage;
@@ -43,13 +45,14 @@ public class MenuOption implements Screen {
 		stage.act(delta);
 		stage.draw();
 		
-//Table.drawDebug(stage);            // case debuglines needed 1/2
+//		Table.drawDebug(stage);            // case debuglines needed 1/2
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.setViewport(width, height, false);
+		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
 		table.invalidateHierarchy();
+//		stage.setViewport(width, height, true);
 	}
 
 	@Override
@@ -59,14 +62,17 @@ public class MenuOption implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
-		
 		table = new Table(skin);
 		table.setFillParent(true);
 		
-//table.debug();            // case debuglines needed 2/2
+//		table.debug();            // case debuglines needed 2/2
 		
 		final CheckBox vSyncCheckBox = new CheckBox("vSync", skin);
 		vSyncCheckBox.setChecked(Gdx.app.getPreferences(Project.TITLE).getBoolean("vsync"));
+		
+		final CheckBox fullScreenCheckBox = new CheckBox("fullScreen", skin);
+		fullScreenCheckBox.setChecked(Gdx.graphics.isFullscreen());
+				
 		
 		final TextField levelDirectoryInput = new TextField(levelDirectory().path(),skin);
 		levelDirectoryInput.setMessageText("level directory");
@@ -86,6 +92,8 @@ public class MenuOption implements Screen {
 					Gdx.graphics.setVSync(vSync());
 					
 					Gdx.app.log(Project.TITLE, "vSync " + (vSync() ? "enabled" : "disabled"));
+				} else if(event.getListenerActor() == fullScreenCheckBox) {
+					GameProperties.toogleFullScreen();
 				} else if(event.getListenerActor() == back) {
 					//save level directory					 // shortened if-statement: [boolean] ? [if true] 													   : [else] 			 // String#trim() removes spaces on both sides of the string
 					String actualLevelDirectory = levelDirectoryInput.getText().trim().equals("") ? Gdx.files.getExternalStoragePath() + Project.TITLE + "/levels" : levelDirectoryInput.getText().trim();
@@ -102,13 +110,12 @@ public class MenuOption implements Screen {
 		};
 		
 		vSyncCheckBox.addListener(buttonHandler);
-		
+		fullScreenCheckBox.addListener(buttonHandler);
 		back.addListener(buttonHandler);
-		
 		//putting stuff together
 		 table.add("Optionen").spaceBottom(20).colspan(3).expandX().row();
 	table.add("Grafik").uniformX().left();   		 table.add().uniformX();	      			  table.add(vSyncCheckBox).uniformX().row();
-	table.add(" Kontrast").left();   				 table.add("   <------->").left();   		  table.add().row();
+	table.add(" Kontrast").left();   				 table.add("   <------->").left();   		  table.add(fullScreenCheckBox).uniform().row();
 	table.add(" Helligkeit").spaceBottom(30).left(); table.add("   <------->").left().spaceBottom(30); table.add().spaceBottom(30).row();
 	table.add("Audio").left();   	  				 table.add();   			      			  table.add().row();
 	table.add(" Effekte").left();   				 table.add("   <------->").left();   		  table.add().row();

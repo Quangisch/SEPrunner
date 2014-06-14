@@ -11,18 +11,21 @@ import core.ingame.GameProperties.GameState;
 public class LauncherQuang {
 	
 	public static void main(String[] args) {
-		
 
-		GameProperties.setGameState(GameState.INGAME);
+		GameProperties.setGameState(GameState.MENU);
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "LibGDXTest";
 		cfg.useGL20 = true;
-		cfg.width = GameProperties.width /2;
-		cfg.height = GameProperties.height /2;
 //		cfg.fullscreen = true;
-
+		
+		int mode = 0;
+		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
+		System.out.println("Mode"+mode+": "+GameProperties.displayMode.toString());
+		
 		new LwjglApplication(new Project(), cfg);
+
 		
 	}
+	
 }

@@ -37,7 +37,7 @@ public class MenuLevelSelect implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.setViewport(width, height, false);
+		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
 		table.invalidateHierarchy();
 	}
 

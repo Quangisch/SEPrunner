@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
+import core.ingame.GameProperties.GameState;
 import core.ingame.input.InputHandler;
 
 public class GameRender implements Screen {
@@ -30,6 +31,7 @@ public class GameRender implements Screen {
 //	private HUD hud;
 
 	public GameRender(int level) {
+		GameProperties.setGameState(GameState.INGAME);
 		loadResources(); //TODO
 		camera = new Camera();
 		iHandler = new InputHandler(camera);
@@ -116,7 +118,7 @@ public class GameRender implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-
+		
 	}
 
 	@Override

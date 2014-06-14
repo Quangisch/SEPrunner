@@ -14,6 +14,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import core.ingame.GameProperties;
+import core.ingame.GameProperties.GameState;
+
 public class Splash implements Screen{
 
 	private SpriteBatch batch;
@@ -22,6 +25,7 @@ public class Splash implements Screen{
 	
 	@Override
 	public void render(float delta) {
+		GameProperties.setGameState(GameState.MENU);
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		

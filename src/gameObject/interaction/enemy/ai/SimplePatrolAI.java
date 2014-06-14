@@ -4,7 +4,6 @@ import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
 import gameObject.body.Sensor;
-import gameObject.interaction.GameObject;
 import misc.Debug;
 
 import com.badlogic.gdx.utils.JsonValue;
@@ -19,7 +18,7 @@ public class SimplePatrolAI extends EnemyAI {
 	//NILS
 	private ActionKey currentAction;
 	private boolean alarm;
-	private GameObject player;
+//	private GameObject player;
 	//NILS
 
 	float leftX, rightX;
@@ -95,7 +94,7 @@ public class SimplePatrolAI extends EnemyAI {
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
 							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){//TODO: hier einf�gen: && other.isDetectable
 					alarm = true;
-					player = other.getParent();
+//					player = other.getParent();
 					Debug.println("Alarm");
 				}
 				

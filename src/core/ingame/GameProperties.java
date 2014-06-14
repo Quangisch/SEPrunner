@@ -6,12 +6,15 @@ import misc.Debug.Mode;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameProperties {
-
-	public static int width = 1280;	//640
-	public static int height = 720; //360
+	
+	public static final int SCALE_WIDTH = 640;
+	public static final int SCALE_HEIGHT = 360;
+	
+	public static DisplayMode displayMode;
 
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
@@ -72,16 +75,25 @@ public class GameProperties {
 				|| (isInGameState() && prevState.isInGame())) {
 			return;
 		}
-
-		width = state.isMenu() ? 1280 : 640;
-		height = state.isMenu() ? 720 : 360; 
 		
-		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
-		Debug.println(width + "x" + height, Mode.CONSOLE);
+		if(displayMode == null)
+			displayMode = Gdx.graphics.getDesktopDisplayMode();
+		
+		Gdx.graphics.setDisplayMode(displayMode.width, displayMode.height, Gdx.graphics.isFullscreen());
+		Debug.println(displayMode.width + "x" + displayMode.height, Mode.CONSOLE);
 		
 		if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 		else			((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
 			
+	}
+	
+	public static void toogleFullScreen() {
+		if (Gdx.graphics.isFullscreen())
+			Gdx.graphics.setDisplayMode(GameProperties.SCALE_WIDTH, 
+					GameProperties.SCALE_HEIGHT, false);
+		else
+			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
+					Gdx.graphics.getDesktopDisplayMode().height, true);
 	}
 	
 	public static void toogleIngamePause() {

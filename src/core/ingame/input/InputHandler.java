@@ -83,11 +83,7 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		switch (keycode) {
 		// toogle Fullscreen
 		case Keys.ESCAPE:
-			if (Gdx.graphics.isFullscreen())
-				Gdx.graphics.setDisplayMode(GameProperties.width, GameProperties.height, false);
-			else
-				Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
-						Gdx.graphics.getDesktopDisplayMode().height, true);
+			GameProperties.toogleFullScreen();
 			break;
 
 		// toogle pause

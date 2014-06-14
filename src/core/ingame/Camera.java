@@ -13,7 +13,7 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 	private IBodyInitializer follow;
 	
 	public Camera() {
-		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());	
+		super.setToOrtho(false, GameProperties.SCALE_WIDTH, GameProperties.SCALE_HEIGHT);	
 	}
 	
 	public void update() {

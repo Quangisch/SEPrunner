@@ -22,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import core.ingame.GameProperties;
+
 public class MenuMain implements Screen {
 
 	private Texture backgroundTexture = new Texture(Gdx.files.internal("res/img/main menu.png"));
@@ -53,9 +55,11 @@ public class MenuMain implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+//		original height / original width x new width = new height
+		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
 		backgroundSprite.setSize(width, height);
-		stage.setViewport(width, height, false);
 		table.invalidateHierarchy();
+//		Gdx.graphics.setDisplayMode(width, height, false);	
 	}
 
 	@Override

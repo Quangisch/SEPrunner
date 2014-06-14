@@ -13,7 +13,6 @@ import misc.StringFunctions;
 import box2dLight.ConeLight;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.utils.JsonValue;
