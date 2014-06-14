@@ -79,7 +79,7 @@ public class GameProperties {
 		if(displayMode == null)
 			displayMode = Gdx.graphics.getDesktopDisplayMode();
 		
-		Gdx.graphics.setDisplayMode(displayMode.width, displayMode.height, Gdx.graphics.isFullscreen());
+		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
 		Debug.println(displayMode.width + "x" + displayMode.height, Mode.CONSOLE);
 		
 		if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());

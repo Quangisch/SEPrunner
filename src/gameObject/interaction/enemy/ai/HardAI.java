@@ -17,9 +17,8 @@ import core.ingame.input.KeyMap.ActionKey;
 public class HardAI extends EnemyAI {
 
 	private ActionKey currentAction;
-	private boolean alarm;
+//	private boolean alarm;
 	private GameObject player;
-
 
 	float leftX, rightX;
 
@@ -92,7 +91,7 @@ public class HardAI extends EnemyAI {
 				&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
 				&& mySensor != null
 				&& mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT){//TODO: hier einf�gen: && other.isDetectable
-			alarm = true;
+//			alarm = true;
 			player = other.getParent();
 			Debug.println("Alarm");
 		}

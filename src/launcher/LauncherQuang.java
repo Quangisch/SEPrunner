@@ -17,6 +17,7 @@ public class LauncherQuang {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "LibGDXTest";
 		cfg.useGL20 = true;
+		cfg.resizable = false;
 //		cfg.fullscreen = true;
 		
 		int mode = 0;

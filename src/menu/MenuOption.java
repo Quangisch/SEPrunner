@@ -45,14 +45,14 @@ public class MenuOption implements Screen {
 		stage.act(delta);
 		stage.draw();
 		
-//		Table.drawDebug(stage);            // case debuglines needed 1/2
+		Table.drawDebug(stage);            // case debuglines needed 1/2
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
 		table.invalidateHierarchy();
-//		stage.setViewport(width, height, true);
+		stage.setViewport(width, height, false);
 	}
 
 	@Override
