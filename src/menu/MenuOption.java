@@ -94,6 +94,8 @@ public class MenuOption implements Screen {
 					Gdx.app.log(Project.TITLE, "vSync " + (vSync() ? "enabled" : "disabled"));
 				} else if(event.getListenerActor() == fullScreenCheckBox) {
 					GameProperties.toogleFullScreen();
+					table.invalidateHierarchy();
+					stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
 				} else if(event.getListenerActor() == back) {
 					//save level directory					 // shortened if-statement: [boolean] ? [if true] 													   : [else] 			 // String#trim() removes spaces on both sides of the string
 					String actualLevelDirectory = levelDirectoryInput.getText().trim().equals("") ? Gdx.files.getExternalStoragePath() + Project.TITLE + "/levels" : levelDirectoryInput.getText().trim();
