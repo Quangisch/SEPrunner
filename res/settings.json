@@ -7,8 +7,8 @@ keymap: {
 	crouch: 47,
 	action: 33
 },
-brightness: 0.1599999964237213,
-contrast: 1.5,
-musicVolume: 0.5699999928474426,
+brightness: -0.019999999552965164,
+contrast: 0.9399999976158142,
+musicVolume: 0.1599999964237213,
 soundVolume: 0.32999998331069946
 }

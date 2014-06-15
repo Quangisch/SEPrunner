@@ -66,7 +66,8 @@ public class ResourceManager extends AssetManager {
 	}
 	
 	public static ResourceManager resetInstance() {
-		manager.dispose();
+		if(manager != null)
+			manager.dispose();
 		manager = null;
 		return getInstance();
 	}

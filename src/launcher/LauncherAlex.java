@@ -17,11 +17,13 @@ public class LauncherAlex {
 		cfg.title = Project.TITLE + " v" + Project.VERSION;
 		cfg.vSyncEnabled = true; //saves some cpu -> save in option menu
 		cfg.useGL20 = true;
+		cfg.width = GameProperties.SCALE_WIDTH;
+		cfg.height = GameProperties.SCALE_HEIGHT;
 //		cfg.fullscreen = true;
 		
 		int mode = 0;
 		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
-		System.out.println("Mode"+mode+": "+GameProperties.displayMode.toString());
+		System.out.println("DisplayMode "+mode+": "+GameProperties.displayMode.toString());
 		
 		new LwjglApplication(new Project(), cfg);
 	}							//start view project Z11 = first img set

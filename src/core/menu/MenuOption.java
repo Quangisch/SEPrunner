@@ -69,6 +69,7 @@ public class MenuOption implements Screen {
 		shaderBatch = new ShaderBatch(100);
 		backgroundTexture = new Texture(Gdx.files.internal(FilePath.graphic_menuMain));
 		backgroundSprite = new Sprite(backgroundTexture);
+		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		width = GameProperties.SCALE_WIDTH;
 		height = GameProperties.SCALE_HEIGHT;
@@ -276,8 +277,7 @@ public class MenuOption implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		System.out.println("resize"+width+"x"+height);
-		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
@@ -402,9 +402,10 @@ public class MenuOption implements Screen {
 				if(!keyMap.hasUnmappedActions())
 					((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 				else {
+					if(warning != null)
+						warning.remove();
 					warning = new Label("Unresolved\nAction Keys", skin, "baoli96", Color.RED);
-//					a.setPosition(width/2+a.getWidth()/2, height/2+a.getHeight()/2);
-					warning.setPosition(width-warning.getWidth()/2, height);
+					warning.setPosition(width-warning.getWidth()/2, height/2+warning.getHeight()/2);
 					warning.toFront();
 					stage.addActor(warning);
 				}

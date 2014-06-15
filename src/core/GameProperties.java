@@ -20,7 +20,7 @@ import core.menu.MenuMain;
 public class GameProperties {
 	
 	public static final int SCALE_WIDTH = 640;
-	public static final int SCALE_HEIGHT = 480;
+	public static final int SCALE_HEIGHT = 360;
 	
 	public static DisplayMode displayMode;
 

@@ -58,9 +58,9 @@ public class MenuMain implements Screen {
 	@Override
 	public void resize(int width, int height) {
 //		original height / original width x new width = new height
-		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
-		backgroundSprite.setSize(width, height);
-		table.invalidateHierarchy();
+//		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
+//		backgroundSprite.setSize(width, height);
+//		table.invalidateHierarchy();
 //		Gdx.graphics.setDisplayMode(width, height, false);	
 	}
 
@@ -71,6 +71,7 @@ public class MenuMain implements Screen {
 		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
 		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
+		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		table = new Table(skin);
 		table.setFillParent(true);

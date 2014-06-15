@@ -18,7 +18,8 @@ public class LauncherQuang {
 		cfg.title = "LibGDXTest";
 		cfg.useGL20 = true;
 		cfg.resizable = false;
-//		cfg.fullscreen = true;
+		cfg.width = GameProperties.SCALE_WIDTH;
+		cfg.height = GameProperties.SCALE_HEIGHT;
 		
 		int mode = 0;
 		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
