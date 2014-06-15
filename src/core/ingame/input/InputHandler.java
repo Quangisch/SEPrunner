@@ -6,7 +6,6 @@ import java.util.TreeSet;
 import misc.Debug;
 import misc.GeometricObject;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
@@ -14,9 +13,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 
+import core.GameProperties;
+import core.GameProperties.GameState;
 import core.ingame.Camera;
-import core.ingame.GameProperties;
-import core.ingame.GameProperties.GameState;
 import core.ingame.input.KeyMap.ActionKey;
 
 public class InputHandler implements IInputHandler, InputProcessor {
@@ -34,19 +33,20 @@ public class InputHandler implements IInputHandler, InputProcessor {
 	private void initKeyMap() {
 
 		keyMap = new KeyMap();
+		
+//		addActionKey(ActionKey.LEFT, Keys.A, Keys.LEFT);
+//		addActionKey(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
+//		addActionKey(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT);
+//
+//		addActionKey(ActionKey.JUMP, Keys.SPACE, Keys.UP);
+//		addActionKey(ActionKey.CROUCH, Keys.S, Keys.DOWN);
+//
+//		addActionKey(ActionKey.ACTION, Keys.E, Keys.ENTER);
 
-		addActionKey(ActionKey.LEFT, Keys.A, Keys.LEFT);
-		addActionKey(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
-		addActionKey(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT);
-
-		addActionKey(ActionKey.JUMP, Keys.SPACE, Keys.UP);
-		addActionKey(ActionKey.CROUCH, Keys.S, Keys.DOWN);
-
-		addActionKey(ActionKey.ACTION, Keys.E, Keys.ENTER);
-		addActionKey(ActionKey.THROW, Input.Buttons.LEFT);
-		addActionKey(ActionKey.HOOK, Input.Buttons.RIGHT);
+		keyMap.initFromFile();
 	}
-
+	
+	@Override
 	public void addActionKey(ActionKey action, int... keys) {
 		keyMap.add(action, keys);
 	}

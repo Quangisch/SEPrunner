@@ -1,12 +1,11 @@
 package launcher;
 
-import menu.Project;
-
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import core.ingame.GameProperties;
-import core.ingame.GameProperties.GameState;
+import core.GameProperties;
+import core.Project;
+import core.GameProperties.GameState;
 
 public class LauncherAlex {
 	

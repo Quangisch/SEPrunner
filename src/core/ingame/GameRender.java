@@ -8,19 +8,21 @@ import java.util.List;
 
 import misc.Debug;
 import misc.GeometricObject;
+import misc.ShaderBatch;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
+import core.GameProperties;
+import core.ResourceManager;
 import core.ingame.input.InputHandler;
 
 public class GameRender implements Screen {
 
-	private SpriteBatch batch;
+	private ShaderBatch batch;
 	private FPSLogger log;
 	private List<GeometricObject> geometrics = new ArrayList<GeometricObject>();
 
@@ -43,7 +45,7 @@ public class GameRender implements Screen {
 
 	@Override
 	public void show() {
-		batch = new SpriteBatch();
+		batch = new ShaderBatch(100);
 		log = new FPSLogger();
 		Gdx.input.setInputProcessor(iHandler);
 	}
@@ -70,7 +72,7 @@ public class GameRender implements Screen {
 
 		switch (GameProperties.getGameState()) {
 		case INGAME:
-			gameWorld.run();
+			
 			break;
 		case INGAME_LOSE:
 			System.out.println("GAME OVER");
@@ -87,12 +89,16 @@ public class GameRender implements Screen {
 
 		}
 
+		gameWorld.run();
 		if (Debug.isMode(Debug.Mode.CONSOLE)) log.log();
 
 		Gdx.gl.glClearColor(0,0,0, 1);//(0,0,0,1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
+		
+		batch.brightness = GameProperties.brightness;
+		batch.contrast = GameProperties.contrast;
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 

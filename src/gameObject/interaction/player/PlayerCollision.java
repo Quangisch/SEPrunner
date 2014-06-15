@@ -4,11 +4,12 @@ import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
+import gameObject.interaction.InteractionState;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;
 
-import core.ingame.GameProperties;
+import core.GameProperties;
 
 abstract class PlayerCollision extends GameObject {
 
@@ -26,8 +27,10 @@ abstract class PlayerCollision extends GameObject {
 			if(handled)
 				return true;
 			
-			if(other != null && other.getBodyObjectType().equals(BodyObjectType.Goal))
+			if(other != null && other.getBodyObjectType().equals(BodyObjectType.Goal)) {
+				applyInteraction(InteractionState.WIN);
 				GameProperties.setWin();
+			}
 //		TODO	
 			if(mySensor != null) {
 //				if(mySensor.getSensorType() == SensorTypes.BODY

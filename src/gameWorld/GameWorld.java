@@ -22,6 +22,7 @@ import box2dLight.DirectionalLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -35,8 +36,9 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import core.FilePath;
+import core.GameProperties;
 import core.ingame.Camera;
-import core.ingame.GameProperties;
 import core.ingame.IDrawable;
 import core.ingame.input.IInputHandler;
 
@@ -63,7 +65,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		
 		switch (level) {
 		case 1:
-			loadMap("res/map/level1.json");
+			loadMap(FilePath.level1);
 			break;
 
 		default:
@@ -90,7 +92,9 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		Collections.sort(objects);
 	}
 
+//		TODO to HUD
 	private void calcTime(float deltaTime) {
+//		System.out.println(time += deltaTime);
 		if (time < timeLimit) {
 			time += deltaTime;
 			System.out.println("Remaining Time: " + Float.toString(timeLimit - time).substring(0, 4) + " min");
@@ -100,11 +104,8 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 
 	@Override
 	public void draw(SpriteBatch batch, float deltaTime) {
-
-		//		TODO
+		
 		calcTime(deltaTime);
-		
-		
 
 		debugMatrix = new Matrix4(camera.combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
@@ -144,6 +145,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 			root = new JsonReader().parse(new FileReader(json));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			Gdx.app.exit();
 			return;
 		}
 

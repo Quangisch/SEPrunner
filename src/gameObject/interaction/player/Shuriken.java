@@ -9,7 +9,7 @@ import gameObject.interaction.enemy.Enemy;
 
 import com.badlogic.gdx.math.Vector2;
 
-import core.ingame.GameProperties;
+import core.GameProperties;
 
 public class Shuriken extends GameObject {
 

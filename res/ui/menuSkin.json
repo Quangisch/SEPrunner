@@ -3,38 +3,47 @@
 		"white": { "r": 1, "g": 1, "b": 1, "a": 1 },
 		"black": { "r": 0, "g": 0, "b": 0, "a": 1 },
 		"gray":  { "r": 0.3, "g": 0.3, "b": 0.3, "a": 1 },
+		"yellow":{ "r": 1, "g": 1, "b": 0.1, "a": 1 },
+		"yellowMedium":{ "r": 1, "g": 1, "b": 0.3, "a": 1 },
+		"yellowLight":{ "r": 1, "g": 1, "b": 0.6, "a": 1 },
 		"red":   { "r": 1, "g": 0, "b": 0, "a": 1 },
 		"green": { "r": 0, "g": 1, "b": 0, "a": 1 },
-		"blue":  { "r": 0, "g": 0, "b": 1, "a": 1 },
+		"blue":  { "r": 0, "g": 0, "b": 0.7, "a": 1 },
 	},
 	"com.badlogic.gdx.graphics.g2d.BitmapFont": {
-		"white16": { "file": "res/font/white16.fnt" },
-		"black16": { "file": "res/font/black16.fnt" },
-		"white32": { "file": "res/font/white32.fnt" },
-		"black32": { "file": "res/font/black32.fnt" },
-		"white64": { "file": "res/font/white64.fnt" },
-		"black64": { "file": "res/font/black64.fnt" }
+		"baoli32": { "file": "res/font/baoli32.fnt" },
+		"baoli44": { "file": "res/font/baoli44.fnt" },
+		"baoli64": { "file": "res/font/baoli64.fnt" },
+		"baoli96": { "file": "res/font/baoli96.fnt" }
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
-		"big":     { "font": white64, "fontColor": white },
-		"default": { "font": white32, "fontColor": white },
-		"small":   { "font": white16, "fontColor": white }
+		"big":     { "font": baoli96, "fontColor": white },
+		"default": { "font": baoli44, "fontColor": white },
+		"small":   { "font": baoli32, "fontColor": white }
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
-		"big": 	   { "up": "button.up" , "down": "button.down", "font": black64, "pressedOffsetX": 1, "pressedOffsetY": -1 },
-		"default": { "up": "button.up" , "down": "button.down", "font": black32, "pressedOffsetX": 1, "pressedOffsetY": -1 },
-		"small":   { "up": "button.up" , "down": "button.down", "font": black16, "pressedOffsetX": 1, "pressedOffsetY": -1 }
+		"big": 	   { "up": "button.up" , "down": "button.down", "font": baoli96, "pressedOffsetX": 1, "pressedOffsetY": -1, 
+			     "fontColor": yellowLight, "overFontColor": yellowMedium, "downFontColor": yellow},
+		"default": { "up": "button.up" , "down": "button.down", "font": baoli64, "pressedOffsetX": 1, "pressedOffsetY": -1, 
+			     "fontColor": yellowLight, "overFontColor": yellowMedium, "downFontColor": yellow},
+		"small":   { "up": "button.up" , "down": "button.down", "font": baoli44, "pressedOffsetX": 1, "pressedOffsetY": -1, 
+			     "fontColor": yellowLight, "overFontColor": yellowMedium, "downFontColor": yellow}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
-		"default": { "font": white32, "fontColorUnselected": white, "fontColorSelected": black, "selection": "blue.pixel" }
+		"default": { "font": baoli44, "fontColorUnselected": white, "fontColorSelected": black, "selection": "yellow.dot" }
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
 		"default": { "hScrollKnob": "button.up", "vScrollKnob": "button.up" }
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle":{
-		"default": { "font": white32, "checkboxOn": "checkbox.on", "checkboxOff": "checkbox.off", "checkboxOver": "checkbox.over" }
+		"default": { "font": baoli44, "checkboxOn": "checkbox.on", "checkboxOff": "checkbox.off", "checkboxOver": "checkbox.over"}
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle":{
-		"default": { "font": black32, "fontColor": black, "messageFontColor": gray, "background": "standard.background", "cursor": "blue.pixel" }
+		"default": { "font": baoli44, "fontColor": black, "messageFontColor": gray, "background": "black.dot", "cursor": "yellow.dot" }
+	},
+	"com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
+		"default-horizontal": { "background": slider, "knob": slider.knob },
+		"default-vertical": { "background": slider, "knob": slider.knob }
 	}
+
 }

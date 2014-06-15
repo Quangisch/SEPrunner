@@ -21,7 +21,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.Disposable;
 
-import core.ingame.GameProperties;
+import core.GameProperties;
 /**
  * Container class for Box2d Body Object with Sensor and Shape Lists. 
  * @author SEP SS14 GruppeA

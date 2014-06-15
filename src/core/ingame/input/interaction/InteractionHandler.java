@@ -5,6 +5,8 @@ import gameObject.interaction.GameObject;
 import java.util.HashSet;
 import java.util.Set;
 
+import core.GameProperties;
+import core.GameProperties.GameState;
 import core.ingame.input.IInputHandler;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
@@ -29,6 +31,8 @@ public class InteractionHandler implements Runnable {
 	}
 	
 	public void run() {
+		if(!GameProperties.isGameState(GameState.INGAME))
+			return;
 		processPressedActionKeys();
 		processFlip();
 		

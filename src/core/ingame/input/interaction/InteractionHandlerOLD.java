@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
-import core.ingame.GameProperties;
+import core.GameProperties;
 import core.ingame.input.IInputHandler;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;

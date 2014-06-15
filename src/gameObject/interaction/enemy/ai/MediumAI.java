@@ -9,8 +9,8 @@ import misc.Debug;
 
 import com.badlogic.gdx.utils.JsonValue;
 
-import core.ingame.GameProperties;
-import core.ingame.GameProperties.GameState;
+import core.GameProperties;
+import core.GameProperties.GameState;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
