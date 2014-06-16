@@ -130,7 +130,8 @@ public abstract class InteractionManager implements IInteractionManageable {
 	
 	@Override
 	public boolean isStunned() {
-		return currentState.equals(InteractionState.STUNNED);
+		return currentState.equals(InteractionState.STUNNED)
+				|| currentState.equals(InteractionState.PULLED);
 	}
 	
 	@Override

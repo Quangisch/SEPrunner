@@ -12,8 +12,7 @@ public class LauncherQuang {
 	
 	public static void main(String[] args) {
 
-		GameProperties.setGameState(GameState.MENU);
-//		GameProperties.initFromFile();
+		GameProperties.initFromFile();
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "SEPrunner";
@@ -34,7 +33,10 @@ public class LauncherQuang {
 		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
 		System.out.println("\n>>Selected Mode "+mode+": "+GameProperties.displayMode.toString());
 		
-		new LwjglApplication(new Project(), cfg);
+		
+		new LwjglApplication(new Project(GameState.INGAME), cfg);
+
+		
 		
 //		Highscore.getInstance().loadHighscoreList();
 //		List<Score> l = Highscore.getInstance().getHighscoreList(2);

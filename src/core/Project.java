@@ -2,6 +2,7 @@ package core;
 
 import com.badlogic.gdx.Game;
 
+import core.GameProperties.GameState;
 import core.ingame.GameRender;
 import core.menu.Splash;
 
@@ -9,6 +10,10 @@ public class Project extends Game{
 
 	public static final String TITLE = "SEPrunner", VERSION = "1.0.0";
 
+	public Project(GameState state) {
+		GameProperties.setGameState(state);
+	}
+	
 	@Override
 	public void create() {
 //		GameProperties.initFromFile();
