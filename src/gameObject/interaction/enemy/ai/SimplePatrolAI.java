@@ -88,8 +88,6 @@ public class SimplePatrolAI extends EnemyAI {
 				//Player ber�hrt Enemy -> Game Over
 				if(mySensor.getSensorType() == ISensorTypes.SensorTypes.BODY){//TODO: hier einf�gen: && other.isDetectable
 					Debug.println("Game Over");
-					other.getParent().applyInteraction(InteractionState.LOSE);
-					GameProperties.setGameState(GameState.INGAME_LOSE);
 				}
 				
 				//Player ber�hrt sichtfeld -> Alarm, TODO: aber nicht, wenn player versteckt

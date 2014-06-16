@@ -29,7 +29,7 @@ public class LauncherQuang {
 			System.out.println("Mode "+j+++": "+m.toString());
 		
 //		TODO select mode depending on screen ratio
-		int mode = 0;
+		int mode = 10;
 		
 		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
 		System.out.println("\n>>Selected Mode "+mode+": "+GameProperties.displayMode.toString());

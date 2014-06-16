@@ -6,7 +6,9 @@ import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
+import gameObject.interaction.enemy.ai.HardAI;
 import gameObject.interaction.enemy.ai.IEnemyAI;
+import gameObject.interaction.enemy.ai.MediumAI;
 import gameObject.interaction.enemy.ai.SimplePatrolAI;
 import gameWorld.GameWorld;
 import misc.StringFunctions;
@@ -114,11 +116,15 @@ public class Enemy extends GameObject {
 		IEnemyAI ai = null;
 		switch (StringFunctions.getMostEqualIndexIgnoreCase(
 				jAI.getString("ID", ""), new String[] //
-				{ "SimplePatrolAI" })) {
+				{ "SimplePatrolAI","MediumAI","HardAI" })) {
 		case 0:
 			ai = new SimplePatrolAI();
 			break;
 		case 1:
+			ai = new MediumAI();
+			break;
+		case 2:
+			ai = new HardAI();
 			break;
 		case -1:
 		default:
