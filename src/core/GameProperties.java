@@ -61,7 +61,8 @@ public class GameProperties {
 			soundVolume = root.getFloat("soundVolume");
 			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.err.println("settings.json not found");
 			return;
 		} catch (NullPointerException e) {
 			e.printStackTrace();

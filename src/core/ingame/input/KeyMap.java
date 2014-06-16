@@ -71,7 +71,7 @@ public class KeyMap {
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
 		} catch (FileNotFoundException e) {
-			System.out.println("Couldnt find settings.json");
+			System.err.println("settings.json not found");
 			initDefault();
 			return false;
 		}
