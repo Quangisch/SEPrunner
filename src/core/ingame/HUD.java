@@ -13,8 +13,9 @@ public class HUD implements IDrawable {
 
 	private GameWorld world;
 	private SpriteBatch b;
-	BitmapFont font;
-	AnimationObject shuriken;
+	private BitmapFont font;
+	private AnimationObject shuriken;
+	private Vector2 goal;
 
 	public HUD(GameWorld world) {
 		this.world = world;
@@ -26,6 +27,10 @@ public class HUD implements IDrawable {
 		s.dispose();
 		shuriken = s.getAnimationObject();
 		shuriken.setPosition(new Vector2(0, Gdx.graphics.getHeight() - 30));
+
+		goal = world.getGoal() == null ? null : world.getGoal().getPosition();
+		// TODO
+		goal = new Vector2(108.7f, 0);
 	}
 
 	@Override
@@ -35,8 +40,13 @@ public class HUD implements IDrawable {
 				Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		b.begin();
 
+		shuriken.setPosition(new Vector2(0, Gdx.graphics.getHeight() - 30));
+		shuriken.draw(b, deltaTime * 0.2f);
 		font.draw(b, String.valueOf(world.getPlayer().getShurikenQuantity()), 30, Gdx.graphics.getHeight() - 5);
-		shuriken.draw(b, deltaTime*0.2f);
+
+		if (goal != null)
+			font.draw(b, String.valueOf((int) (goal.x - world.getPlayer().getBodyObject().getWorldPosition().x)), //
+					Gdx.graphics.getWidth() - 50, Gdx.graphics.getHeight() - 5);
 
 		b.end();
 		batch.begin();
