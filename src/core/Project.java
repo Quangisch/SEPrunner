@@ -11,7 +11,7 @@ public class Project extends Game{
 
 	@Override
 	public void create() {
-		GameProperties.initFromFile();
+//		GameProperties.initFromFile();
 		ResourceManager.getInstance().startMusic();
 		if(GameProperties.isInMenuState())
 			setScreen(new Splash()); //set first img, next Z56 in splash

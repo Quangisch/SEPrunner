@@ -23,14 +23,13 @@ public class GameProperties {
 	public static final int SCALE_HEIGHT = 360;
 	
 	public static DisplayMode displayMode;
+	private static GameState gameState = GameState.MENU;
 
+	public static float brightness = 0.0f;
+	public static float contrast = 1.0f;	
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
-	public static float contrast = 1.0f;
-	public static float brightness = 0.7f;
-	
-	private static GameState gameState = GameState.MENU;
-	
+
 	
 //	CONVERSION
 	final public static float PIXELPROMETER = 100;

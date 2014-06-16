@@ -172,7 +172,7 @@ public class MenuOption implements Screen {
 	
 	private void iniAudioSection() {
 //		ACTORS
-		musicSlider = new Slider(0, 0.7f, 0.01f, false, skin);
+		musicSlider = new Slider(0, 1f, 0.01f, false, skin);
 		musicSlider.setValue(GameProperties.musicVolume);
 		soundSlider = new Slider(0, 1, 0.01f, false, skin);
 		soundSlider.setValue(GameProperties.soundVolume);
