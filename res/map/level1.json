@@ -139,7 +139,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
-							"ID" : "SimplePatrolAI",
+							"ID" : "HardAI",
 							"Param" : [900, 1200]
 						}
 					},

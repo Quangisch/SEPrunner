@@ -15,7 +15,7 @@ import core.ingame.input.KeyMap.ActionKey;
 public class HardAI extends EnemyAI {
 
 	private ActionKey currentAction;
-//	private boolean alarm;
+	private boolean alarm;
 	private GameObject player;
 
 	float leftX, rightX;
@@ -58,15 +58,17 @@ public class HardAI extends EnemyAI {
 		
 		//ALARM -> enemy verfolgt player TODO: kann aber nicht springen, kommt keine steigungen hoch
 		//TODO: verfolgt ihn rennend und auch steigungen hinauf
-		if(player.getBodyObject().getX()>getEnemy().getBodyObject().getX()){
-			currentAction = ActionKey.RIGHT;
-			//getEnemy().setInteractionState(player.getInteractionState());//
-//			getEnemy().applyInteraction(InteractionState.RUN);
-		}else{
-			currentAction = ActionKey.LEFT;
-			//getEnemy().setInteractionState(player.getInteractionState());//
-//			getEnemy().applyInteraction(InteractionState.RUN);
-		}	
+		if(alarm && !getEnemy().isStunned()){
+			if(player.getBodyObject().getX()>getEnemy().getBodyObject().getX()){
+				currentAction = ActionKey.RIGHT;
+				getEnemy().applyInteraction(player.getInteractionState());//
+//				getEnemy().applyInteraction(InteractionState.RUN);
+			}else{
+				currentAction = ActionKey.LEFT;
+				//getEnemy().setInteractionState(player.getInteractionState());//
+//				getEnemy().applyInteraction(InteractionState.RUN);
+			}	
+		}
 		//NILS
 	}
 
@@ -89,7 +91,7 @@ public class HardAI extends EnemyAI {
 				&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
 				&& mySensor != null
 				&& mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT){//TODO: hier einf�gen: && other.isDetectable
-//			alarm = true;
+			alarm = true;
 			player = other.getParent();
 			Debug.println("Alarm");
 		}

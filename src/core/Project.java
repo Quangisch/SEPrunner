@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 
 import core.GameProperties.GameState;
 import core.ingame.GameRender;
+import core.menu.MenuOption;
 import core.menu.Splash;
 
 public class Project extends Game{
@@ -19,7 +20,7 @@ public class Project extends Game{
 //		GameProperties.initFromFile();
 		ResourceManager.getInstance().startMusic();
 		if(GameProperties.isInMenuState())
-			setScreen(new Splash()); //set first img, next Z56 in splash
+			setScreen(new MenuOption()); //set first img, next Z56 in splash
 		else 
 			setScreen(new GameRender(1));
 	}
