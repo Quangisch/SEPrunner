@@ -49,7 +49,6 @@ abstract class ObjectInitializer extends InteractionObject {
 
 	private void initStates(String texturePath, JsonValue stateFrames, int defaultStateIndex) {
 		
-//		TODO necessary?
 		for (JsonValue js : stateFrames)
 			js.name = js.name.toUpperCase();
 

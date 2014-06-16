@@ -1,7 +1,5 @@
 package gameObject.drawable;
 
-import box2dLight.RayHandler;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,7 +19,7 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 	private boolean active;
 	
 	
-	public DrawableObject(RayHandler rayHandler, Vector2 position) {
+	public DrawableObject(Vector2 position) {
 		this.position = position;
 	}
 	
