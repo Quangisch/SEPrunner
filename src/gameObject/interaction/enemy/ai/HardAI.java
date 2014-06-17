@@ -65,8 +65,8 @@ public class HardAI extends EnemyAI {
 		if(alarm && !getEnemy().isStunned()){
 			if(player.getBodyObject().getX()>getEnemy().getBodyObject().getX()){
 				currentAction = ActionKey.RIGHT;
-				getEnemy().applyInteraction(player.getInteractionState());//
-//				getEnemy().applyInteraction(InteractionState.RUN);
+//				getEnemy().applyInteraction(player.getInteractionState());//
+				getEnemy().applyInteraction(InteractionState.RUN);
 			}else{
 				currentAction = ActionKey.LEFT;
 				//getEnemy().setInteractionState(player.getInteractionState());//
