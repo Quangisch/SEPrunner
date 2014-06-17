@@ -38,7 +38,8 @@ abstract class PlayerCollision extends GameObject {
 						&& other.getBodyObjectType().equals(BodyObjectType.Enemy)
 						&& otherSensor != null
 						&& otherSensor.getSensorType() == SensorTypes.BODY
-						&& !other.getParent().isStunned()) {
+						&& !other.getParent().isStunned()
+						&& !isHiding()) {//
 
 					GameProperties.setGameOver();
 //					applyInteraction(InteractionState.LOSE);

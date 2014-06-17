@@ -49,9 +49,9 @@ public class Enemy extends GameObject {
 				SensorTypes.BODY, Sensor.HANDLE_FIRST);
 		// NILS
 
-		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
-		getBodyObject().addSensor(Type.Polygon, verticesFoot,
-				SensorTypes.FOOT, Sensor.HANDLE_FIRST);
+//		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
+//		getBodyObject().addSensor(Type.Polygon, verticesFoot,
+//				SensorTypes.FOOT, Sensor.HANDLE_FIRST);
 	}
 
 	@Override
@@ -106,6 +106,7 @@ public class Enemy extends GameObject {
 		// || getAI() != null || getAI().handleCollision(start, sender, other,
 		// otherSensor);
 		// NILS
+		super.handleCollision(start, postSolve, mySensor, other, otherSensor);
 		return !isStunned() && (AI.handleCollision(start, postSolve, mySensor, other, otherSensor) //
 				|| getAI() != null
 				|| getAI().handleCollision(start, postSolve, mySensor, other, otherSensor));

@@ -5,6 +5,7 @@ import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
+import gameObject.interaction.InteractionState;
 import misc.Debug;
 
 import com.badlogic.gdx.utils.JsonValue;

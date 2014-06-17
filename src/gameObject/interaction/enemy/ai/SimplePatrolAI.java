@@ -4,6 +4,8 @@ import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
 import gameObject.body.Sensor;
+import gameObject.interaction.GameObject;
+import gameObject.interaction.InteractionState;
 import misc.Debug;
 
 import com.badlogic.gdx.utils.JsonValue;
@@ -35,21 +37,82 @@ public class SimplePatrolAI extends EnemyAI {
 		if(getEnemy().getBodyObject().getX()<=leftX){
 			getEnemy().getAnimationObject().flip();
 			currentAction = ActionKey.RIGHT;
+			getEnemy().applyInteraction(InteractionState.WALK);
 			getEnemy().getBodyObject().getSensors().get(0).setActive(false);//deaktiviert linken sensor
 			getEnemy().getBodyObject().getSensors().get(1).setActive(true);
+//			System.out.println(getEnemy().getBodyObject().getX());
 		}
 		if(getEnemy().getBodyObject().getX()>=rightX){
 			getEnemy().getAnimationObject().flip();
 			currentAction = ActionKey.LEFT;
+			getEnemy().applyInteraction(InteractionState.WALK);
 			getEnemy().getBodyObject().getSensors().get(1).setActive(false);//deaktiviert rechten sensor
 			getEnemy().getBodyObject().getSensors().get(0).setActive(true);
+//			System.out.println(getEnemy().getBodyObject().getX());
 		}
-		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<rightX && !getEnemy().getAnimationObject().isFlipped()){
-			currentAction = ActionKey.RIGHT;		
+//		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<rightX && !getEnemy().getAnimationObject().isFlipped()){
+//			currentAction = ActionKey.RIGHT;
+//			getEnemy().applyInteraction(InteractionState.WALK);
+////			System.out.println(getEnemy().getBodyObject().getX());
+//		}
+//		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<rightX && getEnemy().getAnimationObject().isFlipped()){
+//			currentAction = ActionKey.LEFT;
+//			getEnemy().applyInteraction(InteractionState.WALK);
+////			System.out.println(getEnemy().getBodyObject().getX());
+//		}
+		
+		//
+		//BEWEGUNGSABFOLGE
+		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<1250 && !getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.WALK);
+			currentAction = ActionKey.RIGHT;
 		}
-		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<rightX && getEnemy().getAnimationObject().isFlipped()){
+		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<1250 && getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.WALK);
 			currentAction = ActionKey.LEFT;
 		}
+		if(getEnemy().getBodyObject().getX()>1250 && getEnemy().getBodyObject().getX()<1300 && !getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.JUMP_MOVE);
+			currentAction = ActionKey.JUMP;
+		}
+		if(getEnemy().getBodyObject().getX()>1310 && getEnemy().getBodyObject().getX()<1500 && !getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.WALK);
+			currentAction = ActionKey.RIGHT;
+		}
+		if(getEnemy().getBodyObject().getX()>1310 && getEnemy().getBodyObject().getX()<1500 && getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.WALK);
+			currentAction = ActionKey.LEFT;
+		}
+		if(getEnemy().getBodyObject().getX()>1250 && getEnemy().getBodyObject().getX()<1400 && getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.JUMP_MOVE);
+			currentAction = ActionKey.JUMP;
+		}
+		if(getEnemy().getBodyObject().getX()>(1500<leftX ? leftX : 1500) && getEnemy().getBodyObject().getX()<(2000>rightX ? rightX : 2000)){// && !getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.CROUCH_SNEAK);//BUG
+			currentAction = ActionKey.CROUCH;
+		}
+		if(getEnemy().getBodyObject().getX()>(2000<leftX ? leftX : 2000) && getEnemy().getBodyObject().getX()<(2300>rightX ? rightX : 2300) && !getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.WALK);
+			currentAction = ActionKey.RIGHT;
+		}
+		if(getEnemy().getBodyObject().getX()>(2000<leftX ? leftX : 2000) && getEnemy().getBodyObject().getX()<(2300>rightX ? rightX : 2300) && getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.WALK);
+			currentAction = ActionKey.LEFT;
+		}
+		if(getEnemy().getBodyObject().getX()>(2310<leftX ? leftX : 2310) && getEnemy().getBodyObject().getX()<(2600>rightX ? rightX : 2600)){// && !getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.CROUCH_SNEAK);//BUG
+			currentAction = ActionKey.CROUCH;
+		}
+		if(getEnemy().getBodyObject().getX()>(2600<leftX ? leftX : 2600) && getEnemy().getBodyObject().getX()<(3900>rightX ? rightX : 3900) && !getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.WALK);
+			currentAction = ActionKey.RIGHT;
+		}
+		if(getEnemy().getBodyObject().getX()>(2600<leftX ? leftX : 2600) && getEnemy().getBodyObject().getX()<(3900>rightX ? rightX : 3900) && getEnemy().getAnimationObject().isFlipped()){
+			getEnemy().applyInteraction(InteractionState.WALK);
+			currentAction = ActionKey.LEFT;
+		}
+		//BEWEGUNGSABFOLGE ENDE
+		//
 		
 		//STUN
 		if(getEnemy().isStunned()){
@@ -65,6 +128,13 @@ public class SimplePatrolAI extends EnemyAI {
 //				currentAction = ActionKey.LEFT;
 //			}		
 		}
+		if(alarm && !getEnemy().isStunned()){
+//			if(player.getBodyObject().getX()>getEnemy().getBodyObject().getX()){
+//				currentAction = ActionKey.RIGHT;
+//			}else{
+//				currentAction = ActionKey.LEFT;
+//			}
+		}
 		//NILS
 	}
 
@@ -78,19 +148,29 @@ public class SimplePatrolAI extends EnemyAI {
 			if(other.getBodyObjectType().equals(BodyObjectType.Player) 
 					&& !other.getParent().isHiding()
 					&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
-					&& mySensor != null) {
+					&& mySensor != null) {//
 				
 				boolean meFlipped = mySensor.getBodyObject().getParent().getAnimationObject().isFlipped();
 				
-				//Player berï¿½hrt sichtfeld -> Alarm, TODO: aber nicht, wenn player versteckt
+				//Player berührt sichtfeld -> Alarm, TODO: aber nicht, wenn player versteckt
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
-							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){//TODO: hier einfï¿½gen: && other.isDetectable
-					alarm = true;
-//					player = other.getParent();
-					Debug.println("Alarm");
+							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){
+						alarm = true;
+//						player = other.getParent();
+						Debug.println("Alarm");
 				}
 				
 			} //player<->enemy
+			
+			if(other.getBodyObjectType().equals(BodyObjectType.Enemy) 
+					&& !other.getParent().isHiding()
+					&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
+					&& mySensor != null
+					&&other.getParent().isStunned()){
+				alarm = true;
+//				player = other.getParent();
+				Debug.println("Alarm");
+			} //enemy<->enemy
 
 		} //postSolve
 
@@ -105,8 +185,6 @@ public class SimplePatrolAI extends EnemyAI {
 
 	@Override
 	public boolean isKeyDown(ActionKey action) {
-//		return action == ActionKey.CROUCH //
-//			|| action == ActionKey.RIGHT; // || action == ActionKey.RUN;
 		//NILS
 		//Abfrage ob action gleich gesetzter interactionstate
 		if(action == currentAction){

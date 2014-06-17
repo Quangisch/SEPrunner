@@ -60,6 +60,7 @@ public class InteractionToWorld {
 		case CROUCH_SNEAK:
 		case WALK:
 			baseForce.add(1, gameObject.isGrounded() ? 1 : 0);
+			//TODO:Geschwindigkeit zu schnell für Enemys
 			break;
 		default:
 			break;

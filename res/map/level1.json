@@ -139,8 +139,30 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
-							"ID" : "HardAI",
-							"Param" : [900, 1200]
+							"ID" : "SimplePatrolAI",
+							"Param" : [900, 1500]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "ninja_full",
+						"position" : [2010, 400],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [2010, 2290]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "ninja_full",
+						"position" : [3000, 300],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [3000, 3800]
 						}
 					},
 					{
@@ -154,7 +176,7 @@
 					{
 						"ID" : "hideable",
 						"json" : "tree",
-						"position" : [1100, 260],
+						"position" : [1050, 260],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}

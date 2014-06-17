@@ -14,11 +14,11 @@ import core.ingame.input.KeyMap.ActionKey;
 
 public class MediumAI extends EnemyAI {
 
-
+	//NILS
 	private ActionKey currentAction;
 	private boolean alarm;
 	private GameObject player;
-
+	//NILS
 
 	float leftX, rightX;
 
@@ -46,7 +46,7 @@ public class MediumAI extends EnemyAI {
 			getEnemy().getBodyObject().getSensors().get(0).setActive(true);
 		}
 		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<rightX && !getEnemy().getAnimationObject().isFlipped()){
-			currentAction = ActionKey.RIGHT;		
+			currentAction = ActionKey.RIGHT;
 		}
 		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<rightX && getEnemy().getAnimationObject().isFlipped()){
 			currentAction = ActionKey.LEFT;
@@ -54,12 +54,18 @@ public class MediumAI extends EnemyAI {
 		
 		//STUN
 		if(getEnemy().isStunned()){
-			Debug.println("stunned");
 			currentAction = ActionKey.CROUCH;
 			//TODO enemy hat kein sichtfeld mehr
 		}
 		
 		//ALARM -> enemy verfolgt player TODO: kann aber nicht springen, kommt keine steigungen hoch
+		if(alarm && !getEnemy().isStunned()){
+//			if(player.getX()>getEnemy().getX()){
+//				currentAction = ActionKey.RIGHT;
+//			}else{
+//				currentAction = ActionKey.LEFT;
+//			}		
+		}
 		if(alarm && !getEnemy().isStunned()){
 			if(player.getBodyObject().getX()>getEnemy().getBodyObject().getX()){
 				currentAction = ActionKey.RIGHT;
@@ -75,35 +81,37 @@ public class MediumAI extends EnemyAI {
 		//NILS
 		//Achtung es muss abgefragt werden ob sender != null ist
 		
-		//Player berï¿½hrt Enemy -> Game Over
-//		if(other.getBodyObjectType().equals(BodyObjectType.Player) 
-//				&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
-//				&& mySensor != null
-//				&& mySensor.getSensorType() == ISensorTypes.SensorTypes.FOOT){//TODO: hier einfï¿½gen: && other.isDetectable
-//			Debug.println("Game Over");
-//			GameProperties.setGameState(GameState.INGAME_LOSE);
-//		}
-		
-		//Player berï¿½hrt sichtfeld -> Alarm, TODO: aber nicht, wenn player versteckt
-		if(other.getBodyObjectType().equals(BodyObjectType.Player) 
-				&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
-				&& mySensor != null
-				&& mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT){//TODO: hier einfï¿½gen: && other.isDetectable
-			alarm = true;
-			player = other.getParent();
-			Debug.println("Alarm");
-		}
+		if(!postSolve) {
+			
+			if(other.getBodyObjectType().equals(BodyObjectType.Player) 
+					&& !other.getParent().isHiding()
+					&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
+					&& mySensor != null) {//
+				
+				boolean meFlipped = mySensor.getBodyObject().getParent().getAnimationObject().isFlipped();
+				
+				//Player berührt sichtfeld -> Alarm, TODO: aber nicht, wenn player versteckt
+				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
+							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){
+						alarm = true;
+						player = other.getParent();
+						Debug.println("Alarm");
+				}
+				
+			} //player<->enemy
+			
+			if(other.getBodyObjectType().equals(BodyObjectType.Enemy) 
+					&& !other.getParent().isHiding()
+					&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
+					&& mySensor != null
+					&&other.getParent().isStunned()){
+				alarm = true;
+				player = other.getParent();
+				Debug.println("Alarm");
+			} //enemy<->enemy
 
-		
-		//Enemy berï¿½hrt shuriken -> stunned
-		if(other.getBodyObjectType().equals(BodyObjectType.Shuriken)
-				&& mySensor != null
-				&& mySensor.getSensorType() == ISensorTypes.SensorTypes.BODY){
-			//NILS
-			getEnemy().setStun();
-			//NILS
-			Debug.println("hit by Shuriken");
-		}
+		} //postSolve
+
 		return false;
 	}
 
@@ -115,8 +123,6 @@ public class MediumAI extends EnemyAI {
 
 	@Override
 	public boolean isKeyDown(ActionKey action) {
-//		return action == ActionKey.CROUCH //
-//			|| action == ActionKey.RIGHT; // || action == ActionKey.RUN;
 		//NILS
 		//Abfrage ob action gleich gesetzter interactionstate
 		if(action == currentAction){
