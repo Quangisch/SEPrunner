@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -49,13 +50,30 @@ public class KeyMap {
 		return false;
 	}
 	
-	public void initFromFile() {
+	public void init() {
+		initFromFile();
+	}
+	
+	public void initDefault() {
+		add(ActionKey.LEFT, Keys.A, Keys.LEFT);
+		add(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
+		add(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT);
+
+		add(ActionKey.JUMP, Keys.SPACE, Keys.UP);
+		add(ActionKey.CROUCH, Keys.S, Keys.DOWN);
+
+		add(ActionKey.ACTION, Keys.E, Keys.ENTER);
+		System.out.println("Init Default KeyMap");
+	}
+	
+	public boolean initFromFile() {
 		JsonValue root = null;
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return;
+			System.err.println("settings.json not found");
+			initDefault();
+			return false;
 		}
 		
 		if(root.hasChild("keyMap")) {
@@ -68,6 +86,7 @@ public class KeyMap {
 				}
 			}
 		}
+		return true;
 	}
 	
 	public void saveToFile() {

@@ -76,7 +76,6 @@ public class MenuMain implements Screen {
 		table = new Table(skin);
 		table.setFillParent(true);
 		
-		
 		//creating heading
 		BitmapFont f = skin.getFont("baoli96");
 		f.scale(1);

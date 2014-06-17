@@ -56,11 +56,11 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void run() {
+		super.run();
 		if(isStunned())
 			return;
 		if (AI != null)
 			AI.run();
-		super.run();
 		if(interactionHandler != null)
 			interactionHandler.run();
 		

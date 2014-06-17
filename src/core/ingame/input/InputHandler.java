@@ -34,16 +34,9 @@ public class InputHandler implements IInputHandler, InputProcessor {
 
 		keyMap = new KeyMap();
 		
-//		addActionKey(ActionKey.LEFT, Keys.A, Keys.LEFT);
-//		addActionKey(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
-//		addActionKey(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT);
-//
-//		addActionKey(ActionKey.JUMP, Keys.SPACE, Keys.UP);
-//		addActionKey(ActionKey.CROUCH, Keys.S, Keys.DOWN);
-//
-//		addActionKey(ActionKey.ACTION, Keys.E, Keys.ENTER);
 
-		keyMap.initFromFile();
+
+		keyMap.init();
 	}
 	
 	@Override

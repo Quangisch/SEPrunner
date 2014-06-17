@@ -35,7 +35,6 @@ public class InteractionHandler implements Runnable {
 			return;
 		processPressedActionKeys();
 		processFlip();
-		
 		inputToInteraction.process();
 		interactionToWorld.process();
 	}

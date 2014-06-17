@@ -81,7 +81,7 @@ public class MenuOption implements Screen {
 		clickHandler = new ClickHandler();
 		Gdx.input.setInputProcessor(stage);
 		stage.addListener(clickHandler);
-		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
+		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height, true);
 		
 		keyMap = new KeyMap();
 		keyLabelList = new LinkedList<KeyLabel>();

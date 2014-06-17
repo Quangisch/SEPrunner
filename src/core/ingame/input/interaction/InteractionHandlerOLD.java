@@ -428,7 +428,7 @@ public class InteractionHandlerOLD implements
 	
 
 	public boolean setGrab(Enemy enemy) {
-		if (!enemy.isStunned() && enemyGrab == null)
+		if (enemyGrab == null && !enemy.getInteractionState().equals(InteractionState.STUNNED))
 			return false;
 
 		enemy.isCarriable(gameObject.getBodyObject().getPosition());

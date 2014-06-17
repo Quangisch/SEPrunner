@@ -23,13 +23,13 @@ public class GameProperties {
 	public static final int SCALE_HEIGHT = 360;
 	
 	public static DisplayMode displayMode;
-	private static GameState gameState = GameState.MENU;
+	private static GameState gameState = null;
 
 	public static float brightness = 0.0f;
 	public static float contrast = 1.0f;	
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
-
+ 
 	
 //	CONVERSION
 	final public static float PIXELPROMETER = 100;
@@ -61,7 +61,8 @@ public class GameProperties {
 			soundVolume = root.getFloat("soundVolume");
 			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.err.println("settings.json not found");
 			return;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -114,18 +115,18 @@ public class GameProperties {
 	}
 	
 	public static void setGameState(GameState state, int level) {
-
 		final GameState prevState = gameState;
 		gameState = state;
-		if(!gameState.equals(prevState))
-			ResourceManager.getInstance().startMusic();
-		
-		if(Gdx.graphics == null && (isInMenuState() && prevState.isMenu()) 
-				|| (isInGameState() && prevState.isInGame()))
+	
+		if(prevState == null || (Gdx.graphics == null && (isInMenuState() && prevState.isMenu()) 
+				|| (isInGameState() && prevState.isInGame())))
 			return;
 		
 		if(displayMode == null)
 			displayMode = Gdx.graphics.getDesktopDisplayMode();
+		
+		if(!gameState.equals(prevState))
+			ResourceManager.getInstance().startMusic();
 		
 		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
 		Debug.println(displayMode.width + "x" + displayMode.height, Mode.CONSOLE);

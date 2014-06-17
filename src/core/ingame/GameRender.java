@@ -29,14 +29,14 @@ public class GameRender implements Screen {
 	private GameWorld gameWorld;
 	private InputHandler iHandler;
 	private Camera camera;
-//	private HUD hud;
+	private HUD hud;
 
 	public GameRender(int level) {
 		loadResources(); //TODO
 		camera = new Camera();
 		iHandler = new InputHandler(camera);
 		gameWorld = new GameWorld(level, iHandler, camera);
-//		hud = new HUD(gameWorld);
+		hud = new HUD(gameWorld);
 
 		// TODO TMP for debugging
 		Debug.init(iHandler, camera);
@@ -72,7 +72,7 @@ public class GameRender implements Screen {
 
 		switch (GameProperties.getGameState()) {
 		case INGAME:
-			
+
 			break;
 		case INGAME_LOSE:
 			System.out.println("GAME OVER");
@@ -92,11 +92,11 @@ public class GameRender implements Screen {
 		gameWorld.run();
 		if (Debug.isMode(Debug.Mode.CONSOLE)) log.log();
 
-		Gdx.gl.glClearColor(0,0,0, 1);//(0,0,0,1)
+		Gdx.gl.glClearColor(0, 0, 0, 1);//(0,0,0,1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
-		
+
 		batch.brightness = GameProperties.brightness;
 		batch.contrast = GameProperties.contrast;
 		batch.setProjectionMatrix(camera.combined);
@@ -104,7 +104,7 @@ public class GameRender implements Screen {
 
 		gameWorld.draw(batch, delta); //map
 
-//		hud.draw(batch, delta); //userInterface
+		hud.draw(batch, delta); //userInterface
 
 		try {
 			for (GeometricObject g : geometrics)
@@ -122,7 +122,7 @@ public class GameRender implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+
 	}
 
 	@Override

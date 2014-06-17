@@ -12,7 +12,6 @@ public class MainLauncher {
 	
 	public static void main(String[] args) {
 
-		GameProperties.setGameState(GameState.MENU);
 		GameProperties.initFromFile();
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
@@ -26,6 +25,6 @@ public class MainLauncher {
 		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
 		System.out.println("Mode"+mode+": "+GameProperties.displayMode.toString());
 		
-		new LwjglApplication(new Project(), cfg);
+		new LwjglApplication(new Project(GameState.MENU), cfg);
 	}
 }

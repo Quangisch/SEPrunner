@@ -12,8 +12,7 @@ public class LauncherQuang {
 	
 	public static void main(String[] args) {
 
-		GameProperties.setGameState(GameState.MENU);
-//		GameProperties.initFromFile();
+		GameProperties.initFromFile();
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "SEPrunner";
@@ -24,17 +23,22 @@ public class LauncherQuang {
 		
 		
 		System.out.println("Avaiable DisplayModes: ");
-		int j = 0;
-		for(DisplayMode m : LwjglApplicationConfiguration.getDisplayModes())
-			System.out.println("Mode "+j+++": "+m.toString());
+		DisplayMode[] modes = LwjglApplicationConfiguration.getDisplayModes();
 		
 //		TODO select mode depending on screen ratio
-		int mode = 10;
+//		pref ScreenSize: 1280x800
+		int mode = 0;
+		for(int i = 0; i < modes.length; i++) {
+			System.out.println("Mode "+i+": "+modes[i].toString());
+		}
 		
 		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
 		System.out.println("\n>>Selected Mode "+mode+": "+GameProperties.displayMode.toString());
 		
-		new LwjglApplication(new Project(), cfg);
+		
+		new LwjglApplication(new Project(GameState.INGAME), cfg);
+
+		
 		
 //		Highscore.getInstance().loadHighscoreList();
 //		List<Score> l = Highscore.getInstance().getHighscoreList(2);

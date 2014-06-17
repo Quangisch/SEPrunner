@@ -11,7 +11,6 @@ public class LauncherAlex {
 	
 	public static void main(String[] args) {
 
-		GameProperties.setGameState(GameState.MENU);
 		
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = Project.TITLE + " v" + Project.VERSION;
@@ -25,6 +24,6 @@ public class LauncherAlex {
 		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
 		System.out.println("DisplayMode "+mode+": "+GameProperties.displayMode.toString());
 		
-		new LwjglApplication(new Project(), cfg);
+		new LwjglApplication(new Project(GameState.MENU), cfg);
 	}							//start view project Z11 = first img set
 }

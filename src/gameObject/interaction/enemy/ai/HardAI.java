@@ -5,14 +5,10 @@ import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
-import gameObject.interaction.InteractionState;
-import gameObject.interaction.enemy.Alarm;
 import misc.Debug;
 
 import com.badlogic.gdx.utils.JsonValue;
 
-import core.GameProperties;
-import core.GameProperties.GameState;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
@@ -82,13 +78,13 @@ public class HardAI extends EnemyAI {
 		//Achtung es muss abgefragt werden ob sender != null ist
 		
 		//Player ber�hrt Enemy -> Game Over
-		if(other.getBodyObjectType().equals(BodyObjectType.Player) 
-				&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
-				&& mySensor != null
-				&& mySensor.getSensorType() == ISensorTypes.SensorTypes.FOOT){//TODO: hier einf�gen: && other.isDetectable
-			Debug.println("Game Over");
-			GameProperties.setGameState(GameState.INGAME_LOSE);
-		}
+//		if(other.getBodyObjectType().equals(BodyObjectType.Player) 
+//				&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
+//				&& mySensor != null
+//				&& mySensor.getSensorType() == ISensorTypes.SensorTypes.FOOT){//TODO: hier einf�gen: && other.isDetectable
+//			Debug.println("Game Over");
+//			GameProperties.setGameState(GameState.INGAME_LOSE);
+//		}
 		
 		//Player ber�hrt sichtfeld -> Alarm, TODO: aber nicht, wenn player versteckt
 		if(other.getBodyObjectType().equals(BodyObjectType.Player) 

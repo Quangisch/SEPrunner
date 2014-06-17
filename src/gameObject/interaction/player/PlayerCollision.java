@@ -2,6 +2,7 @@ package gameObject.interaction.player;
 
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
+import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
@@ -31,14 +32,18 @@ abstract class PlayerCollision extends GameObject {
 				applyInteraction(InteractionState.WIN);
 				GameProperties.setWin();
 			}
-//		TODO	
+			
 			if(mySensor != null) {
-//				if(mySensor.getSensorType() == SensorTypes.BODY
-//						&& other.getBodyObjectType().equals(BodyObjectType.Enemy)
-//						&& otherSensor != null
-//						&& otherSensor.getSensorType() == SensorTypes.BODY
-//						)
-//					GameProperties.setGameOver();
+				if(mySensor.getSensorType() == SensorTypes.BODY
+						&& other.getBodyObjectType().equals(BodyObjectType.Enemy)
+						&& otherSensor != null
+						&& otherSensor.getSensorType() == SensorTypes.BODY
+						&& !other.getParent().isStunned()) {
+
+					GameProperties.setGameOver();
+//					applyInteraction(InteractionState.LOSE);
+					return true;
+				}
 			}
 		}
 		

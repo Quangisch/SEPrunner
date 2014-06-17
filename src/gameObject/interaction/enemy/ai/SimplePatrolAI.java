@@ -4,13 +4,10 @@ import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
 import gameObject.body.Sensor;
-import gameObject.interaction.InteractionState;
 import misc.Debug;
 
 import com.badlogic.gdx.utils.JsonValue;
 
-import core.GameProperties;
-import core.GameProperties.GameState;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
@@ -84,11 +81,6 @@ public class SimplePatrolAI extends EnemyAI {
 					&& mySensor != null) {
 				
 				boolean meFlipped = mySensor.getBodyObject().getParent().getAnimationObject().isFlipped();
-				
-				//Player ber�hrt Enemy -> Game Over
-				if(mySensor.getSensorType() == ISensorTypes.SensorTypes.BODY){//TODO: hier einf�gen: && other.isDetectable
-					Debug.println("Game Over");
-				}
 				
 				//Player ber�hrt sichtfeld -> Alarm, TODO: aber nicht, wenn player versteckt
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
