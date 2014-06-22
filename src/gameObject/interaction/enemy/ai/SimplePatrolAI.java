@@ -173,7 +173,6 @@ public class SimplePatrolAI extends EnemyAI {
 			getEnemy().applyInteraction(InteractionState.CROUCH_SNEAK);//BUG
 			currentAction = ActionKey.CROUCH;
 		}
-		//TODO:
 		if(getEnemy().getBodyObject().getX()>(8750<leftX ? leftX : 8750) && getEnemy().getBodyObject().getX()<(10500>rightX ? rightX : 10500) && !getEnemy().getAnimationObject().isFlipped()){
 			getEnemy().applyInteraction(walkStyle);
 			currentAction = ActionKey.RIGHT;
