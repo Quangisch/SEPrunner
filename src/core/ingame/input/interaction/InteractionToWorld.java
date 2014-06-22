@@ -62,6 +62,9 @@ public class InteractionToWorld {
 			baseForce.add(1, gameObject.isGrounded() ? 1 : 0);
 			//TODO:Geschwindigkeit zu schnell für Enemys
 			break;
+		case WALK_ENEMY:
+			baseForce.add(0.55f, gameObject.isGrounded() ? 1.35f : 0);
+			break;
 		default:
 			break;
 

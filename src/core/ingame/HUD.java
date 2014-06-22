@@ -16,6 +16,7 @@ public class HUD implements IDrawable {
 	private BitmapFont font;
 	private AnimationObject shuriken;
 	private Vector2 goal;
+	private static boolean alarm = false;
 
 	public HUD(GameWorld world) {
 		this.world = world;
@@ -47,9 +48,20 @@ public class HUD implements IDrawable {
 		if (goal != null)
 			font.draw(b, String.valueOf((int) (goal.x - world.getPlayer().getBodyObject().getWorldPosition().x)), //
 					Gdx.graphics.getWidth() - 50, Gdx.graphics.getHeight() - 5);
+		
+		if(alarm){
+			font.draw(b, "ALARM!", //
+					Gdx.graphics.getWidth() - 365, Gdx.graphics.getHeight() - 5);
+			System.out.println("ALARM");
+		}
 
 		b.end();
 		batch.begin();
+	}
+	
+	public static void setAlarm(boolean a){//funktioniert nicht aus simpleAI heraus line 154
+		alarm = a;
+		System.out.println("setAlarm");
 	}
 
 }

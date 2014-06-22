@@ -45,7 +45,7 @@ public class Shuriken extends GameObject {
 					return true;
 				case Enemy :
 					if(otherSensor != null && otherSensor.getSensorType() == SensorTypes.CORE) {
-						((Enemy) other.getParent()).setStun();
+//						((Enemy) other.getParent()).setStun();
 						dispose();
 						return true;
 					}

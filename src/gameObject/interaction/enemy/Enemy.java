@@ -44,14 +44,10 @@ public class Enemy extends GameObject {
 		// NILS
 		getBodyObject().addSensor(Type.Circle, new float[] { 1.3f, 1, 0.5f },
 				SensorTypes.VISION_RIGHT, Sensor.HANDLE_FIRST);
-		float[] verticesBody = { 0.4f, 0.3f, 0.9f, 0.3f, 0.9f, 1.15f, 0.4f, 1.15f };
-		getBodyObject().addSensor(Type.Polygon, verticesBody,
-				SensorTypes.BODY, Sensor.HANDLE_FIRST);
+//		float[] verticesBody = { 0.4f, 0.3f, 0.9f, 0.3f, 0.9f, 1.15f, 0.4f, 1.15f };
+//		getBodyObject().addSensor(Type.Polygon, verticesBody,
+//				SensorTypes.BODY, Sensor.HANDLE_FIRST);
 		// NILS
-
-//		float[] verticesFoot = { 0.5f, 0.3f, 0.8f, 0.3f, 0.8f, 0.4f, 0.5f, 0.4f };
-//		getBodyObject().addSensor(Type.Polygon, verticesFoot,
-//				SensorTypes.FOOT, Sensor.HANDLE_FIRST);
 	}
 
 	@Override

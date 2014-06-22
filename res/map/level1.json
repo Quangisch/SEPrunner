@@ -85,7 +85,7 @@
 						"rays"		:	32,
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
-						"x"			:	1620,
+						"x"			:	1770,
 						"y"			:	900
 					},
 					{
@@ -115,7 +115,249 @@
 						"y"			:	880,
 						"directionDegree"	:	270,
 						"coneDegree"		:	40
-					}
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	2470,
+						"y"			:	1020,
+						"directionDegree"	:	220,
+						"coneDegree"		:	18
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	2670,
+						"y"			:	880,
+						"directionDegree"	:	300,
+						"coneDegree"		:	13
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	4775,
+						"y"			:	1235,
+						"directionDegree"	:	330,
+						"coneDegree"		:	23
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	4600,
+						"y"			:	1000
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	5470,
+						"y"			:	1030,
+						"directionDegree"	:	270,
+						"coneDegree"		:	35
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	5770,
+						"y"			:	950,
+						"directionDegree"	:	310,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.6, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	6380,
+						"y"			:	780,
+						"directionDegree"	:	230,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	6100,
+						"y"			:	600
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	6700,
+						"y"			:	1200
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.6, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	5570,
+						"y"			:	520,
+						"directionDegree"	:	230,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	750,
+						"x"			:	5570,
+						"y"			:	0,
+						"directionDegree"	:	270,
+						"coneDegree"		:	35
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	6100,
+						"y"			:	100,
+						"directionDegree"	:	270,
+						"coneDegree"		:	17
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	7100,
+						"y"			:	250,
+						"directionDegree"	:	220,
+						"coneDegree"		:	35
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	7700,
+						"y"			:	600
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.6, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	7450,
+						"y"			:	910,
+						"directionDegree"	:	220,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	7900,
+						"y"			:	1300
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	8070,
+						"y"			:	420,
+						"directionDegree"	:	270,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	8600,
+						"y"			:	600
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	9400,
+						"y"			:	500,
+						"directionDegree"	:	270,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	10000,
+						"y"			:	850
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	11200,
+						"y"			:	1100
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	10000,
+						"y"			:	850,
+						"directionDegree"	:	310,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	10500,
+						"y"			:	850,
+						"directionDegree"	:	290,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	11100,
+						"y"			:	850,
+						"directionDegree"	:	270,
+						"coneDegree"		:	40
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	11700,
+						"y"			:	850,
+						"directionDegree"	:	250,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	12000,
+						"y"			:	1100
+					},
 	
 	
 				],
@@ -134,35 +376,123 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "ninja_full",
-						"position" : [900, 300],
+						"json" : "enemy_full",
+						"position" : [930, 300],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
 							"ID" : "SimplePatrolAI",
-							"Param" : [900, 1500]
+							"Param" : [930, 1500]
 						}
 					},
 					{
 						"ID" : "enemy",
-						"json" : "ninja_full",
+						"json" : "enemy_full",
 						"position" : [2010, 400],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
 							"ID" : "SimplePatrolAI",
-							"Param" : [2010, 2290]
+							"Param" : [2010, 2700]
 						}
 					},
 					{
 						"ID" : "enemy",
-						"json" : "ninja_full",
+						"json" : "enemy_full",
 						"position" : [3000, 300],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
 							"ID" : "SimplePatrolAI",
-							"Param" : [3000, 3800]
+							"Param" : [3000, 3870]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [3600, 400],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [3650, 3800]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [5000, 100],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [4800, 6200]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [5550, 250],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [5550, 6200]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [5550, 570],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [4800, 6050]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [5850, 1100],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [5830, 6450]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [7000, 500],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [6950, 7850]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [8150, 800],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [8300, 10500]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [10000, 500],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Param" : [10000, 10500]
 						}
 					},
 					{
@@ -175,8 +505,64 @@
 					},
 					{
 						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [2300, 330],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [5200, 130],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [5950, 360],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [5600, 570],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [7200, 320],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [9100, 460],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [10100, 170],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
 						"json" : "tree",
-						"position" : [1050, 260],
+						"position" : [1150, 260],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}
@@ -185,6 +571,14 @@
 						"ID" : "hideable",
 						"json" : "tree",
 						"position" : [3400, 185],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "tree",
+						"position" : [6000, 970],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}
