@@ -27,7 +27,7 @@ public class LauncherQuang {
 		
 //		TODO select mode depending on screen ratio
 //		pref ScreenSize: 1280x800
-		int mode = 0;
+		int mode = 6;
 		for(int i = 0; i < modes.length; i++) {
 			System.out.println("Mode "+i+": "+modes[i].toString());
 		}

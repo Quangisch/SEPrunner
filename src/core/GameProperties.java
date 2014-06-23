@@ -23,6 +23,7 @@ public class GameProperties {
 	public static final int SCALE_HEIGHT = 360;
 	
 	public static DisplayMode displayMode;
+	public static final int SIZE_WIDTH = 1280, SIZE_HEIGHT = 800;
 	private static GameState gameState = null;
 
 	public static float brightness = 0.0f;
@@ -78,7 +79,8 @@ public class GameProperties {
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("settings.json not found");
 			return;
 		}
 

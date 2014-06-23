@@ -81,7 +81,7 @@ public class MenuOption implements Screen {
 		clickHandler = new ClickHandler();
 		Gdx.input.setInputProcessor(stage);
 		stage.addListener(clickHandler);
-		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height, true);
+		stage.setViewport(1280,800, true);
 		
 		keyMap = new KeyMap();
 		keyLabelList = new LinkedList<KeyLabel>();
@@ -278,6 +278,7 @@ public class MenuOption implements Screen {
 	@Override
 	public void resize(int width, int height) {
 //		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		stage.setViewport(1280,800, true);
 	}
 
 	@Override

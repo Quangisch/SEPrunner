@@ -1,5 +1,6 @@
 package core.ingame;
 
+import misc.StringFunctions;
 import gameObject.drawable.AnimationObject;
 import gameObject.interaction.player.Shuriken;
 import gameWorld.GameWorld;
@@ -39,22 +40,31 @@ public class HUD implements IDrawable {
 		batch.end();
 		b.setProjectionMatrix(b.getProjectionMatrix().setToOrtho2D(0, 0, //
 				Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		b.begin();
 
+//		font.scale(0.00005f);
+
+		font.setScale((float)Gdx.graphics.getWidth()/1280 * 0.7f);
+
+		String shurikenQuantity = String.valueOf(world.getPlayer().getShurikenQuantity());
+		String time = StringFunctions.getTimeAsString(world.getTime());
+		String distance = String.valueOf((int) (goal.x - world.getPlayer().getBodyObject().getWorldPosition().x)) + "m";
+		b.begin();
+		
 		shuriken.setPosition(new Vector2(0, Gdx.graphics.getHeight() - 30));
 		shuriken.draw(b, deltaTime * 0.2f);
-		font.draw(b, String.valueOf(world.getPlayer().getShurikenQuantity()), 30, Gdx.graphics.getHeight() - 5);
-
+		font.draw(b, shurikenQuantity, 30, Gdx.graphics.getHeight() - 5);
+		font.draw(b, time, Gdx.graphics.getWidth()/2-font.getBounds(time).width/2, Gdx.graphics.getHeight() - 5);
 		if (goal != null)
-			font.draw(b, String.valueOf((int) (goal.x - world.getPlayer().getBodyObject().getWorldPosition().x)), //
-					Gdx.graphics.getWidth() - 50, Gdx.graphics.getHeight() - 5);
-		
+			font.draw(b, distance, //
+					Gdx.graphics.getWidth() - font.getBounds(distance).width, Gdx.graphics.getHeight() - 5);
+
+//		TMP
 		if(alarm){
 			font.draw(b, "ALARM!", //
 					Gdx.graphics.getWidth() - 365, Gdx.graphics.getHeight() - 5);
 			System.out.println("ALARM");
 		}
-
+		
 		b.end();
 		batch.begin();
 	}

@@ -37,14 +37,14 @@ public class MenuLevelSelect implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
-		table.invalidateHierarchy();
+//		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
+//		table.invalidateHierarchy();
 	}
 
 	@Override
 	public void show() {
 		stage = new Stage();
-		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
+		stage.setViewport(1280, 800, true);
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));

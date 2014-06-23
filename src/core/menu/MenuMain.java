@@ -62,6 +62,7 @@ public class MenuMain implements Screen {
 //		backgroundSprite.setSize(width, height);
 //		table.invalidateHierarchy();
 //		Gdx.graphics.setDisplayMode(width, height, false);	
+		stage.setViewport(1280,800, true);
 	}
 
 	@Override

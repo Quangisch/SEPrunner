@@ -2,12 +2,13 @@ package core;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import misc.StringFunctions;
 
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -91,24 +92,12 @@ public class Highscore {
 			this.TIME = time;
 			this.LEVEL = level;
 			
-			TIME_STRING = getTimeAsString(time);
+			TIME_STRING = StringFunctions.getTimeAsString(time);
 			
 		}
 		
 //		TODO dirty
-		public String getTimeAsString(float time) {
-			String min = String.valueOf((int) time / 60);
-			min = min.length() == 1 ? "0"+min : min.length() == 0 ? "00" : min.length() > 2 ? "99" : min;
-			
-			String sec = String.valueOf((int) time % 60);
-			sec = sec.length() == 1 ? "0"+sec : sec.length() == 0 ? "00" : sec.length() > 2 ? "99" : sec;
-			
-			DecimalFormat df = new DecimalFormat(".00");
-			String milli = df.format(time);
-			milli = milli.substring(milli.length() - 2);
-			
-			return min+":"+sec+":"+milli;
-		}
+		
 
 		@Override
 		public int compareTo(Score other) {

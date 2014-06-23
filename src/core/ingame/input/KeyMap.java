@@ -94,7 +94,8 @@ public class KeyMap {
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.err.println("settings.json not found");
 			return;
 		}
 

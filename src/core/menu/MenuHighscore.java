@@ -50,16 +50,16 @@ public class MenuHighscore implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		backgroundSprite.setSize(width, height);
-		stage.setViewport(width, height, false);
-		table.invalidateHierarchy();
+//		backgroundSprite.setSize(width, height);
+//		stage.setViewport(1280, 800, true);
+//		table.invalidateHierarchy();
 	}
 
 	@Override
 	public void show() {
 		shaderBatch = new ShaderBatch(100);
 		stage = new Stage();
-		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
+		stage.setViewport(1280, 800, true);
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));

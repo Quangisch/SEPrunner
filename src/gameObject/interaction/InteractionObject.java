@@ -68,7 +68,7 @@ public abstract class InteractionObject
 	}
 	
 	private void processHideTarget() {
-		if(isHiding()) {
+		if(isHiding() && hideTarget != null) {
 			hideTarget.getAnimationObject().setActive(false);
 			if(getInteractionState().equals(InteractionState.HIDE_END))
 				hideTarget.getAnimationObject().setActive(true);

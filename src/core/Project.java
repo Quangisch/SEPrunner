@@ -5,7 +5,6 @@ import com.badlogic.gdx.Game;
 import core.GameProperties.GameState;
 import core.ingame.GameRender;
 import core.menu.MenuOption;
-import core.menu.Splash;
 
 public class Project extends Game{
 

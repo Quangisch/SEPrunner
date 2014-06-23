@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.FilePath;
 import core.GameProperties;
+import core.GameProperties.GameState;
 import core.ingame.Camera;
 import core.ingame.IDrawable;
 import core.ingame.input.IInputHandler;
@@ -95,10 +96,10 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 
 	//		TODO to HUD
 	private void calcTime(float deltaTime) {
-		//		System.out.println(time += deltaTime);
+		if(!GameProperties.isGameState(GameState.INGAME))
+			return;
+		time += deltaTime;
 		if (time < timeLimit) {
-			time += deltaTime;
-			System.out.println("Remaining Time: " + Float.toString(timeLimit - time).substring(0, 4) + " min");
 			if (time >= timeLimit) GameProperties.setGameOver();
 		}
 	}
@@ -323,6 +324,10 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 
 	public BodyObject getGoal() {
 		return goal;
+	}
+	
+	public float getTime() {
+		return time;
 	}
 
 }
