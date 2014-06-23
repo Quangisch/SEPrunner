@@ -232,7 +232,7 @@
 														]
 									},
 						"hide_start" :	{
-										"frameDuration":0.15,
+										"frameDuration":0.08,
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],
 										"textureMap" : [
@@ -254,7 +254,7 @@
 														]
 									},
 						"hide_end" :	{
-										"frameDuration":0.15,
+										"frameDuration":0.06,
 										"boundingBox" : [39.5, 35, 39.5, 117,
 														 90, 117, 90, 35],
 										"textureMap" : [

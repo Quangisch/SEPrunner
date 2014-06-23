@@ -1,9 +1,10 @@
 package core.ingame;
 
-import misc.StringFunctions;
 import gameObject.drawable.AnimationObject;
+import gameObject.interaction.enemy.Alarm;
 import gameObject.interaction.player.Shuriken;
 import gameWorld.GameWorld;
+import misc.StringFunctions;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,7 +18,6 @@ public class HUD implements IDrawable {
 	private BitmapFont font;
 	private AnimationObject shuriken;
 	private Vector2 goal;
-	private static boolean alarm = false;
 
 	public HUD(GameWorld world) {
 		this.world = world;
@@ -33,6 +33,8 @@ public class HUD implements IDrawable {
 		goal = world.getGoal() == null ? null : world.getGoal().getPosition();
 		// TODO
 		goal = new Vector2(108.7f, 0);
+		
+		
 	}
 
 	@Override
@@ -58,20 +60,11 @@ public class HUD implements IDrawable {
 			font.draw(b, distance, //
 					Gdx.graphics.getWidth() - font.getBounds(distance).width, Gdx.graphics.getHeight() - 5);
 
-//		TMP
-		if(alarm){
-			font.draw(b, "ALARM!", //
-					Gdx.graphics.getWidth() - 365, Gdx.graphics.getHeight() - 5);
-			System.out.println("ALARM");
-		}
+		Alarm.getInstance().draw(batch, deltaTime);
+		
 		
 		b.end();
 		batch.begin();
-	}
-	
-	public static void setAlarm(boolean a){//funktioniert nicht aus simpleAI heraus line 154
-		alarm = a;
-		System.out.println("setAlarm");
 	}
 
 }

@@ -6,6 +6,7 @@ import gameObject.body.ISensorTypes;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.InteractionState;
+import gameObject.interaction.enemy.Alarm;
 import misc.Debug;
 
 import com.badlogic.gdx.utils.JsonValue;
@@ -17,7 +18,6 @@ public class SimplePatrolAI extends EnemyAI {
 
 	//NILS
 	private ActionKey currentAction;
-	private boolean alarm;
 	private InteractionState walkStyle;
 	private int armour = 1;//N�tige Shuriken Treffer
 //	private GameObject player;
@@ -206,7 +206,7 @@ public class SimplePatrolAI extends EnemyAI {
 		//BEWEGUNGSABFOLGE ENDE
 				
 		//ALARM -> enemy verfolgt player
-		if(alarm && !getEnemy().isStunned()){
+		if(Alarm.getInstance().isActive() && !getEnemy().isStunned()){
 			walkStyle = InteractionState.WALK;
 //			if(player.getX()>getEnemy().getX()){
 //				currentAction = ActionKey.RIGHT;
@@ -240,7 +240,8 @@ public class SimplePatrolAI extends EnemyAI {
 				//Player ber�hrt sichtfeld -> Alarm
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
 							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){
-						alarm = true;
+						Alarm.getInstance().setActive(start);
+						
 //						player = other.getParent();
 						Debug.println("Alarm");
 				}
@@ -252,7 +253,7 @@ public class SimplePatrolAI extends EnemyAI {
 					&& mySensor != null
 					&&other.getParent().isStunned()){
 //				core.ingame.HUD.setAlarm(true);//funktioniert nicht
-				alarm = true;
+//				alarm = true;
 				Debug.println("Alarm");
 			} //enemy<->enemy	
 

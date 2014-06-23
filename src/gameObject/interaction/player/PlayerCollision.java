@@ -42,7 +42,8 @@ abstract class PlayerCollision extends GameObject {
 						&& !isHiding()) {//
 
 					GameProperties.setGameOver();
-//					applyInteraction(InteractionState.LOSE);
+					applyInteraction(InteractionState.LOSE);
+					getAnimationObject().setLayer(5);
 					return true;
 				}
 			}

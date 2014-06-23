@@ -3,6 +3,7 @@ package gameWorld;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.interaction.GameObject;
+import gameObject.interaction.enemy.Alarm;
 import gameObject.interaction.enemy.Enemy;
 import gameObject.interaction.player.Player;
 import gameObject.statics.Hideout;
@@ -63,10 +64,21 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 	public GameWorld(int level, IInputHandler iHandler, Camera camera) throws LevelNotFoundException {
 		this.camera = camera;
 		this.iHandler = iHandler;
+		
+
+		
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
 
 		switch (level) {
+		case 0:
+			loadMap(FilePath.level0);
+			break;
+		
+		case 1:
+			loadMap(FilePath.level1);
+			break;
+		
 		case 2:
 			loadMap(FilePath.level2);
 			break;
@@ -74,6 +86,8 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		default:
 			throw new LevelNotFoundException();
 		}
+		
+		Alarm.iniInstance(rayHandler, camera);
 	}
 
 	public void run() {
@@ -321,6 +335,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		for (GameObject g : objects)
 			g.dispose();
 		rayHandler.dispose();
+		Alarm.resetInstance();
 	}
 
 	public BodyObject getGoal() {

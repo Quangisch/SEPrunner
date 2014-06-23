@@ -75,7 +75,6 @@ public class MenuLevelSelect implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				previewImage = new Image(previewTextures.get(levelSelectionList.getSelectedIndex()));
-				System.out.println(levelSelectionList.getSelectedIndex());
 				previewTable.clear();
 				previewImage.setSize(width, height);
 				previewTable.add(previewImage);
@@ -120,12 +119,12 @@ public class MenuLevelSelect implements Screen {
 		previewTable = new Table();
 
 		table.top().add().size(width,0).row();
-		table.add(new Label("Levelauswahl", skin, "big")).pad(height/10, 0, height/10, 0).colspan(3).row();
+		table.add(new Label("Levelauswahl", skin, "big")).pad(height/10, 0, height/2, 0).colspan(3).row();
 //		table.add().size(width/2, 0);
 		table.add().size(width/10, 0);
 		table.add().size(width*2, 0).row();
-		table.add(scrollPane).right().padRight(width/10);
-		table.add(previewTable).left();
+		table.add(scrollPane).right();
+		table.add(previewTable).pad(0, width/20, 0, width/10).left();
 		previewTable.add(previewImage);
 		
 		

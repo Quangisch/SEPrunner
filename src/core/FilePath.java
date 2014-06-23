@@ -21,7 +21,7 @@ public interface FilePath {
 			
 			preview_level1 = "res/map/Macarana.png",	//tmp
 			preview_level2 = "res/map/Rio.png",
-			preview_level3 = "res/map/Macarana.png"
+			preview_level3 = "res/map/rioNacht1.png"
 			
 			
 			
