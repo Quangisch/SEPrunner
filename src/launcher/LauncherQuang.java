@@ -1,6 +1,5 @@
 package launcher;
 
-import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -22,21 +21,21 @@ public class LauncherQuang {
 		cfg.height = GameProperties.SCALE_HEIGHT;
 		
 		
-		System.out.println("Avaiable DisplayModes: ");
-		DisplayMode[] modes = LwjglApplicationConfiguration.getDisplayModes();
-		
+//		System.out.println("Avaiable DisplayModes: ");
+//		DisplayMode[] modes = LwjglApplicationConfiguration.getDisplayModes();
+//		
 //		TODO select mode depending on screen ratio
 //		pref ScreenSize: 1280x800
-		int mode = 6;
-		for(int i = 0; i < modes.length; i++) {
-			System.out.println("Mode "+i+": "+modes[i].toString());
-		}
+//		int mode = 0;
+//		for(int i = 0; i < modes.length; i++) {
+//			System.out.println("Mode "+i+": "+modes[i].toString());
+//		}
+//		
+//		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
+//		System.out.println("\n>>Selected Mode "+mode+": "+GameProperties.displayMode.toString());
 		
-		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
-		System.out.println("\n>>Selected Mode "+mode+": "+GameProperties.displayMode.toString());
 		
-		
-		new LwjglApplication(new Project(GameState.INGAME), cfg);
+		new LwjglApplication(new Project(GameState.MENU), cfg);
 
 		
 		

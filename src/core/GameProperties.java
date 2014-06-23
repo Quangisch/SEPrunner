@@ -3,17 +3,14 @@ package core;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-import misc.Debug;
-import misc.Debug.Mode;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
+import core.exception.LevelNotFoundException;
 import core.ingame.GameRender;
 import core.menu.MenuMain;
 
@@ -22,7 +19,6 @@ public class GameProperties {
 	public static final int SCALE_WIDTH = 640;
 	public static final int SCALE_HEIGHT = 360;
 	
-	public static DisplayMode displayMode;
 	public static final int SIZE_WIDTH = 1280, SIZE_HEIGHT = 800;
 	private static GameState gameState = null;
 
@@ -30,6 +26,8 @@ public class GameProperties {
 	public static float contrast = 1.0f;	
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
+	
+	public static final int IMPLEMENTED_LEVEL = 3; 
  
 	
 //	CONVERSION
@@ -113,10 +111,10 @@ public class GameProperties {
 	}
 	
 	public static void setGameState(GameState state) {
-		setGameState(state, 1);
+		setGameState(state, -1);
 	}
 	
-	public static void setGameState(GameState state, int level) {
+	public static void setGameState(GameState state, int level) throws LevelNotFoundException {
 		final GameState prevState = gameState;
 		gameState = state;
 	
@@ -124,18 +122,13 @@ public class GameProperties {
 				|| (isInGameState() && prevState.isInGame())))
 			return;
 		
-		if(displayMode == null)
-			displayMode = Gdx.graphics.getDesktopDisplayMode();
+		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
+		
+		if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
+		else				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
 		
 		if(!gameState.equals(prevState))
 			ResourceManager.getInstance().startMusic();
-		
-		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
-		Debug.println(displayMode.width + "x" + displayMode.height, Mode.CONSOLE);
-
-		
-		if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
-		else			((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
 			
 	}
 	

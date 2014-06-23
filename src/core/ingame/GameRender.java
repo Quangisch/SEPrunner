@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import core.GameProperties;
 import core.ResourceManager;
+import core.exception.LevelNotFoundException;
 import core.ingame.input.InputHandler;
 
 public class GameRender implements Screen {
@@ -31,8 +32,7 @@ public class GameRender implements Screen {
 	private Camera camera;
 	private HUD hud;
 
-	public GameRender(int level) {
-		loadResources(); //TODO
+	public GameRender(int level) throws LevelNotFoundException {
 		camera = new Camera();
 		iHandler = new InputHandler(camera);
 		gameWorld = new GameWorld(level, iHandler, camera);
@@ -79,6 +79,12 @@ public class GameRender implements Screen {
 			break;
 		case INGAME_PAUSE:
 			System.out.println("PAUSE");
+			
+			
+			
+			
+			
+			
 			delta = 0;
 			break;
 		case INGAME_WIN:
@@ -139,10 +145,4 @@ public class GameRender implements Screen {
 	public void hide() {
 
 	}
-
-	private void loadResources() {
-		//TODO
-		//		manager.load(fileName, type);
-	}
-
 }

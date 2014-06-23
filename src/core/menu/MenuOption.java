@@ -81,7 +81,7 @@ public class MenuOption implements Screen {
 		clickHandler = new ClickHandler();
 		Gdx.input.setInputProcessor(stage);
 		stage.addListener(clickHandler);
-		stage.setViewport(1280,800, true);
+		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SCALE_HEIGHT, true);
 		
 		keyMap = new KeyMap();
 		keyLabelList = new LinkedList<KeyLabel>();
@@ -277,8 +277,7 @@ public class MenuOption implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-//		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		stage.setViewport(1280,800, true);
+		
 	}
 
 	@Override
@@ -383,7 +382,7 @@ public class MenuOption implements Screen {
 //			FULLSCREEN
 			} else if(event.getListenerActor() == fullScreenCheckBox) {
 				GameProperties.toogleFullScreen();
-				stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
+				stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT);
 				mainTable.invalidateHierarchy();
 				
 //			SLIDER

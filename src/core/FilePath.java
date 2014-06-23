@@ -5,7 +5,9 @@ public interface FilePath {
 	public static final String 
 //			JSON
 			highscore = "res/highscore.json",
+			level0 = "res/map/level0.json",
 			level1 = "res/map/level1.json",
+			level2 = "res/map/level2.json",
 			settings = "res/settings.json",
 			
 //			AUDIO
@@ -15,8 +17,11 @@ public interface FilePath {
 			music_lose = "res/audio/music/lose.mp3",
 	
 //			GRAPHICS
-			graphic_menuMain = "res/img/main menu.png"
+			graphic_menuMain = "res/img/main menu.png",
 			
+			preview_level1 = "res/map/Macarana.png",	//tmp
+			preview_level2 = "res/map/Rio.png",
+			preview_level3 = "res/map/Macarana.png"
 			
 			
 			

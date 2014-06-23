@@ -57,19 +57,14 @@ public class MenuMain implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-//		original height / original width x new width = new height
-//		height = (int)((float)GameProperties.SCALE_HEIGHT / GameProperties.SCALE_WIDTH * width);
-//		backgroundSprite.setSize(width, height);
-//		table.invalidateHierarchy();
-//		Gdx.graphics.setDisplayMode(width, height, false);	
-		stage.setViewport(1280,800, true);
+		
 	}
 
 	@Override
 	public void show() {
 		stage = new Stage();
 		shaderBatch = new ShaderBatch(100);		//background laden
-		stage.setViewport(GameProperties.displayMode.width, GameProperties.displayMode.height);
+		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT);
 		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
 		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

@@ -20,9 +20,9 @@ public class LauncherAlex {
 		cfg.height = GameProperties.SCALE_HEIGHT;
 //		cfg.fullscreen = true;
 		
-		int mode = 0;
-		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
-		System.out.println("DisplayMode "+mode+": "+GameProperties.displayMode.toString());
+//		int mode = 0;
+//		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
+//		System.out.println("DisplayMode "+mode+": "+GameProperties.displayMode.toString());
 		
 		new LwjglApplication(new Project(GameState.MENU), cfg);
 	}							//start view project Z11 = first img set

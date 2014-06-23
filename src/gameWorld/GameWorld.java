@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.FilePath;
 import core.GameProperties;
 import core.GameProperties.GameState;
+import core.exception.LevelNotFoundException;
 import core.ingame.Camera;
 import core.ingame.IDrawable;
 import core.ingame.input.IInputHandler;
@@ -59,19 +60,19 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 
 	private float timeLimit, time = 0;
 
-	public GameWorld(int level, IInputHandler iHandler, Camera camera) {
+	public GameWorld(int level, IInputHandler iHandler, Camera camera) throws LevelNotFoundException {
 		this.camera = camera;
 		this.iHandler = iHandler;
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
 
 		switch (level) {
-		case 1:
-			loadMap(FilePath.level1);
+		case 2:
+			loadMap(FilePath.level2);
 			break;
 
 		default:
-			break;
+			throw new LevelNotFoundException();
 		}
 	}
 

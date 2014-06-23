@@ -3,15 +3,15 @@
 	"mapTexture" : [
 						{
 							"position" : [0, 0], 
-							"texture" : "res/map/level1_1.png"
+							"texture" : "res/map/level2_1.png"
 						},
 						{
 							"position" : [4260, 0], 
-							"texture" : "res/map/level1_2.png"
+							"texture" : "res/map/level2_2.png"
 						},
 						{
 							"position" : [7100, 0], 
-							"texture" : "res/map/level1_3.png"
+							"texture" : "res/map/level2_3.png"
 						},
 					],
 	"gravity" 	: [0, -20],

@@ -21,9 +21,9 @@ public class MainLauncher {
 		cfg.width = GameProperties.SCALE_WIDTH;
 		cfg.height = GameProperties.SCALE_HEIGHT;
 		
-		int mode = 0;
-		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
-		System.out.println("Mode"+mode+": "+GameProperties.displayMode.toString());
+//		int mode = 0;
+//		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
+//		System.out.println("Mode"+mode+": "+GameProperties.displayMode.toString());
 		
 		new LwjglApplication(new Project(GameState.MENU), cfg);
 	}

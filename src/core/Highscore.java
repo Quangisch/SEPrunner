@@ -21,6 +21,7 @@ public class Highscore {
 	
 	private Highscore() {
 		highscoreList = new HashMap<Level, List<Score>>();
+		loadHighscoreList();
 	}
 	
 	public boolean loadHighscoreList() {
@@ -35,7 +36,7 @@ public class Highscore {
 			return false;
 		
 		for(int i = 0; i < root.size; i++) {
-			final Level level = new Level(i+1, root.get(i).getString("name"));
+			final Level level = new Level(i, root.get(i).getString("name"));
 			if(!highscoreList.containsKey(level))
 				highscoreList.put(level, new LinkedList<Score>());
 			for(JsonValue s : root.get(i).get("highscore")) {
@@ -75,6 +76,13 @@ public class Highscore {
 		return null;
 	}
 	
+	public List<List<Score>> getHighscoreLists() {
+		List<List<Score>> highscoreLists = new LinkedList<List<Score>>();
+		for(int i = 0; i < 3; i++)
+			highscoreLists.add(getHighscoreList(i));
+		return highscoreLists;
+	}
+	
 	public static Highscore getInstance() {
 		if(highscore == null)
 			highscore = new Highscore();
@@ -95,9 +103,6 @@ public class Highscore {
 			TIME_STRING = StringFunctions.getTimeAsString(time);
 			
 		}
-		
-//		TODO dirty
-		
 
 		@Override
 		public int compareTo(Score other) {
