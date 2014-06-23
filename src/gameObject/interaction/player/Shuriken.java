@@ -5,7 +5,6 @@ import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
-import gameObject.interaction.enemy.Enemy;
 
 import com.badlogic.gdx.math.Vector2;
 

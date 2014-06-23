@@ -3,11 +3,9 @@ package gameObject.interaction.enemy.ai;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
-import gameObject.body.Sensor;
 import gameObject.body.ISensorTypes.SensorTypes;
-import gameObject.interaction.GameObject;
+import gameObject.body.Sensor;
 import gameObject.interaction.InteractionState;
-import gameObject.interaction.enemy.Enemy;
 import misc.Debug;
 
 import com.badlogic.gdx.utils.JsonValue;
@@ -21,7 +19,7 @@ public class HardAI extends EnemyAI {
 	private ActionKey currentAction;
 	private boolean alarm;
 	private InteractionState walkStyle;
-	private int armour = 3;//Nötige Shuriken Treffer
+	private int armour = 3;//Nï¿½tige Shuriken Treffer
 //	private GameObject player;
 	//NILS
 
@@ -239,7 +237,7 @@ public class HardAI extends EnemyAI {
 				
 				boolean meFlipped = mySensor.getBodyObject().getParent().getAnimationObject().isFlipped();
 				
-				//Player berührt sichtfeld -> Alarm
+				//Player berï¿½hrt sichtfeld -> Alarm
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
 							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){
 						alarm = true;
