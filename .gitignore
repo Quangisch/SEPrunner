@@ -22,3 +22,4 @@ $RECYCLE.BIN/
 .settings/
 bin/
 res/settings.json
+res/profile.json

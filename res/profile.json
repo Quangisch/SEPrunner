@@ -1,5 +1,5 @@
 {
-shuriken: 0,
-hookRadius: 100,
+shuriken: 1000,
+hookRadius: 300,
 stylePoints: 0
 }
