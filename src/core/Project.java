@@ -21,7 +21,7 @@ public class Project extends Game{
 		if(GameProperties.isInMenuState())
 			setScreen(new MenuProfile()); //set first img, next Z56 in splash
 		else 
-			setScreen(new GameRender(0));
+			setScreen(new GameRender(2));
 	}
 
 	@Override

@@ -31,14 +31,10 @@ public class InputHandler implements IInputHandler, InputProcessor {
 	}
 
 	private void initKeyMap() {
-
 		keyMap = new KeyMap();
-		
-
-
 		keyMap.init();
 	}
-	
+
 	@Override
 	public void addActionKey(ActionKey action, int... keys) {
 		keyMap.add(action, keys);
@@ -110,10 +106,10 @@ public class InputHandler implements IInputHandler, InputProcessor {
 			keyUp(k);
 		return true;
 	}
-	
+
 	@Override
 	public void keyDown(ActionKey action) {
-		for(int k : keyMap.get(action))
+		for (int k : keyMap.get(action))
 			keyDown(k);
 	}
 

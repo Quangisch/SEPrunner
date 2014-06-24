@@ -62,7 +62,360 @@
 				],
 				
 	"light" : 		[
-						
+						{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	800,
+						"x"			:	500,
+						"y"			:	800,
+						"directionDegree"	:	270,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	1000,
+						"y"			:	700
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	1800,
+						"y"			:	800,
+						"directionDegree"	:	220,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	2300,
+						"y"			:	700
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	2600,
+						"y"			:	1200
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	3500,
+						"y"			:	1200
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	1600,
+						"y"			:	1500
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	300,
+						"y"			:	1700
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	530,
+						"y"			:	1620,
+						"directionDegree"	:	320,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	1100,
+						"y"			:	2100
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 1, 1],
+						"distance"	:	700,
+						"x"			:	2035,
+						"y"			:	1600,
+						"directionDegree"	:	230,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	700,
+						"x"			:	1830,
+						"y"			:	1300,
+						"directionDegree"	:	320,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.5, 1],
+						"distance"	:	600,
+						"x"			:	2325,
+						"y"			:	1660,
+						"directionDegree"	:	320,
+						"coneDegree"		:	19
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	2900,
+						"y"			:	1500
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	3500,
+						"y"			:	1900
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.5, 1],
+						"distance"	:	900,
+						"x"			:	3840,
+						"y"			:	1340,
+						"directionDegree"	:	320,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	4800,
+						"y"			:	1200
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	600,
+						"x"			:	4530,
+						"y"			:	1335,
+						"directionDegree"	:	270,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	600,
+						"x"			:	5600,
+						"y"			:	1335,
+						"directionDegree"	:	270,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	600,
+						"x"			:	6000,
+						"y"			:	1335,
+						"directionDegree"	:	270,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	3330,
+						"y"			:	640,
+						"directionDegree"	:	230,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.3, 1, 0.3, 1],
+						"distance"	:	800,
+						"x"			:	3490,
+						"y"			:	640,
+						"directionDegree"	:	310,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	4100,
+						"y"			:	550
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	800,
+						"x"			:	5230,
+						"y"			:	635,
+						"directionDegree"	:	245,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	800,
+						"x"			:	5230,
+						"y"			:	570,
+						"directionDegree"	:	320,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	6200,
+						"y"			:	500
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	6700,
+						"y"			:	1300
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	7250,
+						"y"			:	1900
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	8300,
+						"y"			:	1400
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	8030,
+						"y"			:	1310,
+						"directionDegree"	:	240,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	7280,
+						"y"			:	1040,
+						"directionDegree"	:	320,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	7900,
+						"y"			:	200,
+						"directionDegree"	:	270,
+						"coneDegree"		:	35
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	600,
+						"x"			:	8900,
+						"y"			:	540,
+						"directionDegree"	:	270,
+						"coneDegree"		:	35
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	9000,
+						"y"			:	1000
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	9800,
+						"y"			:	700
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	10400,
+						"y"			:	900
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	10700,
+						"y"			:	800,
+						"directionDegree"	:	300,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	11100,
+						"y"			:	800,
+						"directionDegree"	:	270,
+						"coneDegree"		:	35
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	11500,
+						"y"			:	800,
+						"directionDegree"	:	240,
+						"coneDegree"		:	20
+					},
 	
 				],
 	"music" : "map1.mp3",
@@ -77,6 +430,412 @@
 						"isPlayer" : true,
 						"AI" : {
 						}
-					}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_medium",
+						"position" : [2500, 1000],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "MediumAI",
+							"Actions" : 	[
+										{
+											"between"	: [2500],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [1780],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_medium",
+						"position" : [3100, 1000],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "MediumAI",
+							"Actions" : 	[
+										{
+											"between"	: [3900],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [3100],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [3450, 3893],
+											"horizontal" 	: true,
+											"key"		: "CROUCH"
+										},
+										{
+											"between"	: [3215, 3250],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [3500, 1200],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [3800],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [3500],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [4000, 1220],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [4450],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [4000],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_hard",
+						"position" : [5200, 900],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "HardAI",
+							"Actions" : 	[
+										{
+											"between"	: [5700],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [5200],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [1100, 600],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [1200],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [1100],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_medium",
+						"position" : [900, 300],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "MediumAI",
+							"Actions" : 	[
+										{
+											"between"	: [1700],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [900],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_medium",
+						"position" : [2600, 250],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "MediumAI",
+							"Actions" : 	[
+										{
+											"between"	: [3600],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [2600],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_hard",
+						"position" : [4100, 250],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "HardAI",
+							"Actions" : 	[
+										{
+											"between"	: [4800],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [4100],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [5000, 600],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [5300],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [5000],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [6400, 500],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [7700],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [6400],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_medium",
+						"position" : [7900, 900],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "MediumAI",
+							"Actions" : 	[
+										{
+											"between"	: [8500],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [7900],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_medium",
+						"position" : [8500, 1300],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "MediumAI",
+							"Actions" : 	[
+										{
+											"between"	: [9700],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [8500],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [9250, 9550],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_hard",
+						"position" : [10550, 1000],
+						"scale" : 1.0,
+						"flip" : true,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "HardAI",
+							"Actions" : 	[
+										
+									]
+						}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [2300, 1000],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [3700, 1090],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [4200, 1260],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [1470, 190],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [1470, 190],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [3400, 290],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [7200, 290],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "tree",
+						"position" : [8700, 1190],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
 				]
 }

@@ -27,7 +27,6 @@ public class Player extends PlayerCollision {
 			return;
 		super.run();
 		interactionHandler.run();
-	
 	}
 
 	
