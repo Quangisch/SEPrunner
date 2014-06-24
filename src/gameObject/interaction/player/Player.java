@@ -29,8 +29,8 @@ public class Player extends PlayerCollision {
 		super.run();
 //		interactionHandler.run();
 		interactionHandler.run();
-		
-	
+		System.out.println("X = "+this.getBodyObject().getX());
+		System.out.println("Y = "+this.getBodyObject().getY());
 	}
 
 	
