@@ -60,7 +60,383 @@
 				],
 				
 	"light" : 		[
-						
+	
+						{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	800,
+						"x"			:	350,
+						"y"			:	1200,
+						"directionDegree"	:	270,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	750,
+						"y"			:	1200,
+						"directionDegree"	:	270,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	800,
+						"x"			:	1150,
+						"y"			:	1200,
+						"directionDegree"	:	270,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	1550,
+						"y"			:	1400,
+						"directionDegree"	:	270,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	800,
+						"x"			:	1950,
+						"y"			:	1300,
+						"directionDegree"	:	270,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	2350,
+						"y"			:	1200,
+						"directionDegree"	:	270,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	2900,
+						"y"			:	1200
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.2, 1, 1, 0.6],
+						"distance"	:	800,
+						"x"			:	3200,
+						"y"			:	1390,
+						"directionDegree"	:	200,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	3500,
+						"y"			:	1000,
+						"directionDegree"	:	270,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	3885,
+						"y"			:	1355,
+						"directionDegree"	:	320,
+						"coneDegree"		:	13
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	4200,
+						"y"			:	1200
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	4395,
+						"y"			:	1355,
+						"directionDegree"	:	230,
+						"coneDegree"		:	13
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.7, 0.9],
+						"distance"	:	800,
+						"x"			:	4780,
+						"y"			:	1090,
+						"directionDegree"	:	240,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	5040,
+						"y"			:	500,
+						"directionDegree"	:	270,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	600,
+						"x"			:	4990,
+						"y"			:	1150,
+						"directionDegree"	:	300,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	5700,
+						"y"			:	1200
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	6300,
+						"y"			:	1800
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	6900,
+						"y"			:	1300
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.7, 0.9],
+						"distance"	:	1000,
+						"x"			:	7600,
+						"y"			:	1200,
+						"directionDegree"	:	270,
+						"coneDegree"		:	35
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	8250,
+						"y"			:	1100
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.5, 1],
+						"distance"	:	600,
+						"x"			:	8495,
+						"y"			:	1450,
+						"directionDegree"	:	220,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	9000,
+						"y"			:	1400
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	600,
+						"x"			:	8800,
+						"y"			:	750,
+						"directionDegree"	:	220,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	7840,
+						"y"			:	700,
+						"directionDegree"	:	270,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	400,
+						"x"			:	7545,
+						"y"			:	685,
+						"directionDegree"	:	270,
+						"coneDegree"		:	17
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	7340,
+						"y"			:	450,
+						"directionDegree"	:	270,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	7590,
+						"y"			:	350,
+						"directionDegree"	:	270,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	7810,
+						"y"			:	280,
+						"directionDegree"	:	270,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	500,
+						"x"			:	8100,
+						"y"			:	280,
+						"directionDegree"	:	270,
+						"coneDegree"		:	15
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	8800,
+						"y"			:	300
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0,5, 1, 1, 1],
+						"distance"	:	700,
+						"x"			:	9295,
+						"y"			:	380,
+						"directionDegree"	:	220,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	9500,
+						"y"			:	850
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 0.7, 0.9],
+						"distance"	:	500,
+						"x"			:	9400,
+						"y"			:	1050,
+						"directionDegree"	:	270,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[0.5, 1, 0.7, 0.9],
+						"distance"	:	800,
+						"x"			:	9850,
+						"y"			:	870,
+						"directionDegree"	:	270,
+						"coneDegree"		:	30
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	10400,
+						"y"			:	1200
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[1, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	10600,
+						"y"			:	1900
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	11000,
+						"y"			:	1200,
+						"directionDegree"	:	310,
+						"coneDegree"		:	25
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	11400,
+						"y"			:	1400,
+						"directionDegree"	:	300,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	800,
+						"x"			:	11800,
+						"y"			:	1400,
+						"directionDegree"	:	270,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"pointLight",
+						"rays"		:	32,
+						"color"		:	[0.2, 0.3, 1, 0.6],
+						"distance"	:	1000,
+						"x"			:	12100,
+						"y"			:	1500
+					}
 	
 				],
 	"music" : "map1.mp3",
