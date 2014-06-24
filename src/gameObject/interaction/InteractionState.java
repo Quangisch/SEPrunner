@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 
 public enum InteractionState {
 
-	STAND(true, false, Animation.LOOP), WALK(true, false, Animation.LOOP), WALK_ENEMY(true, false, Animation.LOOP), RUN(true, false, Animation.LOOP),
+	STAND(true, false, Animation.LOOP), WALK(true, false, Animation.LOOP), RUN(true, false, Animation.LOOP),
 
 	CROUCH_STAND(true, false, Animation.LOOP), CROUCH_DOWN(false, true, Animation.NORMAL), CROUCH_SNEAK(true, false, Animation.LOOP),
 

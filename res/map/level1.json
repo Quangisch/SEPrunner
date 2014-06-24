@@ -380,121 +380,35 @@
 						"position" : [930, 300],
 						"scale" : 1.0,
 						"flip" : false,
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
-							"Param" : [930, 1500]
+							"Actions" : 	[
+										{
+											"between"	: [930],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [500],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [500,700],
+											"horizontal" 	: true,
+											"key"		: "CROUCH"
+										},
+										
+										
+									],
 						}
 					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [2010, 400],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [2010, 2700]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [3000, 300],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [3000, 3870]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [3600, 400],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [3650, 3800]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [5000, 100],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [4800, 6200]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [5550, 250],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [5550, 6200]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [5550, 570],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [4800, 6050]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [5850, 1100],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [5830, 6450]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [7000, 500],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [6950, 7850]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [8150, 800],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [8300, 10500]
-						}
-					},
-					{
-						"ID" : "enemy",
-						"json" : "enemy_full",
-						"position" : [10000, 500],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {
-							"ID" : "SimplePatrolAI",
-							"Param" : [10000, 10500]
-						}
-					},
+					
+
+					
+
+
 					{
 						"ID" : "hideable",
 						"json" : "trashbin",

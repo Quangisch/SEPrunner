@@ -18,7 +18,6 @@ public class MediumAI extends EnemyAI {
 	//NILS
 	private ActionKey currentAction;
 	private boolean alarm;
-	private InteractionState walkStyle;
 	private int armour = 2;//N�tige Shuriken Treffer
 //	private GameObject player;
 	//NILS
@@ -29,7 +28,6 @@ public class MediumAI extends EnemyAI {
 	public void init(JsonValue jsonValue) {
 		leftX = jsonValue.getFloat(0);
 		rightX = jsonValue.getFloat(1);
-		walkStyle = InteractionState.WALK_ENEMY;
 	}
 
 	@Override
@@ -40,25 +38,25 @@ public class MediumAI extends EnemyAI {
 		if(getEnemy().getBodyObject().getX()<=leftX){
 			getEnemy().getAnimationObject().flip();
 			currentAction = ActionKey.RIGHT;
-			getEnemy().applyInteraction(walkStyle);
+			
 			getEnemy().getBodyObject().getSensors().get(0).setActive(false);//deaktiviert linken sensor
 			getEnemy().getBodyObject().getSensors().get(1).setActive(true);
 		}
 		if(getEnemy().getBodyObject().getX()>=rightX){
 			getEnemy().getAnimationObject().flip();
 			currentAction = ActionKey.LEFT;
-			getEnemy().applyInteraction(walkStyle);
+			
 			getEnemy().getBodyObject().getSensors().get(1).setActive(false);//deaktiviert rechten sensor
 			getEnemy().getBodyObject().getSensors().get(0).setActive(true);
 		}
 
 		//BEWEGUNGSABFOLGE
 		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<1250 && !getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.RIGHT;
 		}
 		if(getEnemy().getBodyObject().getX()>leftX && getEnemy().getBodyObject().getX()<1250 && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>1250 && getEnemy().getBodyObject().getX()<1300 && !getEnemy().getAnimationObject().isFlipped()){
@@ -66,11 +64,11 @@ public class MediumAI extends EnemyAI {
 			currentAction = ActionKey.JUMP;
 		}
 		if(getEnemy().getBodyObject().getX()>1310 && getEnemy().getBodyObject().getX()<1500 && !getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.RIGHT;
 		}
 		if(getEnemy().getBodyObject().getX()>1310 && getEnemy().getBodyObject().getX()<1500 && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>1250 && getEnemy().getBodyObject().getX()<1400 && getEnemy().getAnimationObject().isFlipped()){
@@ -82,11 +80,11 @@ public class MediumAI extends EnemyAI {
 			currentAction = ActionKey.CROUCH;
 		}
 		if(getEnemy().getBodyObject().getX()>(2000<leftX ? leftX : 2000) && getEnemy().getBodyObject().getX()<(2300>rightX ? rightX : 2300) && !getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.RIGHT;
 		}
 		if(getEnemy().getBodyObject().getX()>(2000<leftX ? leftX : 2000) && getEnemy().getBodyObject().getX()<(2340>rightX ? rightX : 2340) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>(2310<leftX ? leftX : 2310) && getEnemy().getBodyObject().getX()<(2650>rightX ? rightX : 2650)){// && !getEnemy().getAnimationObject().isFlipped()){
@@ -94,11 +92,11 @@ public class MediumAI extends EnemyAI {
 			currentAction = ActionKey.CROUCH;
 		}
 		if(getEnemy().getBodyObject().getX()>(2650<leftX ? leftX : 2650) && getEnemy().getBodyObject().getX()<(4330>rightX ? rightX : 4330) && !getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.RIGHT;
 		}
 		if(getEnemy().getBodyObject().getX()>(2650<leftX ? leftX : 2650) && getEnemy().getBodyObject().getX()<(4330>rightX ? rightX : 4330) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>(4330<leftX ? leftX : 4330) && getEnemy().getBodyObject().getX()<(4750>rightX ? rightX : 4750)){// && !getEnemy().getAnimationObject().isFlipped()){
@@ -106,11 +104,11 @@ public class MediumAI extends EnemyAI {
 			currentAction = ActionKey.CROUCH;
 		}
 		if(getEnemy().getBodyObject().getX()>(4750<leftX ? leftX : 4750) && getEnemy().getBodyObject().getX()<(5330>rightX ? rightX : 5430) && !getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.RIGHT;
 		}
 		if(getEnemy().getBodyObject().getX()>(4750<leftX ? leftX : 4750) && getEnemy().getBodyObject().getX()<(5430>rightX ? rightX : 5430) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getY()<700){//Ebene 1 & 2
@@ -120,7 +118,7 @@ public class MediumAI extends EnemyAI {
 					currentAction = ActionKey.JUMP;
 				}
 				if(getEnemy().getBodyObject().getX()>(5500<leftX ? leftX : 5500) && getEnemy().getBodyObject().getX()<(5750>rightX ? rightX : 5750) && !getEnemy().getAnimationObject().isFlipped()){
-					getEnemy().applyInteraction(walkStyle);
+					
 					currentAction = ActionKey.RIGHT;
 				}
 				if(getEnemy().getBodyObject().getX()>5750 && getEnemy().getBodyObject().getX()<5820 && !getEnemy().getAnimationObject().isFlipped()){
@@ -128,43 +126,43 @@ public class MediumAI extends EnemyAI {
 					currentAction = ActionKey.JUMP;
 				}
 				if(getEnemy().getBodyObject().getX()>(5820<leftX ? leftX : 5820) && getEnemy().getBodyObject().getX()<(6200>rightX ? rightX : 6200) && !getEnemy().getAnimationObject().isFlipped()){
-					getEnemy().applyInteraction(walkStyle);
+					
 					currentAction = ActionKey.RIGHT;
 				}
 			}else{//Ebene 2
 				if(getEnemy().getBodyObject().getX()>(5430<leftX ? leftX : 5430) && getEnemy().getBodyObject().getX()<(6100>rightX ? rightX : 6100) && !getEnemy().getAnimationObject().isFlipped()){
-					getEnemy().applyInteraction(walkStyle);
+					
 						currentAction = ActionKey.RIGHT;
 				}
 			}
 			if(getEnemy().getBodyObject().getX()>(5430<leftX ? leftX : 5430) && getEnemy().getBodyObject().getX()<(6200>rightX ? rightX : 6200) && getEnemy().getAnimationObject().isFlipped()){
-				getEnemy().applyInteraction(walkStyle);
+				
 				currentAction = ActionKey.LEFT;
 			}
 		}else{//Ebene 3
 			if(getEnemy().getBodyObject().getX()>(5830<leftX ? leftX : 5830) && getEnemy().getBodyObject().getX()<(6450>rightX ? rightX : 6450) && !getEnemy().getAnimationObject().isFlipped()){
-				getEnemy().applyInteraction(walkStyle);
+				
 				currentAction = ActionKey.RIGHT;
 			}
 			if(getEnemy().getBodyObject().getX()>(5830<leftX ? leftX : 5830) && getEnemy().getBodyObject().getX()<(6450>rightX ? rightX : 6450) && getEnemy().getAnimationObject().isFlipped()){
-				getEnemy().applyInteraction(walkStyle);
+				
 				currentAction = ActionKey.LEFT;
 			}
 		}
 		if(getEnemy().getBodyObject().getX()>(6950<leftX ? leftX : 6950) && getEnemy().getBodyObject().getX()<(7850>rightX ? rightX : 7850) && !getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.RIGHT;
 		}
 		if(getEnemy().getBodyObject().getX()>(6950<leftX ? leftX : 6950) && getEnemy().getBodyObject().getX()<(7850>rightX ? rightX : 7850) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>(8120<leftX ? leftX : 8120) && getEnemy().getBodyObject().getX()<(8400>rightX ? rightX : 8400) && !getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.RIGHT;
 		}
 		if(getEnemy().getBodyObject().getX()>(8120<leftX ? leftX : 8120) && getEnemy().getBodyObject().getX()<(8400>rightX ? rightX : 8400) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>(8400<leftX ? leftX : 8400) && getEnemy().getBodyObject().getX()<(8750>rightX ? rightX : 8750)){// && !getEnemy().getAnimationObject().isFlipped()){
@@ -172,11 +170,11 @@ public class MediumAI extends EnemyAI {
 			currentAction = ActionKey.CROUCH;
 		}
 		if(getEnemy().getBodyObject().getX()>(8750<leftX ? leftX : 8750) && getEnemy().getBodyObject().getX()<(10500>rightX ? rightX : 10500) && !getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.RIGHT;
 		}	
 		if(getEnemy().getBodyObject().getX()>(9950<leftX ? leftX : 9950) && getEnemy().getBodyObject().getX()<(10500>rightX ? rightX : 10500) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>9550 && getEnemy().getBodyObject().getX()<9950 && getEnemy().getAnimationObject().isFlipped()){
@@ -184,7 +182,7 @@ public class MediumAI extends EnemyAI {
 			currentAction = ActionKey.JUMP;
 		}
 		if(getEnemy().getBodyObject().getX()>(9450<leftX ? leftX : 9450) && getEnemy().getBodyObject().getX()<(9550>rightX ? rightX : 9550) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>9150 && getEnemy().getBodyObject().getX()<9450 && getEnemy().getAnimationObject().isFlipped()){
@@ -192,7 +190,7 @@ public class MediumAI extends EnemyAI {
 			currentAction = ActionKey.JUMP;
 		}
 		if(getEnemy().getBodyObject().getX()>(9050<leftX ? leftX : 9050) && getEnemy().getBodyObject().getX()<(9150>rightX ? rightX : 9150) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		if(getEnemy().getBodyObject().getX()>8800 && getEnemy().getBodyObject().getX()<9050 && getEnemy().getAnimationObject().isFlipped()){
@@ -200,14 +198,14 @@ public class MediumAI extends EnemyAI {
 			currentAction = ActionKey.JUMP;
 		}
 		if(getEnemy().getBodyObject().getX()>(8750<leftX ? leftX : 8750) && getEnemy().getBodyObject().getX()<(8800>rightX ? rightX : 8800) && getEnemy().getAnimationObject().isFlipped()){
-			getEnemy().applyInteraction(walkStyle);
+			
 			currentAction = ActionKey.LEFT;
 		}
 		//BEWEGUNGSABFOLGE ENDE
 				
 		//ALARM -> enemy verfolgt player
 		if(alarm && !getEnemy().isStunned()){
-			walkStyle = InteractionState.WALK;
+//			walkStyle = InteractionState.WALK;
 //			if(player.getX()>getEnemy().getX()){
 //				currentAction = ActionKey.RIGHT;
 //			}else{

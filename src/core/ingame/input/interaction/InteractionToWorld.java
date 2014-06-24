@@ -59,11 +59,7 @@ public class InteractionToWorld {
 		case RUN:
 		case CROUCH_SNEAK:
 		case WALK:
-			baseForce.add(1, gameObject.isGrounded() ? 1 : 0);
-			//TODO:Geschwindigkeit zu schnell für Enemys
-			break;
-		case WALK_ENEMY:
-			baseForce.add(0.55f, gameObject.isGrounded() ? 1.35f : 0);
+			baseForce.add(walkMul, gameObject.isGrounded() ? 2-walkMul : 0);
 			break;
 		default:
 			break;
@@ -72,8 +68,15 @@ public class InteractionToWorld {
 		return baseForce;
 	}
 
-	private float runMul = 1.5f, sneakMul = 0.8f, pullMul = 1.5f;
-
+	private float walkMul = 1, runMul = 1.5f, sneakMul = 0.8f, pullMul = 1.5f;
+	
+	protected void setForceMultiplier(float walkMul, float runMul, float sneakMul, float pullMull) {
+		this.walkMul = walkMul;
+		this.runMul = runMul;
+		this.sneakMul = sneakMul;
+		this.pullMul = pullMull;
+	}
+	
 	private Vector2 applyForceMultiplier(Vector2 baseForce) {
 		Vector2 multipliedForce = baseForce.scl(2.5f);
 
@@ -82,7 +85,7 @@ public class InteractionToWorld {
 			multipliedForce = baseForce.scl(runMul, 1);
 			break;
 		case CROUCH_SNEAK:
-			multipliedForce = baseForce.scl(sneakMul, 0);
+			multipliedForce = baseForce.scl(sneakMul);
 			break;
 		case GRAB_PULL:
 			multipliedForce = baseForce.scl(-pullMul, 0);

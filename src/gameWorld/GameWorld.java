@@ -268,7 +268,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 			break;
 		case 1:
 			obj = new Enemy(this, pos);
-			if (root.hasChild("AI")) ((Enemy) obj).setNewAI(root.get("AI"));
+			if (root.hasChild("AI")) ((Enemy) obj).setNewAI(root.get("AI"), root.get("forceMultiplier"));
 			break;
 		case 2:
 			obj = new Hideout(this, pos);

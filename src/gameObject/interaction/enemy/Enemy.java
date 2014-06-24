@@ -37,17 +37,12 @@ public class Enemy extends GameObject {
 		super.init(name);
 		setBodyObjectType(BodyObjectType.Enemy);
 		getAnimationObject().setLayer(3);
-//		getBodyObject().setLinearDamping(2.5f);
-		
+
 		getBodyObject().addSensor(Type.Circle, new float[] { 0, 1, 0.5f },
 				SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
 		// NILS
 		getBodyObject().addSensor(Type.Circle, new float[] { 1.3f, 1, 0.5f },
 				SensorTypes.VISION_RIGHT, Sensor.HANDLE_FIRST);
-//		float[] verticesBody = { 0.4f, 0.3f, 0.9f, 0.3f, 0.9f, 1.15f, 0.4f, 1.15f };
-//		getBodyObject().addSensor(Type.Polygon, verticesBody,
-//				SensorTypes.BODY, Sensor.HANDLE_FIRST);
-		// NILS
 	}
 
 	@Override
@@ -69,12 +64,20 @@ public class Enemy extends GameObject {
 		view.setDirection(getAnimationObject().isFlipped() ? 180 : 0);
 	}
 
-	public void setAI(IEnemyAI ai) {
+	public void setAI(IEnemyAI ai, float walkMul, float runMul, float sneakMul, float pullMul) {
 		if (AI == ai)
 			return;
 		AI = ai;
 		interactionHandler = new InteractionHandler(ai, this);
+//		TODO
+//		playerMul: private float walkMul = 1, runMul = 1.5f, sneakMul = 0.8f, pullMul = 1.5f;
+//		interactionHandler.setForceMultiplier(0.55f, 1.2f, 0.8f, 1.5f);
+		interactionHandler.setForceMultiplier(walkMul, runMul, sneakMul, pullMul);
 		AI.setEnemy(this);
+	}
+	
+	public void setAI(IEnemyAI ai) {
+		setAI(ai, 0.55f, 1.2f, 0.8f, 1.5f);
 	}
 
 	public IEnemyAI getAI() {
@@ -108,8 +111,8 @@ public class Enemy extends GameObject {
 				|| getAI().handleCollision(start, postSolve, mySensor, other, otherSensor));
 		// NILS
 	}
-
-	public void setNewAI(JsonValue jAI) {
+	
+	public void setNewAI(JsonValue jAI, JsonValue jMul) {
 		IEnemyAI ai = null;
 		switch (StringFunctions.getMostEqualIndexIgnoreCase(
 				jAI.getString("ID", ""), new String[] //
@@ -128,7 +131,11 @@ public class Enemy extends GameObject {
 			break;
 		}
 		if (ai != null)
-			ai.init(jAI.get("Param"));
-		setAI(ai);
+			ai.init(jAI.get("Actions"));
+		
+		if(jMul == null)	setAI(ai);
+		else				setAI(ai, jMul.getFloat(0), jMul.getFloat(1), 
+										jMul.getFloat(2), jMul.getFloat(3));
+		
 	}
 }

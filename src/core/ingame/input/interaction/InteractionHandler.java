@@ -73,5 +73,10 @@ public class InteractionHandler implements Runnable {
 	protected Click popClick() {
 		return iHandler.popClick();
 	}
+	
+//	@Override
+	public void setForceMultiplier(float walkMul, float runMul, float sneakMul, float pullMull) {
+		interactionToWorld.setForceMultiplier(walkMul, runMul, sneakMul, pullMull);
+	}
 
 }
