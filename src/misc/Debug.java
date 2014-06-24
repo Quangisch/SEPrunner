@@ -31,7 +31,7 @@ public abstract class Debug {
 			endMode(mode);
 	}
 
-	private static Mode mode = Mode.BOXRENDERER;
+	private static Mode mode = Mode.CAMERA;
 
 	public enum Mode {
 		BOXRENDERER(Keys.NUM_1), 
@@ -76,8 +76,6 @@ public abstract class Debug {
 		case BOXRENDERER:
 			break;
 		case CAMERA:
-			if(camera != null)
-				initialZoom = camera.zoom;
 			break;
 		case CONSOLE:
 			break;
@@ -96,7 +94,7 @@ public abstract class Debug {
 			break;
 		case CAMERA:
 			if(camera != null)
-				camera.zoom = initialZoom;
+				camera.zoom = 1;
 			break;
 		case CONSOLE:
 			break;
@@ -136,7 +134,7 @@ public abstract class Debug {
 	private static final float CAMSPEED_INITIAL = 5, CAMSPEED_UP = 2, CAMSPEED_ZOOM = 0.1f;
 
 	private static float camSpeed = CAMSPEED_INITIAL;
-	private static float zoom, initialZoom;
+	private static float zoom;
 	private static float moveX, moveY;
 
 	public static void processCamera(Camera cam) {
@@ -150,7 +148,7 @@ public abstract class Debug {
 	}
 
 	private static void processCameraControll() {
-		if (!isMode(Mode.CAMERA)) return;
+		if (!isMode(Mode.CAMERA) || iHandler == null) return;
 
 		if (iHandler.isKeyDown(CAM_UP))
 			moveY = 1;

@@ -121,9 +121,7 @@ public class GameProperties {
 		if(prevState == null || (Gdx.graphics == null && (isInMenuState() && prevState.isMenu()) 
 				|| (isInGameState() && prevState.isInGame())))
 			return;
-		
 		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
-		
 		if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 		else				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
 		

@@ -80,11 +80,6 @@ public class GameRender implements Screen {
 		case INGAME_PAUSE:
 			System.out.println("PAUSE");
 			
-			
-			
-			
-			
-			
 			delta = 0;
 			break;
 		case INGAME_WIN:
@@ -143,6 +138,6 @@ public class GameRender implements Screen {
 
 	@Override
 	public void hide() {
-
+		dispose();
 	}
 }

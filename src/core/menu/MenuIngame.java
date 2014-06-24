@@ -21,7 +21,7 @@ public class MenuIngame implements Screen {
 
 	@Override
 	public void hide() {
-		
+		dispose();
 	}
 
 	@Override

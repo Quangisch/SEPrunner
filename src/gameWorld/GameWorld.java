@@ -328,14 +328,13 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 
 	@Override
 	public void dispose() {
+		rayHandler.dispose();
 		debugRender.dispose();
 		for (MapTexture t : mapTextures)
 			t.texture.dispose();
 		world.dispose();
 		for (GameObject g : objects)
 			g.dispose();
-		rayHandler.dispose();
-		Alarm.resetInstance();
 	}
 
 	public BodyObject getGoal() {

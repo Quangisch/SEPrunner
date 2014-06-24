@@ -20,14 +20,8 @@ public class Alarm implements IDrawable {
 		return alarm;
 	}
 	
-	public static void resetInstance() {
-		alarm = null;
-	}
-	
 	public static Alarm iniInstance(RayHandler rayHandler, Camera camera) {
-		if(alarm == null)
-			alarm = new Alarm(rayHandler, camera);
-		return alarm;
+		return alarm = new Alarm(rayHandler, camera);
 	}
 	
 	private Camera camera;
@@ -63,6 +57,7 @@ public class Alarm implements IDrawable {
 			
 			for(PointLight l : alarmLights)
 				l.setDistance(distance);
+			System.out.println("alarm");
 		}	
 	}
 	

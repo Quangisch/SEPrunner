@@ -25,7 +25,7 @@ public abstract class InteractionObject
 		extends InteractionManager 
 		implements ICollisionable, RayCastCallback, IInteractable {
 	
-	private int shuriken = 10;
+	private int shuriken = 0;
 	private int grounded, bodyBlocked;
 	private boolean hookable;
 	private GameObject grabTarget, disposeTarget, hideTarget;
@@ -97,6 +97,10 @@ public abstract class InteractionObject
 	@Override
 	public int getShurikenQuantity() {
 		return shuriken;
+	}
+	
+	protected void setShurikenQuantity(int shuriken) {
+		this.shuriken = shuriken;
 	}
 	
 	
@@ -226,8 +230,8 @@ public abstract class InteractionObject
 			if(other.getBodyObjectType().equals(BodyObjectType.Ground) 
 					&& getInteractionState().equals(InteractionState.HOOK_FLY)) {
 				resetHook();
+				return true;
 			}
-			return false;
 			
 //		BEGIN/END
 		} else {

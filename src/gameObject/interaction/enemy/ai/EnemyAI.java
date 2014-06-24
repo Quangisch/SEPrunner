@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import misc.Debug;
+
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.input.InputHandler.Click;
@@ -49,24 +51,20 @@ public abstract class EnemyAI implements IEnemyAI {
 		float currentY = link.getBodyObject().getY();
 		
 		for(ScriptedAction a : scriptedActions) {
-			
-			
 			if(!currentAction.contains(a.ACTION_KEY) && ((a.HORIZONTAL && a.tryToTrigger(lastX, currentX))
 					|| (!a.HORIZONTAL && a.tryToTrigger(lastY, currentY)))) {
 				addAction(a.ACTION_KEY);
-				System.out.println("trigger "+a.ACTION_KEY);
-			} else if(currentAction.contains(a.ACTION_KEY) && a.LOWER != a.HIGHER 
-						&& !((a.HORIZONTAL && a.tryToTrigger(lastX, currentX))
+				Debug.println("trigger "+a.ACTION_KEY, Debug.Mode.CONSOLE);
+			} else if(a.trigger && !((a.HORIZONTAL && a.tryToTrigger(lastX, currentX))
 							|| (!a.HORIZONTAL && a.tryToTrigger(lastY, currentY)))) {
 				currentAction.remove(a.ACTION_KEY);
-				System.out.println("release "+a.ACTION_KEY);
+				a.trigger = false;
+				Debug.println("release "+a.ACTION_KEY, Debug.Mode.CONSOLE);
 			}
 		}
 		
 		lastX = link.getBodyObject().getX();
 		lastY = link.getBodyObject().getY();
-		
-//		System.out.println((int)currentX+"x"+(int)currentY);
 	}
 
 //	TODO testing
@@ -101,6 +99,7 @@ public abstract class EnemyAI implements IEnemyAI {
 			currentAction.remove(ActionKey.LEFT);
 			break;
 		case RUN:
+			currentAction.remove(ActionKey.CROUCH);
 			break;
 		case THROW:
 			break;
@@ -108,24 +107,22 @@ public abstract class EnemyAI implements IEnemyAI {
 			break;
 		
 		}
-		if(!currentAction.contains(action))
-			currentAction.add(action);
+		
+		currentAction.add(action);
 	}
 	
 	
-	
-	
-
 	public class ScriptedAction {
 		private final ActionKey ACTION_KEY;
 		private final float LOWER, HIGHER;
 		private final boolean HORIZONTAL;
+		private boolean trigger;
 
 		protected ScriptedAction(ActionKey actionKey, boolean horizontal, float a, float b) {
 			this.ACTION_KEY = actionKey;
 			this.HORIZONTAL = horizontal;
-			LOWER = b < a ? b : a;		//Left, Down
-			HIGHER = b > a ? b : a;		//Right, Up
+			LOWER = b < a ? b : a;
+			HIGHER = b > a ? b : a;
 		}
 		
 		protected ScriptedAction(ActionKey action, boolean horizontal, float a) {
@@ -138,7 +135,7 @@ public abstract class EnemyAI implements IEnemyAI {
 				trigger = (prev <= current && prev <= LOWER && LOWER <= current)
 							|| (prev >= current && prev >= LOWER && LOWER >= current);
 			else 			//inBetweenTrigger
-				trigger = LOWER <= current && current <= HIGHER;
+				this.trigger = trigger = LOWER <= current && current <= HIGHER;
 			
 			return trigger;
 		}

@@ -9,6 +9,7 @@ public interface FilePath {
 			level1 = "res/map/level1.json",
 			level2 = "res/map/level2.json",
 			settings = "res/settings.json",
+			profile = "res/profile.json",
 			
 //			AUDIO
 			music_menu = "res/audio/music/mainMenu.mp3",

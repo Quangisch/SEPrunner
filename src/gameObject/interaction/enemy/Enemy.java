@@ -38,10 +38,10 @@ public class Enemy extends GameObject {
 		setBodyObjectType(BodyObjectType.Enemy);
 		getAnimationObject().setLayer(3);
 
-		getBodyObject().addSensor(Type.Circle, new float[] { 0, 1, 0.5f },
+		getBodyObject().addSensor(Type.Circle, new float[] { 0, 1, 1f },
 				SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
 		// NILS
-		getBodyObject().addSensor(Type.Circle, new float[] { 1.3f, 1, 0.5f },
+		getBodyObject().addSensor(Type.Circle, new float[] { 1.3f, 1, 1f },
 				SensorTypes.VISION_RIGHT, Sensor.HANDLE_FIRST);
 	}
 
@@ -60,6 +60,8 @@ public class Enemy extends GameObject {
 		
 		head.x += getAnimationObject().isFlipped() ? 40 : 110;
 		head.y += 100;
+		if(isCrouching())
+			head.y -= 25;
 		view.setPosition(head);
 		view.setDirection(getAnimationObject().isFlipped() ? 180 : 0);
 	}
@@ -69,9 +71,6 @@ public class Enemy extends GameObject {
 			return;
 		AI = ai;
 		interactionHandler = new InteractionHandler(ai, this);
-//		TODO
-//		playerMul: private float walkMul = 1, runMul = 1.5f, sneakMul = 0.8f, pullMul = 1.5f;
-//		interactionHandler.setForceMultiplier(0.55f, 1.2f, 0.8f, 1.5f);
 		interactionHandler.setForceMultiplier(walkMul, runMul, sneakMul, pullMul);
 		AI.setEnemy(this);
 	}
@@ -87,11 +86,6 @@ public class Enemy extends GameObject {
 	public void setStun() {
 		applyInteraction(InteractionState.STUNNED);
 		view.setActive(false);
-	}
-
-	public boolean isCarriable(Vector2 position) {
-		// TODO
-		return false;
 	}
 
 	public enum Pattern {

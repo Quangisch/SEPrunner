@@ -377,9 +377,10 @@
 					{
 						"ID" : "enemy",
 						"json" : "enemy_full",
-						"position" : [500, 300],
+						"position" : [1500, 350],
 						"scale" : 1.0,
 						"flip" : false,
+						"initialAction" : [],
 						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
@@ -395,22 +396,279 @@
 											"key"		: "RIGHT"
 										},
 										{
-											"between"	: [400,600],
+											"between"	: [1230,1400],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [2700, 400],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [2010],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [2700],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [2310,2650],
+											"horizontal" 	: true,
+											"key"		: "CROUCH"
+										}
+
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [3000, 300],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [3000],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [3870],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [3650, 400],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [3650],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [3800],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										}
+									]
+
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [4800, 100],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [4800],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [6200],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [5450,5510],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										},
+										{
+											"between"	: [5750,5800],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										}
+									]
+						}
+					},
+
+										{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [5550, 250],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [5550],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [6200],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [5750,5810],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										}
+									]
+						}
+					},
+
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [4800, 570],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [4800],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [6050],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										}
+									]							
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [5830, 1100],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [5830],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [6450],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [6950, 500],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [6950],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [7850],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [10500, 800],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [8300],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [10500],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [8400,8750],
 											"horizontal" 	: true,
 											"key"		: "CROUCH"
 										},
 										{
-											"between"	: [1230,1400],
+											"between"	: [8800,9050],
 											"horizontal" 	: true,
 											"key"		: "JUMP"
 										},
-									],
+										{
+											"between"	: [9150,9450],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										},
+										{
+											"between"	: [9550,9950],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										}
+									]
+						}
+
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_full",
+						"position" : [10000, 500],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [10000],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [10500],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										}
+									]
 						}
 					},
-					
-
-					
-
 
 					{
 						"ID" : "hideable",

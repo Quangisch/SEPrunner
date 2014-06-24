@@ -68,7 +68,7 @@ public class InteractionToWorld {
 		return baseForce;
 	}
 
-	private float walkMul = 1, runMul = 1.5f, sneakMul = 0.8f, pullMul = 1.5f;
+	private float walkMul = 1, runMul = 1.5f, sneakMul = 0.6f, pullMul = 1.5f;
 	
 	protected void setForceMultiplier(float walkMul, float runMul, float sneakMul, float pullMull) {
 		this.walkMul = walkMul;

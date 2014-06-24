@@ -29,7 +29,7 @@ import core.Highscore.Score;
 
 public class MenuHighscore implements Screen {
 	
-	private Texture backgroundTexture = new Texture(Gdx.files.internal("res/img/Highscore.png"));
+	private Texture backgroundTexture = new Texture(Gdx.files.internal("res/img/main menu.png"));
 	private Sprite backgroundSprite = new Sprite(backgroundTexture);
 	private ShaderBatch shaderBatch;
 	private Stage stage;
@@ -77,6 +77,8 @@ public class MenuHighscore implements Screen {
 		
 		clickHandler = new ClickHandler();
 		shaderBatch = new ShaderBatch(100);
+		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
 		stage = new Stage();
 		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT, true);
 		Gdx.input.setInputProcessor(stage);

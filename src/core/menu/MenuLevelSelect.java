@@ -2,10 +2,15 @@ package core.menu;
 
 import java.util.LinkedList;
 
+import misc.ShaderBatch;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -36,14 +41,28 @@ public class MenuLevelSelect implements Screen {
 	private int width, height;
 	private java.util.List<Texture> previewTextures;
 	private String[] levelList = {"Level 1", "Level 2", "Level 3"};
+	
+	private ShaderBatch shaderBatch;
+	private Pixmap pixmap;
+	private Texture txt;
 		
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1); 		//black screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		shaderBatch.brightness = GameProperties.brightness;
+		shaderBatch.contrast = GameProperties.contrast;
+		
+		shaderBatch.begin();
+		pixmap.drawRectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		shaderBatch.draw(txt, 0, 0);
+		shaderBatch.end();
+		
 		stage.act(delta);
 		stage.draw();
+		
+		
 		
 //		Table.drawDebug(stage);            // case debuglines needed 1/2
 	}
@@ -57,6 +76,11 @@ public class MenuLevelSelect implements Screen {
 	public void show() {
 		width = GameProperties.SCALE_WIDTH;
 		height = GameProperties.SCALE_HEIGHT;
+		
+		shaderBatch = new ShaderBatch(50);
+		pixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Format.RGB888);
+		pixmap.setColor(Color.BLACK);
+		txt = new Texture(pixmap);
 		
 		stage = new Stage();
 		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT, true);
@@ -151,6 +175,8 @@ public class MenuLevelSelect implements Screen {
 	public void dispose() {
 		for(Texture t : previewTextures)
 			t.dispose();
+		pixmap.dispose();
+		txt.dispose();
 		stage.dispose();
 		skin.dispose();
 	}
