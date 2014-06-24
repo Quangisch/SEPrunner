@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import core.GameProperties;
 import core.ResourceManager;
+import core.GameProperties.GameState;
 import core.exception.LevelNotFoundException;
 import core.ingame.input.InputHandler;
 
@@ -31,12 +32,14 @@ public class GameRender implements Screen {
 	private InputHandler iHandler;
 	private Camera camera;
 	private HUD hud;
+	private PauseMenu pauseMenu;
 
 	public GameRender(int level) throws LevelNotFoundException {
 		camera = new Camera();
 		iHandler = new InputHandler(camera);
 		gameWorld = new GameWorld(level, iHandler, camera);
 		hud = new HUD(gameWorld);
+		pauseMenu = new PauseMenu(gameWorld);
 
 		// TODO TMP for debugging
 		Debug.init(iHandler, camera);
@@ -69,17 +72,16 @@ public class GameRender implements Screen {
 
 	@Override
 	public void render(float delta) {
+		float realdelta = delta;
 
 		switch (GameProperties.getGameState()) {
 		case INGAME:
-
 			break;
 		case INGAME_LOSE:
 			System.out.println("GAME OVER");
 			break;
 		case INGAME_PAUSE:
-			System.out.println("PAUSE");
-			
+			// System.out.println("PAUSE");
 			delta = 0;
 			break;
 		case INGAME_WIN:
@@ -87,13 +89,12 @@ public class GameRender implements Screen {
 			break;
 		default:
 			break;
-
 		}
 
 		gameWorld.run();
 		if (Debug.isMode(Debug.Mode.CONSOLE)) log.log();
 
-		Gdx.gl.glClearColor(0, 0, 0, 1);//(0,0,0,1)
+		Gdx.gl.glClearColor(0, 0, 0, 1); //(0,0,0,1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
@@ -105,36 +106,32 @@ public class GameRender implements Screen {
 
 		gameWorld.draw(batch, delta); //map
 
-		hud.draw(batch, delta); //userInterface
+		if (GameProperties.getGameState() != GameState.INGAME_PAUSE)
+			hud.draw(batch, delta); //userInterface
+		else
+			pauseMenu.draw(batch, realdelta);
 
 		try {
 			for (GeometricObject g : geometrics)
 				g.draw(batch);
 		} catch (ConcurrentModificationException e) {
-			//			if(GameProperties.debugMode)
-			//				e.printStackTrace();
+			// if(GameProperties.debugMode)
+			// 	e.printStackTrace();
 		}
 
 		batch.end();
 
 		gameWorld.step(Gdx.graphics.getDeltaTime(), 6, 4);
-
 	}
 
 	@Override
-	public void resize(int width, int height) {
-
-	}
+	public void resize(int width, int height) {}
 
 	@Override
-	public void pause() {
-
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-
-	}
+	public void resume() {}
 
 	@Override
 	public void hide() {
