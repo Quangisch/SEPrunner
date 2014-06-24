@@ -451,6 +451,267 @@
 						"isPlayer" : true,
 						"AI" : {
 						}
-					}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [750, 500],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [1900],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [750],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [2500, 500],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [3100],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [2500],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [3600, 500],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [4550],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [3600],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [3690, 3860],
+											"horizontal" 	: true,
+											"key"		: "CROUCH"
+										}
+										,
+										{
+											"between"	: [4290, 4435],
+											"horizontal" 	: true,
+											"key"		: "CROUCH"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [4900, 1100],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [5150],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [4900],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [5500, 560],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [7100],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [5500],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [6900, 560],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [8000],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [6900],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										}
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_simple",
+						"position" : [9400, 760],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "SimplePatrolAI",
+							"Actions" : 	[
+										{
+											"between"	: [10170],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [9400],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [9700, 10020],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										},
+									]
+						}
+					},
+					{
+						"ID" : "enemy",
+						"json" : "enemy_medium",
+						"position" : [10550, 400],
+						"scale" : 1.0,
+						"flip" : false,
+						"initialAction" : [],
+						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"AI" : {
+							"ID" : "MediumAI",
+							"Actions" : 	[
+										{
+											"between"	: [11400],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [10550],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+										{
+											"between"	: [10720, 11030],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										},
+									]
+						}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "tree",
+						"position" : [1470, 170],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [4250, 470],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [2800, 470],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "trashbin",
+						"position" : [6400, 470],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "tree",
+						"position" : [7500, 360],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"json" : "tree",
+						"position" : [9600, 760],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
 				]
 }

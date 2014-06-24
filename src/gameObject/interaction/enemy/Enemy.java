@@ -132,4 +132,8 @@ public class Enemy extends GameObject {
 										jMul.getFloat(2), jMul.getFloat(3));
 		
 	}
+	
+	public InteractionHandler getInteractionHandler(){
+		return interactionHandler;
+	}
 }
