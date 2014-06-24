@@ -93,7 +93,7 @@ public class MenuHighscore implements Screen {
 		scoreTable = new Table(skin);
 		
 		
-		backButton = new TextButton("Zurueck", skin);
+		backButton = new TextButton("Back", skin);
 		backButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());

@@ -80,7 +80,7 @@ public class MenuMain implements Screen {
 		
 		
 		//creating buttons
-		TextButton buttonPlay = new TextButton("Spielen", skin);
+		TextButton buttonPlay = new TextButton("Play", skin);
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking img's		
@@ -88,7 +88,15 @@ public class MenuMain implements Screen {
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		TextButton buttonOption = new TextButton("Optionen", skin);
+		TextButton buttonProfile = new TextButton("Profile", skin);
+		buttonProfile.addListener(new ClickListener(){
+			public void clicked(InputEvent event, float x, float y){
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuProfile());
+			}
+		});
+		buttonProfile.pad(15);
+		
+		TextButton buttonOption = new TextButton("Options", skin);
 		buttonOption.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuOption());
@@ -104,7 +112,7 @@ public class MenuMain implements Screen {
 		});
 		buttonHighscore.pad(15);
 		
-		TextButton buttonExit = new TextButton("Beenden", skin);
+		TextButton buttonExit = new TextButton("Quit", skin);
 		buttonExit.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				Gdx.app.exit();
@@ -113,9 +121,10 @@ public class MenuMain implements Screen {
 		buttonExit.pad(15);
 
 		//putting stuff together
-		table.add(heading).spaceBottom(100).colspan(3).expandX().row(); //100 abstand, neue zeile
+		table.add(heading).spaceBottom(50).colspan(3).expandX().row(); //100 abstand, neue zeile
 		table.defaults().width(buttonHighscore.getWidth()+15); //setzt alle buttons auf groesse vom Highscore button
 		table.add().uniformX();		table.add(buttonPlay).spaceBottom(15);			table.add().row().uniformX();
+		table.add();				table.add(buttonProfile).spaceBottom(15);		table.add().row();
 		table.add();				table.add(buttonOption).spaceBottom(15);		table.add().row();
 		table.add();				table.add(buttonHighscore).spaceBottom(15);		table.add().row();
 		table.add();				table.add(buttonExit);							table.add();
@@ -132,11 +141,13 @@ public class MenuMain implements Screen {
 		Timeline.createSequence().beginSequence()
 			.push(Tween.set(heading, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonPlay, ActorAccessor.ALPHA).target(0))
+			.push(Tween.set(buttonProfile, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonOption, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonHighscore, ActorAccessor.ALPHA).target(0))
 			.push(Tween.set(buttonExit, ActorAccessor.ALPHA).target(0))
 			.push(Tween.to(heading, ActorAccessor.ALPHA, .3f).target(1))
 			.push(Tween.to(buttonPlay, ActorAccessor.ALPHA, .15f).target(1))
+			.push(Tween.to(buttonProfile, ActorAccessor.ALPHA, .15f).target(1))
 			.push(Tween.to(buttonOption, ActorAccessor.ALPHA, .15f).target(1))
 			.push(Tween.to(buttonHighscore, ActorAccessor.ALPHA, .15f).target(1))
 			.push(Tween.to(buttonExit, ActorAccessor.ALPHA, .25f).target(1))

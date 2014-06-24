@@ -103,7 +103,7 @@ public class MenuOption implements Screen {
 		mainTable.setFillParent(true);
 		mainTable.top();
 		mainTable.add().space(height/10, width, height/5, width).row();
-		mainTable.add(new Label("Optionen", skin, "big")).center().colspan(2).padBottom(height/10).row();
+		mainTable.add(new Label("Options", skin, "big")).center().colspan(2).padBottom(height/10).row();
 		mainTable.add(leftMainTable);
 		mainTable.add(rightMainTable);
 		

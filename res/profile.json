@@ -1,5 +1,7 @@
 {
-shuriken: 1000,
+name: User473,
+shuriken: 998,
 hookRadius: 300,
-stylePoints: 0
+stylePoints: 0,
+experience: 0
 }

@@ -108,7 +108,7 @@ public class MenuLevelSelect implements Screen {
 		
 		ScrollPane scrollPane = new ScrollPane(levelSelectionList, skin);
 		
-		TextButton playButton = new TextButton("Level starten", skin);
+		TextButton playButton = new TextButton("Start Level", skin);
 		playButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				try {
@@ -123,7 +123,7 @@ public class MenuLevelSelect implements Screen {
 		playButton.setPosition(width*2 - playButton.getWidth(), height/10);
 		stage.addActor(playButton);
 		
-		TextButton backButton = new TextButton("Zurueck", skin); //small da ungleich defaultgroesse
+		TextButton backButton = new TextButton("Back", skin); //small da ungleich defaultgroesse
 		backButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
@@ -143,7 +143,7 @@ public class MenuLevelSelect implements Screen {
 		previewTable = new Table();
 
 		table.top().add().size(width,0).row();
-		table.add(new Label("Levelauswahl", skin, "big")).pad(height/10, 0, height/2, 0).colspan(3).row();
+		table.add(new Label("Level Selection", skin, "big")).pad(height/10, 0, height/2, 0).colspan(3).row();
 //		table.add().size(width/2, 0);
 		table.add().size(width/10, 0);
 		table.add().size(width*2, 0).row();

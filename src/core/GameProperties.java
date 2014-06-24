@@ -94,6 +94,25 @@ public class GameProperties {
 	
 //	GAMESTATES
 	
+	public enum Rank {
+		Noob(0),
+		Rookie(30),
+		Expert(100);
+		
+		final private int EXPERIENCE;
+		private Rank(int points) {
+			this.EXPERIENCE = points;
+		}
+		
+		public static Rank getRank(int expPoints) {
+			Rank rank = Noob;
+			for(Rank r : Rank.values())
+				if(expPoints > r.EXPERIENCE && rank.EXPERIENCE > r.EXPERIENCE)
+					rank = r;
+			return rank;
+		}
+	}
+	
 	public enum GameState {
 		MENU(true),
 		INGAME(false),
