@@ -65,13 +65,6 @@ public class Alarm implements IDrawable {
 		this.active = active;
 		for(PointLight l : alarmLights)
 			l.setActive(active);
-		
-		if(active){
-			try{
-			     Thread.sleep(1000);
-			}catch(InterruptedException e){}
-			active = false;
-		}
 	}
 	
 	public boolean isActive() {

@@ -26,24 +26,10 @@ int z = 0;
 		if (getEnemy() == null) 
 			return;
 
-		//BEWEGUNGSABFOLGE ENDE
-				
-		//ALARM -> enemy verfolgt player
-//		if(Alarm.getInstance().isActive() && !getEnemy().isStunned()){
-//			if(player.getX()>getEnemy().getX()){
-//				addAction(ActionKey.RIGHT;
-//			}else{
-//				addAction(ActionKey.LEFT;
-//			}		
-//		}
-//		if(alarm && !getEnemy().isStunned()){
-//			if(player.getBodyObject().getX()>getEnemy().getBodyObject().getX()){
-//				addAction(ActionKey.RIGHT;
-//			}else{
-//				addAction(ActionKey.LEFT;
-//			}
-//		}
-		//NILS
+		//ALARM -> enemy bewegt sich schneller
+		if(Alarm.getInstance().isActive()){
+			getEnemy().getInteractionHandler().setForceMultiplier(1.2f, 1.2f, 0.8f, 1.5f);
+		}
 	}
 
 	@Override

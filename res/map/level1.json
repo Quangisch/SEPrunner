@@ -376,7 +376,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [1500, 350],
 						"scale" : 1.0,
 						"flip" : false,
@@ -405,7 +405,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [2700, 400],
 						"scale" : 1.0,
 						"flip" : false,
@@ -434,7 +434,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [3000, 300],
 						"scale" : 1.0,
 						"flip" : false,
@@ -456,7 +456,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [3650, 400],
 						"scale" : 1.0,
 						"flip" : false,
@@ -479,7 +479,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [4800, 100],
 						"scale" : 1.0,
 						"flip" : false,
@@ -512,7 +512,7 @@
 
 										{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [5550, 250],
 						"scale" : 1.0,
 						"flip" : false,
@@ -540,7 +540,7 @@
 
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [4800, 570],
 						"scale" : 1.0,
 						"flip" : false,
@@ -562,7 +562,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [5830, 1100],
 						"scale" : 1.0,
 						"flip" : false,
@@ -584,7 +584,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [6950, 500],
 						"scale" : 1.0,
 						"flip" : false,
@@ -606,7 +606,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [10500, 800],
 						"scale" : 1.0,
 						"flip" : false,
@@ -649,7 +649,7 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_full",
+						"json" : "enemy_simple",
 						"position" : [10000, 500],
 						"scale" : 1.0,
 						"flip" : false,

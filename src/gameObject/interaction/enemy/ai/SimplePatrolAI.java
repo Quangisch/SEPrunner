@@ -26,8 +26,6 @@ int z = 0;
 		super.run();
 		if (getEnemy() == null) 
 			return;
-
-		//BEWEGUNGSABFOLGE ENDE
 				
 		//ALARM -> enemy bewegt sich schneller
 		if(Alarm.getInstance().isActive()){
