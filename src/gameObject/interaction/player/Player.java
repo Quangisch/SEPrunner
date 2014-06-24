@@ -19,7 +19,6 @@ public class Player extends PlayerCollision {
 		interactionHandler = new InteractionHandler(inputHandler, this);
 		getGameWorld().getCamera().setToFollowMoveable(getBodyObject());
 		
-		
 	}
 
 	
@@ -27,9 +26,7 @@ public class Player extends PlayerCollision {
 		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
 		super.run();
-//		interactionHandler.run();
 		interactionHandler.run();
-		
 	
 	}
 

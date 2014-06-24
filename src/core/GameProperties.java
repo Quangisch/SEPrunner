@@ -107,7 +107,7 @@ public class GameProperties {
 		public static Rank getRank(int expPoints) {
 			Rank rank = Noob;
 			for(Rank r : Rank.values())
-				if(expPoints > r.EXPERIENCE && rank.EXPERIENCE > r.EXPERIENCE)
+				if(expPoints > r.EXPERIENCE && r.EXPERIENCE > rank.EXPERIENCE)
 					rank = r;
 			return rank;
 		}
