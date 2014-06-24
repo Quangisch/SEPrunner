@@ -49,15 +49,16 @@ public abstract class EnemyAI implements IEnemyAI {
 		float currentY = link.getBodyObject().getY();
 		
 		for(ScriptedAction a : scriptedActions) {
-			if((a.HORIZONTAL && a.tryToTrigger(lastX, currentX))
-					|| (!a.HORIZONTAL && a.tryToTrigger(lastY, currentY))) {
-				if(!a.isTriggered()) {
-					addAction(a.ACTION_KEY);
-					System.out.println("trigger "+a.ACTION_KEY);
-				} 
-			} else if(a.isTriggered()) {
-//				currentAction.remove(a.ACTION_KEY);
-//				a.resetTrigger();
+			
+			
+			if(!currentAction.contains(a.ACTION_KEY) && ((a.HORIZONTAL && a.tryToTrigger(lastX, currentX))
+					|| (!a.HORIZONTAL && a.tryToTrigger(lastY, currentY)))) {
+				addAction(a.ACTION_KEY);
+				System.out.println("trigger "+a.ACTION_KEY);
+			} else if(currentAction.contains(a.ACTION_KEY) && a.LOWER != a.HIGHER 
+						&& !((a.HORIZONTAL && a.tryToTrigger(lastX, currentX))
+							|| (!a.HORIZONTAL && a.tryToTrigger(lastY, currentY)))) {
+				currentAction.remove(a.ACTION_KEY);
 				System.out.println("release "+a.ACTION_KEY);
 			}
 		}
@@ -67,8 +68,6 @@ public abstract class EnemyAI implements IEnemyAI {
 		
 //		System.out.println((int)currentX+"x"+(int)currentY);
 	}
-	
-	
 
 //	TODO testing
 	@Override
@@ -109,7 +108,8 @@ public abstract class EnemyAI implements IEnemyAI {
 			break;
 		
 		}
-		currentAction.add(action);
+		if(!currentAction.contains(action))
+			currentAction.add(action);
 	}
 	
 	
@@ -120,9 +120,6 @@ public abstract class EnemyAI implements IEnemyAI {
 		private final ActionKey ACTION_KEY;
 		private final float LOWER, HIGHER;
 		private final boolean HORIZONTAL;
-		
-		private boolean trigger;
-		
 
 		protected ScriptedAction(ActionKey actionKey, boolean horizontal, float a, float b) {
 			this.ACTION_KEY = actionKey;
@@ -136,31 +133,15 @@ public abstract class EnemyAI implements IEnemyAI {
 		}
 		
 		protected boolean tryToTrigger(float prev, float current) {
-			
 			boolean trigger = false;
 			if(LOWER == HIGHER) //onPointTrigger
 				trigger = (prev <= current && prev <= LOWER && LOWER <= current)
 							|| (prev >= current && prev >= LOWER && LOWER >= current);
-			else				//inBetweenTrigger
+			else 			//inBetweenTrigger
 				trigger = LOWER <= current && current <= HIGHER;
 			
-			if(LOWER != HIGHER)
-				this.trigger = trigger;
-			
-			if(this.trigger && ACTION_KEY.equals(ActionKey.CROUCH))
-				System.out.println("tryToTrigger "+ACTION_KEY);
-			
 			return trigger;
 		}
-		
-		protected boolean isTriggered() {
-			return trigger;
-		}
-		
-		protected void resetTrigger() {
-			trigger = false;
-		}
-		
 	}
 	
 //	IInputHandler

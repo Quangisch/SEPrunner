@@ -1,5 +1,6 @@
 package core.ingame.input.interaction;
 
+import gameObject.body.BodyObjectType;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 
@@ -134,7 +135,7 @@ public class BasicMovement {
 	private int runTapTimer = 0;
 	private boolean triggerRun(InteractionState nextState) {
 		
-		if(gameObject.isJumping())
+		if(gameObject.isJumping() || gameObject.getBodyObjectType().equals(BodyObjectType.Enemy))
 			return false;
 		
 		boolean trigger = false;

@@ -377,7 +377,7 @@
 					{
 						"ID" : "enemy",
 						"json" : "enemy_full",
-						"position" : [930, 300],
+						"position" : [500, 300],
 						"scale" : 1.0,
 						"flip" : false,
 						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
@@ -385,7 +385,7 @@
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
 										{
-											"between"	: [930],
+											"between"	: [1500],
 											"horizontal" 	: true,
 											"key"		: "LEFT"
 										},
@@ -395,12 +395,15 @@
 											"key"		: "RIGHT"
 										},
 										{
-											"between"	: [500,700],
+											"between"	: [400,600],
 											"horizontal" 	: true,
 											"key"		: "CROUCH"
 										},
-										
-										
+										{
+											"between"	: [1230,1400],
+											"horizontal" 	: true,
+											"key"		: "JUMP"
+										},
 									],
 						}
 					},
