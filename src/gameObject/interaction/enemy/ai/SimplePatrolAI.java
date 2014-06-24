@@ -1,5 +1,6 @@
 package gameObject.interaction.enemy.ai;
 
+import core.ingame.input.interaction.InteractionHandler;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
@@ -28,22 +29,11 @@ int z = 0;
 
 		//BEWEGUNGSABFOLGE ENDE
 				
-		//ALARM -> enemy verfolgt player
-//		if(Alarm.getInstance().isActive() && !getEnemy().isStunned()){
-//			if(player.getX()>getEnemy().getX()){
-//				addAction(ActionKey.RIGHT;
-//			}else{
-//				addAction(ActionKey.LEFT;
-//			}		
-//		}
-//		if(alarm && !getEnemy().isStunned()){
-//			if(player.getBodyObject().getX()>getEnemy().getBodyObject().getX()){
-//				addAction(ActionKey.RIGHT;
-//			}else{
-//				addAction(ActionKey.LEFT;
-//			}
-//		}
-		//NILS
+		//ALARM -> enemy bewegt sich schneller
+		if(Alarm.getInstance().isActive()){
+//			getEnemy().setAI(this, 0.1f, 1.2f, 0.8f, 1.5f);//funktioniert nicht
+			getEnemy().getInteractionHandler().setForceMultiplier(1, 1.2f, 0.8f, 1.5f);
+		}
 	}
 
 	@Override
