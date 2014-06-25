@@ -40,9 +40,9 @@ public class GameRender implements Screen {
 		iHandler = new InputHandler(camera);
 		gameWorld = new GameWorld(level, iHandler, camera);
 		hud = new HUD(gameWorld);
-		pauseMenu = new PauseMenu(gameWorld);
-		winMenu = new WinMenu(gameWorld);
-		loseMenu = new LoseMenu(gameWorld);
+		pauseMenu = new PauseMenu();
+		winMenu = new WinMenu();
+		loseMenu = new LoseMenu();
 
 		// TODO TMP for debugging
 		Debug.init(iHandler, camera);
@@ -95,7 +95,6 @@ public class GameRender implements Screen {
 		}
 
 		gameWorld.run();
-		pauseMenu.run();
 		if (Debug.isMode(Debug.Mode.CONSOLE)) log.log();
 
 		Gdx.gl.glClearColor(0, 0, 0, 1); //(0,0,0,1)

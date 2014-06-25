@@ -29,6 +29,6 @@ public enum StringFunctions {
 	public static String getTimeAsString(float time) {
 		time = Math.min(time, 59 * 60 + 59.999f);
 		Date d = new Date((long) (time * 1000));
-		return new SimpleDateFormat("mm:ss.S").format(d).substring(0, 8);
+		return new SimpleDateFormat("mm:ss.S").format(d);//.substring(0, 8);
 	}
 }
