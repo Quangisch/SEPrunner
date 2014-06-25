@@ -37,7 +37,7 @@ public class InteractionToWorld {
 		case STAND:
 		case THROW:
 		case GRAB:
-		case GRAB_DISPOSE:
+//		case GRAB_DISPOSE:
 		case HOOK:
 			return new Vector2();
 		case HOOK_FLY:

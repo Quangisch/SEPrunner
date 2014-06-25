@@ -1,7 +1,5 @@
 package core.menu;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -10,9 +8,8 @@ import misc.ShaderBatch;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -32,11 +29,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 
-import core.FilePath;
 import core.GameProperties;
+import core.PlayerProfile;
 
 public class MenuProfile implements Screen {
 
@@ -45,7 +40,8 @@ public class MenuProfile implements Screen {
 	private Sprite backgroundSprite = new Sprite(backgroundTexture);
 	private Stage stage;
 	
-	private Table mainTable, contentTable, shopTable, shopTableContent, shopTableBuy, profileTable, itemTable;
+	private Table mainTable, contentTable, shopTable, shopTableContent, shopTableBuy, profileTable, itemTable, 
+					newProfileTable, delProfileTable, warningBuyTable;
 	private Skin skin;
 	
 	private TextButton backButton;
@@ -56,7 +52,7 @@ public class MenuProfile implements Screen {
 	private ShaderBatch shaderBatch;
 	
 	private Label label_quantityshuriken, label_quantityLevelUp, label_price;
-	private Label label_name, label_rank, label_shuriken, label_stylePoints, label_hookLevel;
+	private Label label_name, label_rank, label_shuriken, label_stylePoints, label_hookRadius;
 	private Label label_buy, label_newProfile, label_moreShu, label_lessShu, label_moreHook, label_lessHook;
 	private Label label_warningCosts, label_warningProfile, label_warningProfile_accept, label_warningProfile_decline;
 	
@@ -66,10 +62,11 @@ public class MenuProfile implements Screen {
 	private Pixmap pixmap;
 	private Texture texture;
 	
-	private String name = "New User", rank = "Noob";
-	private int shuriken, hookLevel, stylePoints, exp;
+	private PlayerProfile profile;
+//	private String name = "New User", rank = "Noob";
+//	private int shuriken, hookLevel, stylePoints, exp;
 	private int buy_shu, buy_hook, buy_costs;
-	private final int PRICE_SHU = 5, PRICE_HOOK = 100;
+	private final int PRICE_SHU = 5, PRICE_HOOK = 1;
 	private float warningCostsAlpha = 0f, warningProfileAlpha = 0f;
 	
 	@Override
@@ -79,18 +76,11 @@ public class MenuProfile implements Screen {
 		
 		clickHandler = new ClickHandler();
 		shaderBatch = new ShaderBatch(100);
-		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
 		stage = new Stage();
-		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT, true);
-		Gdx.input.setInputProcessor(stage);
-		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
+		profile = new PlayerProfile();
 		
-		mainTable = new Table(skin);
-		mainTable.setFillParent(true);
-		mainTable.debug();
-		
+//		BACK BUTTON
 		backButton = new TextButton("Back", skin);
 		backButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
@@ -101,23 +91,37 @@ public class MenuProfile implements Screen {
 		backButton.setPosition(width/10, height/10);
 		stage.addActor(backButton);
 		
+//		INIT TABLES
+		mainTable = new Table(skin);
+		contentTable = new Table();
+		shopTable = new Table();
+		shopTableContent = new Table();
+		shopTableBuy = new Table();
+		profileTable = new Table();
+		itemTable = new Table();
+		newProfileTable = new Table();
+		warningBuyTable = new Table();
+		delProfileTable = new Table();
+		
+		
+		
+		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT, true);
 		stage.addActor(mainTable);
+		mainTable.setFillParent(true);
 		stage.addListener(clickHandler);
+		Gdx.input.setInputProcessor(stage);
 		
-		contentTable = new Table(skin);
-		shopTable = new Table(skin);
-		shopTableContent = new Table(skin);
-		shopTableBuy = new Table(skin);
-		profileTable = new Table(skin);
-		itemTable = new Table(skin);
-		
-		contentTable.debug();
-		shopTable.debug();
-		shopTableContent.debug();
-		shopTableBuy.debug();
-		profileTable.debug();
-		itemTable.debug();
-		
+//		mainTable.debug();
+//		contentTable.debug();
+//		shopTable.debug();
+//		shopTableContent.debug();
+//		shopTableBuy.debug();
+//		profileTable.debug();
+//		itemTable.debug();
+		delProfileTable.debug();
+		newProfileTable.debug();
+		warningBuyTable.debug();
 		
 //		HEAD
 		mainTable.top().add(new Label("Profile", skin, "big")).pad(height/5, 0, height/5, 0).row();
@@ -126,14 +130,16 @@ public class MenuProfile implements Screen {
 		contentTable.add(profileTable).right();
 		
 		iniLabel();
-		
-		iniShop();
-		iniProfile();
+		iniShopTable();
+		iniProfileTable();
 		iniWarningLabels();
-		
+		iniNewProfileTable();
+
+	}
+	
+	private void iniNewProfileTable() {
 //		TEXTFIELD
 		label_createProfile = new Label("Enter your name", skin, "baoli96", Color.WHITE);
-		label_createProfile.setPosition(width-label_createProfile.getWidth()/3, height*1.3f);
 		
 		pixmap = new Pixmap(2, height*5, Format.RGB888);
 		pixmap.setColor(Color.WHITE);
@@ -150,12 +156,14 @@ public class MenuProfile implements Screen {
 
 		nameField = new TextField("", skin);
 		nameField.setSize(width*0.8f, height/3);
-		nameField.setPosition(width-width/5, height);
 		nameField.setStyle(style);
 		nameField.setMaxLength(10);
 		nameField.setText("NewPlayer");
-		nameField.setCursorPosition(9);
+		nameField.setCursorPosition(nameField.getText().length());
 		nameField.addListener(clickHandler);
+
+		newProfileTable.add(label_createProfile).row();
+		newProfileTable.add(nameField).row();
 	
 	}
 	
@@ -174,11 +182,11 @@ public class MenuProfile implements Screen {
 		label_lessHook = getLabel32("<");
 		
 //		PROFILE
-		label_name = getLabel44(name);
-		label_rank = getLabel44(rank);
-		label_shuriken = getLabel44(Integer.toString(shuriken));
-		label_stylePoints = getLabel44(Integer.toString(stylePoints));
-		label_hookLevel = getLabel44(Integer.toString(hookLevel));
+		label_name = getLabel44(profile.name);
+		label_rank = getLabel44(GameProperties.Rank.getRank(profile.experience).toString());
+		label_shuriken = getLabel44(Integer.toString(profile.shuriken));
+		label_stylePoints = getLabel44(Integer.toString(profile.stylePoints));
+		label_hookRadius = getLabel44(Integer.toString(profile.hookRadius/100));
 		
 //		LABEL BUTTONS
 		label_buy.addListener(clickHandler);
@@ -204,26 +212,20 @@ public class MenuProfile implements Screen {
 	
 	private void iniWarningLabels() {
 		label_warningCosts = new Label("Not enough StylePoints", skin, "baoli44", Color.RED);
-		label_warningCosts.setPosition(width/2-label_warningCosts.getWidth()/2, 
-				height/3-label_warningCosts.getHeight()/2);
+//		label_warningCosts.setPosition(width/2-label_warningCosts.getWidth()/2, 
+//				height/3-label_warningCosts.getHeight()/2);
+		warningBuyTable.add(label_warningCosts);
 		
 		label_warningProfile = new Label("Delete current Profile?", skin, "baoli64", Color.RED);
-		label_warningProfile.setPosition(width/2-label_warningProfile.getWidth()/2, height/2);
-		
-		label_warningProfile_accept = new Label("YES", skin, "baoli96", Color.WHITE);
-		label_warningProfile_accept.setPosition(width+width/10+label_warningProfile_accept.getWidth()/2, 
-				height-height/10);
-		label_warningProfile_accept.setVisible(false);
-		
 		label_warningProfile_decline = new Label("NO", skin, "baoli96", Color.WHITE);
-		label_warningProfile_decline.setPosition(width-width/10-label_warningProfile_decline.getWidth()/2
-				, height-height/10);
-		label_warningProfile_decline.setVisible(false);
+		label_warningProfile_accept = new Label("YES", skin, "baoli96", Color.WHITE);
+
+		delProfileTable.center().add(label_warningProfile).colspan(2).row();
+		delProfileTable.add(label_warningProfile_decline).padRight(width/10);
+		delProfileTable.add(label_warningProfile_decline).padLeft(width/10);
 		
 		addListener(label_warningProfile_accept);
 		addListener(label_warningProfile_decline);
-		stage.addActor(label_warningProfile_accept);
-		stage.addActor(label_warningProfile_decline);
 	}
 	
 	private void addListener(Label label) {
@@ -233,7 +235,7 @@ public class MenuProfile implements Screen {
 	}
 	
 	
-	private void iniShop() {
+	private void iniShopTable() {
 		shopTable.add(getLabel64("Shop")).row();
 		shopTable.add(shopTableContent).row();
 		shopTable.add(shopTableBuy).row();
@@ -243,13 +245,13 @@ public class MenuProfile implements Screen {
 		shopTableContent.add(getLabel44("Quantity")).colspan(3).row();
 		
 		shopTableContent.add(getLabel44("shuriken")).left();
-		shopTableContent.add(getLabel44("5"));
+		shopTableContent.add(getLabel44(Integer.toString(PRICE_SHU)));
 		shopTableContent.add(label_lessShu);
 		shopTableContent.add(label_quantityshuriken);
 		shopTableContent.add(label_moreShu).row();
 		
-		shopTableContent.add(getLabel44("Hook LevelUp")).left();
-		shopTableContent.add(getLabel44("50"));
+		shopTableContent.add(getLabel44("Hook Radius")).left();
+		shopTableContent.add(getLabel44(Integer.toString(PRICE_HOOK)));
 		shopTableContent.add(label_lessHook);
 		shopTableContent.add(label_quantityLevelUp);
 		shopTableContent.add(label_moreHook).row();
@@ -262,8 +264,8 @@ public class MenuProfile implements Screen {
 		shopTableBuy.add(label_buy);
 	}
 	
-	private void iniProfile() {
-		loadProfile();
+	private void iniProfileTable() {
+		updateProfileLabels();
 		
 		profileTable.add(getLabel44("Name")).left();
 		profileTable.add(label_name).size(width/10, height/10).row();
@@ -279,7 +281,7 @@ public class MenuProfile implements Screen {
 		itemTable.add(getLabel44("shuriken")).left().padRight(width/20);
 		itemTable.add(label_shuriken).row();
 		itemTable.add(getLabel44("Hook Level")).left().padRight(width/20);
-		itemTable.add(label_hookLevel).row();
+		itemTable.add(label_hookRadius).row();
 		itemTable.add(getLabel44("StylePoints")).left().padRight(width/20);
 		itemTable.add(label_stylePoints).row();
 		
@@ -311,20 +313,33 @@ public class MenuProfile implements Screen {
 		backgroundSprite.draw(shaderBatch);
 		shaderBatch.end();
 		
-//		Table.drawDebug(stage);
+		Table.drawDebug(stage);
 		stage.act(delta);
 		stage.draw();
 		
-		shaderBatch.begin();
 		if(warningCostsAlpha > 0) {
-			label_warningCosts.draw(shaderBatch, warningCostsAlpha);
+			if(!warningBuyTable.hasParent())
+				stage.addActor(warningBuyTable);
+			Color c = label_warningCosts.getColor();
+			label_warningCosts.setColor(c.r, c.g, c.b, warningCostsAlpha);
 			warningCostsAlpha = Math.max(0, warningCostsAlpha-0.01f);
+			if(warningCostsAlpha == 0) {
+				warningBuyTable.remove();
+				stage.addActor(mainTable);
+			}
+				
 		}
 		
-		if(warningProfileAlpha == 1)
-			label_warningProfile.draw(shaderBatch, warningProfileAlpha);
-		
-		shaderBatch.end();
+//		shaderBatch.begin();
+//		if(warningCostsAlpha > 0) {
+//			label_warningCosts.draw(shaderBatch, warningCostsAlpha);
+//			warningCostsAlpha = Math.max(0, warningCostsAlpha-0.01f);
+//		}
+//		
+//		if(warningProfileAlpha == 1)
+//			label_warningProfile.draw(shaderBatch, warningProfileAlpha);
+//		
+//		shaderBatch.end();
 		
 	}
 
@@ -350,7 +365,7 @@ public class MenuProfile implements Screen {
 
 	@Override
 	public void dispose() {
-		saveProfile();
+		profile.saveProfile();
 		stage.dispose();
 		skin.dispose();
 		shaderBatch.dispose();
@@ -366,64 +381,32 @@ public class MenuProfile implements Screen {
 	}
 	
 	private void updateItems() {
-		stylePoints -= buy_costs;
-		shuriken += buy_shu;
-		hookLevel += buy_hook;
+		profile.stylePoints -= buy_costs;
+		profile.shuriken += buy_shu;
+		profile.hookRadius += buy_hook;
 		buy_costs = buy_shu = buy_hook = 0;
-		saveProfile();
-		loadProfile();
+		profile.saveProfile();
+		updateProfileLabels();
 		updateShopLabels();
 	}
 
-	private void loadProfile() {
-		JsonValue root = null;
-		try {
-			root = new JsonReader().parse(new FileReader(FilePath.profile));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+	private void updateProfileLabels() {
 		
-		if(root != null) {
-			name = root.getString("name");
-			exp = root.getInt("experience");
-			rank = GameProperties.Rank.getRank(exp).toString();
-			shuriken = root.getInt("shuriken");
-			hookLevel = root.getInt("hookRadius")/100;
-			stylePoints = root.getInt("stylePoints");
-
-		}
-		
-		label_name.setText(name);
-		label_rank.setText(rank);
-		label_shuriken.setText(Integer.toString(shuriken));
-		label_stylePoints.setText(Integer.toString(stylePoints));
-		label_hookLevel.setText(Integer.toString(hookLevel));
+		label_name.setText(profile.name);
+		label_rank.setText(GameProperties.Rank.getRank(profile.experience).toString());
+		label_shuriken.setText(Integer.toString(profile.shuriken));
+		label_stylePoints.setText(Integer.toString(profile.stylePoints));
+		label_hookRadius.setText(Integer.toString(profile.hookRadius));
 	}
 	
-	private void saveProfile() {
-		JsonValue root = null;
-		try {
-			root = new JsonReader().parse(new FileReader(FilePath.profile));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		root.get("name").set(name);
-		root.get("experience").set(exp);
-		root.get("shuriken").set(shuriken);
-		root.get("hookRadius").set(hookLevel*100);
-		root.get("stylePoints").set(stylePoints);
-		
-		FileHandle file = Gdx.files.local(FilePath.profile);
-		file.writeString(root.toString(), false);
-	}
 	
-	private void resetProfile() {
-		name = "New User";
-		rank = "Noob";
-		shuriken = stylePoints = exp = 0;
-		hookLevel = 1;
-	}
+//	TODO
+//	private void resetProfile() {
+//		name = "New User";
+//		rank = "Noob";
+//		shuriken = stylePoints = exp = 0;
+//		hookLevel = 1;
+//	}
 	
 	private class ClickHandler extends ClickListener {
 		private List<Actor> hoverList = new CopyOnWriteArrayList<Actor>();
@@ -456,23 +439,21 @@ public class MenuProfile implements Screen {
 			if(warningProfileAlpha == 1f) {
 				if(event.getListenerActor().equals(label_warningProfile_accept)) {
 					backButton.remove();
-					mainTable.remove();
-					stage.addActor(label_createProfile);
-					stage.addActor(nameField);
+					delProfileTable.remove();
+					stage.addActor(newProfileTable);
+					warningProfileAlpha = 0f;
+
 					stage.setKeyboardFocus(nameField);
-					warningProfileAlpha = 0.5f;
 				} else if(event.getListenerActor().equals(label_warningProfile_decline)) {
 					warningProfileAlpha = 0f;
+					delProfileTable.remove();
 					stage.addActor(mainTable);
 				}
-
-				label_warningProfile_accept.setVisible(warningProfileAlpha == 1);
-				label_warningProfile_decline.setVisible(warningProfileAlpha == 1);
+				
 			} else if(event.getListenerActor().equals(label_newProfile)) {
 				warningProfileAlpha = 1f;
 				mainTable.remove();
-				label_warningProfile_accept.setVisible(true);
-				label_warningProfile_decline.setVisible(true);
+//				stage.addActor(delProfileTable);
 			} else if(event.getListenerActor().equals(label_buy)) {
 				updateItems();
 			} else if(event.getListenerActor().equals(label_lessHook)) {
@@ -481,9 +462,9 @@ public class MenuProfile implements Screen {
 			} else if(event.getListenerActor().equals(label_lessShu)) {
 				buy_shu = Math.max(0, buy_shu - 1);
 				updateShopLabels();
-			} else if(event.getListenerActor().equals(label_moreHook) && (hookLevel + buy_hook <= 5)) {
+			} else if(event.getListenerActor().equals(label_moreHook) && (profile.hookRadius + buy_hook <= GameProperties.HOOK_RADIUS_MAX)) {
 				int costs = buy_costs + PRICE_HOOK;
-				if(costs <= stylePoints) {
+				if(costs <= profile.stylePoints) {
 					buy_costs = costs;
 					buy_hook++;
 				} else
@@ -491,7 +472,7 @@ public class MenuProfile implements Screen {
 				updateShopLabels();
 			} else if(event.getListenerActor().equals(label_moreShu)) {
 				int costs = buy_costs + PRICE_SHU;
-				if(costs <= stylePoints) {
+				if(costs <= profile.stylePoints) {
 					buy_costs = costs;
 					buy_shu++;
 				} else
@@ -502,24 +483,24 @@ public class MenuProfile implements Screen {
 		
 		public boolean keyDown(InputEvent event, int keycode) {
 			if(keycode == Keys.ENTER && event.getListenerActor().equals(nameField)) {
-				resetProfile();
-				name = nameField.getText();
-				if(name.compareTo("Cheater") == 0) {
-					shuriken = 999;
-					hookLevel = 5;
-					stylePoints = 999;
-				}
-				saveProfile();
-				loadProfile();
 				
-				label_createProfile.remove();
-				nameField.setText("NewPlayer");
-				nameField.setCursorPosition(9);
-				nameField.remove();
-				warningProfileAlpha = 0f;
-				
+				newProfileTable.remove();
 				stage.addActor(backButton);
 				stage.addActor(mainTable);
+				
+//				TODO
+//				resetProfile();
+//				name = nameField.getText();
+//				if(name.compareTo("Cheater") == 0) {
+//					shuriken = 999;
+//					hookLevel = 5;
+//					stylePoints = 999;
+//				}
+//				saveProfile();
+				updateProfileLabels();
+
+				nameField.setText("NewPlayer");
+				nameField.setCursorPosition(9);
 				return true;
 			}
 			return false;

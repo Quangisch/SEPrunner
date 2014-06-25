@@ -149,6 +149,7 @@ public class InputHandler implements IInputHandler, InputProcessor {
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
+//		boolean inScreen = !(screenX < 0 || screenY < 0 || screenX > Gdx.graphics.getWidth() || screenY > Gdx.graphics.getHeight());
 		return false;
 	}
 

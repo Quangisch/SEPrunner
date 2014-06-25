@@ -1,6 +1,5 @@
 package gameObject.interaction.enemy.ai;
 
-import core.ingame.input.interaction.InteractionHandler;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
@@ -41,7 +40,6 @@ int z = 0;
 		if(!postSolve) {
 			
 			if(other.getBodyObjectType().equals(BodyObjectType.Player) 
-					&& !other.getParent().isHiding()
 					&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
 					&& mySensor != null) {
 				
@@ -50,10 +48,11 @@ int z = 0;
 				//Player ber�hrt sichtfeld -> Alarm
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
 							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){
-						Alarm.getInstance().setActive(start);
-						
-//						player = other.getParent();
-						Debug.println("Alarm");
+					
+						if(!other.getParent().isHiding())
+							Alarm.getInstance().trigger();
+						else
+							other.getParent().wasHiddenFrom(getEnemy());
 				}
 			} //player<->enemy
 			

@@ -459,7 +459,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -483,7 +483,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -507,7 +507,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -542,7 +542,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -566,7 +566,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -590,7 +590,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -614,7 +614,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -643,7 +643,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "MediumAI",
 							"Actions" : 	[

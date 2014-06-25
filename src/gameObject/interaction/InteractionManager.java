@@ -124,8 +124,8 @@ public abstract class InteractionManager implements IInteractionManageable {
 	@Override
 	public boolean isGrabbing() {
 		return currentState.equals(InteractionState.GRAB) 
-				|| currentState.equals(InteractionState.GRAB_PULL)
-				|| currentState.equals(InteractionState.GRAB_DISPOSE);
+				|| currentState.equals(InteractionState.GRAB_PULL);
+//				|| currentState.equals(InteractionState.GRAB_DISPOSE);
 	}
 	
 	@Override

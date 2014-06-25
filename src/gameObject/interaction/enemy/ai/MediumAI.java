@@ -48,7 +48,7 @@ int z = 0;
 				//Player ber�hrt sichtfeld -> Alarm
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
 							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){
-						Alarm.getInstance().setActive(start);
+						Alarm.getInstance().trigger();
 						
 //						player = other.getParent();
 						Debug.println("Alarm");

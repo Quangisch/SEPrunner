@@ -1,5 +1,6 @@
 package gameObject.interaction.enemy;
 
+import misc.Debug;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
@@ -26,7 +27,7 @@ public class Alarm implements IDrawable {
 	
 	private Camera camera;
 	private PointLight[] alarmLights;
-	private boolean active = false;
+	private int timer;
 	
 	private final float W, H, DISTANCE_MAX;
 	private float x, y, distance;
@@ -44,7 +45,7 @@ public class Alarm implements IDrawable {
 	}
 	
 	public void draw(SpriteBatch batch, float deltaTime) {
-		if(active) {
+		if(timer > 0) {
 			x = camera.position.x;
 			y = camera.position.y;
 			
@@ -57,18 +58,28 @@ public class Alarm implements IDrawable {
 			
 			for(PointLight l : alarmLights)
 				l.setDistance(distance);
-			System.out.println("alarm");
-		}	
+			timer--;
+		} else {
+			if(alarmLights[0].isActive())
+				for(PointLight l : alarmLights)
+					l.setActive(false);
+		}
+
+		Debug.println("AlarmTimer@"+timer);
 	}
 	
-	public void setActive(boolean active) {
-		this.active = active;
+	public void trigger() {
+		trigger(80);
+	}
+	
+	public void trigger(int time) {
+		timer += time;
 		for(PointLight l : alarmLights)
-			l.setActive(active);
+			l.setActive(true);
 	}
 	
 	public boolean isActive() {
-		return active;
+		return timer > 0;
 	}
 
 }

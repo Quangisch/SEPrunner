@@ -71,11 +71,11 @@ public class ActionMovement  {
 			if(!(actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
 				return InteractionState.GRAB;
 			return null;
-		case GRAB_DISPOSE:
+//		case GRAB_DISPOSE:
 //			if(gameObject.isInteractionFinished())
 //			System.out.println("disposeStand");
 //				gameObject.applyInteraction(InteractionState.STAND);
-			return null;
+//			return null;
 		case HIDE:
 			if(!actions.contains(ActionKey.ACTION))
 				return InteractionState.HIDE_END;

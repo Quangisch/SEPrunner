@@ -43,7 +43,7 @@ public class InputToInteraction {
 				return InteractionState.CROUCH_STAND;
 				
 			case THROW:
-			case GRAB_DISPOSE:
+//			case GRAB_DISPOSE:
 			case HIDE_END:
 				return InteractionState.STAND;
 				

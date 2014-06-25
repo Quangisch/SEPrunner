@@ -14,7 +14,7 @@ public enum InteractionState {
 
 	HOOK_FLY(true, true, Animation.LOOP), HOOK(false, true, Animation.NORMAL, "THROW"), THROW(false, true, Animation.NORMAL),
 
-	GRAB(true, true, Animation.NORMAL), GRAB_PULL(true, true, Animation.LOOP), GRAB_DISPOSE(false, true, Animation.NORMAL, "GRAB"),
+	GRAB(true, true, Animation.NORMAL), GRAB_PULL(true, true, Animation.LOOP), //GRAB_DISPOSE(false, true, Animation.NORMAL, "GRAB"),
 	
 	GRAB_START(false, true, Animation.NORMAL), GRAB_END(false, true, Animation.NORMAL),
 

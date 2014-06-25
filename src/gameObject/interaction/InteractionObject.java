@@ -7,8 +7,10 @@ import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameWorld.GameWorld;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import misc.Debug;
 import misc.GeometricObject;
@@ -25,14 +27,22 @@ public abstract class InteractionObject
 		extends InteractionManager 
 		implements ICollisionable, RayCastCallback, IInteractable {
 	
-	private int shuriken = 0;
 	private int grounded, bodyBlocked;
 	private boolean hookable;
 	private GameObject grabTarget, disposeTarget, hideTarget;
 
 	private Vector2 hookPoint;
 	private List<Vector2> hookPoints = new LinkedList<Vector2>();
-	private int hookRadius = 600;
+	private int shuriken, hookRadius;
+	private int shurikenThrown, enemiesHidden, unseen;
+	private Set<GameObject> hiddenFrom = new HashSet<GameObject>();
+	
+	public void wasHiddenFrom(GameObject gameObject) {
+		if(!hiddenFrom.contains(gameObject)) {
+			unseen++;
+			hiddenFrom.add(gameObject);
+		}
+	}
 	
 	protected InteractionObject(GameWorld gameWorld) {
 		super(gameWorld);
@@ -49,6 +59,11 @@ public abstract class InteractionObject
 	protected void processInteractionTransitions() {
 		processGrabTarget();
 		processHideTarget();
+		
+		if(this.getBodyObject().getBodyObjectType().equals(BodyObjectType.Player)) {
+//			System.out.println(String.format("thrown:%d, hidden:%d, unseen:%d", shurikenThrown, enemiesHidden, unseen));
+		
+		}
 	}
 	
 	private void processGrabTarget() {
@@ -64,7 +79,8 @@ public abstract class InteractionObject
 			if(!getInteractionState().equals(InteractionState.GRAB_PULL)
 					&& !grabTarget.getInteractionState().equals(InteractionState.STUNNED))
 				grabTarget.applyInteraction(InteractionState.STUNNED);
-		}
+		} else
+			disposeTarget = null;
 	}
 	
 	private void processHideTarget() {
@@ -89,7 +105,7 @@ public abstract class InteractionObject
 	public boolean decShuriken() {
 		if(shuriken <= 0)
 			return false;
-			
+		shurikenThrown++;
 		shuriken--;
 		return true;
 	}
@@ -131,6 +147,7 @@ public abstract class InteractionObject
 	@Override
 	public boolean endGrab() {
 		if(isGrabbing()) {
+			applyInteraction(getDefaultInteractionState());
 			grabTarget = getBodyObject().uncoupleBodies();
 			return true;
 		}
@@ -145,6 +162,7 @@ public abstract class InteractionObject
 			endGrab();
 			grabTarget.dispose();
 			grabTarget = null;
+			enemiesHidden++;
 			return true;
 		}
 		return false;
@@ -153,6 +171,18 @@ public abstract class InteractionObject
 	@Override
 	public int getHookRadius() {
 		return hookRadius;
+	}
+	
+	public int getShurikenThrown() {
+		return shurikenThrown;
+	}
+	
+	public int getEnemiesHidden() {
+		return enemiesHidden;
+	}
+	
+	public int getUnseenFrom() {
+		return unseen;
 	}
 	
 	@Override
@@ -256,9 +286,8 @@ public abstract class InteractionObject
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
 						&& other.getParent().isStunned() && !isGrabbing()) {
 					grabTarget = start ? other.getParent() : null;
-					other.getParent().getAnimationObject().setActive(canGrab());
-					return true;
-
+					other.getParent().getAnimationObject().setActive(canGrab());	
+					
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& grabTarget != null && isGrabbing()) {
 					disposeTarget = start ? other.getParent() : null;

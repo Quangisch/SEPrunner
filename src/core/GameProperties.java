@@ -27,8 +27,9 @@ public class GameProperties {
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
 	
+	
 	public static final int IMPLEMENTED_LEVEL = 3; 
- 
+	public static final int HOOK_RADIUS_MAX = 500;
 	
 //	CONVERSION
 	final public static float PIXELPROMETER = 100;
@@ -68,8 +69,6 @@ public class GameProperties {
 			brightness = contrast = musicVolume = soundVolume = 1;
 			return;
 		}
-		
-		
 	}
 	
 	public static void saveToFile() {
@@ -92,8 +91,7 @@ public class GameProperties {
 		
 	}
 	
-//	GAMESTATES
-	
+//	RANK, EXPERIENCE
 	public enum Rank {
 		Noob(0),
 		Rookie(30),
@@ -113,6 +111,16 @@ public class GameProperties {
 		}
 	}
 	
+	public static final int SHU_MUL = -1;
+	public static final int DISPOSED_MUL = 10;
+	public static final int HIDDEN_MUL = 20;
+	
+	public static int calcStylePoints(int shurikenThrown, int disposedBodies, int hiddenFrom) {
+		return Math.max(0, shurikenThrown * SHU_MUL + disposedBodies * DISPOSED_MUL + hiddenFrom * HIDDEN_MUL);
+	}
+	
+	
+//	GAMESTATES
 	public enum GameState {
 		MENU(true),
 		INGAME(false),

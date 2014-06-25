@@ -88,9 +88,6 @@ public class Enemy extends GameObject {
 		view.setActive(false);
 	}
 
-	public enum Pattern {
-		STAND, WALK_RIGHT, WALK_LEFT, RUN_RIGHT, RUN_LEFT, JUMP, JUMP_LEFT, JUMP_RIGHT;
-	}
 
 	@Override
 	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor,
