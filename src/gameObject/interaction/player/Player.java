@@ -44,6 +44,10 @@ public class Player extends PlayerCollision {
 		super.dispose();
 	}
 	
+	public String getName() {
+		return profile.name;
+	}
+	
 	public void processRewards() {
 		int points = GameProperties.calcStylePoints(getShurikenThrown(), getEnemiesHidden(), getUnseenFrom());
 		profile.experience += points;
