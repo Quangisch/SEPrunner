@@ -154,7 +154,7 @@ public class GameProperties {
 		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
 		ResourceManager.getInstance().startMusic();
 		
-		if((isInMenuState() && prevState.isMenu()) || (isInGameState() && prevState.isInGame())) {
+		if(!((isInMenuState() && prevState.isMenu()) || (isInGameState() && prevState.isInGame()))) {
 			if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 			else				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
 		}
@@ -208,8 +208,8 @@ public class GameProperties {
 			this.level = level;
 		}
 		public void run() {
-//			if(GameProperties.isGameState(state))
-//				GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
+			if(GameProperties.isGameState(state))
+				GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
 			GameProperties.setGameState(state, level);
 		}
 	}
