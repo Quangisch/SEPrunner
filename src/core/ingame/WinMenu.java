@@ -44,13 +44,13 @@ public class WinMenu implements IDrawable {
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1, -1, -1, 0x00 };
 
 		// TODO ??
-		// b.setColor(205, 25, 201, 0.8f);
+		b.setColor(205, 25, 201, 0.8f);
 		Pixmap pixmap = new Pixmap(colordot, 0, colordot.length);
 		Texture texture = new Texture(pixmap);
 		b.draw(texture, 0, height * 0.2f, width, height * 0.6f);
 		pixmap.dispose();
 		texture.dispose();
-		// b.setColor(Color.WHITE);
+		b.setColor(Color.WHITE);
 
 		//
 		// Point m = MouseInfo.getPointerInfo().getLocation();
