@@ -118,8 +118,10 @@ public class GameRender implements Screen {
 			break;
 		case INGAME_WIN:
 			winMenu.draw(batch, realdelta);
+			break;
 		case INGAME_LOSE:
 			loseMenu.draw(batch, realdelta);
+			break;
 		default:
 			break;
 		}

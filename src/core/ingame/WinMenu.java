@@ -84,7 +84,8 @@ public class WinMenu implements IDrawable {
 
 			public void onClick() {
 				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(//
-						GameState.INGAME, Math.min(2, GameProperties.currentLevel + 1)));
+						GameState.INGAME, Math.min(GameProperties.IMPLEMENTED_LEVEL - 1,
+								GameProperties.currentLevel + 1)));
 			}
 		};
 		tB = font.getBounds(cont.getText());
