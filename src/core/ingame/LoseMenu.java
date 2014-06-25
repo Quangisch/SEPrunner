@@ -1,7 +1,5 @@
 package core.ingame;
 
-import gameWorld.GameWorld;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -17,15 +15,12 @@ import core.GameProperties.GameState;
 import core.ingame.input.InputHandler;
 import core.ingame.input.InputHandler.Click;
 
-public class LoseMenu implements IDrawable, Runnable {
+public class LoseMenu implements IDrawable {
 
-	private GameWorld world;
 	private SpriteBatch b;
 	private BitmapFont font;
-	private GameState nextGameState;
 
-	public LoseMenu(GameWorld gameWorld) {
-		this.world = gameWorld;
+	public LoseMenu() {
 		b = new SpriteBatch();
 		font = new BitmapFont(Gdx.files.internal("res/font/baoli64.fnt"), //
 				Gdx.files.internal("res/font/baoli64.png"), false);
@@ -49,13 +44,13 @@ public class LoseMenu implements IDrawable, Runnable {
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1, -1, -1, 0x00 };
 
 		// TODO ??
-		b.setColor(205, 25, 201, 0.8f);
+		// b.setColor(205, 25, 201, 0.8f);
 		Pixmap pixmap = new Pixmap(colordot, 0, colordot.length);
 		Texture texture = new Texture(pixmap);
 		b.draw(texture, 0, height * 0.2f, width, height * 0.6f);
 		pixmap.dispose();
 		texture.dispose();
-		b.setColor(Color.WHITE);
+		// b.setColor(Color.WHITE);
 
 		//
 		// Point m = MouseInfo.getPointerInfo().getLocation();
@@ -88,8 +83,7 @@ public class LoseMenu implements IDrawable, Runnable {
 			}
 
 			public void onClick() {
-// TODO Reset Level
-				GameProperties.setGameState(GameState.INGAME);
+				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.INGAME, GameProperties.currentLevel));
 			}
 		};
 		tB = font.getBounds(cont.getText());
@@ -107,9 +101,7 @@ public class LoseMenu implements IDrawable, Runnable {
 			}
 
 			public void onClick() {
-				// TODO Fix Crash
-				// GameProperties.setGameState(GameState.MENU);
-				nextGameState = GameState.MENU;
+				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.MENU, -1));
 			}
 		};
 		tB = font.getBounds(back.getText());
@@ -128,7 +120,7 @@ public class LoseMenu implements IDrawable, Runnable {
 
 			public void onClick() {
 				// TODO Level Auswahl
-				GameProperties.setGameState(GameState.MENU);
+				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.MENU, -1));
 			}
 		};
 		tB = font.getBounds(restart.getText());
@@ -160,11 +152,5 @@ public class LoseMenu implements IDrawable, Runnable {
 		}
 
 		public abstract void onClick();
-	}
-
-	@Override
-	public void run() {
-		if (nextGameState != null) GameProperties.setGameState(nextGameState);
-		nextGameState = null;
 	}
 }
