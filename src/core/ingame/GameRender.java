@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.Disposable;
 
 import core.GameProperties;
 import core.ResourceManager;
-import core.GameProperties.GameState;
 import core.exception.LevelNotFoundException;
 import core.ingame.input.InputHandler;
 
@@ -33,6 +32,8 @@ public class GameRender implements Screen {
 	private Camera camera;
 	private HUD hud;
 	private PauseMenu pauseMenu;
+	private WinMenu winMenu;
+	private LoseMenu loseMenu;
 
 	public GameRender(int level) throws LevelNotFoundException {
 		camera = new Camera();
@@ -40,6 +41,8 @@ public class GameRender implements Screen {
 		gameWorld = new GameWorld(level, iHandler, camera);
 		hud = new HUD(gameWorld);
 		pauseMenu = new PauseMenu(gameWorld);
+		winMenu = new WinMenu(gameWorld);
+		loseMenu = new LoseMenu(gameWorld);
 
 		// TODO TMP for debugging
 		Debug.init(iHandler, camera);
@@ -92,6 +95,7 @@ public class GameRender implements Screen {
 		}
 
 		gameWorld.run();
+		pauseMenu.run();
 		if (Debug.isMode(Debug.Mode.CONSOLE)) log.log();
 
 		Gdx.gl.glClearColor(0, 0, 0, 1); //(0,0,0,1)
@@ -106,10 +110,20 @@ public class GameRender implements Screen {
 
 		gameWorld.draw(batch, delta); //map
 
-		if (GameProperties.getGameState() != GameState.INGAME_PAUSE)
+		switch (GameProperties.getGameState()) {
+		case INGAME:
 			hud.draw(batch, delta); //userInterface
-		else
+			break;
+		case INGAME_PAUSE:
 			pauseMenu.draw(batch, realdelta);
+			break;
+		case INGAME_WIN:
+			winMenu.draw(batch, realdelta);
+		case INGAME_LOSE:
+			loseMenu.draw(batch, realdelta);
+		default:
+			break;
+		}
 
 		try {
 			for (GeometricObject g : geometrics)
