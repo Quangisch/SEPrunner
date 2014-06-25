@@ -2,6 +2,8 @@ package core;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -12,14 +14,7 @@ import core.exception.ProfileNotFoundException;
 
 public class PlayerProfile {
 
-	/*
-	 * name: No1,
-		shuriken: 10,
-		hookRadius: 100,
-		stylePoints: 123,
-		experience: 0
 
-	 */
 	private JsonValue root;
 	private int index;
 	public String name;
@@ -36,11 +31,28 @@ public class PlayerProfile {
 			throw new ProfileNotFoundException();
 		
 		this.index = index;
+		
+		if(root.size == 0)
+			initNewFile();
+		
 		loadProfile();
 	}
 	
 	public PlayerProfile() {
 		this(0);
+	}
+	
+	private void initNewFile() {
+		if(root.size == 0) {
+			FileHandle file = Gdx.files.local(FilePath.profile);
+			file.writeString("[{name: NewPlayer,shuriken: 10,hookRadius: 100,stylePoints: 0,experience: 0}]", false);
+			
+			try {
+				root = new JsonReader().parse(new FileReader(FilePath.profile));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void loadProfile() {
@@ -50,7 +62,6 @@ public class PlayerProfile {
 		shuriken = root.get(index).getInt("shuriken");
 		hookRadius = root.get(index).getInt("hookRadius");
 		stylePoints = root.get(index).getInt("stylePoints");
-		System.out.println("loadProfile:"+this.toString());
 	}
 	
 	public void saveProfile() {
@@ -63,7 +74,13 @@ public class PlayerProfile {
 		FileHandle file = Gdx.files.local(FilePath.profile);
 		file.writeString(root.toString(), false);
 		
-		System.out.println(root.toString());
+	}
+	
+	public void reset() {
+		name = "NewPlayer";
+		shuriken = 10;
+		hookRadius = 100;
+		experience = stylePoints = 0;
 	}
 	
 	public void deleteProfile() {
@@ -127,6 +144,30 @@ public class PlayerProfile {
 	public static boolean deletePlayerProfile(int index) {
 		(new PlayerProfile(index)).deleteProfile();
 		return false;
+	}
+	
+	public static int getProfileCount() {
+		JsonValue root = null;
+		try {
+			root = new JsonReader().parse(new FileReader(FilePath.profile));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return root == null ? 0 : root.size;
+	}
+	
+	public static List<String> getNameList() {
+		List<String> list = new LinkedList<String>();
+		JsonValue root = null;
+		try {
+			root = new JsonReader().parse(new FileReader(FilePath.profile));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		for(JsonValue v : root)
+			list.add(v.getString("name"));
+		return list;
 	}
 	
 }

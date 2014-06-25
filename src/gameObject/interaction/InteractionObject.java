@@ -295,7 +295,7 @@ public abstract class InteractionObject
 					return true;
 					
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
-						&& !isInAction()) {
+						&& !isInAction() && !isStunned()) {
 					hideTarget = start ? other.getParent() : null;
 					other.getParent().getAnimationObject().setActive(canHide());
 					return true;

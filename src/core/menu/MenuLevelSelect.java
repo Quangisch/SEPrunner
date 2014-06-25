@@ -168,7 +168,7 @@ public class MenuLevelSelect implements Screen {
 
 	@Override
 	public void resume() {
-
+		show();
 	}
 
 	@Override

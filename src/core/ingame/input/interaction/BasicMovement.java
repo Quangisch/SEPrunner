@@ -36,7 +36,7 @@ public class BasicMovement {
 			nextState = processJump();
 		if(!inAction && nextState == null && actions.contains(ActionKey.CROUCH))
 			nextState = processCrouch();
-		if(nextState == null && gameObject.isInteractionFinished() 
+		if(nextState == null && gameObject.isInteractionFinished()
 				&& (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
 			nextState = processMovement();
 		

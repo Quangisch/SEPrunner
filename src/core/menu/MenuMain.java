@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.GameProperties;
+import core.PlayerProfile;
 import core.Project;
 import core.menu.tween.ActorAccessor;
 
@@ -62,6 +63,7 @@ public class MenuMain implements Screen {
 
 	@Override
 	public void show() {
+		
 		stage = new Stage();
 		shaderBatch = new ShaderBatch(100);		//background laden
 		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT);
@@ -137,6 +139,8 @@ public class MenuMain implements Screen {
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(Actor.class, new ActorAccessor());
 	
+
+		
 		//heading and buttons fade-in
 		Timeline.createSequence().beginSequence()
 			.push(Tween.set(heading, ActorAccessor.ALPHA).target(0))
@@ -158,6 +162,11 @@ public class MenuMain implements Screen {
 		Tween.from(table, ActorAccessor.Y, .5f).target(Gdx.graphics.getHeight()/8).start(tweenManager);
 		
 		tweenManager.update(Gdx.graphics.getDeltaTime());
+		
+
+		if(PlayerProfile.getProfileCount() == 0)
+			((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(this));
+	
 	}
 
 	@Override
@@ -172,7 +181,7 @@ public class MenuMain implements Screen {
 
 	@Override
 	public void resume() {
-
+		show();
 	}
 
 	@Override

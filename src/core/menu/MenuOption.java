@@ -299,7 +299,7 @@ public class MenuOption implements Screen {
 
 	@Override
 	public void resume() {
-
+		show();
 	}
 
 	@Override

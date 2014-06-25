@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -41,7 +42,7 @@ public class MenuProfile implements Screen {
 	private Stage stage;
 	
 	private Table mainTable, contentTable, shopTable, shopTableContent, shopTableBuy, profileTable, itemTable, 
-					newProfileTable, delProfileTable, warningBuyTable;
+					newProfileTable, delProfileTable, warningBuyTable, warningMaxProfileTable, chooseProfileTable;
 	private Skin skin;
 	
 	private TextButton backButton;
@@ -51,23 +52,25 @@ public class MenuProfile implements Screen {
 	private ClickHandler clickHandler;
 	private ShaderBatch shaderBatch;
 	
-	private Label label_quantityshuriken, label_quantityLevelUp, label_price;
+	private Label label_quantityshuriken, label_quantityHook, label_price;
 	private Label label_name, label_rank, label_shuriken, label_stylePoints, label_hookRadius;
 	private Label label_buy, label_newProfile, label_moreShu, label_lessShu, label_moreHook, label_lessHook;
-	private Label label_warningCosts, label_warningProfile, label_warningProfile_accept, label_warningProfile_decline;
+	private Label label_warningCosts, label_warningMaxProfile, label_delProfile_accept, label_delProfile_decline;
 	
-	private Label label_createProfile;
+	private com.badlogic.gdx.scenes.scene2d.ui.List profileList;
+	private ScrollPane scrollPane;
+	private Label label_createProfile, label_delProfile, label_chooseProfile, label_selectProfile;
 	private TextField nameField;
-	
 	private Pixmap pixmap;
 	private Texture texture;
 	
 	private PlayerProfile profile;
-//	private String name = "New User", rank = "Noob";
-//	private int shuriken, hookLevel, stylePoints, exp;
-	private int buy_shu, buy_hook, buy_costs;
+
+//	SHOP
 	private final int PRICE_SHU = 5, PRICE_HOOK = 1;
 	private float warningCostsAlpha = 0f, warningProfileAlpha = 0f;
+	private float buy_shu, buy_hook, buy_costs, incShu, incHook;
+	private final float INC_SPEED = 0.1f;
 	
 	@Override
 	public void show() {
@@ -101,8 +104,15 @@ public class MenuProfile implements Screen {
 		itemTable = new Table();
 		newProfileTable = new Table();
 		warningBuyTable = new Table();
+		warningMaxProfileTable = new Table();
 		delProfileTable = new Table();
+		chooseProfileTable = new Table();
 		
+		delProfileTable.setFillParent(true);
+		newProfileTable.setFillParent(true);
+		warningBuyTable.setFillParent(true);
+		chooseProfileTable.setFillParent(true);
+		warningMaxProfileTable.setFillParent(true);
 		
 		
 		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -119,9 +129,10 @@ public class MenuProfile implements Screen {
 //		shopTableBuy.debug();
 //		profileTable.debug();
 //		itemTable.debug();
-		delProfileTable.debug();
-		newProfileTable.debug();
-		warningBuyTable.debug();
+//		delProfileTable.debug();
+//		newProfileTable.debug();
+//		warningBuyTable.debug();
+//		chooseProfileTable.debug();
 		
 //		HEAD
 		mainTable.top().add(new Label("Profile", skin, "big")).pad(height/5, 0, height/5, 0).row();
@@ -135,7 +146,20 @@ public class MenuProfile implements Screen {
 		iniWarningLabels();
 		iniNewProfileTable();
 
+		profileList = new com.badlogic.gdx.scenes.scene2d.ui.List(PlayerProfile.getNameList().toArray(), skin);
+		scrollPane = new ScrollPane(profileList, skin);
+		chooseProfileTable.add(new Label("Profile Selection", skin, "baoli96", Color.WHITE)).padBottom(height/5).row();
+		chooseProfileTable.add(scrollPane).padBottom(height/10).row();
+		chooseProfileTable.add(label_selectProfile);
+
 	}
+	
+	private void updateProfileSelection() {
+		profileList = new com.badlogic.gdx.scenes.scene2d.ui.List(PlayerProfile.getNameList().toArray(), skin);
+		scrollPane.clear();
+		scrollPane.setWidget(profileList);
+	}
+	
 	
 	private void iniNewProfileTable() {
 //		TEXTFIELD
@@ -155,7 +179,6 @@ public class MenuProfile implements Screen {
 		style.selection = spriteDrawable;
 
 		nameField = new TextField("", skin);
-		nameField.setSize(width*0.8f, height/3);
 		nameField.setStyle(style);
 		nameField.setMaxLength(10);
 		nameField.setText("NewPlayer");
@@ -163,18 +186,18 @@ public class MenuProfile implements Screen {
 		nameField.addListener(clickHandler);
 
 		newProfileTable.add(label_createProfile).row();
-		newProfileTable.add(nameField).row();
-	
+		newProfileTable.add(nameField).size(width, height/4).row();
+		newProfileTable.add(label_selectProfile);
+
 	}
 	
 	private void iniLabel() {
 		
 //		SHOP
-		label_quantityLevelUp = getLabel44(Integer.toString(0));
+		label_quantityHook = getLabel44(String.format("%.2f m",0f));
 		label_quantityshuriken = getLabel44(Integer.toString(0));
 		label_price = getLabel44(Integer.toString(0));
 		label_buy = getLabel44("Buy");
-		label_newProfile = getLabel44("New Profile");
 		
 		label_moreShu = getLabel32(">");
 		label_lessShu = getLabel32("<");
@@ -186,46 +209,45 @@ public class MenuProfile implements Screen {
 		label_rank = getLabel44(GameProperties.Rank.getRank(profile.experience).toString());
 		label_shuriken = getLabel44(Integer.toString(profile.shuriken));
 		label_stylePoints = getLabel44(Integer.toString(profile.stylePoints));
-		label_hookRadius = getLabel44(Integer.toString(profile.hookRadius/100));
-		
-//		LABEL BUTTONS
-		label_buy.addListener(clickHandler);
-		label_newProfile.addListener(clickHandler);
-		label_moreShu.addListener(clickHandler);
-		label_lessShu.addListener(clickHandler);
-		label_moreHook.addListener(clickHandler);
-		label_lessHook.addListener(clickHandler);
-		
+		label_hookRadius = getLabel44(String.format("%.2f m",(float)profile.hookRadius/100)+" m");
 
-		
+		label_newProfile = getLabel32("New Profile");
+		label_delProfile = getLabel32("Delete Profile");
+		label_chooseProfile = getLabel32("Choose Profile");
+		label_selectProfile = getLabel32("Select");
+
+
 //		LISTENER
 		addListener(label_buy);
-		addListener(label_newProfile);
 		addListener(label_moreShu);
 		addListener(label_lessShu);
 		addListener(label_lessHook);
 		addListener(label_moreHook);
+		
+		addListener(label_newProfile);
+		addListener(label_delProfile);
+		addListener(label_chooseProfile);
+		addListener(label_selectProfile);
 		
 	}
 	
 	
 	
 	private void iniWarningLabels() {
-		label_warningCosts = new Label("Not enough StylePoints", skin, "baoli44", Color.RED);
-//		label_warningCosts.setPosition(width/2-label_warningCosts.getWidth()/2, 
-//				height/3-label_warningCosts.getHeight()/2);
+		label_warningCosts = new Label("Not enough StylePoints", skin, "baoli64", Color.RED);
 		warningBuyTable.add(label_warningCosts);
+		label_warningMaxProfile = new Label("Maximal 5 Profiles", skin, "baoli64", Color.RED);
+		warningMaxProfileTable.add(label_warningMaxProfile);
 		
-		label_warningProfile = new Label("Delete current Profile?", skin, "baoli64", Color.RED);
-		label_warningProfile_decline = new Label("NO", skin, "baoli96", Color.WHITE);
-		label_warningProfile_accept = new Label("YES", skin, "baoli96", Color.WHITE);
+		label_delProfile_decline = new Label("NO", skin, "baoli96", Color.WHITE);
+		label_delProfile_accept = new Label("YES", skin, "baoli96", Color.WHITE);
 
-		delProfileTable.center().add(label_warningProfile).colspan(2).row();
-		delProfileTable.add(label_warningProfile_decline).padRight(width/10);
-		delProfileTable.add(label_warningProfile_decline).padLeft(width/10);
+		delProfileTable.center().add(new Label("Delete current Profile?", skin, "baoli64", Color.RED)).colspan(2).row();
+		delProfileTable.add(label_delProfile_accept).padRight(width/10);
+		delProfileTable.add(label_delProfile_decline).padLeft(width/10);
 		
-		addListener(label_warningProfile_accept);
-		addListener(label_warningProfile_decline);
+		addListener(label_delProfile_accept);
+		addListener(label_delProfile_decline);
 	}
 	
 	private void addListener(Label label) {
@@ -252,8 +274,9 @@ public class MenuProfile implements Screen {
 		
 		shopTableContent.add(getLabel44("Hook Radius")).left();
 		shopTableContent.add(getLabel44(Integer.toString(PRICE_HOOK)));
+		
 		shopTableContent.add(label_lessHook);
-		shopTableContent.add(label_quantityLevelUp);
+		shopTableContent.add(label_quantityHook).pad(0, width/20, 0, width/20);
 		shopTableContent.add(label_moreHook).row();
 		
 		shopTableBuy.add().size(width/2, height/10);
@@ -280,13 +303,20 @@ public class MenuProfile implements Screen {
 		
 		itemTable.add(getLabel44("shuriken")).left().padRight(width/20);
 		itemTable.add(label_shuriken).row();
-		itemTable.add(getLabel44("Hook Level")).left().padRight(width/20);
+		itemTable.add(getLabel44("Hook Radius")).left().padRight(width/20);
 		itemTable.add(label_hookRadius).row();
 		itemTable.add(getLabel44("StylePoints")).left().padRight(width/20);
 		itemTable.add(label_stylePoints).row();
 		
 		profileTable.add();
-		profileTable.add(label_newProfile).padBottom(height/5);
+		profileTable.add(label_newProfile).row();
+		
+		profileTable.add();
+		profileTable.add(label_chooseProfile).row();
+		
+		profileTable.add();
+		profileTable.add(label_delProfile).row();
+		
 	}
 	
 	private Label getLabel32(String text) {
@@ -327,19 +357,22 @@ public class MenuProfile implements Screen {
 				warningBuyTable.remove();
 				stage.addActor(mainTable);
 			}
-				
+			
+		} else if(warningProfileAlpha > 0) {
+			if(!warningMaxProfileTable.hasParent())
+				stage.addActor(warningMaxProfileTable);
+			Color c = label_warningMaxProfile.getColor();
+			label_warningMaxProfile.setColor(c.r, c.g, c.b, warningProfileAlpha);
+			warningProfileAlpha = Math.max(0, warningProfileAlpha-0.01f);
+			if(warningProfileAlpha == 0) {
+				warningMaxProfileTable.remove();
+				stage.addActor(mainTable);
+			}
 		}
 		
-//		shaderBatch.begin();
-//		if(warningCostsAlpha > 0) {
-//			label_warningCosts.draw(shaderBatch, warningCostsAlpha);
-//			warningCostsAlpha = Math.max(0, warningCostsAlpha-0.01f);
-//		}
-//		
-//		if(warningProfileAlpha == 1)
-//			label_warningProfile.draw(shaderBatch, warningProfileAlpha);
-//		
-//		shaderBatch.end();
+		
+
+		processBuySelection();
 		
 	}
 
@@ -360,7 +393,7 @@ public class MenuProfile implements Screen {
 
 	@Override
 	public void resume() {
-		
+		show();
 	}
 
 	@Override
@@ -375,15 +408,16 @@ public class MenuProfile implements Screen {
 	}
 	
 	private void updateShopLabels() {
-		label_quantityshuriken.setText(Integer.toString(buy_shu));
-		label_quantityLevelUp.setText(Integer.toString(buy_hook));
-		label_price.setText(Integer.toString(buy_costs));	
+		label_quantityshuriken.setText(Integer.toString((int)buy_shu));
+		label_quantityHook.setText(String.format("%.2f m",Math.floor(buy_hook)/100));
+		label_price.setText(Integer.toString((int)buy_costs));	
+		
 	}
 	
-	private void updateItems() {
-		profile.stylePoints -= buy_costs;
-		profile.shuriken += buy_shu;
-		profile.hookRadius += buy_hook;
+	private void purchaseItems() {
+		profile.stylePoints -= (int)buy_costs;
+		profile.shuriken += (int)buy_shu;
+		profile.hookRadius += (int)buy_hook;
 		buy_costs = buy_shu = buy_hook = 0;
 		profile.saveProfile();
 		updateProfileLabels();
@@ -396,17 +430,35 @@ public class MenuProfile implements Screen {
 		label_rank.setText(GameProperties.Rank.getRank(profile.experience).toString());
 		label_shuriken.setText(Integer.toString(profile.shuriken));
 		label_stylePoints.setText(Integer.toString(profile.stylePoints));
-		label_hookRadius.setText(Integer.toString(profile.hookRadius));
+		label_hookRadius.setText(String.format("%.2f m", (float)profile.hookRadius/100));
 	}
 	
+	private void processBuySelection() {
+		if(incHook != 0) {
+			if(incHook < 0)
+				buy_hook = Math.max(0, buy_hook - INC_SPEED);
+			else if(incHook > 0 && profile.hookRadius + buy_hook <= GameProperties.HOOK_RADIUS_MAX) {
+				if(buy_costs <= profile.stylePoints)	buy_hook += INC_SPEED;
+				else									warningCostsAlpha = 1f;
+			}	
+			
+			buy_costs = (int)buy_hook * PRICE_HOOK;
+			updateShopLabels();
 	
-//	TODO
-//	private void resetProfile() {
-//		name = "New User";
-//		rank = "Noob";
-//		shuriken = stylePoints = exp = 0;
-//		hookLevel = 1;
-//	}
+		} else if(incShu != 0) {
+			if(incShu < 0)
+				buy_shu = Math.max(0, buy_shu - INC_SPEED);
+			else if(incShu > 0) {
+				if(buy_costs <= profile.stylePoints)	buy_shu += INC_SPEED;
+				else									warningCostsAlpha = 1f;
+			}
+
+			buy_costs = (int)buy_shu * PRICE_SHU;
+			updateShopLabels();
+		}
+		
+	}
+	
 	
 	private class ClickHandler extends ClickListener {
 		private List<Actor> hoverList = new CopyOnWriteArrayList<Actor>();
@@ -436,67 +488,69 @@ public class MenuProfile implements Screen {
 		}
 		
 		public void clicked(InputEvent event, float x, float y){
-			if(warningProfileAlpha == 1f) {
-				if(event.getListenerActor().equals(label_warningProfile_accept)) {
+		
+//			SHOP
+			if(event.getListenerActor().equals(label_buy)) {
+				purchaseItems();
+				
+//			PROFILES
+			} else if(event.getListenerActor().equals(label_newProfile)) {
+				if(PlayerProfile.getProfileCount() < GameProperties.MAX_PROFILE_COUNT) {
+					 mainTable.remove();
 					backButton.remove();
-					delProfileTable.remove();
 					stage.addActor(newProfileTable);
-					warningProfileAlpha = 0f;
-
 					stage.setKeyboardFocus(nameField);
-				} else if(event.getListenerActor().equals(label_warningProfile_decline)) {
-					warningProfileAlpha = 0f;
-					delProfileTable.remove();
+					
+				 } else
+					 warningProfileAlpha = 1f;
+				
+			} else if(event.getListenerActor().equals(label_chooseProfile)) {
+				mainTable.remove();
+				updateProfileSelection();
+				stage.addActor(chooseProfileTable);
+				
+			} else if(event.getListenerActor().equals(label_delProfile)) {
+				mainTable.remove();
+				stage.addActor(delProfileTable);
+				
+//			SUBMENU
+			} else if(event.getListenerActor().equals(label_delProfile_accept)) {
+				delProfileTable.remove();
+				profile.deleteProfile();
+				
+				if(PlayerProfile.getProfileCount() > 0) {
+					profile = new PlayerProfile();
+					updateProfileLabels();
 					stage.addActor(mainTable);
+				} else {
+					stage.addActor(newProfileTable);
+					stage.setKeyboardFocus(nameField);
 				}
 				
-			} else if(event.getListenerActor().equals(label_newProfile)) {
-				warningProfileAlpha = 1f;
-				mainTable.remove();
-//				stage.addActor(delProfileTable);
-			} else if(event.getListenerActor().equals(label_buy)) {
-				updateItems();
-			} else if(event.getListenerActor().equals(label_lessHook)) {
-				buy_hook = Math.max(0, buy_hook - 1);
-				updateShopLabels();
-			} else if(event.getListenerActor().equals(label_lessShu)) {
-				buy_shu = Math.max(0, buy_shu - 1);
-				updateShopLabels();
-			} else if(event.getListenerActor().equals(label_moreHook) && (profile.hookRadius + buy_hook <= GameProperties.HOOK_RADIUS_MAX)) {
-				int costs = buy_costs + PRICE_HOOK;
-				if(costs <= profile.stylePoints) {
-					buy_costs = costs;
-					buy_hook++;
-				} else
-					warningCostsAlpha = 1f;
-				updateShopLabels();
-			} else if(event.getListenerActor().equals(label_moreShu)) {
-				int costs = buy_costs + PRICE_SHU;
-				if(costs <= profile.stylePoints) {
-					buy_costs = costs;
-					buy_shu++;
-				} else
-					warningCostsAlpha = 1f;
-				updateShopLabels();
+			} else if(event.getListenerActor().equals(label_delProfile_decline)) {
+				delProfileTable.remove();
+				stage.addActor(mainTable);
+				
+			} else if(event.getListenerActor().equals(label_selectProfile)) {
+				profile = new PlayerProfile(profileList.getSelectedIndex());
+				profile.reorderToIndex(0);
+				
+				chooseProfileTable.remove();
+				stage.addActor(mainTable);
+				updateProfileLabels();
 			}
 		}
 		
+		
 		public boolean keyDown(InputEvent event, int keycode) {
 			if(keycode == Keys.ENTER && event.getListenerActor().equals(nameField)) {
+				
+				profile = PlayerProfile.createNewProfile(nameField.getText());
 				
 				newProfileTable.remove();
 				stage.addActor(backButton);
 				stage.addActor(mainTable);
 				
-//				TODO
-//				resetProfile();
-//				name = nameField.getText();
-//				if(name.compareTo("Cheater") == 0) {
-//					shuriken = 999;
-//					hookLevel = 5;
-//					stylePoints = 999;
-//				}
-//				saveProfile();
 				updateProfileLabels();
 
 				nameField.setText("NewPlayer");
@@ -504,6 +558,26 @@ public class MenuProfile implements Screen {
 				return true;
 			}
 			return false;
+		}
+		
+		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			if(event.getListenerActor().equals(label_lessHook))
+				incHook = -1;
+			else if(event.getListenerActor().equals(label_lessShu))
+				incShu = -1;
+			else if(event.getListenerActor().equals(label_moreHook))
+				incHook = 1;
+			else if(event.getListenerActor().equals(label_moreShu))
+				incShu = 1;
+			
+			if(!(incShu != 0 || incHook != 0))
+				clicked(event, x, y);
+			
+			return incShu != 0 || incHook != 0;
+		}
+		
+		public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+			incShu = incHook = 0;
 		}
 		
 	}

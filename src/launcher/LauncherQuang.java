@@ -20,19 +20,9 @@ public class LauncherQuang {
 		cfg.width = GameProperties.SCALE_WIDTH;
 		cfg.height = GameProperties.SCALE_HEIGHT;
 
-//		cfg.width = 10;
-//		cfg.height = 10;
 		new LwjglApplication(new Project(GameState.INGAME), cfg);
 
-//		PlayerProfile.deletePlayerProfile(0);
 		
-//		System.out.println((new PlayerProfile(1)).toString());
-//		(new PlayerProfile(1)).deleteProfile();
-		
-//		Highscore.getInstance().loadHighscoreList();
-//		List<Score> l = Highscore.getInstance().getHighscoreList(2);
-//		for(int i = 0; i < l.size(); i++)
-//			System.out.println("rank:"+i+" name:"+l.get(i).PLAYER_NAME+" time:"+l.get(i).TIME_STRING);
 	}
 	
 }

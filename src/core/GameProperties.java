@@ -28,8 +28,9 @@ public class GameProperties {
 	public static float soundVolume = 1.0f;
 	
 	
-	public static final int IMPLEMENTED_LEVEL = 3; 
+	public static final int IMPLEMENTED_LEVEL = 3;
 	public static final int HOOK_RADIUS_MAX = 500;
+	public static final int MAX_PROFILE_COUNT = 5;
 	
 //	CONVERSION
 	final public static float PIXELPROMETER = 100;
