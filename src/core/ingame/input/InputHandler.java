@@ -11,6 +11,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import core.GameProperties;
@@ -147,10 +148,18 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		return false;
 	}
 
+	Vector2 mousePos = new Vector2();
+
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-//		boolean inScreen = !(screenX < 0 || screenY < 0 || screenX > Gdx.graphics.getWidth() || screenY > Gdx.graphics.getHeight());
-		return false;
+		mousePos.set(screenX, screenY);
+		return true;
+	}
+
+	public Vector2 getMousePos() {
+		Vector2 v = mousePos.cpy();
+		mousePos.set(0, 0);
+		return v;
 	}
 
 	@Override

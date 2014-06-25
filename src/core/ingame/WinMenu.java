@@ -17,14 +17,14 @@ import core.GameProperties.GameState;
 import core.ingame.input.InputHandler;
 import core.ingame.input.InputHandler.Click;
 
-public class PauseMenu implements IDrawable, Runnable {
+public class WinMenu implements IDrawable, Runnable {
 
 	private GameWorld world;
 	private SpriteBatch b;
 	private BitmapFont font;
 	private GameState nextGameState;
 
-	public PauseMenu(GameWorld gameWorld) {
+	public WinMenu(GameWorld gameWorld) {
 		this.world = gameWorld;
 		b = new SpriteBatch();
 		font = new BitmapFont(Gdx.files.internal("res/font/baoli64.fnt"), //
@@ -74,7 +74,7 @@ public class PauseMenu implements IDrawable, Runnable {
 			// new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
 		}
 
-		String title = "Pause";
+		String title = "Level Abgeschlossen!";
 		TextBounds tB = font.getBounds(title);
 		font.draw(b, title, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2);
 
@@ -92,12 +92,12 @@ public class PauseMenu implements IDrawable, Runnable {
 			}
 		};
 		tB = font.getBounds(cont.getText());
-		if (new Rectangle((width - tB.width) * 0.25f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.2f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(cont.getHoverColor());
 			if (cl != null) cont.onClick();
 		} else
 			font.setColor(cont.getTextColor());
-		font.draw(b, cont.getText(), (width - tB.width) * 0.25f, height * 0.25f + tB.height);
+		font.draw(b, cont.getText(), (width - tB.width) * 0.2f, height * 0.25f + tB.height);
 		//
 		Button back = new Button() {
 
@@ -112,17 +112,17 @@ public class PauseMenu implements IDrawable, Runnable {
 			}
 		};
 		tB = font.getBounds(back.getText());
-		if (new Rectangle((width - tB.width) * 0.75f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.8f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(back.getHoverColor());
 			if (cl != null) back.onClick();
 		} else
 			font.setColor(back.getTextColor());
-		font.draw(b, back.getText(), (width - tB.width) * 0.75f, height * 0.25f + tB.height);
+		font.draw(b, back.getText(), (width - tB.width) * 0.8f, height * 0.25f + tB.height);
 		//
 		Button restart = new Button() {
 
 			public String getText() {
-				return "Neustart";
+				return "Wiederholen";
 			}
 
 			public void onClick() {
