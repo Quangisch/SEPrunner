@@ -2,10 +2,9 @@ package core.ingame;
 
 import gameWorld.GameWorld;
 
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
 
-import misc.Debug;
 import misc.GeometricObject;
 
 import com.badlogic.gdx.Gdx;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 import core.ingame.input.InputHandler;
 import core.ingame.input.InputHandler.Click;
@@ -49,9 +47,10 @@ public class PauseMenu implements IDrawable {
 
 		final byte[] colordot = { 0x42, 0x4D, 0x3A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00,
 				0x28, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, (byte) 0xC4, 0x0E, 0x00, 0x00, (byte) 0xC4, 0x0E, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, 0x00 };
+				0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, -60, 0x0E, 0x00, 0x00, -60, 0x0E, 0x00, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1, -1, -1, 0x00 };
 
+		// TODO ??
 		b.setColor(205, 25, 201, 0.8f);
 		Pixmap pixmap = new Pixmap(colordot, 0, colordot.length);
 		Texture texture = new Texture(pixmap);
@@ -67,6 +66,12 @@ public class PauseMenu implements IDrawable {
 			System.out.println("Click: (" + cl.screenX + "|" + cl.screenY + ")");
 			new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
 		}
+
+		Point m = MouseInfo.getPointerInfo().getLocation();
+		System.out.println(m.x + "," + m.y);
+
+		Vector2 v = new Vector2(Gdx.input.getX(), Gdx.input.getY()).scl(1, -1).add(0, height);
+		new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
 
 		TextBounds tB = font.getBounds("Pause");
 		font.draw(b, "Pause", (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2);
