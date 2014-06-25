@@ -15,8 +15,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import core.GameProperties;
+import core.GameProperties.GameState;
 import core.ingame.input.InputHandler;
 import core.ingame.input.InputHandler.Click;
 
@@ -59,24 +62,105 @@ public class PauseMenu implements IDrawable {
 		texture.dispose();
 		b.setColor(Color.WHITE);
 
-		InputHandler in = (InputHandler) Gdx.app.getInput().getInputProcessor();
-		Click cl = in.popClick();
-		if (cl != null) {
-			Vector2 v = new Vector2(cl.screenX, height - cl.screenY);
-			System.out.println("Click: (" + cl.screenX + "|" + cl.screenY + ")");
-			new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
-		}
-
-		Point m = MouseInfo.getPointerInfo().getLocation();
-		System.out.println(m.x + "," + m.y);
+		//
+		// Point m = MouseInfo.getPointerInfo().getLocation();
+		// System.out.println(m.x + "," + m.y);
 
 		Vector2 v = new Vector2(Gdx.input.getX(), Gdx.input.getY()).scl(1, -1).add(0, height);
-		new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
+		// new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
+		//
+
+		InputHandler in = (InputHandler) Gdx.app.getInput().getInputProcessor();
+		Click cl = in.popClick();
+
+		if (cl != null) {
+			v = new Vector2(cl.screenX, height - cl.screenY);
+			// System.out.println("Click: (" + cl.screenX + "|" + cl.screenY + ")");
+			// new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
+		}
 
 		TextBounds tB = font.getBounds("Pause");
 		font.draw(b, "Pause", (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2);
 
+		font.setScale(font.getScaleY() * 0.5f);
+
+		//
+		Button cont = new Button() {
+
+			public String getText() {
+				return "Weiter";
+			}
+
+			public void onClick() {
+				GameProperties.setGameState(GameState.INGAME);
+			}
+		};
+		tB = font.getBounds(cont.getText());
+		if (new Rectangle((width - tB.width) * 0.25f, height * 0.25f, tB.width, tB.height).contains(v)) {
+			font.setColor(cont.getHoverColor());
+			if (cl != null) cont.onClick();
+		} else
+			font.setColor(cont.getTextColor());
+		font.draw(b, cont.getText(), (width - tB.width) * 0.25f, height * 0.25f + tB.height);
+		//
+		Button back = new Button() {
+
+			public String getText() {
+				return "Menu";
+			}
+
+			public void onClick() {
+				// TODO Fix Crash
+				GameProperties.setGameState(GameState.MENU);
+			}
+		};
+		tB = font.getBounds(back.getText());
+		if (new Rectangle((width - tB.width) * 0.75f, height * 0.25f, tB.width, tB.height).contains(v)) {
+			font.setColor(back.getHoverColor());
+			if (cl != null) back.onClick();
+		} else
+			font.setColor(back.getTextColor());
+		font.draw(b, back.getText(), (width - tB.width) * 0.75f, height * 0.25f + tB.height);
+		//
+		Button restart = new Button() {
+
+			public String getText() {
+				return "Neustart";
+			}
+
+			public void onClick() {
+				// TODO Reset Level
+				GameProperties.setGameState(GameState.INGAME);
+			}
+		};
+		tB = font.getBounds(restart.getText());
+		if (new Rectangle((width - tB.width) * 0.5f, height * 0.25f, tB.width, tB.height).contains(v)) {
+			font.setColor(restart.getHoverColor());
+			if (cl != null) restart.onClick();
+		} else
+			font.setColor(restart.getTextColor());
+		font.draw(b, restart.getText(), (width - tB.width) * 0.5f, height * 0.25f + tB.height);
+		//
+		font.setColor(Color.WHITE);
+
 		b.end();
 		batch.begin();
+	}
+
+	public abstract static class Button {
+
+		public String getText() {
+			return "Button";
+		}
+
+		public Color getTextColor() {
+			return Color.WHITE;
+		}
+
+		public Color getHoverColor() {
+			return Color.YELLOW;
+		}
+
+		public abstract void onClick();
 	}
 }
