@@ -134,6 +134,11 @@ public class PlayerProfile {
 		newProfile.hookRadius = 100;
 		newProfile.shuriken = 10;
 		
+		if(name.compareTo("Cheater") == 0) {
+			newProfile.hookRadius = GameProperties.HOOK_RADIUS_MAX;
+			newProfile.shuriken = newProfile.stylePoints = newProfile.experience = 999;
+		}
+		
 		newProfile.root.get(newProfile.index).setNext(root.get(0));
 		root.child = newProfile.root.get(newProfile.index);
 		newProfile.saveProfile();

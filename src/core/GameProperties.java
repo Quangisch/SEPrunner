@@ -205,7 +205,8 @@ public class GameProperties {
 			this.level = level;
 		}
 		public void run() {
-			GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
+			if(state.equals(GameState.INGAME))
+				GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
 			GameProperties.setGameState(state, level);
 		}
 	}

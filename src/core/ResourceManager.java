@@ -44,6 +44,7 @@ public class ResourceManager extends AssetManager {
 		
 		int currentMusicIndex = currentMusic.size()-1;
 		currentMusic.get(currentMusicIndex).setVolume(GameProperties.musicVolume);
+		currentMusic.get(currentMusicIndex).setLooping(true);
 		currentMusic.get(currentMusicIndex).play();
 		fadeOutPrevious(currentMusicIndex);
 	}

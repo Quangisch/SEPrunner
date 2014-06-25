@@ -34,7 +34,6 @@ public class Player extends PlayerCollision {
 		setBodyObjectType(BodyObjectType.Player);
 		getAnimationObject().setLayer(3);
 		
-		System.out.println("init");
 		profile = new PlayerProfile();
 		setShurikenQuantity(profile.shuriken);
 		setHookRadius(profile.hookRadius);
