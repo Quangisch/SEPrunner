@@ -21,6 +21,7 @@ public class GameProperties {
 	
 	public static final int SIZE_WIDTH = 1280, SIZE_HEIGHT = 800;
 	private static GameState gameState = null;
+	public static int currentLevel;
 
 	public static float brightness = 0.0f;
 	public static float contrast = 1.0f;	
@@ -142,19 +143,22 @@ public class GameProperties {
 		setGameState(state, -1);
 	}
 	
-	public static void setGameState(GameState state, int level) throws LevelNotFoundException {
+	public static boolean setGameState(GameState state, int level) throws LevelNotFoundException {
 		final GameState prevState = gameState;
 		gameState = state;
 	
 		if(prevState == null || (Gdx.graphics == null && (isInMenuState() && prevState.isMenu()) 
 				|| (isInGameState() && prevState.isInGame())))
-			return;
+			return false;
 		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
 		if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
 		else				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
 		
+		currentLevel = level;
+		
 		if(!gameState.equals(prevState))
 			ResourceManager.getInstance().startMusic();
+		return true;
 			
 	}
 	
@@ -201,6 +205,7 @@ public class GameProperties {
 			this.level = level;
 		}
 		public void run() {
+			GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
 			GameProperties.setGameState(state, level);
 		}
 	}

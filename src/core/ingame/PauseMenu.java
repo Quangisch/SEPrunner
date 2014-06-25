@@ -2,7 +2,9 @@ package core.ingame;
 
 import gameWorld.GameWorld;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -128,7 +130,8 @@ public class PauseMenu implements IDrawable, Runnable {
 
 			public void onClick() {
 				// TODO Reset Level
-				GameProperties.setGameState(GameState.INGAME);
+//				GameProperties.setGameState(GameState.INGAME);
+				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.INGAME, GameProperties.currentLevel));
 				
 			}
 		};
@@ -168,6 +171,5 @@ public class PauseMenu implements IDrawable, Runnable {
 //		if (nextGameState != null) GameProperties.setGameState(nextGameState);
 		nextGameState = null;
 	}
-	
 	
 }
