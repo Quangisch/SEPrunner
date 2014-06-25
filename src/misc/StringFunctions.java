@@ -1,13 +1,14 @@
 package misc;
 
-import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public enum StringFunctions {
 	;
 
 	public static int getMostEqualIndexIgnoreCase(String a, String[] other) {
 		if (a == null || other == null) return -1;
-	
+
 		a = a.toUpperCase();
 
 		int max = 0;
@@ -24,19 +25,10 @@ public enum StringFunctions {
 		}
 		return max_i;
 	}
-	
-//	TODO dirty
+
 	public static String getTimeAsString(float time) {
-		String min = String.valueOf((int) time / 60);
-		min = min.length() == 1 ? "0"+min : min.length() == 0 ? "00" : min.length() > 2 ? "99" : min;
-		
-		String sec = String.valueOf((int) time % 60);
-		sec = sec.length() == 1 ? "0"+sec : sec.length() == 0 ? "00" : sec.length() > 2 ? "99" : sec;
-		
-		DecimalFormat df = new DecimalFormat(".00");
-		String milli = df.format(time);
-		milli = milli.substring(milli.length() - 2);
-		
-		return min+":"+sec+":"+milli;
+		time = Math.min(time, 59 * 60 + 59.999f);
+		Date d = new Date((long) (time * 1000));
+		return new SimpleDateFormat("mm:ss.S").format(d).substring(0, 8);
 	}
 }
