@@ -146,18 +146,19 @@ public class GameProperties {
 	public static boolean setGameState(GameState state, int level) throws LevelNotFoundException {
 		final GameState prevState = gameState;
 		gameState = state;
-	
-		if(prevState == null || (Gdx.graphics == null && (isInMenuState() && prevState.isMenu()) 
-				|| (isInGameState() && prevState.isInGame())))
-			return false;
-		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
-		if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
-		else				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
-		
 		currentLevel = level;
+	
+		if(prevState == null || Gdx.graphics == null)
+			return false;
 		
-		if(!gameState.equals(prevState))
-			ResourceManager.getInstance().startMusic();
+		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
+		ResourceManager.getInstance().startMusic();
+		
+		if((isInMenuState() && prevState.isMenu()) || (isInGameState() && prevState.isInGame())) {
+			if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
+			else				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
+		}
+
 		return true;
 			
 	}
@@ -180,10 +181,12 @@ public class GameProperties {
 	
 	public static void setGameOver() {
 		gameState = GameState.INGAME_LOSE;
+		ResourceManager.getInstance().startMusic();
 	}
 	
 	public static void setWin() {
 		gameState = GameState.INGAME_WIN;
+		ResourceManager.getInstance().startMusic();
 	}
 	
 	public static boolean isGameState(GameState state) {
@@ -205,8 +208,8 @@ public class GameProperties {
 			this.level = level;
 		}
 		public void run() {
-			if(state.equals(GameState.INGAME))
-				GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
+//			if(GameProperties.isGameState(state))
+//				GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
 			GameProperties.setGameState(state, level);
 		}
 	}

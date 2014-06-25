@@ -16,6 +16,7 @@ public class ResourceManager extends AssetManager {
 	private ScheduledExecutorService exec;
 	private List<Music> currentMusic;
 	private List<Music> currentSounds;
+	private GameProperties.GameState currentState;
 	
 	private ResourceManager() {
 		currentMusic = new LinkedList<Music>();
@@ -23,6 +24,9 @@ public class ResourceManager extends AssetManager {
 	}
 	
 	public void startMusic() {
+		if(currentState != null && currentState.equals(GameProperties.getGameState()))
+			return;
+		
 		switch(GameProperties.getGameState()) {
 		case INGAME:
 			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_soundScape)));
