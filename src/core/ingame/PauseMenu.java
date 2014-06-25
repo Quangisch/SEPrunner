@@ -109,6 +109,7 @@ public class PauseMenu implements IDrawable, Runnable {
 				// TODO Fix Crash
 				// GameProperties.setGameState(GameState.MENU);
 				nextGameState = GameState.MENU;
+				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(nextGameState, -1));
 			}
 		};
 		tB = font.getBounds(back.getText());
@@ -128,6 +129,7 @@ public class PauseMenu implements IDrawable, Runnable {
 			public void onClick() {
 				// TODO Reset Level
 				GameProperties.setGameState(GameState.INGAME);
+				
 			}
 		};
 		tB = font.getBounds(restart.getText());
@@ -163,7 +165,9 @@ public class PauseMenu implements IDrawable, Runnable {
 
 	@Override
 	public void run() {
-		if (nextGameState != null) GameProperties.setGameState(nextGameState);
+//		if (nextGameState != null) GameProperties.setGameState(nextGameState);
 		nextGameState = null;
 	}
+	
+	
 }

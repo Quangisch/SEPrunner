@@ -193,4 +193,16 @@ public class GameProperties {
 		return gameState;
 	}
 
+	public static class GameStateSwitcher implements Runnable {
+		private GameState state;
+		private int level;
+		public GameStateSwitcher(GameState state, int level) {
+			this.state = state;
+			this.level = level;
+		}
+		public void run() {
+			GameProperties.setGameState(state, level);
+		}
+	}
+	
 }
