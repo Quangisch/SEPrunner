@@ -17,6 +17,7 @@ public class ResourceManager extends AssetManager {
 	private List<Music> currentMusic;
 	private List<Music> currentSounds;
 	private GameProperties.GameState currentState;
+	private boolean inMenu;
 	
 	private ResourceManager() {
 		currentMusic = new LinkedList<Music>();
@@ -24,33 +25,34 @@ public class ResourceManager extends AssetManager {
 	}
 	
 	public void startMusic() {
-		if(currentState != null && currentState.equals(GameProperties.getGameState()))
+		if(GameProperties.isCurrentGameState(currentState) && ((inMenu && GameProperties.isInMenu()) || !inMenu && GameProperties.isIngame()))
 			return;
 		
-		switch(GameProperties.getGameState()) {
-		case INGAME:
-			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_soundScape)));
-			break;
-		case INGAME_LOSE:
-			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_lose)));
-			break;
-		case INGAME_PAUSE:
-			break;
-		case INGAME_WIN:
-			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_win)));
-			break;
-		case MENU:
+		System.out.println(currentState);
+		if(GameProperties.isInMenu() && !inMenu)
 			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_menu)));
-			break;
-		default:
-			break;
-		}
+		
+		else if((GameProperties.isIngame() && inMenu) || currentState == null)
+			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_soundScape)));
+		
+		else if(!GameProperties.isCurrentGameState(currentState) && GameProperties.isCurrentGameState(GameProperties.GameState.WIN))
+			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_win)));
+		
+		else if(!GameProperties.isCurrentGameState(currentState) && GameProperties.isCurrentGameState(GameProperties.GameState.LOSE))
+			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_lose)));
+
 		
 		int currentMusicIndex = currentMusic.size()-1;
+		if(currentMusicIndex < 0)
+			return;
+		
 		currentMusic.get(currentMusicIndex).setVolume(GameProperties.musicVolume);
 		currentMusic.get(currentMusicIndex).setLooping(true);
 		currentMusic.get(currentMusicIndex).play();
 		fadeOutPrevious(currentMusicIndex);
+
+		currentState = GameProperties.gameState;
+		inMenu = GameProperties.isInMenu();
 	}
 	
 	private void fadeOutPrevious(int index) {

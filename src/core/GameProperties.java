@@ -5,6 +5,7 @@ import java.io.FileReader;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
@@ -12,26 +13,34 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.exception.LevelNotFoundException;
 import core.ingame.GameRender;
+import core.menu.MenuHighscore;
+import core.menu.MenuLevelSelect;
 import core.menu.MenuMain;
+import core.menu.MenuOption;
+import core.menu.MenuProfile;
+import core.menu.Splash;
 
 public class GameProperties {
 	
 	public static final int SCALE_WIDTH = 640;
 	public static final int SCALE_HEIGHT = 360;
 	
-	public static final int SIZE_WIDTH = 1280, SIZE_HEIGHT = 800;
-	private static GameState gameState = null;
-	public static int currentLevel;
+	public static int SIZE_WIDTH, SIZE_HEIGHT;
+	public static GameState gameState = GameState.NORMAL;
+	public static GameScreen gameScreen = GameScreen.MenuSplash;
 
 	public static float brightness = 0.0f;
 	public static float contrast = 1.0f;	
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
 	
+	public static String loseMessage = "";
 	
 	public static final int IMPLEMENTED_LEVEL = 3;
 	public static final int HOOK_RADIUS_MAX = 500;
 	public static final int MAX_PROFILE_COUNT = 5;
+	
+	
 	
 //	CONVERSION
 	final public static float PIXELPROMETER = 100;
@@ -123,42 +132,79 @@ public class GameProperties {
 	
 	
 //	GAMESTATES
-	public enum GameState {
-		MENU(true),
-		INGAME(false),
-		INGAME_WIN(false), 
-		INGAME_LOSE(false), 
-		INGAME_PAUSE(false);
+	public static enum GameState {
+		NORMAL,
+		WIN,
+		LOSE,
+		PAUSE
+	}
+	
+	public static enum GameScreen {
+		MenuMain(-1),
+		MenuLevelSelect(-2),
+		MenuProfile(-3),
+		MenuOptions(-4),
+		MenuHighscore(-5),
+		MenuSplash(-10),
 		
-		private final boolean inMenu;
-		GameState(boolean menu) {
-			inMenu = menu;
+		Level1(0),
+		Level2(1),
+		Level3(2);
+		
+		public final int INDEX;
+		GameScreen(int index) {
+			this.INDEX = index;
 		}
 		
-		private boolean isInGame() 	{ return !inMenu;	}
-		private boolean isMenu() 	{ return inMenu;	}
+		public static GameScreen getScreen(int index) {
+			GameScreen screen = MenuMain;
+			for(GameScreen s : GameScreen.values())
+				if(s.INDEX == index)
+					screen = s;
+			return screen;
+		}
 	}
 	
-	public static void setGameState(GameState state) {
-		setGameState(state, -1);
-	}
-	
-	public static boolean setGameState(GameState state, int level) throws LevelNotFoundException {
-		final GameState prevState = gameState;
-		gameState = state;
-		currentLevel = level;
-	
-		if(prevState == null || Gdx.graphics == null)
+	public static boolean switchGameScreen(GameScreen screen) throws LevelNotFoundException {
+		if(Gdx.graphics == null)
 			return false;
 		
+		gameScreen = screen;
+		Screen nextScreen;
+		gameState = GameState.NORMAL;
+		
+		switch(gameScreen) {
+		case Level1:
+		case Level2:
+		case Level3:
+			nextScreen = new GameRender(screen.INDEX);
+			break;
+			
+		case MenuHighscore:
+			nextScreen = new MenuHighscore();
+			break;
+		case MenuLevelSelect:
+			nextScreen = new MenuLevelSelect();
+			break;
+		case MenuOptions:
+			nextScreen = new MenuOption();
+			break;
+		case MenuProfile:
+			nextScreen = new MenuProfile();
+			break;
+		case MenuSplash:
+			nextScreen = new Splash();
+			break;
+
+		case MenuMain:
+		default:
+			nextScreen = new MenuMain();
+//			throw new LevelNotFoundException();
+		
+		}
 		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
 		ResourceManager.getInstance().startMusic();
-		
-		if(!((isInMenuState() && prevState.isMenu()) || (isInGameState() && prevState.isInGame()))) {
-			if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
-			else				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
-		}
-
+		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
 		return true;
 			
 	}
@@ -173,44 +219,46 @@ public class GameProperties {
 	}
 	
 	public static void toogleIngamePause() {
-		if(gameState.equals(GameState.INGAME))
-			gameState = GameState.INGAME_PAUSE;
-		else if(gameState.equals(GameState.INGAME_PAUSE))
-			gameState = GameState.INGAME;
+		if(gameState.equals(GameState.NORMAL))
+			gameState = GameState.PAUSE;
+		else if(gameState.equals(GameState.PAUSE))
+			gameState = GameState.NORMAL;
 	}
 	
-	public static void setGameOver() {
-		gameState = GameState.INGAME_LOSE;
+	public static void setGameOver(String message) {
+		loseMessage = message;
+		gameState = GameState.LOSE;
 		ResourceManager.getInstance().startMusic();
 	}
 	
 	public static void setWin() {
-		gameState = GameState.INGAME_WIN;
+		gameState = GameState.WIN;
 		ResourceManager.getInstance().startMusic();
 	}
 	
-	public static boolean isGameState(GameState state) {
+	public static boolean isCurrentGameState(GameState state) {
 		return gameState.equals(state);
 	}
 	
-	public static boolean isInMenuState() { return gameState.equals(GameState.MENU);	}
-	public static boolean isInGameState() { return !isInMenuState();						}
-
-	public static GameState getGameState() {
-		return gameState;
+	public static boolean isCurrentGameScreen(GameScreen screen) {
+		return gameScreen.equals(screen);
+	}
+	
+	public static boolean isInMenu() {
+		return gameScreen.INDEX < 0;
+	}
+	
+	public static boolean isIngame() {
+		return !isInMenu();
 	}
 
-	public static class GameStateSwitcher implements Runnable {
-		private GameState state;
-		private int level;
-		public GameStateSwitcher(GameState state, int level) {
-			this.state = state;
-			this.level = level;
+	public static class GameScreenSwitcher implements Runnable {
+		private GameScreen screen;
+		public GameScreenSwitcher(GameScreen screen) {
+			this.screen = screen;
 		}
 		public void run() {
-			if(GameProperties.isGameState(state))
-				GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
-			GameProperties.setGameState(state, level);
+			GameProperties.switchGameScreen(screen);
 		}
 	}
 	

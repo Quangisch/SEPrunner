@@ -31,7 +31,7 @@ public class InteractionHandler implements Runnable {
 	}
 	
 	public void run() {
-		if(!GameProperties.isGameState(GameState.INGAME))
+		if(!GameProperties.isCurrentGameState(GameState.NORMAL))
 			return;
 		processPressedActionKeys();
 		processFlip();

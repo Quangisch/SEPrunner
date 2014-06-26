@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.GameProperties.GameState;
 import core.ingame.input.InputHandler;
 import core.ingame.input.InputHandler.Click;
@@ -83,7 +84,7 @@ public class PauseMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				GameProperties.setGameState(GameState.INGAME);
+				GameProperties.gameState = GameState.NORMAL;
 			}
 		};
 		tB = font.getBounds(cont.getText());
@@ -101,7 +102,7 @@ public class PauseMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.MENU, -1));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MenuMain));
 			}
 		};
 		tB = font.getBounds(back.getText());
@@ -119,7 +120,7 @@ public class PauseMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.INGAME, GameProperties.currentLevel));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameProperties.gameScreen));
 			}
 		};
 		tB = font.getBounds(restart.getText());

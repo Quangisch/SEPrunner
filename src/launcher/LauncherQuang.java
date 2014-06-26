@@ -4,7 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import core.GameProperties;
-import core.GameProperties.GameState;
+import core.GameProperties.GameScreen;
 import core.Project;
 
 public class LauncherQuang {
@@ -20,7 +20,7 @@ public class LauncherQuang {
 		cfg.width = GameProperties.SCALE_WIDTH;
 		cfg.height = GameProperties.SCALE_HEIGHT;
 
-		new LwjglApplication(new Project(GameState.INGAME), cfg);
+		new LwjglApplication(new Project(GameScreen.Level1), cfg);
 
 		
 	}

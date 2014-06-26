@@ -159,6 +159,7 @@ public abstract class EnemyAI implements IEnemyAI {
 
 	@Override
 	public boolean keyUp(ActionKey action) {
+		currentAction.remove(action);
 		return false;
 	}
 
@@ -174,7 +175,7 @@ public abstract class EnemyAI implements IEnemyAI {
 
 	@Override
 	public void keyDown(ActionKey action) {
-		
+		currentAction.add(action);
 	}
 
 }

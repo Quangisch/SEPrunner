@@ -29,8 +29,18 @@ int z = 0;
 		//ALARM -> enemy bewegt sich schneller
 		if(Alarm.getInstance().isActive()){
 //			getEnemy().setAI(this, 0.1f, 1.2f, 0.8f, 1.5f);//funktioniert nicht
-			getEnemy().getInteractionHandler().setForceMultiplier(1, 1.2f, 0.8f, 1.5f);
+//			getEnemy().getInteractionHandler().setForceMultiplier(1, 1.2f, 0.8f, 1.5f);
+			
 		}
+		
+		
+//		if(Alarm.getInstance().isActive())
+//			keyDown(ActionKey.RUN);
+//		else
+//			keyUp(ActionKey.RUN);
+//		
+//		System.out.println("Alarm:"+Alarm.getInstance().isActive()+" keyDown"+isKeyDown(ActionKey.RUN));
+
 	}
 
 	@Override

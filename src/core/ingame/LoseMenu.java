@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import core.GameProperties;
-import core.GameProperties.GameState;
+import core.GameProperties.GameScreen;
 import core.ingame.input.InputHandler;
 import core.ingame.input.InputHandler.Click;
 
@@ -69,9 +69,8 @@ public class LoseMenu implements IDrawable {
 			// new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
 		}
 
-		String title = "Sie wurden gefangen!";
-		TextBounds tB = font.getBounds(title);
-		font.draw(b, title, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2);
+		TextBounds tB = font.getBounds(GameProperties.loseMessage);
+		font.draw(b, GameProperties.loseMessage, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2);
 
 		font.setScale(font.getScaleY() * 0.5f);
 
@@ -83,7 +82,7 @@ public class LoseMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.INGAME, GameProperties.currentLevel));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameProperties.gameScreen));
 			}
 		};
 		tB = font.getBounds(cont.getText());
@@ -101,7 +100,7 @@ public class LoseMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.MENU, -1));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MenuMain));
 			}
 		};
 		tB = font.getBounds(back.getText());
@@ -120,7 +119,7 @@ public class LoseMenu implements IDrawable {
 
 			public void onClick() {
 				// TODO Level Auswahl
-				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.MENU, -1));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MenuLevelSelect));
 			}
 		};
 		tB = font.getBounds(restart.getText());

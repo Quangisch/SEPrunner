@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import core.GameProperties;
-import core.GameProperties.GameState;
+import core.GameProperties.GameScreen;
 import core.ingame.input.InputHandler;
 import core.ingame.input.InputHandler.Click;
 
@@ -83,9 +83,9 @@ public class WinMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(//
-						GameState.INGAME, Math.min(GameProperties.IMPLEMENTED_LEVEL - 1,
-								GameProperties.currentLevel + 1)));
+				
+				int nextScreenIndex = GameProperties.gameScreen.INDEX + 1 > GameProperties.IMPLEMENTED_LEVEL ? -2 : GameProperties.gameScreen.INDEX + 1;
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.getScreen(nextScreenIndex)));
 			}
 		};
 		tB = font.getBounds(cont.getText());
@@ -103,7 +103,7 @@ public class WinMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.MENU, -1));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MenuMain));
 			}
 		};
 		tB = font.getBounds(back.getText());
@@ -121,7 +121,7 @@ public class WinMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameStateSwitcher(GameState.INGAME, GameProperties.currentLevel));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameProperties.gameScreen));
 			}
 		};
 		tB = font.getBounds(restart.getText());

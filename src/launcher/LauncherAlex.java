@@ -4,8 +4,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.Project;
-import core.GameProperties.GameState;
 
 public class LauncherAlex {
 	
@@ -24,6 +24,6 @@ public class LauncherAlex {
 //		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
 //		System.out.println("DisplayMode "+mode+": "+GameProperties.displayMode.toString());
 		
-		new LwjglApplication(new Project(GameState.MENU), cfg);
+		new LwjglApplication(new Project(GameScreen.MenuSplash), cfg);
 	}							//start view project Z11 = first img set
 }

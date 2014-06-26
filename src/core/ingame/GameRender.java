@@ -77,22 +77,18 @@ public class GameRender implements Screen {
 	public void render(float delta) {
 		float realdelta = delta;
 
-		switch (GameProperties.getGameState()) {
-		case INGAME:
+		switch (GameProperties.gameState) {
+		case WIN:
+		case LOSE:
 			break;
-		case INGAME_LOSE:
-			System.out.println("GAME OVER");
-			break;
-		case INGAME_PAUSE:
-			// System.out.println("PAUSE");
+		case PAUSE:
 			delta = 0;
 			break;
-		case INGAME_WIN:
-			System.out.println("WIN");
-			break;
+		case NORMAL:
 		default:
 			break;
 		}
+
 
 		gameWorld.run();
 		if (Debug.isMode(Debug.Mode.CONSOLE)) log.log();
@@ -109,17 +105,17 @@ public class GameRender implements Screen {
 
 		gameWorld.draw(batch, delta); //map
 
-		switch (GameProperties.getGameState()) {
-		case INGAME:
+		switch (GameProperties.gameState) {
+		case NORMAL:
 			hud.draw(batch, delta); //userInterface
 			break;
-		case INGAME_PAUSE:
+		case PAUSE:
 			pauseMenu.draw(batch, realdelta);
 			break;
-		case INGAME_WIN:
+		case WIN:
 			winMenu.draw(batch, realdelta);
 			break;
-		case INGAME_LOSE:
+		case LOSE:
 			loseMenu.draw(batch, realdelta);
 			break;
 		default:

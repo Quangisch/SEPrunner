@@ -4,8 +4,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.Project;
-import core.GameProperties.GameState;
 
 
 public class MainLauncher {
@@ -21,6 +21,6 @@ public class MainLauncher {
 		cfg.width = GameProperties.SCALE_WIDTH;
 		cfg.height = GameProperties.SCALE_HEIGHT;
 		
-		new LwjglApplication(new Project(GameState.MENU), cfg);
+		new LwjglApplication(new Project(GameScreen.MenuProfile), cfg);
 	}
 }

@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import core.GameProperties;
-import core.GameProperties.GameState;
+import core.GameProperties.GameScreen;
 import core.ingame.Camera;
 import core.ingame.input.KeyMap.ActionKey;
 
@@ -82,7 +82,7 @@ public class InputHandler implements IInputHandler, InputProcessor {
 
 		// back to menu
 		case Keys.BACKSPACE:
-			GameProperties.setGameState(GameState.MENU);
+			GameProperties.switchGameScreen(GameScreen.MenuMain);
 			break;
 
 		// toogle debug

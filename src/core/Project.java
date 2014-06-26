@@ -1,27 +1,24 @@
 package core;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 
-import core.GameProperties.GameState;
-import core.ingame.GameRender;
-import core.menu.MenuMain;
+import core.GameProperties.GameScreen;
 
 public class Project extends Game{
 
 	public static final String TITLE = "SEPrunner", VERSION = "1.0.0";
-
-	public Project(GameState state) {
-		GameProperties.setGameState(state, 0);
+	private GameScreen initialScreen;
+	
+	public Project(GameScreen initialScreen) {
+		this.initialScreen = initialScreen;
 	}
 	
 	@Override
 	public void create() {
-//		GameProperties.initFromFile();
-		ResourceManager.getInstance().startMusic();
-		if(GameProperties.isInMenuState())
-			setScreen(new MenuMain()); //set first img, next Z56 in splash
-		else 
-			setScreen(new GameRender(0));
+		GameProperties.SIZE_WIDTH = Gdx.graphics.getDesktopDisplayMode().width;
+		GameProperties.SIZE_HEIGHT = Gdx.graphics.getDesktopDisplayMode().height;
+		GameProperties.switchGameScreen(initialScreen);
 	}
 
 	@Override

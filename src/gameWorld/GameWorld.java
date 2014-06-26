@@ -109,14 +109,12 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		Collections.sort(objects);
 	}
 
-	//		TODO to HUD
 	private void calcTime(float deltaTime) {
-		if(!GameProperties.isGameState(GameState.INGAME))
+		if(!GameProperties.isCurrentGameState(GameState.NORMAL))
 			return;
 		time += deltaTime;
-		if (time < timeLimit) {
-			if (time >= timeLimit) GameProperties.setGameOver();
-		}
+		if (timeLimit > 0 && time >= timeLimit) 
+			GameProperties.setGameOver("TimeOut");
 	}
 
 	@Override

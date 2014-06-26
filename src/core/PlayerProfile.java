@@ -62,6 +62,8 @@ public class PlayerProfile {
 		shuriken = root.get(index).getInt("shuriken");
 		hookRadius = root.get(index).getInt("hookRadius");
 		stylePoints = root.get(index).getInt("stylePoints");
+		
+		applyNameCheat(this);
 	}
 	
 	public void saveProfile() {
@@ -71,8 +73,15 @@ public class PlayerProfile {
 		root.get(index).get("hookRadius").set(hookRadius);
 		root.get(index).get("stylePoints").set(stylePoints);
 		
-		FileHandle file = Gdx.files.local(FilePath.profile);
-		file.writeString(root.toString(), false);
+		applyNameCheat(this);
+		
+		if(Gdx.files != null) {
+			FileHandle file = Gdx.files.local(FilePath.profile);
+			file.writeString(root.toString(), false);
+		} else {
+			System.err.println(this.getClass()+": No Gdx Instance found\n");
+			System.out.println(root.toString());
+		}
 		
 	}
 	
@@ -91,7 +100,8 @@ public class PlayerProfile {
 	
 	public void reorderToIndex(int newIndex) {
 		if(newIndex == index || newIndex < 0 || newIndex > root.size) {
-			System.err.println(this.getClass()+": Illegal reorderIndex");
+			if(newIndex != index)
+				System.err.println(this.getClass()+": Illegal reorderIndex");
 			return;
 		}
 		
@@ -134,16 +144,22 @@ public class PlayerProfile {
 		newProfile.hookRadius = 100;
 		newProfile.shuriken = 10;
 		
-		if(name.compareTo("Cheater") == 0) {
-			newProfile.hookRadius = GameProperties.HOOK_RADIUS_MAX;
-			newProfile.shuriken = newProfile.stylePoints = newProfile.experience = 999;
-		}
+		applyNameCheat(newProfile);
 		
 		newProfile.root.get(newProfile.index).setNext(root.get(0));
 		root.child = newProfile.root.get(newProfile.index);
 		newProfile.saveProfile();
 		
 		return newProfile;
+	}
+	
+	private static boolean applyNameCheat(PlayerProfile profile) {
+		if(profile.name.compareTo("Cheater") == 0) {
+			profile.hookRadius = GameProperties.HOOK_RADIUS_MAX;
+			profile.shuriken = profile.stylePoints = profile.experience = 999;
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean deletePlayerProfile(int index) {

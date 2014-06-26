@@ -41,7 +41,7 @@ abstract class PlayerCollision extends GameObject {
 						&& !other.getParent().isStunned()
 						&& !isHiding()) {//
 
-					GameProperties.setGameOver();
+					GameProperties.setGameOver("You were caught!");
 					applyInteraction(InteractionState.LOSE);
 					getAnimationObject().setLayer(5);
 					return true;

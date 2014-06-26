@@ -28,7 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.FilePath;
 import core.GameProperties;
-import core.GameProperties.GameState;
+import core.GameProperties.GameScreen;
 import core.exception.LevelNotFoundException;
 
 public class MenuLevelSelect implements Screen {
@@ -112,10 +112,9 @@ public class MenuLevelSelect implements Screen {
 		playButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				try {
-					GameProperties.setGameState(GameState.INGAME, levelSelectionList.getSelectedIndex());
+					GameProperties.switchGameScreen(GameScreen.getScreen(levelSelectionList.getSelectedIndex()));
 				} catch (LevelNotFoundException e) {
-					GameProperties.setGameState(GameState.MENU);
-					((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect());
+					GameProperties.switchGameScreen(GameScreen.MenuLevelSelect);
 					e.printStackTrace();
 				}
 			}
