@@ -102,7 +102,7 @@ public class PauseMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MenuMain));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_MAIN));
 			}
 		};
 		tB = font.getBounds(back.getText());

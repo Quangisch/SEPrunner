@@ -17,7 +17,6 @@ public class ResourceManager extends AssetManager {
 	private List<Music> currentMusic;
 	private List<Music> currentSounds;
 	private GameProperties.GameState currentState;
-	private boolean inMenu;
 	
 	private ResourceManager() {
 		currentMusic = new LinkedList<Music>();
@@ -25,14 +24,14 @@ public class ResourceManager extends AssetManager {
 	}
 	
 	public void startMusic() {
-		if(GameProperties.isCurrentGameState(currentState) && ((inMenu && GameProperties.isInMenu()) || !inMenu && GameProperties.isIngame()))
+		if(GameProperties.isCurrentGameState(currentState))
 			return;
 		
-		System.out.println(currentState);
-		if(GameProperties.isInMenu() && !inMenu)
+//		TODO bug
+		if(GameProperties.isInMenu())
 			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_menu)));
 		
-		else if((GameProperties.isIngame() && inMenu) || currentState == null)
+		if(GameProperties.isIngame())
 			currentMusic.add(Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_soundScape)));
 		
 		else if(!GameProperties.isCurrentGameState(currentState) && GameProperties.isCurrentGameState(GameProperties.GameState.WIN))
@@ -43,8 +42,6 @@ public class ResourceManager extends AssetManager {
 
 		
 		int currentMusicIndex = currentMusic.size()-1;
-		if(currentMusicIndex < 0)
-			return;
 		
 		currentMusic.get(currentMusicIndex).setVolume(GameProperties.musicVolume);
 		currentMusic.get(currentMusicIndex).setLooping(true);
@@ -52,7 +49,8 @@ public class ResourceManager extends AssetManager {
 		fadeOutPrevious(currentMusicIndex);
 
 		currentState = GameProperties.gameState;
-		inMenu = GameProperties.isInMenu();
+//		inMenu = GameProperties.isInMenu();
+//		System.out.println(currentState + " "+ inMenu);
 	}
 	
 	private void fadeOutPrevious(int index) {

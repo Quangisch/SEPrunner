@@ -1,0 +1,14 @@
+{
+keymap: {
+	left: 29,
+	right: 32,
+	run: 34,
+	jump: 62,
+	crouch: 47,
+	action: 33
+},
+brightness: 0.07999999821186066,
+contrast: 1.0,
+musicVolume: 0.699999988079071,
+soundVolume: 0.5
+}

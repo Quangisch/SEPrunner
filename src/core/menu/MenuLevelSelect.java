@@ -114,7 +114,7 @@ public class MenuLevelSelect implements Screen {
 				try {
 					GameProperties.switchGameScreen(GameScreen.getScreen(levelSelectionList.getSelectedIndex()));
 				} catch (LevelNotFoundException e) {
-					GameProperties.switchGameScreen(GameScreen.MenuLevelSelect);
+					GameProperties.switchGameScreen(GameScreen.MENU_LEVELSELECT);
 					e.printStackTrace();
 				}
 			}

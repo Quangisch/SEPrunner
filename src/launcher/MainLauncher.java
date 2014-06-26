@@ -21,6 +21,6 @@ public class MainLauncher {
 		cfg.width = GameProperties.SCALE_WIDTH;
 		cfg.height = GameProperties.SCALE_HEIGHT;
 		
-		new LwjglApplication(new Project(GameScreen.MenuProfile), cfg);
+		new LwjglApplication(new Project(GameScreen.MENU_PROFILE), cfg);
 	}
 }

@@ -24,6 +24,6 @@ public class LauncherAlex {
 //		GameProperties.displayMode = LwjglApplicationConfiguration.getDisplayModes()[mode];
 //		System.out.println("DisplayMode "+mode+": "+GameProperties.displayMode.toString());
 		
-		new LwjglApplication(new Project(GameScreen.MenuSplash), cfg);
+		new LwjglApplication(new Project(GameScreen.MENU_SPLASH), cfg);
 	}							//start view project Z11 = first img set
 }

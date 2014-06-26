@@ -1,5 +1,7 @@
 package core;
 
+import gameObject.interaction.enemy.Alarm;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -21,16 +23,17 @@ import core.menu.MenuProfile;
 import core.menu.Splash;
 
 public class GameProperties {
-	
+
 	public static final int SCALE_WIDTH = 640;
 	public static final int SCALE_HEIGHT = 360;
-	
+
 	public static int SIZE_WIDTH, SIZE_HEIGHT;
 	public static GameState gameState = GameState.NORMAL;
-	public static GameScreen gameScreen = GameScreen.MenuSplash;
+	public static GameScreen gameScreen = GameScreen.MENU_SPLASH;
+
 
 	public static float brightness = 0.0f;
-	public static float contrast = 1.0f;	
+	public static float contrast = 1.0f;
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
 	
@@ -52,27 +55,27 @@ public class GameProperties {
 	public static float pixelToMeter(float pixel) {
 		return pixel / PIXELPROMETER;
 	}
-	
+
 	public static Vector2 meterToPixel(Vector2 meter) {
 		return new Vector2(meterToPixel(meter.x), meterToPixel(meter.y));
 	}
-	
+
 	public static Vector2 pixelToMeter(Vector2 pixel) {
 		return new Vector2(pixelToMeter(pixel.x), pixelToMeter(pixel.y));
 	}
-	
+
 	public static void initFromFile() {
 		JsonValue root = null;
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
-			
+
 			brightness = root.getFloat("brightness");
 			contrast = root.getFloat("contrast");
 			musicVolume = root.getFloat("musicVolume");
 			soundVolume = root.getFloat("soundVolume");
-			
+
 		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
+			//			e.printStackTrace();
 			System.err.println("settings.json not found");
 			return;
 		} catch (NullPointerException e) {
@@ -81,13 +84,13 @@ public class GameProperties {
 			return;
 		}
 	}
-	
+
 	public static void saveToFile() {
 		JsonValue root = null;
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
 		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
+			//			e.printStackTrace();
 			System.out.println("settings.json not found");
 			return;
 		}
@@ -96,40 +99,45 @@ public class GameProperties {
 		root.get("contrast").set(contrast);
 		root.get("soundVolume").set(soundVolume);
 		root.get("musicVolume").set(musicVolume);
-		
+
 		FileHandle file = Gdx.files.local(FilePath.settings);
 		file.writeString(root.toString(), false);
-		
+
 	}
-	
-//	RANK, EXPERIENCE
+
+	//	RANK, EXPERIENCE
 	public enum Rank {
-		Noob(0),
-		Rookie(30),
-		Expert(100);
-		
+		Noob(0), Rookie(30), Expert(100);
+
 		final private int EXPERIENCE;
+
 		private Rank(int points) {
 			this.EXPERIENCE = points;
 		}
-		
+
 		public static Rank getRank(int expPoints) {
 			Rank rank = Noob;
-			for(Rank r : Rank.values())
-				if(expPoints > r.EXPERIENCE && r.EXPERIENCE > rank.EXPERIENCE)
-					rank = r;
+			for (Rank r : Rank.values())
+				if (expPoints > r.EXPERIENCE && r.EXPERIENCE > rank.EXPERIENCE) rank = r;
 			return rank;
 		}
 	}
-	
+
 	public static final int SHU_MUL = -1;
 	public static final int DISPOSED_MUL = 10;
 	public static final int HIDDEN_MUL = 20;
-	
+	public static final int LEVEL_COMPLETE = 1000;
+	public static final int ALARM_MUL = -10;
+
 	public static int calcStylePoints(int shurikenThrown, int disposedBodies, int hiddenFrom) {
-		return Math.max(0, shurikenThrown * SHU_MUL + disposedBodies * DISPOSED_MUL + hiddenFrom * HIDDEN_MUL);
+		return Math.max(0, shurikenThrown * SHU_MUL //
+				+ disposedBodies * DISPOSED_MUL //
+				+ hiddenFrom * HIDDEN_MUL //
+				+ LEVEL_COMPLETE //
+				+ (int) (Alarm.getTotalAlarmTime() * ALARM_MUL) //
+		);
 	}
-	
+
 	
 //	GAMESTATES
 	public static enum GameState {
@@ -140,16 +148,16 @@ public class GameProperties {
 	}
 	
 	public static enum GameScreen {
-		MenuMain(-1),
-		MenuLevelSelect(-2),
-		MenuProfile(-3),
-		MenuOptions(-4),
-		MenuHighscore(-5),
-		MenuSplash(-10),
+		MENU_MAIN(-1),
+		MENU_LEVELSELECT(-2),
+		MENU_PROFILE(-3),
+		MENU_OPTION(-4),
+		MENU_HIGHSCORE(-5),
+		MENU_SPLASH(-10),
 		
-		Level1(0),
-		Level2(1),
-		Level3(2);
+		LEVEL1(0),
+		LEVEL2(1),
+		LEVEL3(2);
 		
 		public final int INDEX;
 		GameScreen(int index) {
@@ -157,7 +165,7 @@ public class GameProperties {
 		}
 		
 		public static GameScreen getScreen(int index) {
-			GameScreen screen = MenuMain;
+			GameScreen screen = MENU_MAIN;
 			for(GameScreen s : GameScreen.values())
 				if(s.INDEX == index)
 					screen = s;
@@ -174,29 +182,29 @@ public class GameProperties {
 		gameState = GameState.NORMAL;
 		
 		switch(gameScreen) {
-		case Level1:
-		case Level2:
-		case Level3:
+		case LEVEL1:
+		case LEVEL2:
+		case LEVEL3:
 			nextScreen = new GameRender(screen.INDEX);
 			break;
 			
-		case MenuHighscore:
+		case MENU_HIGHSCORE:
 			nextScreen = new MenuHighscore();
 			break;
-		case MenuLevelSelect:
+		case MENU_LEVELSELECT:
 			nextScreen = new MenuLevelSelect();
 			break;
-		case MenuOptions:
+		case MENU_OPTION:
 			nextScreen = new MenuOption();
 			break;
-		case MenuProfile:
+		case MENU_PROFILE:
 			nextScreen = new MenuProfile();
 			break;
-		case MenuSplash:
+		case MENU_SPLASH:
 			nextScreen = new Splash();
 			break;
 
-		case MenuMain:
+		case MENU_MAIN:
 		default:
 			nextScreen = new MenuMain();
 //			throw new LevelNotFoundException();
@@ -207,19 +215,19 @@ public class GameProperties {
 		ResourceManager.getInstance().startMusic();
 		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
 		return true;
-			
+
 	}
-	
+
 	public static void toogleFullScreen() {
 		if (Gdx.graphics.isFullscreen())
-			Gdx.graphics.setDisplayMode(GameProperties.SCALE_WIDTH, 
-					GameProperties.SCALE_HEIGHT, false);
+			Gdx.graphics.setDisplayMode(GameProperties.SCALE_WIDTH, GameProperties.SCALE_HEIGHT, false);
 		else
 			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
 					Gdx.graphics.getDesktopDisplayMode().height, true);
 	}
-	
+
 	public static void toogleIngamePause() {
+
 		if(gameState.equals(GameState.NORMAL))
 			gameState = GameState.PAUSE;
 		else if(gameState.equals(GameState.PAUSE))
@@ -231,7 +239,7 @@ public class GameProperties {
 		gameState = GameState.LOSE;
 		ResourceManager.getInstance().startMusic();
 	}
-	
+
 	public static void setWin() {
 		gameState = GameState.WIN;
 		ResourceManager.getInstance().startMusic();
@@ -257,10 +265,12 @@ public class GameProperties {
 		private GameScreen screen;
 		public GameScreenSwitcher(GameScreen screen) {
 			this.screen = screen;
+
 		}
+
 		public void run() {
 			GameProperties.switchGameScreen(screen);
 		}
 	}
-	
+
 }

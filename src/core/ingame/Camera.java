@@ -1,6 +1,7 @@
 package core.ingame;
 
 import gameObject.body.IBodyInitializer;
+import gameObject.interaction.InteractionState;
 import misc.Debug;
 
 import com.badlogic.gdx.Gdx;
@@ -28,6 +29,16 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		
 		if(follow == null)
 			return;
+
+		if(follow.getParent().getInteractionState().equals(InteractionState.STAND)){
+			if(this.zoom >=1.2f){
+				this.zoom = zoom - 0.005f;
+			}
+		}else{
+			if(this.zoom <=1.5f){
+				this.zoom = zoom + 0.01f;
+			}
+		}
 		
 		float lerp = 0.1f;		
 		

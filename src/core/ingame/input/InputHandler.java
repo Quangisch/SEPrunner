@@ -82,12 +82,17 @@ public class InputHandler implements IInputHandler, InputProcessor {
 
 		// back to menu
 		case Keys.BACKSPACE:
-			GameProperties.switchGameScreen(GameScreen.MenuMain);
+			GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
 			break;
 
 		// toogle debug
 		case Keys.TAB:
 			Debug.toogleOnOff();
+			break;
+
+		// set WIN
+		case Keys.C:
+			GameProperties.setWin();
 			break;
 		}
 

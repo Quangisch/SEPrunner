@@ -100,7 +100,7 @@ public class LoseMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MenuMain));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_MAIN));
 			}
 		};
 		tB = font.getBounds(back.getText());
@@ -119,7 +119,7 @@ public class LoseMenu implements IDrawable {
 
 			public void onClick() {
 				// TODO Level Auswahl
-				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MenuLevelSelect));
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_LEVELSELECT));
 			}
 		};
 		tB = font.getBounds(restart.getText());

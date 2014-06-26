@@ -27,7 +27,7 @@ int z = 0;
 			return;
 				
 		//ALARM -> enemy bewegt sich schneller
-		if(Alarm.getInstance().isActive()){
+		if(Alarm.isActive()){
 //			getEnemy().setAI(this, 0.1f, 1.2f, 0.8f, 1.5f);//funktioniert nicht
 //			getEnemy().getInteractionHandler().setForceMultiplier(1, 1.2f, 0.8f, 1.5f);
 			
@@ -60,7 +60,7 @@ int z = 0;
 							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){
 					
 						if(!other.getParent().isHiding())
-							Alarm.getInstance().trigger();
+							Alarm.trigger();
 						else
 							other.getParent().wasHiddenFrom(getEnemy());
 				}

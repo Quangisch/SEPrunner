@@ -41,7 +41,7 @@ public class GameRender implements Screen {
 		gameWorld = new GameWorld(level, iHandler, camera);
 		hud = new HUD(gameWorld);
 		pauseMenu = new PauseMenu();
-		winMenu = new WinMenu();
+		winMenu = new WinMenu(gameWorld);
 		loseMenu = new LoseMenu();
 
 		// TODO TMP for debugging
