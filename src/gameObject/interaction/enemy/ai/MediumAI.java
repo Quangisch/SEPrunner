@@ -27,7 +27,7 @@ int z = 0;
 			return;
 
 		//ALARM -> enemy bewegt sich schneller
-		if(Alarm.getInstance().isActive()){
+		if(Alarm.isActive()){
 			getEnemy().getInteractionHandler().setForceMultiplier(1.2f, 1.2f, 0.8f, 1.5f);
 		}
 	}
@@ -48,8 +48,8 @@ int z = 0;
 				//Player ber�hrt sichtfeld -> Alarm
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
 							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)){
-						Alarm.getInstance().trigger();
-						
+						Alarm.trigger();
+
 //						player = other.getParent();
 						Debug.println("Alarm");
 				}
@@ -79,6 +79,5 @@ int z = 0;
 		return false;
 	}
 
-	
 	
 }

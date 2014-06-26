@@ -1,5 +1,8 @@
 package core.ingame;
 
+import gameObject.interaction.player.Player;
+import gameWorld.GameWorld;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -17,10 +20,12 @@ import core.ingame.input.InputHandler.Click;
 
 public class WinMenu implements IDrawable {
 
+	private GameWorld world;
 	private SpriteBatch b;
 	private BitmapFont font;
 
-	public WinMenu() {
+	public WinMenu(GameWorld world) {
+		this.world = world;
 		b = new SpriteBatch();
 		font = new BitmapFont(Gdx.files.internal("res/font/baoli64.fnt"), //
 				Gdx.files.internal("res/font/baoli64.png"), false);
@@ -33,6 +38,7 @@ public class WinMenu implements IDrawable {
 		b.setProjectionMatrix(b.getProjectionMatrix().setToOrtho2D(0, 0, //
 				Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		font.setScale((float) Gdx.graphics.getWidth() / 1280 * 2f);
+		final float MAX_FONT_SCALE = font.getScaleY();
 		b.begin();
 
 		float width = Gdx.graphics.getWidth();
@@ -69,11 +75,21 @@ public class WinMenu implements IDrawable {
 			// new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
 		}
 
+		font.setScale(MAX_FONT_SCALE * 0.9f);
+
 		String title = "Level Abgeschlossen!";
 		TextBounds tB = font.getBounds(title);
-		font.draw(b, title, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2);
+		font.draw(b, title, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2 * 1.2f);
 
-		font.setScale(font.getScaleY() * 0.5f);
+		font.setScale(MAX_FONT_SCALE * 0.4f);
+
+		int points = GameProperties.calcStylePoints(world.getPlayer().getShurikenThrown(), world.getPlayer()
+				.getEnemiesHidden(), world.getPlayer().getUnseenFrom());
+		String secondLine = points + " StylePoints";
+		tB = font.getBounds(secondLine);
+		font.draw(b, secondLine, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2 * 0.9f);
+
+		font.setScale(MAX_FONT_SCALE * 0.5f);
 
 		//
 		Button cont = new Button() {

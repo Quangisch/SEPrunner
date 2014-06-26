@@ -89,6 +89,11 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		case Keys.TAB:
 			Debug.toogleOnOff();
 			break;
+
+		// set WIN
+		case Keys.C:
+			GameProperties.setGameState(GameState.INGAME_WIN);
+			break;
 		}
 
 		Debug.setMode(keycode);

@@ -32,7 +32,7 @@ public class HUD implements IDrawable {
 
 		goal = world.getGoal() == null ? null : world.getGoal().getPosition();
 		// TODO
-		goal = new Vector2(108.7f, 0);
+		// goal = new Vector2(108.7f, 0);
 	}
 
 	@Override

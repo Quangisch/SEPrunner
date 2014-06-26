@@ -1,5 +1,7 @@
 package core;
 
+import gameObject.interaction.enemy.Alarm;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -15,25 +17,24 @@ import core.ingame.GameRender;
 import core.menu.MenuMain;
 
 public class GameProperties {
-	
+
 	public static final int SCALE_WIDTH = 640;
 	public static final int SCALE_HEIGHT = 360;
-	
+
 	public static final int SIZE_WIDTH = 1280, SIZE_HEIGHT = 800;
 	private static GameState gameState = null;
 	public static int currentLevel;
 
 	public static float brightness = 0.0f;
-	public static float contrast = 1.0f;	
+	public static float contrast = 1.0f;
 	public static float musicVolume = 1.0f;
 	public static float soundVolume = 1.0f;
-	
-	
+
 	public static final int IMPLEMENTED_LEVEL = 3;
 	public static final int HOOK_RADIUS_MAX = 500;
 	public static final int MAX_PROFILE_COUNT = 5;
-	
-//	CONVERSION
+
+	//	CONVERSION
 	final public static float PIXELPROMETER = 100;
 
 	public static float meterToPixel(float meter) {
@@ -43,27 +44,27 @@ public class GameProperties {
 	public static float pixelToMeter(float pixel) {
 		return pixel / PIXELPROMETER;
 	}
-	
+
 	public static Vector2 meterToPixel(Vector2 meter) {
 		return new Vector2(meterToPixel(meter.x), meterToPixel(meter.y));
 	}
-	
+
 	public static Vector2 pixelToMeter(Vector2 pixel) {
 		return new Vector2(pixelToMeter(pixel.x), pixelToMeter(pixel.y));
 	}
-	
+
 	public static void initFromFile() {
 		JsonValue root = null;
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
-			
+
 			brightness = root.getFloat("brightness");
 			contrast = root.getFloat("contrast");
 			musicVolume = root.getFloat("musicVolume");
 			soundVolume = root.getFloat("soundVolume");
-			
+
 		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
+			//			e.printStackTrace();
 			System.err.println("settings.json not found");
 			return;
 		} catch (NullPointerException e) {
@@ -72,13 +73,13 @@ public class GameProperties {
 			return;
 		}
 	}
-	
+
 	public static void saveToFile() {
 		JsonValue root = null;
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
 		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
+			//			e.printStackTrace();
 			System.out.println("settings.json not found");
 			return;
 		}
@@ -87,131 +88,144 @@ public class GameProperties {
 		root.get("contrast").set(contrast);
 		root.get("soundVolume").set(soundVolume);
 		root.get("musicVolume").set(musicVolume);
-		
+
 		FileHandle file = Gdx.files.local(FilePath.settings);
 		file.writeString(root.toString(), false);
-		
+
 	}
-	
-//	RANK, EXPERIENCE
+
+	//	RANK, EXPERIENCE
 	public enum Rank {
-		Noob(0),
-		Rookie(30),
-		Expert(100);
-		
+		Noob(0), Rookie(30), Expert(100);
+
 		final private int EXPERIENCE;
+
 		private Rank(int points) {
 			this.EXPERIENCE = points;
 		}
-		
+
 		public static Rank getRank(int expPoints) {
 			Rank rank = Noob;
-			for(Rank r : Rank.values())
-				if(expPoints > r.EXPERIENCE && r.EXPERIENCE > rank.EXPERIENCE)
-					rank = r;
+			for (Rank r : Rank.values())
+				if (expPoints > r.EXPERIENCE && r.EXPERIENCE > rank.EXPERIENCE) rank = r;
 			return rank;
 		}
 	}
-	
+
 	public static final int SHU_MUL = -1;
 	public static final int DISPOSED_MUL = 10;
 	public static final int HIDDEN_MUL = 20;
-	
+	public static final int LEVEL_COMPLETE = 1000;
+	public static final int ALARM_MUL = -10;
+
 	public static int calcStylePoints(int shurikenThrown, int disposedBodies, int hiddenFrom) {
-		return Math.max(0, shurikenThrown * SHU_MUL + disposedBodies * DISPOSED_MUL + hiddenFrom * HIDDEN_MUL);
+		return Math.max(0, shurikenThrown * SHU_MUL //
+				+ disposedBodies * DISPOSED_MUL //
+				+ hiddenFrom * HIDDEN_MUL //
+				+ LEVEL_COMPLETE //
+				+ (int) (Alarm.getTotalAlarmTime() * ALARM_MUL) //
+		);
 	}
-	
-	
-//	GAMESTATES
+
+	//	GAMESTATES
 	public enum GameState {
-		MENU(true),
-		INGAME(false),
-		INGAME_WIN(false), 
-		INGAME_LOSE(false), 
-		INGAME_PAUSE(false);
-		
+		MENU(true), INGAME(false), INGAME_WIN(false), INGAME_LOSE(false), INGAME_PAUSE(false);
+
 		private final boolean inMenu;
+
 		GameState(boolean menu) {
 			inMenu = menu;
 		}
-		
-		private boolean isInGame() 	{ return !inMenu;	}
-		private boolean isMenu() 	{ return inMenu;	}
+
+		private boolean isInGame() {
+			return !inMenu;
+		}
+
+		private boolean isMenu() {
+			return inMenu;
+		}
 	}
-	
+
 	public static void setGameState(GameState state) {
 		setGameState(state, -1);
 	}
-	
+
 	public static boolean setGameState(GameState state, int level) throws LevelNotFoundException {
 		final GameState prevState = gameState;
 		gameState = state;
 		currentLevel = level;
-	
-		if(prevState == null || Gdx.graphics == null)
-			return false;
-		
+
+		if (prevState == null || Gdx.graphics == null) return false;
+
 		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
 		ResourceManager.getInstance().startMusic();
-		
-		if(!((isInMenuState() && prevState.isMenu()) || (isInGameState() && prevState.isInGame()))) {
-			if(isInMenuState())	((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
-			else				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
+
+		if (!((isInMenuState() && prevState.isMenu()) || (isInGameState() && prevState.isInGame()))) {
+			if (isInMenuState())
+				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
+			else
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameRender(level));
 		}
 
 		return true;
-			
+
 	}
-	
+
 	public static void toogleFullScreen() {
 		if (Gdx.graphics.isFullscreen())
-			Gdx.graphics.setDisplayMode(GameProperties.SCALE_WIDTH, 
-					GameProperties.SCALE_HEIGHT, false);
+			Gdx.graphics.setDisplayMode(GameProperties.SCALE_WIDTH, GameProperties.SCALE_HEIGHT, false);
 		else
 			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
 					Gdx.graphics.getDesktopDisplayMode().height, true);
 	}
-	
+
 	public static void toogleIngamePause() {
-		if(gameState.equals(GameState.INGAME))
+		if (gameState.equals(GameState.INGAME))
 			gameState = GameState.INGAME_PAUSE;
-		else if(gameState.equals(GameState.INGAME_PAUSE))
-			gameState = GameState.INGAME;
+		else if (gameState.equals(GameState.INGAME_PAUSE)) gameState = GameState.INGAME;
 	}
-	
+
 	public static void setGameOver() {
 		gameState = GameState.INGAME_LOSE;
 		ResourceManager.getInstance().startMusic();
 	}
-	
+
 	public static void setWin() {
 		gameState = GameState.INGAME_WIN;
 		ResourceManager.getInstance().startMusic();
 	}
-	
+
 	public static boolean isGameState(GameState state) {
 		return gameState.equals(state);
 	}
-	
-	public static boolean isInMenuState() { return gameState.equals(GameState.MENU);	}
-	public static boolean isInGameState() { return !isInMenuState();						}
+
+	public static boolean isInMenuState() {
+		return gameState.equals(GameState.MENU);
+	}
+
+	public static boolean isInGameState() {
+		return !isInMenuState();
+	}
 
 	public static GameState getGameState() {
 		return gameState;
 	}
 
 	public static class GameStateSwitcher implements Runnable {
+
 		private GameState state;
 		private int level;
+
 		public GameStateSwitcher(GameState state, int level) {
 			this.state = state;
 			this.level = level;
 		}
+
 		public void run() {
-			if(GameProperties.isGameState(state))
+			if (GameProperties.isGameState(state))
 				GameProperties.gameState = GameProperties.isInGameState() ? GameState.MENU : GameState.INGAME;
 			GameProperties.setGameState(state, level);
 		}
 	}
-	
+
 }
