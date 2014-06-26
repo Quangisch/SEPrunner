@@ -342,5 +342,9 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 	public float getTime() {
 		return time;
 	}
+	
+	public float getTimeLimit() {
+		return timeLimit;
+	}
 
 }

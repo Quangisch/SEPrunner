@@ -200,6 +200,7 @@ public class GameProperties {
 		default:
 			nextScreen = new MenuMain();
 //			throw new LevelNotFoundException();
+			break;
 		
 		}
 		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
