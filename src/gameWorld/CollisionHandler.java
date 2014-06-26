@@ -3,8 +3,6 @@ package gameWorld;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.Sensor;
-import misc.Debug;
-import misc.Debug.Mode;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactFilter;
@@ -17,8 +15,7 @@ public class CollisionHandler implements ContactListener {
 
 	@Override
 	public void beginContact(Contact contact) {
-		boolean handled = handleCollision(contact, true, false);
-		if (!handled) Debug.println("Unhandled Collision (" + contact.toString() + ")", Mode.CONSOLE);
+		handleCollision(contact, true, false);
 	}
 
 	private boolean handleCollision(Contact contact, boolean start, boolean postSolve) {
@@ -57,9 +54,6 @@ public class CollisionHandler implements ContactListener {
 		if(!handled && bodyA.getParent() == null && bodyB.getParent() != null)
 			handled = bodyB.getParent().handleCollision(start, postSolve, sensorB, bodyA, sensorA);
 		
-//		unhandled collision
-		Debug.print("Unhandled Collision between "+bodyA.getBodyObjectType()+
-				" and "+bodyB.getBodyObjectType(), Debug.Mode.CONSOLE);
 		return false;
 	}
 

@@ -4,9 +4,11 @@ import gameObject.drawable.AnimationObject;
 import gameObject.interaction.enemy.Alarm;
 import gameObject.interaction.player.Shuriken;
 import gameWorld.GameWorld;
+import misc.Debug;
 import misc.StringFunctions;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -30,9 +32,7 @@ public class HUD implements IDrawable {
 		shuriken = s.getAnimationObject();
 		shuriken.setPosition(new Vector2(0, Gdx.graphics.getHeight() - 30));
 
-		goal = world.getGoal() == null ? null : world.getGoal().getPosition();
-		// TODO
-		// goal = new Vector2(108.7f, 0);
+		goal = world.getGoal() == null ? null : world.getGoal().getWorldPosition();
 	}
 
 	@Override
@@ -48,6 +48,9 @@ public class HUD implements IDrawable {
 		String shurikenQuantity = String.valueOf(world.getPlayer().getShurikenQuantity());
 		String time = StringFunctions.getTimeAsString(world.getTime());
 		String distance = String.valueOf((int) (goal.x - world.getPlayer().getBodyObject().getWorldPosition().x)) + "m";
+		String alarm = StringFunctions.getTimeAsString(Alarm.getTimer());
+		String fps = Gdx.graphics.getFramesPerSecond()+"fps";
+
 		b.begin();
 
 		shuriken.setPosition(new Vector2(0, Gdx.graphics.getHeight() - 30));
@@ -57,8 +60,16 @@ public class HUD implements IDrawable {
 		if (goal != null) font.draw(b, distance, //
 				Gdx.graphics.getWidth() - font.getBounds(distance).width, Gdx.graphics.getHeight() - 5);
 
+		if(Debug.isOn())
+			font.draw(b, fps, 10, Gdx.graphics.getHeight() - 40);
+		if(Alarm.isActive()) {
+			font.setColor(Color.RED);
+			font.draw(b, alarm, Gdx.graphics.getWidth() / 2 - font.getBounds(alarm).width / 2, Gdx.graphics.getHeight() - font.getBounds(time).height - 10);
+			font.setColor(Color.WHITE);
+		}
 		Alarm.getInstance().draw(batch, deltaTime);
-
+		
+		
 		b.end();
 		batch.begin();
 	}

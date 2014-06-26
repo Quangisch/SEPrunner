@@ -20,9 +20,9 @@ public interface FilePath {
 //			GRAPHICS
 			graphic_menuMain = "res/img/main menu.png",
 			
-			preview_level1 = "res/map/Macarana.png",	//tmp
-			preview_level2 = "res/map/Rio.png",
-			preview_level3 = "res/map/rioNacht1.png"
+			preview_level1 = "res/map/preview/Macarana.png",	//tmp
+			preview_level2 = "res/map/preview/Rio.png",
+			preview_level3 = "res/map/preview/rioNacht1.png"
 			
 			
 			

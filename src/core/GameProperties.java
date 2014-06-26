@@ -235,6 +235,8 @@ public class GameProperties {
 	}
 	
 	public static void setGameOver(String message) {
+		if(gameState.equals(GameState.LOSE))
+			return;
 		loseMessage = message;
 		gameState = GameState.LOSE;
 		ResourceManager.getInstance().startMusic();

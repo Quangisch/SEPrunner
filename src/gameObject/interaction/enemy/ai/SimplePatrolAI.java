@@ -7,6 +7,7 @@ import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.enemy.Alarm;
 import misc.Debug;
+import core.ingame.input.KeyMap.ActionKey;
 
 public class SimplePatrolAI extends EnemyAI {
 
@@ -33,13 +34,13 @@ int z = 0;
 			
 		}
 		
+//		TODO why oh why?
+		if(Alarm.isActive())
+			keyDown(ActionKey.RUN);
+		else
+			keyUp(ActionKey.RUN);
 		
-//		if(Alarm.getInstance().isActive())
-//			keyDown(ActionKey.RUN);
-//		else
-//			keyUp(ActionKey.RUN);
-//		
-//		System.out.println("Alarm:"+Alarm.getInstance().isActive()+" keyDown"+isKeyDown(ActionKey.RUN));
+		System.out.println("Alarm:"+Alarm.isActive()+" keyDown"+isKeyDown(ActionKey.RUN));
 
 	}
 

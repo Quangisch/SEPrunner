@@ -3,20 +3,26 @@
 	"mapTexture" : [
 						{
 							"position" : [0, 0], 
-							"texture" : "res/map/level1_1.png"
+							"texture" : "res/map/levelTextures/level1_1.png"
 						},
 						{
 							"position" : [4260, 0], 
-							"texture" : "res/map/level1_2.png"
+							"texture" : "res/map/levelTextures/level1_2.png"
 						},
 						{
 							"position" : [7100, 0], 
-							"texture" : "res/map/level1_3.png"
+							"texture" : "res/map/levelTextures/level1_3.png"
 						},
 					],
+	"background" : 	{
+				"texture" : "res/map/GothemCity.png",
+				"light"	: 	[
+							
+						]
+			},
 	"gravity" 	: [0, -20],
 	"timelimit" : 0,
-	"goal"		: [10870,1320 , 11270, 1320, 11270,1220, 10870,1220],
+	"goal"		: [11200,1220 , 400,1000],
 	"ground" 	:	[
 
 [4910,1350 , 4260,1350 , 4260,1020 , 4060,1020 , 4060,1350 , 3660,1350 , 3560,1300 , 3400,1300 , 

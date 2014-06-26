@@ -14,18 +14,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import misc.Debug;
 import misc.StringFunctions;
 import box2dLight.ConeLight;
 import box2dLight.DirectionalLight;
+import box2dLight.Light;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -52,20 +55,20 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 	private Matrix4 debugMatrix;
 
 	private MapTexture[] mapTextures;
+	private Background[] backgrounds;
 	private World world;
 	private Camera camera;
 	private List<GameObject> objects;
 	private Player player;
 	private RayHandler rayHandler;
 	private BodyObject goal;
+	private float mapWidth, mapHeight;
 
 	private float timeLimit, time = 0;
 
 	public GameWorld(int level, IInputHandler iHandler, Camera camera) throws LevelNotFoundException {
 		this.camera = camera;
 		this.iHandler = iHandler;
-		
-
 		
 		objects = new ArrayList<GameObject>();
 		debugRender = new Box2DDebugRenderer();
@@ -125,12 +128,17 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		debugMatrix = new Matrix4(camera.combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
-		// batch.disableBlending();
-		// for (Background b : backgrounds) {
-		//		batch.draw(b.texture, b.scrollFactorX * Camera.getInstance().position.x,
-		//		b.scrollFactorY * Camera.getInstance().position.y);
-		// }
-		// batch.enableBlending();
+//		 batch.disableBlending();
+		 for(Background b : backgrounds) {
+//			 float moveX = camera.position.x*b.mapTexture.width/mapWidth;
+//			 float moveY = camera.position.y*b.mapTexture.height/mapHeight;
+
+			 b.move(camera.position.x, camera.position.y);
+			 b.sprite.draw(batch);
+//			 batch.draw(b.mapTexture.texture, moveX, moveY, mapWidth, mapHeight);
+			 
+		 }
+//		 batch.enableBlending();
 
 		for (MapTexture mT : mapTextures)
 			if (mT.texture != null) batch.draw(mT.texture, mT.x, mT.y);
@@ -167,60 +175,48 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 
 		timeLimit = root.getFloat("timelimit");
 
+		
+		
 		// TEXTURE
 		JsonValue mapTextureData = root.get("mapTexture");
 		mapTextures = new MapTexture[mapTextureData.size];
 		int part = 0;
 		for (JsonValue mT : mapTextureData) {
 			JsonValue position = mT.get("position");
-			mapTextures[part++] = new MapTexture(position.getFloat(0), position.getFloat(1), mT.getString("texture"));
+			mapTextures[part] = new MapTexture(position.getFloat(0), position.getFloat(1), mT.getString("texture"));
+			mapWidth = Math.max(mapTextures[part].x+mapTextures[part].width, mapWidth);
+			mapHeight = Math.max(mapTextures[part].y+mapTextures[part].height, mapHeight);
+			part++;
 		}
-
-		// GOAL
-		goal = new BodyObject(world, new Vector2(0, 0));
-		PolygonShape g = new PolygonShape();
-		Vector2[] gVecs = new Vector2[root.get("goal").size / 2];
-		for (int i = 0; i < gVecs.length; i++)
-			gVecs[i] = GameProperties.pixelToMeter(new Vector2(root.get("goal").getFloat(i * 2), //
-					mapTextures[0].texture.getHeight() - root.get("goal").getFloat(i * 2 + 1)));
-
-		g.set(gVecs);
-		goal.addFixture(0, 0, 0, true, g, true);
-		goal.setBodyObjectType(BodyObjectType.Goal);
-
+		Debug.println("MapSize@"+mapWidth+"x"+mapHeight);
+		
 		// LIGHTS
 		rayHandler = new RayHandler(world);
-		rayHandler.setCulling(true);
+		rayHandler.setCulling(false);
 		rayHandler.setBlur(true);
 		rayHandler.setShadows(true);
-		rayHandler.setAmbientLight(1, 1, 1, 0.1f);
+		rayHandler.setAmbientLight(1, 1, 1, 0.05f);
 
 		JsonValue jLights = root.get("light");
 		if (jLights != null) {
-			for (JsonValue l : jLights) {
+			for (JsonValue jLight : jLights) {
 
-				int rays = l.getInt("rays");
-				JsonValue c = l.get("color");
-				Color color = new Color(c.getFloat(0), c.getFloat(1), c.getFloat(2), c.getFloat(3));
-
-				switch (StringFunctions.getMostEqualIndexIgnoreCase(l.getString("type"), new String[] { "coneLight",
-						"directionalLight", "pointLight" })) {
-
-				case 0:
-					new ConeLight(rayHandler, rays, color, l.getFloat("distance"), l.getFloat("x"),
-							mapTextures[0].texture.getHeight() - l.getFloat("y"), l.getFloat("directionDegree"),
-							l.getFloat("coneDegree"));
-					break;
-				case 1:
-					new DirectionalLight(rayHandler, rays, color, l.getFloat("directionDegree"));
-					break;
-				case 2:
-					new PointLight(rayHandler, rays, color, l.getFloat("distance"), l.getFloat("x"),
-							mapTextures[0].texture.getHeight() - l.getFloat("y"));
-					break;
-				}
+				loadSingleLight(jLight);
 			}
+		}				
+		
+//		BACKGROUND
+		backgrounds = new Background[root.get("background").size];
+		part = 0;
+		for(JsonValue b : root.get("background")) {
+			backgrounds[part] = new Background(new MapTexture(0 ,0,b.getString("texture")), b.getFloat("scrollFactor"));
+			if(b.hasChild("light"))
+				for(JsonValue jLight : b.get("light"))
+					backgrounds[part].addLight(loadSingleLight(jLight));
+			part++;
 		}
+
+
 
 		// GROUND
 		JsonValue jGrounds = root.get("ground");
@@ -250,9 +246,49 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		world.setContactFilter(new CollisionHandler.MoverContactFilter());
 		world.setContactListener(new CollisionHandler());
 		world.setAutoClearForces(true);
+		
+		// GOAL
+		Vector2[] gVecs = new Vector2[root.get("goal").size / 2];
+		for (int i = 0; i < gVecs.length; i++)
+			gVecs[i] = GameProperties.pixelToMeter(new Vector2(root.get("goal").getFloat(i * 2), //
+					mapTextures[0].texture.getHeight() - root.get("goal").getFloat(i * 2 + 1)));
+		
+		PolygonShape g = new PolygonShape();
+		g.setAsBox(gVecs[1].x, gVecs[1].y, new Vector2(0,0), 0);
 
+		goal = new BodyObject(world, gVecs[0]);
+		goal.addFixture(0, 0, 0, true, g, true);
+		goal.setBodyObjectType(BodyObjectType.Goal);
+		
 	}
 
+	private Light loadSingleLight(JsonValue jLight) {
+		int rays = jLight.getInt("rays");
+		JsonValue c = jLight.get("color");
+		Color color = new Color(c.getFloat(0), c.getFloat(1), c.getFloat(2), c.getFloat(3));
+
+		Light light = null;
+		switch (StringFunctions.getMostEqualIndexIgnoreCase(jLight.getString("type"), new String[] { "coneLight",
+				"directionalLight", "pointLight" })) {
+
+		case 0:
+			light = new ConeLight(rayHandler, rays, color, jLight.getFloat("distance"), jLight.getFloat("x"),
+					mapTextures[0].texture.getHeight() - jLight.getFloat("y"), jLight.getFloat("directionDegree"),
+					jLight.getFloat("coneDegree"));
+			break;
+		case 1:
+			light = new DirectionalLight(rayHandler, rays, color, jLight.getFloat("directionDegree"));
+			break;
+		case 2:
+			light = new PointLight(rayHandler, rays, color, jLight.getFloat("distance"), jLight.getFloat("x"),
+					mapTextures[0].texture.getHeight() - jLight.getFloat("y"));
+			break;
+		}
+		if(light != null)
+			light.setXray(true);
+		return light;
+	}
+	
 	private void loadMapObject(JsonValue root) throws NullPointerException {
 		Vector2 pos = GameProperties.pixelToMeter(new Vector2(root.get("position").getFloat(0), root.get("position")
 				.getFloat(1)));
@@ -312,18 +348,6 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		return rayHandler;
 	}
 
-	private static class MapTexture {
-
-		private final float x, y;
-		private final Texture texture;
-
-		private MapTexture(float x, float y, String texturePath) {
-			this.x = x;
-			this.y = y;
-			this.texture = new Texture(texturePath);
-		}
-	}
-
 	@Override
 	public void dispose() {
 		rayHandler.dispose();
@@ -333,6 +357,8 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		world.dispose();
 		for (GameObject g : objects)
 			g.dispose();
+		for(Background b : backgrounds)
+			b.dispose();
 	}
 
 	public BodyObject getGoal() {
@@ -345,6 +371,58 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 	
 	public float getTimeLimit() {
 		return timeLimit;
+	}
+	
+	private class MapTexture {
+
+		private final float x, y, width, height;
+		private final Texture texture;
+
+		private MapTexture(float x, float y, String texturePath) {
+			this.x = x;
+			this.y = y;
+			this.texture = new Texture(texturePath);
+			width = texture.getWidth();
+			height = texture.getHeight();
+		}
+	}
+	
+	private class Background implements Disposable {
+		private Sprite sprite;
+		private List<Light> lights;
+		private float scrollFactor;
+		
+		private Background(MapTexture mapTexture, float scrollFactor) {
+			sprite = new Sprite(mapTexture.texture);
+			this.scrollFactor = scrollFactor;
+			sprite.scale(mapWidth/sprite.getWidth()*scrollFactor);
+		}
+		
+		private void addLight(Light light) {
+			if(lights == null)
+				lights = new LinkedList<Light>();
+			lights.add(light);
+			light.setPosition(light.getPosition().x, mapHeight - light.getPosition().y);
+		}
+		
+		private void move(float camX, float camY) {
+			float newX = camX * scrollFactor;
+			float newY = camY * scrollFactor;
+
+			float dx = newX - sprite.getX();
+			float dy = newY - sprite.getY();
+			sprite.translate(dx, dy);
+			if(lights == null)
+				return;
+			for(Light l : lights) {
+				l.setPosition(l.getX()+dx, l.getY()+dy);
+				
+			}
+		}
+		
+		public void dispose() {
+			sprite.getTexture().dispose();
+		}
 	}
 
 }

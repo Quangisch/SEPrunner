@@ -12,7 +12,6 @@ import misc.ShaderBatch;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -24,7 +23,6 @@ import core.ingame.input.InputHandler;
 public class GameRender implements Screen {
 
 	private ShaderBatch batch;
-	private FPSLogger log;
 	private List<GeometricObject> geometrics = new ArrayList<GeometricObject>();
 
 	private GameWorld gameWorld;
@@ -52,7 +50,6 @@ public class GameRender implements Screen {
 	@Override
 	public void show() {
 		batch = new ShaderBatch(100);
-		log = new FPSLogger();
 		Gdx.input.setInputProcessor(iHandler);
 	}
 
@@ -91,7 +88,6 @@ public class GameRender implements Screen {
 
 
 		gameWorld.run();
-		if (Debug.isMode(Debug.Mode.CONSOLE)) log.log();
 
 		Gdx.gl.glClearColor(0, 0, 0, 1); //(0,0,0,1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

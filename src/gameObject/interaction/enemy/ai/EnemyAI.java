@@ -1,5 +1,6 @@
 package gameObject.interaction.enemy.ai;
 
+import gameObject.interaction.enemy.Alarm;
 import gameObject.interaction.enemy.Enemy;
 
 import java.util.HashSet;

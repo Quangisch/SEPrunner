@@ -1,6 +1,5 @@
 package gameObject.interaction.enemy;
 
-import misc.Debug;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
@@ -28,7 +27,7 @@ public class Alarm implements IDrawable {
 
 	private Camera camera;
 	private PointLight[] alarmLights;
-	private int timer;
+	private float timer;
 
 	private final float W, H, DISTANCE_MAX;
 	private float x, y, distance;
@@ -59,25 +58,28 @@ public class Alarm implements IDrawable {
 
 			for (PointLight l : alarmLights)
 				l.setDistance(distance);
-			timer--;
+			timer = Math.max(0, timer - deltaTime);
 			totalAlarmTime += deltaTime;
-		} else {
-			if (alarmLights[0].isActive()) for (PointLight l : alarmLights)
+			
+		} else if (alarmLights[0].isActive()) {
+			 for (PointLight l : alarmLights)
 				l.setActive(false);
 		}
-
-		Debug.println("AlarmTimer@" + timer);
 	}
 
 	public static void trigger() {
-		trigger(80);
+		trigger(0.5f);
 	}
 
-	public static void trigger(int time) {
+	public static void trigger(float time) {
 		if (getInstance() == null) return;
 		getInstance().timer += time;
 		for (PointLight l : getInstance().alarmLights)
 			l.setActive(true);
+	}
+	
+	public static float getTimer() {
+		return getInstance().timer;
 	}
 
 	public static boolean isActive() {

@@ -3,20 +3,26 @@
 	"mapTexture" : [
 						{
 							"position" : [0, 0], 
-							"texture" : "res/map/level2_1.png"
+							"texture" : "res/map/levelTextures/level2_1.png"
 						},
 						{
 							"position" : [4096, 0], 
-							"texture" : "res/map/level2_2.png"
+							"texture" : "res/map/levelTextures/level2_2.png"
 						},
 						{
 							"position" : [8192, 0], 
-							"texture" : "res/map/level2_3.png"
+							"texture" : "res/map/levelTextures/level2_3.png"
 						},
 					],
+	"background" : 	{
+				"texture" : "res/map/GothemCity.png",
+				"light"	: 	[
+							
+						]
+			},
 	"gravity" 	: [0, -20],
 	"timelimit" : 0,
-	"goal"		: [10870,1320 , 11270, 1320, 11270,1220, 10870,1220],
+	"goal"		: [12000,1220, 400,1000],
 	"ground" 	:	[
 [2630,836 , 2630,636 , 3330,636 , 3330,1036 , 3430,1036 , 3730,1066 , 3930,1066 , 3930,936 , 3490,936 , 3490,636 , 
 		5230,636 , 5230,570 , 6030,570 , 6030,696 , 6230,696 , 6230,636 , 6330,636 , 6331.002,1436 , 6330,1436 , 7130,1536 , 7830,1536 , 7860,1526 , 
