@@ -2,8 +2,8 @@
 keymap: {
 	left: 29,
 	right: 32,
-	run: 59,
-	jump: 51,
+	run: 34,
+	jump: 62,
 	crouch: 47,
 	action: 33
 },
