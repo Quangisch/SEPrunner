@@ -122,7 +122,7 @@ public class Enemy extends GameObject {
 			break;
 		}
 		if (ai != null)
-			ai.init(jAI.get("Actions"), jAI.get("Advanced"));
+			ai.init(jAI.get("Actions"));
 		
 		if(jMul == null)	setAI(ai);
 		else				setAI(ai, jMul.getFloat(0), jMul.getFloat(1), 
