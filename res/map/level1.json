@@ -386,7 +386,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -418,7 +418,6 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -450,8 +449,6 @@
 						"position" : [3000, 810],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -477,8 +474,6 @@
 						"position" : [3650, 910],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -505,8 +500,6 @@
 						"position" : [4800, 610],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -543,8 +536,6 @@
 						"position" : [5550, 760],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -566,6 +557,7 @@
 									]
 						}
 					},
+
 					{
 						"ID" : "enemy",
 						"resources" : 	{
@@ -575,8 +567,6 @@
 						"position" : [4800, 1080],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -602,8 +592,6 @@
 						"position" : [5830, 1610],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -629,8 +617,6 @@
 						"position" : [6950, 1010],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -656,8 +642,6 @@
 						"position" : [10500, 1310],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -704,8 +688,6 @@
 						"position" : [10000, 1010],
 						"scale" : 1.0,
 						"flip" : false,
-						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
