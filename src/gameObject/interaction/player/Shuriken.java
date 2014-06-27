@@ -8,6 +8,7 @@ import gameObject.interaction.GameObject;
 
 import com.badlogic.gdx.math.Vector2;
 
+import core.FilePath;
 import core.GameProperties;
 
 public class Shuriken extends GameObject {
@@ -18,7 +19,10 @@ public class Shuriken extends GameObject {
 	public Shuriken(GameObject thrower, Vector2 clickPoint) {
 		super(thrower.getGameWorld(), thrower.getBodyObject().getLocalCenterInWorld());
 
-		this.init("shuriken");
+		String texturePath = FilePath.objectTexturePath + "shuriken.png";
+		String jsonPath = FilePath.objectJsonPath + "shuriken.json";
+		
+		super.init(texturePath, jsonPath);
 		getBodyObject().setBodyObjectType(BodyObjectType.Shuriken);
 
 		direction = GameProperties.pixelToMeter(clickPoint.sub(getBodyObject().getPosition()));

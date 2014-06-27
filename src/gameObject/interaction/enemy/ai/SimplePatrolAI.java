@@ -1,12 +1,10 @@
 package gameObject.interaction.enemy.ai;
 
-import jdk.nashorn.internal.runtime.regexp.joni.ApplyCaseFoldArg;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
-import gameObject.interaction.InteractionState;
 import gameObject.interaction.enemy.Alarm;
 import misc.Debug;
 import core.ingame.input.KeyMap.ActionKey;
@@ -36,7 +34,6 @@ int z = 0;
 			
 		}
 		
-//		TODO why oh why?
 		if (Alarm.isActive()) {
 			keyDown(ActionKey.RUN);
 		} else

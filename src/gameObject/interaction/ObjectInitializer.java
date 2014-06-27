@@ -30,19 +30,19 @@ abstract class ObjectInitializer extends InteractionObject {
 	}
 	
 	
-	protected void init(String name, String jsonPath) {
+	protected void init(String texturePath, String jsonPath) {
 		JsonReader reader = new JsonReader();
-		JsonValue root;
+		JsonValue objectDataJson;
 		try {
-			root = reader.parse(new FileReader(jsonPath)).get(name);
+			objectDataJson = reader.parse(new FileReader(jsonPath));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
 		}
 
-		initStates(root.getString("texture"), root.get("stateframes"), root.getInt("defaultState"));
-		initBody(root.get("bodyDef"));
-		initSensors(root.get("sensor"));
+		initStates(texturePath, objectDataJson.get("stateframes"), objectDataJson.getInt("defaultState"));
+		initBody(objectDataJson.get("bodyDef"));
+		initSensors(objectDataJson.get("sensor"));
 		
 		applyInteraction(getDefaultInteractionState());
 	}

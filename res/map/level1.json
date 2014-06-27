@@ -12,14 +12,24 @@
 						{
 							"position" : [7100, 0], 
 							"texture" : "res/map/levelTextures/level1_3.png"
-						},
+						}
 					],
-	"background" : 	{
-				"texture" : "res/map/GothemCity.png",
-				"light"	: 	[
-							
-						]
-			},
+	"background" : 	[
+				
+				{
+					"scrollFactor":	0.9,
+					"texture" : 	"res/map/background/groundSky.png"
+				},
+				{
+					"scrollFactor":	0.8,
+					"texture" : 	"res/map/background/skyline1.png"
+				},
+				{
+					"scrollFactor":	0.6,
+					"texture" : 	"res/map/background/skyline2.png"
+				}
+				
+			],
 	"gravity" 	: [0, -20],
 	"timelimit" : 0,
 	"goal"		: [11200,1220 , 400,1000],
@@ -363,16 +373,17 @@
 						"distance"	:	1000,
 						"x"			:	12000,
 						"y"			:	1100
-					},
+					}
 	
 	
 				],
-	"music" : "map1.mp3",
-	"shurikans" : 10,
 	"objects" :	[
 					{
 						"ID" : "player",
-						"json" : "ninja_full",
+						"json" : 	{
+									"texture"	:	"ninja.png",
+									"json"		:	"body.json"
+								},
 						"position" : [250, 190],
 						"scale" : 1.0,
 						"flip" : false,
@@ -382,7 +393,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [1500, 350],
 						"scale" : 1.0,
 						"flip" : false,
@@ -411,7 +425,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [2700, 400],
 						"scale" : 1.0,
 						"flip" : false,
@@ -440,7 +457,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [3000, 300],
 						"scale" : 1.0,
 						"flip" : false,
@@ -462,7 +482,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [3650, 400],
 						"scale" : 1.0,
 						"flip" : false,
@@ -485,7 +508,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [4800, 100],
 						"scale" : 1.0,
 						"flip" : false,
@@ -518,7 +544,10 @@
 
 										{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [5550, 250],
 						"scale" : 1.0,
 						"flip" : false,
@@ -546,7 +575,10 @@
 
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [4800, 570],
 						"scale" : 1.0,
 						"flip" : false,
@@ -568,7 +600,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [5830, 1100],
 						"scale" : 1.0,
 						"flip" : false,
@@ -590,7 +625,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [6950, 500],
 						"scale" : 1.0,
 						"flip" : false,
@@ -612,7 +650,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [10500, 800],
 						"scale" : 1.0,
 						"flip" : false,
@@ -655,7 +696,10 @@
 					},
 					{
 						"ID" : "enemy",
-						"json" : "enemy_simple",
+						"resources" : 	{
+									"texture"	:	"enemy_simple.png",
+									"json"		:	"body.json"
+								},
 						"position" : [10000, 500],
 						"scale" : 1.0,
 						"flip" : false,
@@ -678,7 +722,10 @@
 
 					{
 						"ID" : "hideable",
-						"json" : "trashbin",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
 						"position" : [500, 170],
 						"scale" : 1.0,
 						"flip" : false,
@@ -686,7 +733,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "trashbin",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
 						"position" : [2300, 330],
 						"scale" : 1.0,
 						"flip" : false,
@@ -694,7 +744,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "trashbin",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
 						"position" : [5200, 130],
 						"scale" : 1.0,
 						"flip" : false,
@@ -702,7 +755,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "trashbin",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
 						"position" : [5950, 360],
 						"scale" : 1.0,
 						"flip" : false,
@@ -710,7 +766,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "trashbin",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
 						"position" : [5600, 570],
 						"scale" : 1.0,
 						"flip" : false,
@@ -718,7 +777,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "trashbin",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
 						"position" : [7200, 320],
 						"scale" : 1.0,
 						"flip" : false,
@@ -726,7 +788,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "trashbin",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
 						"position" : [9100, 460],
 						"scale" : 1.0,
 						"flip" : false,
@@ -734,7 +799,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "trashbin",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
 						"position" : [10100, 170],
 						"scale" : 1.0,
 						"flip" : false,
@@ -742,7 +810,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "tree",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"tree.json"
+								},
 						"position" : [1150, 260],
 						"scale" : 1.0,
 						"flip" : false,
@@ -750,7 +821,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "tree",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"tree.json"
+								},
 						"position" : [3400, 185],
 						"scale" : 1.0,
 						"flip" : false,
@@ -758,7 +832,10 @@
 					},
 					{
 						"ID" : "hideable",
-						"json" : "tree",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"tree.json"
+								},
 						"position" : [6000, 970],
 						"scale" : 1.0,
 						"flip" : false,

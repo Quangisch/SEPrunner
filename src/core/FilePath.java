@@ -11,6 +11,9 @@ public interface FilePath {
 			settings = "res/settings.json",
 			profile = "res/profile.json",
 			
+			objectTexturePath = "res/objects/textures/",
+			objectJsonPath = "res/objects/",
+			
 //			AUDIO
 			music_menu = "res/audio/music/mainMenu.mp3",
 			music_soundScape = "res/audio/music/soundScape.mp3",

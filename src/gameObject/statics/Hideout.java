@@ -6,6 +6,7 @@ import gameObject.interaction.GameObject;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
 
 public class Hideout extends GameObject implements Hideable {
 
@@ -20,8 +21,8 @@ public class Hideout extends GameObject implements Hideable {
 	}
 	
 	@Override
-	public void init(String name) {
-		super.init(name);
+	public void init(JsonValue resources) {
+		super.init(resources);
 		setBodyObjectType(BodyObjectType.Hideable);
 		getAnimationObject().setLayer(2);
 	}

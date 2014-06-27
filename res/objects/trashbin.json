@@ -1,5 +1,4 @@
 {
-	"trashbin" :{
 		"bodyDef" :	{
 					 "linearDamping"	: 0,
 					 "density"			: 0, 
@@ -14,12 +13,10 @@
 		"stateframes" :	{
 						"stand" :	{
 										"frameDuration": 1,
-										"boundingBox" : [40,90 , 60,90, 60,20 , 40,20],
+										"boundingBox" : [40,90 , 60,90, 60,30 , 40,30],
 										"textureMap" : [	
 														[0, 0, 100, 100]
 														]
 									}
 						}
-	}
-
 }

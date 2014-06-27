@@ -41,10 +41,13 @@ public class InteractionHandler implements Runnable {
 	
 	private void processFlip() {
 		if(!gameObject.isGrabbing()) {
-			if(pressedActionKeys.contains(ActionKey.LEFT))
+			if(pressedActionKeys.contains(ActionKey.LEFT) && !gameObject.getAnimationObject().isFlipped()) {
 				gameObject.getAnimationObject().setFlip(true);
-			else if(pressedActionKeys.contains(ActionKey.RIGHT))
+				iHandler.keyUp(ActionKey.RUN);
+			} else if(pressedActionKeys.contains(ActionKey.RIGHT) && gameObject.getAnimationObject().isFlipped()) {
 				gameObject.getAnimationObject().setFlip(false);
+				iHandler.keyUp(ActionKey.RUN);
+			}
 		}
 	}
 

@@ -8,6 +8,9 @@ import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.JsonValue;
+
+import core.FilePath;
 
 public class GameObject extends ObjectInitializer implements IIdentifiable, IGameObject, Comparable<GameObject>,
 		Runnable, Disposable {
@@ -29,8 +32,10 @@ public class GameObject extends ObjectInitializer implements IIdentifiable, IGam
 	}
 
 	@Override
-	public void init(String name) {
-		init(name, "res/sprites/" + name + ".json");
+	public void init(JsonValue resources) {
+		String texturePath = FilePath.objectTexturePath + resources.getString("texture");
+		String jsonPath = FilePath.objectJsonPath + resources.getString("json"); 
+		super.init(texturePath, jsonPath);
 	}
 
 	@Override

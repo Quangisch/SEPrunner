@@ -313,7 +313,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 			return;
 		}
 
-		obj.init(root.getString("json"));
+		obj.init(root.get("resources"));
 		obj.getAnimationObject().setScale(root.getFloat("scale", 1f));
 		obj.getAnimationObject().setFlip(root.getBoolean("flip", false));
 

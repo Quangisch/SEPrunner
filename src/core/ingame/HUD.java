@@ -49,7 +49,7 @@ public class HUD implements IDrawable {
 		String time = StringFunctions.getTimeAsString(world.getTime());
 		String distance = String.valueOf((int) (goal.x - world.getPlayer().getBodyObject().getWorldPosition().x)) + "m";
 		String alarm = StringFunctions.getTimeAsString(Alarm.getTimer());
-		String fps = Gdx.graphics.getFramesPerSecond()+"fps";
+		String fps = Gdx.graphics.getFramesPerSecond()+"fps@delta "+Gdx.graphics.getDeltaTime();
 
 		b.begin();
 

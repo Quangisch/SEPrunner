@@ -5,6 +5,7 @@ import gameWorld.GameWorld;
 import misc.Debug;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
 
 import core.GameProperties;
 import core.PlayerProfile;
@@ -29,8 +30,8 @@ public class Player extends PlayerCollision {
 		interactionHandler.run();
 	}
 
-	public void init(String name) {
-		super.init(name);
+	public void init(JsonValue resources) {
+		super.init(resources);
 		setBodyObjectType(BodyObjectType.Player);
 		getAnimationObject().setLayer(3);
 		

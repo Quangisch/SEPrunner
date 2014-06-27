@@ -36,12 +36,15 @@ public class BasicMovement {
 			nextState = processJump();
 		if(!inAction && nextState == null && actions.contains(ActionKey.CROUCH))
 			nextState = processCrouch();
-		if(nextState == null && gameObject.isInteractionFinished()
+		if(nextState == null && gameObject.isInteractionFinished() 
 				&& (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
 			nextState = processMovement();
 		
-		if(triggerRun(nextState) || (nextState == InteractionState.WALK && actions.contains(ActionKey.RUN)))
+		if(triggerRun(nextState) || (gameObject.getInteractionState().equals(InteractionState.WALK) && iHandler.isKeyDown(ActionKey.RUN)))
 			nextState = InteractionState.RUN;
+		
+		if(gameObject.isRunning() && !actions.contains(ActionKey.RUN))
+			nextState = InteractionState.WALK;
 			
 		return nextState;
 	}
@@ -110,23 +113,31 @@ public class BasicMovement {
 	
 //	MOVEMENT
 	private InteractionState processMovement() {
+		InteractionState nextState = null;
 		switch(gameObject.getInteractionState()) {
 		case CROUCH_STAND:
 		case CROUCH_DOWN:
-			return InteractionState.CROUCH_SNEAK;
+			nextState = InteractionState.CROUCH_SNEAK;
+			break;
 		case GRAB:
 			if((!gameObject.getAnimationObject().isFlipped() && iHandler.isKeyDown(ActionKey.LEFT))
 					|| (gameObject.getAnimationObject().isFlipped() && iHandler.isKeyDown(ActionKey.RIGHT)))
-				return InteractionState.GRAB_PULL;
+				nextState = InteractionState.GRAB_PULL;
 			
 			return null;
 		case JUMP:
-			return InteractionState.JUMP_MOVE;
+			nextState = InteractionState.JUMP_MOVE;
+			break;
 		case STAND:
-			return InteractionState.WALK;
+			nextState = InteractionState.WALK;
+			break;
 		default:
-			return null;
+			;
 		}	
+		
+		
+		
+		return nextState;
 	}
 	
 //	RUN
@@ -134,8 +145,10 @@ public class BasicMovement {
 	private int runTapTimer = 0;
 	private boolean triggerRun(InteractionState nextState) {
 		
-		if (gameObject.isJumping() || gameObject.getBodyObjectType() == BodyObjectType.Enemy)
+		if(gameObject.isJumping() || gameObject.getBodyObjectType().equals(BodyObjectType.Enemy)) {
+			runTapTimer = 0;
 			return false;
+		}
 		
 		boolean trigger = false;
 
@@ -153,6 +166,7 @@ public class BasicMovement {
 				&& !(iHandler.isKeyDown(ActionKey.LEFT) || iHandler.isKeyDown(ActionKey.RIGHT)))
 				|| gameObject.isCrouching() || gameObject.isInAction()) {
 			runTapTimer = 0;
+			
 			iHandler.keyUp(ActionKey.RUN);
 		}
 

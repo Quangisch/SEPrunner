@@ -1,0 +1,26 @@
+{
+	"bodyDef" :	{
+					 "linearDamping"	: 0,
+					 "density"			: 0, 
+					 "friction"			: 0, 
+					 "restitution"		: 0, 
+					 "sensor"			: true, 
+					 "bodyType"			: 2
+			},
+	"texture" 		: "res/sprites/shuriken.png",
+	"defaultState" 	: 0,
+	"animationen" 	: ["hook_fly"],
+	"stateframes" 	: {
+				"hook_fly" :	{
+							"frameDuration":0.05,
+							"boundingBox" : [0,0, 0,30, 30,30, 30, 0],
+							"textureMap" : [
+										[0, 0, 30, 30],
+										[0, 30, 30, 30],
+										[0, 60, 30, 30],
+										[0, 90, 30, 30],
+										[0, 120, 30, 30]
+									]
+						}
+			}
+}

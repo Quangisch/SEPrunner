@@ -33,8 +33,8 @@ public class Enemy extends GameObject {
 	}
 
 	@Override
-	public void init(String name) {
-		super.init(name);
+	public void init(JsonValue resources) {
+		super.init(resources);
 		setBodyObjectType(BodyObjectType.Enemy);
 		getAnimationObject().setLayer(3);
 
