@@ -84,7 +84,7 @@ public class PauseMenu implements IDrawable {
 			}
 
 			public void onClick() {
-				GameProperties.gameState = GameState.NORMAL;
+				GameProperties.switchGameState(GameState.NORMAL);
 			}
 		};
 		tB = font.getBounds(cont.getText());
