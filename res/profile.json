@@ -1,5 +1,12 @@
 [
 {
+	name: NewPlaye,
+	shuriken: 10,
+	hookRadius: 300,
+	stylePoints: 0,
+	experience: 0
+},
+{
 	name: Cheater,
 	shuriken: 999,
 	hookRadius: 500,

@@ -28,7 +28,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 
 	private int grounded, bodyBlocked;
 	private boolean hookable;
-	private GameObject grabTarget, disposeTarget, hideTarget;
+	protected GameObject grabTarget, disposeTarget, hideTarget;
 
 	private Vector2 hookPoint;
 	private List<Vector2> hookPoints = new LinkedList<Vector2>();
@@ -78,6 +78,11 @@ public abstract class InteractionObject extends InteractionManager implements IC
 			if(!getInteractionState().equals(InteractionState.GRAB_PULL)
 					&& !grabTarget.getInteractionState().equals(InteractionState.STUNNED))
 				grabTarget.applyInteraction(InteractionState.STUNNED);
+			
+			if(disposeTarget == null && grabTarget.disposeTarget != null)
+				disposeTarget = grabTarget.disposeTarget;
+			else if(hideTarget != null)
+				disposeTarget = hideTarget;
 		} else
 			disposeTarget = null;
 	}
@@ -290,13 +295,17 @@ public abstract class InteractionObject extends InteractionManager implements IC
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& grabTarget != null && isGrabbing()) {
 					disposeTarget = start ? other.getParent() : null;
-					other.getParent().getAnimationObject().setActive(canDispose());
+					
+					if(getBodyObject().getBodyObjectType().equals(BodyObjectType.Player))
+						other.getParent().getAnimationObject().setActive(canDispose());
 					return true;
 					
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& !isInAction() && !isStunned()) {
 					hideTarget = start ? other.getParent() : null;
-					other.getParent().getAnimationObject().setActive(canHide());
+					
+					if(getBodyObject().getBodyObjectType().equals(BodyObjectType.Player))
+						other.getParent().getAnimationObject().setActive(canHide());
 					return true;
 					
 				} 

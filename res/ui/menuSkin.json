@@ -33,7 +33,7 @@
 		"default": { "font": baoli44, "fontColorUnselected": white, "fontColorSelected": black, "selection": "yellow.dot" }
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
-		"default": { "hScrollKnob": "button.up", "vScrollKnob": "button.up" }
+		"default": { "hScrollKnob": "black.dot", "vScrollKnob": "black.dot" }
 	},
 	"com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle":{
 		"default": { "font": baoli44, "checkboxOn": "checkbox.on", "checkboxOff": "checkbox.off", "checkboxOver": "checkbox.over"}

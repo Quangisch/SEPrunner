@@ -493,7 +493,8 @@
 											"horizontal" 	: true,
 											"key"		: "RIGHT"
 										}
-									]
+									],
+							"advanced" : [0.8,0.6,190002,34]
 						}
 					},
 					{

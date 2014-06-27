@@ -44,7 +44,8 @@ public class MenuHighscore implements Screen {
 	private int width, height;
 	final private Color NORMAL = new Color(1,1,0.90f,1);
 	final private Color HOVER = new Color(1,1,0f,1);
-		
+	final private int HIGHSCORE_TABLE_COUNT = 5;
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1); 		//black screen
@@ -80,7 +81,7 @@ public class MenuHighscore implements Screen {
 		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		stage = new Stage();
-		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT, true);
+		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
@@ -118,7 +119,7 @@ public class MenuHighscore implements Screen {
 		mainTable.add().row();
 		
 
-		levelName = new Label(Highscore.getInstance().getHighscoreList(levelIndex).get(0).LEVEL.NAME, skin);
+		levelName = new Label(GameProperties.IMPLEMENTED_LEVEL[0], skin);
 		
 		mainTable.add(prevLevel).right();
 		mainTable.add(levelName).center();
@@ -137,22 +138,22 @@ public class MenuHighscore implements Screen {
 	
 	
 	private void iniScoreTable() {
-		if(Highscore.getInstance().getHighscoreList(levelIndex) == null)
+		if(Highscore.getHighscoreList(levelIndex) == null)
 			return;
 		
 		scoreTable.clear();
 		scoreTable.debug();
 		
-		levelName.setText(Highscore.getInstance().getHighscoreList(levelIndex).get(0).LEVEL.NAME);
+		levelName.setText(GameProperties.IMPLEMENTED_LEVEL[levelIndex]);
 		scoreTable.add().size(width/10, 0);
-		scoreTable.add().size(width/3, 0);
-		scoreTable.add().size(width, 0).row();
+		scoreTable.add().size(width, 0);
+		scoreTable.add().size(width/3, 0).row();
 		
 		scoreTable.add(new Label("Place", skin));
-		scoreTable.add(new Label("Time", skin));
-		scoreTable.add(new Label("Name", skin)).row();
+		scoreTable.add(new Label("Name", skin));
+		scoreTable.add(new Label("Time", skin)).row();
 		
-		iniScoreTableList(Highscore.getInstance().getHighscoreList(levelIndex));
+		iniScoreTableList(Highscore.getHighscoreList(levelIndex));
 		
 		scoreTable.setSize(10, 0);
 		scoreTable.invalidate();
@@ -161,10 +162,10 @@ public class MenuHighscore implements Screen {
 	
 	private void iniScoreTableList(java.util.List<Score> scores) {
 		if(scores != null)
-		for(int i = 0; i < scores.size() && i < 5; i++) {
+		for(int i = 0; i < scores.size() && i < HIGHSCORE_TABLE_COUNT; i++) {
 			scoreTable.add(new Label(Integer.toString(i+1), skin));
-			scoreTable.add(scores.get(i).TIME_STRING);
-			scoreTable.add(scores.get(i).PLAYER_NAME).row();
+			scoreTable.add(scores.get(i).PLAYER_NAME);
+			scoreTable.add(scores.get(i).TIME_STRING).row();
 		}
 	}
 	
@@ -229,7 +230,7 @@ public class MenuHighscore implements Screen {
 			if(next == 0)
 				return;
 			
-			levelIndex = ((levelIndex + next % GameProperties.IMPLEMENTED_LEVEL) + GameProperties.IMPLEMENTED_LEVEL) % GameProperties.IMPLEMENTED_LEVEL;
+			levelIndex = ((levelIndex + next % GameProperties.IMPLEMENTED_LEVEL.length) + GameProperties.IMPLEMENTED_LEVEL.length) % GameProperties.IMPLEMENTED_LEVEL.length;
 			iniScoreTable();
 		}
 		

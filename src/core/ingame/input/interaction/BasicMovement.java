@@ -45,7 +45,6 @@ public class BasicMovement {
 		
 		if(gameObject.isRunning() && !actions.contains(ActionKey.RUN))
 			nextState = InteractionState.WALK;
-			
 		return nextState;
 	}
 	
@@ -123,8 +122,7 @@ public class BasicMovement {
 			if((!gameObject.getAnimationObject().isFlipped() && iHandler.isKeyDown(ActionKey.LEFT))
 					|| (gameObject.getAnimationObject().isFlipped() && iHandler.isKeyDown(ActionKey.RIGHT)))
 				nextState = InteractionState.GRAB_PULL;
-			
-			return null;
+			break;
 		case JUMP:
 			nextState = InteractionState.JUMP_MOVE;
 			break;

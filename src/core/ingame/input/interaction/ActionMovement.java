@@ -46,6 +46,8 @@ public class ActionMovement  {
 			if(nextState == null && actions.contains(ActionKey.ACTION))
 				nextState = processActionKey();
 		}
+		
+		iHandler.popClick();
 
 		
 		if(gameObject.isHooking())
@@ -53,10 +55,7 @@ public class ActionMovement  {
 		if(gameObject.isGrabbing())
 			nextState = processGrabbing();
 		processHiding();
-		
 
-		
-		
 		return nextState;
 	}
 	

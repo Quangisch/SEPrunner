@@ -116,7 +116,7 @@ public class MenuProfile implements Screen {
 		
 		
 		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT, true);
+		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
 		stage.addActor(mainTable);
 		mainTable.setFillParent(true);
 		stage.addListener(clickHandler);

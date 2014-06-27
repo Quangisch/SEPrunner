@@ -88,7 +88,7 @@ public class PlayerProfile {
 	public void reset() {
 		name = "NewPlayer";
 		shuriken = 10;
-		hookRadius = 100;
+		hookRadius = GameProperties.HOOK_RADIUS_MIN;
 		experience = stylePoints = 0;
 	}
 	
@@ -141,7 +141,7 @@ public class PlayerProfile {
 		
 		newProfile.name = name;
 		newProfile.experience = newProfile.stylePoints = 0;
-		newProfile.hookRadius = 100;
+		newProfile.hookRadius = GameProperties.HOOK_RADIUS_MIN;
 		newProfile.shuriken = 10;
 		
 		applyNameCheat(newProfile);
