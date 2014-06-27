@@ -380,7 +380,7 @@
 	"objects" :	[
 					{
 						"ID" : "player",
-						"json" : 	{
+						"resources" : 	{
 									"texture"	:	"ninja.png",
 									"json"		:	"body.json"
 								},
