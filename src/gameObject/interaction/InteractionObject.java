@@ -23,10 +23,9 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.GameProperties;
 
-public abstract class InteractionObject 
-		extends InteractionManager 
-		implements ICollisionable, RayCastCallback, IInteractable {
-	
+public abstract class InteractionObject extends InteractionManager implements ICollisionable, RayCastCallback,
+		IInteractable {
+
 	private int grounded, bodyBlocked;
 	private boolean hookable;
 	private GameObject grabTarget, disposeTarget, hideTarget;

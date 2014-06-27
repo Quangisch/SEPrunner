@@ -117,7 +117,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 			return;
 		time += deltaTime;
 		if (timeLimit > 0 && time >= timeLimit) 
-			GameProperties.setGameOver("TimeOut");
+			GameProperties.setGameOver("Time Out");
 	}
 
 	@Override
@@ -209,7 +209,8 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		backgrounds = new Background[root.get("background").size];
 		part = 0;
 		for(JsonValue b : root.get("background")) {
-			backgrounds[part] = new Background(new MapTexture(0 ,0,b.getString("texture")), b.getFloat("scrollFactor"));
+			backgrounds[part] = new Background(new MapTexture(0, 0, b.getString("texture",
+					"res/map/background/fog1.png")), b.getFloat("scrollFactor", 0));
 			if(b.hasChild("light"))
 				for(JsonValue jLight : b.get("light"))
 					backgrounds[part].addLight(loadSingleLight(jLight));

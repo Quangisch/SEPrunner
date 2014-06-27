@@ -40,7 +40,7 @@ public class BasicMovement {
 				&& (actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
 			nextState = processMovement();
 		
-		if(triggerRun(nextState) || (nextState != null && nextState.equals(InteractionState.WALK) && actions.contains(ActionKey.RUN)))
+		if(triggerRun(nextState) || (nextState == InteractionState.WALK && actions.contains(ActionKey.RUN)))
 			nextState = InteractionState.RUN;
 			
 		return nextState;
@@ -130,21 +130,20 @@ public class BasicMovement {
 	}
 	
 //	RUN
-	private int RUN_TAP_TIMER_MAX = 20,
-			RUN_TAP_TIMER_MIN = 5;
+	private int RUN_TAP_TIMER_MAX = 20, RUN_TAP_TIMER_MIN = 5;
 	private int runTapTimer = 0;
 	private boolean triggerRun(InteractionState nextState) {
 		
-		if(gameObject.isJumping() || gameObject.getBodyObjectType().equals(BodyObjectType.Enemy))
+		if (gameObject.isJumping() || gameObject.getBodyObjectType() == BodyObjectType.Enemy)
 			return false;
 		
 		boolean trigger = false;
 
-		if(nextState != null && nextState.equals(InteractionState.WALK) && runTapTimer == 0)
+		if (nextState == InteractionState.WALK && runTapTimer == 0)
 			runTapTimer++;
-		else if(nextState == null && runTapTimer >= 1 && runTapTimer < RUN_TAP_TIMER_MAX) {
+		else if (nextState == null && runTapTimer >= 1 && runTapTimer < RUN_TAP_TIMER_MAX) {
 			runTapTimer++;
-		} else if(nextState != null && nextState.equals(InteractionState.WALK) && runTapTimer > RUN_TAP_TIMER_MIN) {
+		} else if (nextState == InteractionState.WALK && runTapTimer > RUN_TAP_TIMER_MIN) {
 			runTapTimer = RUN_TAP_TIMER_MAX;
 			trigger = true;
 			iHandler.keyDown(ActionKey.RUN);

@@ -64,6 +64,8 @@ public class KeyMap {
 
 		add(ActionKey.ACTION, Keys.E, Keys.ENTER);
 		System.out.println("Init Default KeyMap");
+		
+		add(ActionKey.RUN, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
 	}
 	
 	public boolean initFromFile() {
