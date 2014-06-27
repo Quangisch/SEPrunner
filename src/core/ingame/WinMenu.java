@@ -99,7 +99,7 @@ public class WinMenu implements IDrawable {
 
 			public void onClick() {
 				
-				int nextScreenIndex = GameProperties.gameScreen.INDEX + 1 > GameProperties.IMPLEMENTED_LEVEL.length ? -2 : GameProperties.gameScreen.INDEX + 1;
+				int nextScreenIndex = GameProperties.gameScreen.INDEX + 1 > GameProperties.IMPLEMENTED_LEVEL ? -2 : GameProperties.gameScreen.INDEX + 1;
 				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.getScreen(nextScreenIndex)));
 			}
 		};

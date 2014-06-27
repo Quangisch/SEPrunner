@@ -19,7 +19,6 @@ public abstract class EnemyAI implements IEnemyAI {
 	protected Enemy link;
 	private Set<ActionKey> currentAction;
 	private List<ScriptedAction> scriptedActions;
-	protected float[] advancedValues;
 
 	private float lastX, lastY;
 
@@ -69,20 +68,15 @@ public abstract class EnemyAI implements IEnemyAI {
 		lastY = link.getBodyObject().getY();
 	}
 
+	//	TODO testing
 	@Override
-	public void init(JsonValue actions, JsonValue advanced) {
+	public void init(JsonValue actions) {
 		for (JsonValue action : actions) {
 			float a = action.get("between").getFloat(0);
 			float b = action.get("between").size == 2 ? action.get("between").getFloat(1) : a;
 			ActionKey aKey = ActionKey.valueOf(action.getString("key"));
 			boolean horizontal = action.getBoolean("horizontal");
 			scriptedActions.add(new ScriptedAction(aKey, horizontal, a, b));
-		}
-		if(advanced != null) {
-			advancedValues = new float[advanced.size];
-			int i = 0;
-			for(JsonValue jF : advanced)
-				advancedValues[i++] = jF.asFloat();
 		}
 	}
 

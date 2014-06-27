@@ -56,7 +56,7 @@ public class EnterNameScreen implements Screen {
 	@Override
 	public void show() {
 		stage = new Stage();
-		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2);
+		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT);
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		mainTable = new Table();
 		mainTable.setFillParent(true);

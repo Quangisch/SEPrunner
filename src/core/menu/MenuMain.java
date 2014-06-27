@@ -66,7 +66,7 @@ public class MenuMain implements Screen {
 		
 		stage = new Stage();
 		shaderBatch = new ShaderBatch(100);		//background laden
-		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2);
+		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT);
 		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
 		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
