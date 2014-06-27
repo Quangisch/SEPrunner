@@ -40,7 +40,7 @@ public class Enemy extends GameObject {
 
 		getBodyObject().addSensor(Type.Circle, new float[] { 0, 1, 1f },
 				SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
-		// NILS
+		
 		getBodyObject().addSensor(Type.Circle, new float[] { 1.3f, 1, 1f },
 				SensorTypes.VISION_RIGHT, Sensor.HANDLE_FIRST);
 	}
@@ -95,12 +95,10 @@ public class Enemy extends GameObject {
 		// return super.handleCollision(start, sender, other, otherSensor) //
 		// || getAI() != null || getAI().handleCollision(start, sender, other,
 		// otherSensor);
-		// NILS
 		super.handleCollision(start, postSolve, mySensor, other, otherSensor);
 		return !isStunned() && (AI.handleCollision(start, postSolve, mySensor, other, otherSensor) //
 				|| getAI() != null
 				|| getAI().handleCollision(start, postSolve, mySensor, other, otherSensor));
-		// NILS
 	}
 	
 	public void setNewAI(JsonValue jAI, JsonValue jMul) {

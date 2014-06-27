@@ -407,7 +407,27 @@
 						"rays"		:	100,
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
-						"x"			:	10700,
+						"x"			:	10500,
+						"y"			:	800,
+						"directionDegree"	:	320,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	10900,
+						"y"			:	800,
+						"directionDegree"	:	320,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	11400,
 						"y"			:	800,
 						"directionDegree"	:	300,
 						"coneDegree"		:	20
@@ -417,7 +437,7 @@
 						"rays"		:	100,
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
-						"x"			:	11100,
+						"x"			:	11800,
 						"y"			:	800,
 						"directionDegree"	:	270,
 						"coneDegree"		:	35
@@ -427,7 +447,7 @@
 						"rays"		:	100,
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
-						"x"			:	11500,
+						"x"			:	12200,
 						"y"			:	800,
 						"directionDegree"	:	240,
 						"coneDegree"		:	20
@@ -458,7 +478,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "MediumAI",
 							"Actions" : 	[
@@ -485,7 +505,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "MediumAI",
 							"Actions" : 	[
@@ -517,7 +537,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -544,7 +564,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -571,7 +591,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "HardAI",
 							"Actions" : 	[
@@ -598,7 +618,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "MediumAI",
 							"Actions" : 	[
@@ -625,7 +645,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "MediumAI",
 							"Actions" : 	[
@@ -652,7 +672,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "HardAI",
 							"Actions" : 	[
@@ -679,7 +699,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -706,7 +726,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -733,7 +753,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "MediumAI",
 							"Actions" : 	[
@@ -760,7 +780,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "MediumAI",
 							"Actions" : 	[
@@ -792,11 +812,20 @@
 						"scale" : 1.0,
 						"flip" : true,
 						"initialAction" : [],
-						"forceMultiplier" : [0.85, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.85, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "HardAI",
 							"Actions" : 	[
-										
+										{
+											"between"	: [11400],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [10550],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
 									]
 						}
 					},
@@ -839,18 +868,7 @@
 									"texture"	:	"mapObjects.png",
 									"json"		:	"trashbin.json"
 								},
-						"position" : [1470, 190],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {	}
-					},
-					{
-						"ID" : "hideable",
-						"resources" : 	{
-									"texture"	:	"mapObjects.png",
-									"json"		:	"trashbin.json"
-								},
-						"position" : [1470, 190],
+						"position" : [1270, 190],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}
@@ -887,6 +905,17 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}
-					}
+					},
+					{
+						"ID" : "hideable",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
+						"position" : [10800, 700],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
 				]
 }

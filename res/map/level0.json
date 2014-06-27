@@ -479,7 +479,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -506,7 +506,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -533,7 +533,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -571,7 +571,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -598,7 +598,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -625,7 +625,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -652,7 +652,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -684,7 +684,7 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
+						"forceMultiplier" : [0.55, 1.2, 0.75, 1.5],
 						"AI" : {
 							"ID" : "MediumAI",
 							"Actions" : 	[
@@ -771,6 +771,17 @@
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}
-					}
+					},
+{
+						"ID" : "hideable",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
+						"position" : [11100, 220],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
 				]
 }

@@ -11,12 +11,8 @@ import core.ingame.input.KeyMap.ActionKey;
 
 public class SimplePatrolAI extends EnemyAI {
 
-	//NILS
-	
 	private int armour = 1;//N�tige Shuriken Treffer
 //	private GameObject player;
-	//NILS
-
 	float leftX, rightX;
 
 	
@@ -27,24 +23,18 @@ int z = 0;
 		if (getEnemy() == null) 
 			return;
 				
-		//ALARM -> enemy bewegt sich schneller
-		if(Alarm.isActive()){
-//			getEnemy().setAI(this, 0.1f, 1.2f, 0.8f, 1.5f);//funktioniert nicht
-//			getEnemy().getInteractionHandler().setForceMultiplier(1, 1.2f, 0.8f, 1.5f);
-			
-		}
-		
+		//ALARM -> enemy bewegt sich schneller		
 		if (Alarm.isActive()) {
 			keyDown(ActionKey.RUN);
+//			getEnemy().getInteractionHandler().setForceMultiplier(1, 1.2f, 0.8f, 1.5f);
 		} else
 			keyUp(ActionKey.RUN);
+//			getEnemy().getInteractionHandler().setForceMultiplier(1, 1.2f, 0.8f, 1.5f);
 
 	}
 
 	@Override
 	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor, BodyObject other, Sensor otherSensor) {
-		//NILS
-		//Achtung es muss abgefragt werden ob sender != null ist
 		if(!postSolve) {
 			
 			if(other.getBodyObjectType().equals(BodyObjectType.Player) 
@@ -69,9 +59,7 @@ int z = 0;
 					&& getEnemy().getBodyObjectType().equals(BodyObjectType.Enemy)
 					&& mySensor != null
 					&&other.getParent().isStunned()){
-//				core.ingame.HUD.setAlarm(true);//funktioniert nicht
-//				alarm = true;
-				Debug.println("Alarm");
+					Debug.println("Alarm");
 			} //enemy<->enemy	
 
 			//STUN
@@ -81,6 +69,8 @@ int z = 0;
 					armour--;
 					if(armour ==0){
 						getEnemy().setStun();
+					}else{
+						Alarm.trigger(4);
 					}
 			}
 			
