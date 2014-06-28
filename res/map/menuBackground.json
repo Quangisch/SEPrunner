@@ -1,0 +1,48 @@
+{
+
+	"mapTexture" : [
+						{
+							"position" : [0, 0], 
+							"texture" : "res/map/background/ground2.png"
+						},
+						{
+							"position" : [1024, 0], 
+							"texture" : "res/map/background/ground2.png"
+						}
+					],
+	"background" : 	[
+				
+				{
+					"scrollFactor":	0.9,
+					"texture" : 	"res/map/background/sky.png"
+				}
+				
+			],
+	"gravity" 	: [0, -200],
+	"timelimit" : 0,
+	"goal"		: [12000,1220, 400,1000],
+	"ground" 	:	[
+					[0,200 , 209,200 , 7,300]
+		
+				],
+				
+	"light" : 		[
+					
+	
+				],
+	"objects" :	[    
+					{
+						"ID" : "player",
+						"resources" : 	{
+									"texture"	:	"ninja.png",
+									"json"		:	"body.json"
+								},
+						"position" : [80,0],
+						"scale" : 1.0,
+						"flip" : false,
+						"isPlayer" : true,
+						"AI" : {
+						}
+					}
+		]
+}

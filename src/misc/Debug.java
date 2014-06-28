@@ -31,7 +31,7 @@ public abstract class Debug {
 			endMode(mode);
 	}
 
-	private static Mode mode = Mode.CAMERA;
+	private static Mode mode = Mode.BOXRENDERER;
 
 	public enum Mode {
 		BOXRENDERER(Keys.NUM_1), 

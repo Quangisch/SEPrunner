@@ -9,9 +9,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,14 +21,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.PlayerProfile;
 import core.Project;
 import core.menu.tween.ActorAccessor;
 
 public class MenuMain implements Screen {
 
-	private Texture backgroundTexture = new Texture(Gdx.files.internal("res/img/main menu.png"));
-	private Sprite backgroundSprite = new Sprite(backgroundTexture);
 	private ShaderBatch shaderBatch;
 	private Stage stage;
 	private Skin skin;
@@ -45,7 +42,7 @@ public class MenuMain implements Screen {
 		shaderBatch.brightness = GameProperties.brightness; // 0.0 -> no change
 		shaderBatch.contrast = GameProperties.contrast; // 1.0 -> no change
 		shaderBatch.begin();					//dispose spriteBatch and backgroundSprite.getTexture()
-		backgroundSprite.draw(shaderBatch);		//private state Texture, Sprite, SpriteBatch
+		AnimatedBackground.getInstance().draw(shaderBatch, delta);
 		shaderBatch.end();						//resize backgroundSprite.setSize(width, height);
 		
 		stage.act(delta); //updates table as well since thats in there
@@ -66,10 +63,9 @@ public class MenuMain implements Screen {
 		
 		stage = new Stage();
 		shaderBatch = new ShaderBatch(100);		//background laden
-		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT);
+		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
 		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
-		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		table = new Table(skin);
 		table.setFillParent(true);
@@ -85,7 +81,7 @@ public class MenuMain implements Screen {
 		TextButton buttonPlay = new TextButton("Play", skin);
 		buttonPlay.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuLevelSelect()); //further linking img's		
+				GameProperties.switchGameScreen(GameScreen.MENU_LEVELSELECT);	
 			}
 		});
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
@@ -93,7 +89,7 @@ public class MenuMain implements Screen {
 		TextButton buttonProfile = new TextButton("Profile", skin);
 		buttonProfile.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuProfile());
+				GameProperties.switchGameScreen(GameScreen.MENU_PROFILE);
 			}
 		});
 		buttonProfile.pad(15);
@@ -101,7 +97,7 @@ public class MenuMain implements Screen {
 		TextButton buttonOption = new TextButton("Options", skin);
 		buttonOption.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuOption());
+				GameProperties.switchGameScreen(GameScreen.MENU_OPTION);
 			}
 		});
 		buttonOption.pad(15);
@@ -109,7 +105,7 @@ public class MenuMain implements Screen {
 		TextButton buttonHighscore = new TextButton("Highscore", skin);
 		buttonHighscore.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuHighscore());
+				GameProperties.switchGameScreen(GameScreen.MENU_HIGHSCORE);
 			}
 		});
 		buttonHighscore.pad(15);
@@ -164,7 +160,7 @@ public class MenuMain implements Screen {
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 		
 
-		if(PlayerProfile.getProfileCount() == 0)
+		if(PlayerProfile.isEmptyProfile())
 			((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(this));
 	
 	}
@@ -189,7 +185,6 @@ public class MenuMain implements Screen {
 		stage.dispose();
 		skin.dispose();
 		shaderBatch.dispose();
-		backgroundSprite.getTexture().dispose();
 	}
 
 }

@@ -25,6 +25,7 @@ public class GameObject extends ObjectInitializer implements IIdentifiable, IGam
 	public void run() {
 		// update drawPosition depending on bodyObjectPosition
 		getAnimationObject().setPosition(getBodyObject().getPosition());
+		getAnimationObject().setRotation(getBodyObject().getRotation());
 
 		// update visuals/transitions
 		processInteractionTransitions();

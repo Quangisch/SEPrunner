@@ -32,11 +32,11 @@ public class Splash implements Screen{
 		batch.end();
 		
 		tweenManager.update(delta);
+		AnimatedBackground.getInstance().run();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		splash.setSize(width, height);
 	}
 
 	@Override
@@ -46,12 +46,13 @@ public class Splash implements Screen{
 		//apply preferences
 		Gdx.graphics.setVSync(Gdx.app.getPreferences(Project.TITLE).getBoolean("vsync"));
 		
-		
 		tweenManager = new TweenManager();
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 		
 		splash = new Sprite(new Texture(Gdx.files.internal("res/img/splash.png")));
-		splash.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		splash.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getWidth() * splash.getHeight()/splash.getWidth());
+		splash.setY((Gdx.graphics.getHeight()-splash.getHeight())/2);
 		
 		Tween.set(splash, SpriteAccessor.ALPHA).target(0).start(tweenManager);
 		Tween.to(splash, SpriteAccessor.ALPHA, 2).target(1).repeatYoyo(1,.25f).setCallback(new TweenCallback(){

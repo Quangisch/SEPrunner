@@ -3,6 +3,7 @@ package gameObject.interaction.enemy;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -35,10 +36,12 @@ public class Alarm implements IDrawable {
 	private Alarm(RayHandler rayHandler, Camera camera) {
 		this.camera = camera;
 
-		alarmLights = new PointLight[4];
-		for (int i = 0; i < alarmLights.length; i++)
-			alarmLights[i] = new PointLight(rayHandler, 32, Color.RED, 100, 0, 0);
-
+		if(Gdx.graphics.isGL20Available()) {
+			alarmLights = new PointLight[4];
+			for (int i = 0; i < alarmLights.length; i++)
+				alarmLights[i] = new PointLight(rayHandler, 32, Color.RED, 100, 0, 0);
+		}
+		
 		W = GameProperties.SCALE_WIDTH * 0.7f;
 		H = GameProperties.SCALE_HEIGHT * 0.7f;
 		DISTANCE_MAX = 400;
@@ -46,22 +49,27 @@ public class Alarm implements IDrawable {
 
 	public void draw(SpriteBatch batch, float deltaTime) {
 		if (timer > 0) {
-			x = camera.position.x;
-			y = camera.position.y;
+			if(Gdx.graphics.isGL20Available()) {
+				x = camera.position.x;
+				y = camera.position.y;
 
-			alarmLights[0].setPosition(x - W, y);
-			alarmLights[1].setPosition(x + W, y);
-			alarmLights[2].setPosition(x, y - H);
-			alarmLights[3].setPosition(x, y + H);
+				alarmLights[0].setPosition(x - W, y);
+				alarmLights[1].setPosition(x + W, y);
+				alarmLights[2].setPosition(x, y - H);
+				alarmLights[3].setPosition(x, y + H);
 
-			distance = (distance + 10) % DISTANCE_MAX;
+				distance = (distance + 10) % DISTANCE_MAX;
 
-			for (PointLight l : alarmLights)
-				l.setDistance(distance);
+				for (PointLight l : alarmLights)
+					l.setDistance(distance);
+			} else {
+				batch.setColor(Color.RED);
+			}
+			
 			timer = Math.max(0, timer - deltaTime);
 			totalAlarmTime += deltaTime;
 			
-		} else if (alarmLights[0].isActive()) {
+		} else if (alarmLights != null && alarmLights[0].isActive()) {
 			 for (PointLight l : alarmLights)
 				l.setActive(false);
 		}
@@ -73,9 +81,11 @@ public class Alarm implements IDrawable {
 
 	public static void trigger(float time) {
 		if (getInstance() == null) return;
-		getInstance().timer += time;
-		for (PointLight l : getInstance().alarmLights)
-			l.setActive(true);
+			getInstance().timer += time;
+		
+		if(Gdx.graphics.isGL20Available())
+			for (PointLight l : getInstance().alarmLights)
+				l.setActive(true);
 	}
 	
 	public static float getTimer() {

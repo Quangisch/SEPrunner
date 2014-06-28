@@ -14,6 +14,7 @@ import gameWorld.GameWorld;
 import misc.StringFunctions;
 import box2dLight.ConeLight;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
@@ -29,7 +30,8 @@ public class Enemy extends GameObject {
 	
 	public Enemy(GameWorld world, Vector2 position) {
 		super(world, position);
-		view = new ConeLight(world.getRayHandler(), 32, new Color(1,1,0.5f,0.8f), 200, 0, 0, 0, 30);
+		if(Gdx.graphics.isGL20Available())
+			view = new ConeLight(world.getRayHandler(), 32, new Color(1,1,0.5f,0.8f), 200, 0, 0, 0, 30);
 	}
 
 	@Override
@@ -54,16 +56,17 @@ public class Enemy extends GameObject {
 			AI.run();
 		if(interactionHandler != null)
 			interactionHandler.run();
-		
-//		TODO hack
-		Vector2 head = getBodyObject().getPosition();
-		
-		head.x += getAnimationObject().isFlipped() ? 40 : 110;
-		head.y += 100;
-		if(isCrouching())
-			head.y -= 25;
-		view.setPosition(head);
-		view.setDirection(getAnimationObject().isFlipped() ? 180 : 0);
+
+		if(Gdx.graphics.isGL20Available()) {
+			Vector2 head = getBodyObject().getPosition();
+			
+			head.x += getAnimationObject().isFlipped() ? 40 : 110;
+			head.y += 100;
+			if(isCrouching())
+				head.y -= 25;
+			view.setPosition(head);
+			view.setDirection(getAnimationObject().isFlipped() ? 180 : 0);
+		}
 	}
 
 	public void setAI(IEnemyAI ai, float walkMul, float runMul, float sneakMul, float pullMul) {
@@ -85,7 +88,8 @@ public class Enemy extends GameObject {
 
 	public void setStun() {
 		applyInteraction(InteractionState.STUNNED);
-		view.setActive(false);
+		if(Gdx.graphics.isGL20Available())
+			view.setActive(false);
 	}
 
 

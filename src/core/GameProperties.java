@@ -7,7 +7,10 @@ import java.io.FileReader;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
@@ -27,11 +30,11 @@ public class GameProperties {
 	public static final int SCALE_WIDTH = 640;
 	public static final int SCALE_HEIGHT = 360;
 
-	public static int SIZE_WIDTH, SIZE_HEIGHT;
 	public static GameState gameState = GameState.NORMAL;
 	public static GameScreen gameScreen = GameScreen.MENU_SPLASH;
 
 
+	public static DisplayMode prefDisplayMode;
 	public static float brightness = 0.0f;
 	public static float contrast = 1.0f;
 	public static float musicVolume = 1.0f;
@@ -39,7 +42,8 @@ public class GameProperties {
 	
 	public static String loseMessage = "";
 	
-	public static final int IMPLEMENTED_LEVEL = 3;
+	public static final String[] IMPLEMENTED_LEVEL = {"Slums", "City", "Undergrounds"};
+	public static final int HOOK_RADIUS_MIN = 300;
 	public static final int HOOK_RADIUS_MAX = 500;
 	public static final int MAX_PROFILE_COUNT = 5;
 	
@@ -157,7 +161,10 @@ public class GameProperties {
 		
 		LEVEL1(0),
 		LEVEL2(1),
-		LEVEL3(2);
+		LEVEL3(2),
+		
+		MENU_BACKGROUND(-11) //for animatedMenuBackground
+		;
 		
 		public final int INDEX;
 		GameScreen(int index) {
@@ -185,7 +192,7 @@ public class GameProperties {
 		case LEVEL1:
 		case LEVEL2:
 		case LEVEL3:
-			nextScreen = new GameRender(screen.INDEX);
+			nextScreen = new GameRender(screen);
 			break;
 			
 		case MENU_HIGHSCORE:
@@ -204,6 +211,7 @@ public class GameProperties {
 			nextScreen = new Splash();
 			break;
 
+		case MENU_BACKGROUND:
 		case MENU_MAIN:
 		default:
 			nextScreen = new MenuMain();
@@ -222,8 +230,24 @@ public class GameProperties {
 		if (Gdx.graphics.isFullscreen())
 			Gdx.graphics.setDisplayMode(GameProperties.SCALE_WIDTH, GameProperties.SCALE_HEIGHT, false);
 		else
-			Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
-					Gdx.graphics.getDesktopDisplayMode().height, true);
+			Gdx.graphics.setDisplayMode(prefDisplayMode.width,
+					prefDisplayMode.height, true);
+	}
+	
+	public static DisplayMode initPrefDisplayMode() {
+		if(prefDisplayMode == null) {
+			for(DisplayMode m : LwjglApplicationConfiguration.getDisplayModes()) {
+				if(prefDisplayMode == null || (m.width < prefDisplayMode.width))
+					prefDisplayMode = m;
+			}
+		}
+		return prefDisplayMode;
+	}
+	
+	public static void refreshDisplayMode() {
+		int width = Gdx.graphics.isFullscreen() ? prefDisplayMode.width : GameProperties.SCALE_WIDTH;
+		int height = Gdx.graphics.isFullscreen() ? prefDisplayMode.height : GameProperties.SCALE_HEIGHT;
+		Gdx.graphics.setDisplayMode(width, height, Gdx.graphics.isFullscreen());
 	}
 
 	public static void toogleIngamePause() {
@@ -262,6 +286,22 @@ public class GameProperties {
 	public static boolean isIngame() {
 		return !isInMenu();
 	}
+	
+	
+	public static void resetUserData() {
+		TMP tmp = new TMP();
+		new LwjglApplication(tmp);
+		Highscore.deleteAll();
+		PlayerProfile.deletePlayerProfiles();
+		
+		brightness = 0.0f;
+		contrast = musicVolume = soundVolume = 1.0f;
+		saveToFile();
+		
+		System.exit(0);
+		
+	}
+	
 
 	public static class GameScreenSwitcher implements Runnable {
 		private GameScreen screen;
@@ -273,6 +313,15 @@ public class GameProperties {
 		public void run() {
 			GameProperties.switchGameScreen(screen);
 		}
+	}
+	
+//	HACK
+	private static class TMP extends Game {
+		@Override
+		public void create() {
+			
+		}
+		
 	}
 
 }

@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Disposable;
 
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.ResourceManager;
 import core.exception.LevelNotFoundException;
 import core.ingame.input.InputHandler;
@@ -33,7 +34,7 @@ public class GameRender implements Screen {
 	private WinMenu winMenu;
 	private LoseMenu loseMenu;
 
-	public GameRender(int level) throws LevelNotFoundException {
+	public GameRender(GameScreen level) throws LevelNotFoundException {
 		camera = new Camera();
 		iHandler = new InputHandler(camera);
 		gameWorld = new GameWorld(level, iHandler, camera);

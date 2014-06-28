@@ -8,6 +8,7 @@ public interface FilePath {
 			level0 = "res/map/level0.json",
 			level1 = "res/map/level1.json",
 			level2 = "res/map/level2.json",
+			menuBackground = "res/map/menuBackground.json",
 			settings = "res/settings.json",
 			profile = "res/profile.json",
 			
@@ -22,10 +23,10 @@ public interface FilePath {
 	
 //			GRAPHICS
 			graphic_menuMain = "res/img/main menu.png",
-			
-			preview_level1 = "res/map/preview/Macarana.png",	//tmp
-			preview_level2 = "res/map/preview/Rio.png",
-			preview_level3 = "res/map/preview/rioNacht1.png"
+			ground = "res/map/background/ground.png",
+			preview_level1 = "res/map/preview/city.png",
+			preview_level2 = "res/map/preview/slums.png",
+			preview_level3 = "res/map/preview/underground.png"
 			
 			
 			
