@@ -1,9 +1,9 @@
 package core;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 
 import core.GameProperties.GameScreen;
+import core.menu.AnimatedBackground;
 
 public class Project extends Game{
 
@@ -14,10 +14,14 @@ public class Project extends Game{
 		this.initialScreen = initialScreen;
 	}
 	
+	public Project() {
+		this(GameScreen.MENU_SPLASH);
+	}
+	
 	@Override
 	public void create() {
-		GameProperties.SIZE_WIDTH = Gdx.graphics.getDesktopDisplayMode().width;
-		GameProperties.SIZE_HEIGHT = Gdx.graphics.getDesktopDisplayMode().height;
+		GameProperties.initFromFile();
+		GameProperties.initPrefDisplayMode();
 		GameProperties.switchGameScreen(initialScreen);
 	}
 
@@ -45,6 +49,7 @@ public class Project extends Game{
 	public void dispose() {
 		ResourceManager.resetInstance();
 		super.dispose();
+		AnimatedBackground.getInstance().dispose();
 	}
 
 }

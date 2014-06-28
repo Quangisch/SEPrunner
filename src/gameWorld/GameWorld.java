@@ -42,6 +42,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.FilePath;
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.GameProperties.GameState;
 import core.exception.LevelNotFoundException;
 import core.ingame.Camera;
@@ -66,7 +67,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 
 	private float timeLimit, time = 0;
 
-	public GameWorld(int level, IInputHandler iHandler, Camera camera) throws LevelNotFoundException {
+	public GameWorld(GameScreen level, IInputHandler iHandler, Camera camera) throws LevelNotFoundException {
 		this.camera = camera;
 		this.iHandler = iHandler;
 		
@@ -74,18 +75,21 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		debugRender = new Box2DDebugRenderer();
 
 		switch (level) {
-		case 0:
+		case LEVEL1:
 			loadMap(FilePath.level0);
 			break;
 		
-		case 1:
+		case LEVEL2:
 			loadMap(FilePath.level1);
 			break;
 		
-		case 2:
+		case LEVEL3:
 			loadMap(FilePath.level2);
 			break;
-
+			
+		case MENU_BACKGROUND:
+			loadMap(FilePath.menuBackground);
+			break;
 		default:
 			throw new LevelNotFoundException();
 		}
@@ -151,7 +155,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		if (debugRender != null && (Debug.isMode(Debug.Mode.BOXRENDERER) || Debug.isMode(Debug.Mode.CAMERA)))
 			debugRender.render(world, debugMatrix);
 
-		if (!Debug.isMode(Debug.Mode.LIGHTS_OFF)) {
+		if (!Debug.isMode(Debug.Mode.LIGHTS_OFF) && Gdx.graphics.isGL20Available()) {
 			rayHandler.setCombinedMatrix(camera.combined);
 			rayHandler.updateAndRender();
 		}
@@ -191,19 +195,22 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		Debug.println("MapSize@"+mapWidth+"x"+mapHeight);
 		
 		// LIGHTS
-		rayHandler = new RayHandler(world);
-		rayHandler.setCulling(false);
-		rayHandler.setBlur(true);
-		rayHandler.setShadows(true);
-		rayHandler.setAmbientLight(1, 1, 1, 0.05f);
+		if(Gdx.gl20 != null){
+			rayHandler = new RayHandler(world);
+			rayHandler.setCulling(false);
+			rayHandler.setBlur(true);
+			rayHandler.setShadows(true);
+			rayHandler.setAmbientLight(1, 1, 1, 0.05f);
 
-		JsonValue jLights = root.get("light");
-		if (jLights != null) {
-			for (JsonValue jLight : jLights) {
+			JsonValue jLights = root.get("light");
+			if (jLights != null) {
+				for (JsonValue jLight : jLights) {
 
-				loadSingleLight(jLight);
-			}
-		}				
+					loadSingleLight(jLight);
+				}
+			}				
+		}
+		
 		
 //		BACKGROUND
 		backgrounds = new Background[root.get("background").size];
@@ -351,7 +358,8 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 
 	@Override
 	public void dispose() {
-		rayHandler.dispose();
+		if(Gdx.graphics.isGL20Available())
+			rayHandler.dispose();
 		debugRender.dispose();
 		for (MapTexture t : mapTextures)
 			t.texture.dispose();
@@ -360,6 +368,22 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 			g.dispose();
 		for(Background b : backgrounds)
 			b.dispose();
+	}
+	
+	public void moveMapTextures(int index, float dx, float dy) {
+		if(index < mapTextures.length && index >= 0) {
+			mapTextures[index].x += dx;
+			mapTextures[index].y += dy;
+		}
+	}
+	
+	public void moveMapTextures(float dx, float dy) {
+		for(int i = 0; i < mapTextures.length; i++)
+			moveMapTextures(i, dx, dy);
+	}
+	
+	public float getMapTextureX(int index) {
+		return mapTextures[index].x;
 	}
 
 	public BodyObject getGoal() {
@@ -374,9 +398,17 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		return timeLimit;
 	}
 	
+	public float getWidth() {
+		return mapWidth;
+	}
+	
+	public float getHeight() {
+		return mapHeight;
+	}
+	
 	private class MapTexture {
 
-		private final float x, y, width, height;
+		private float x, y, width, height;
 		private final Texture texture;
 
 		private MapTexture(float x, float y, String texturePath) {

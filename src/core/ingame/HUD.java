@@ -67,6 +67,7 @@ public class HUD implements IDrawable {
 			font.draw(b, alarm, Gdx.graphics.getWidth() / 2 - font.getBounds(alarm).width / 2, Gdx.graphics.getHeight() - font.getBounds(time).height - 10);
 			font.setColor(Color.WHITE);
 		}
+		
 		Alarm.getInstance().draw(batch, deltaTime);
 		
 		

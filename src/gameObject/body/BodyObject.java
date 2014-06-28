@@ -187,6 +187,10 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	public Vector2 getPosition() {
 		return new Vector2(getX(), getY());
 	}
+	
+	public void setPixelPosition(Vector2 position) {
+		body.setTransform(GameProperties.pixelToMeter(position), body.getAngle());
+	}
 
 	@Override
 	public Vector2 getLocalCenterInWorld() {
@@ -231,7 +235,6 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 
 	}
 	
-//	TODO dirty
 	@Override
 	public BodyObjectType getBodyObjectType() {
 		return bodyObjectType;
@@ -257,6 +260,10 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	
 	public GameObject getJointGameObject() {
 		return jointObject;
+	}
+	
+	public int getRotation() {
+		return (int)Math.toDegrees(body.getAngle());
 	}
 	
 	@Override

@@ -7,28 +7,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import misc.ShaderBatch;
 import sk.maniacs.KeyCodeMap;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import core.FilePath;
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.Project;
 import core.ResourceManager;
 import core.ingame.input.KeyMap;
@@ -39,7 +39,7 @@ public class MenuOption implements Screen {
 	private Stage stage;
 	
 	private Table mainTable, leftMainTable, rightMainTable,
-					graphicTable, checkboxTable, soundTable, inputTable;
+					graphicTable, checkboxTable, soundTable, inputTable, displayModeTable, displaySelectTable;
 	private Skin skin;
 	
 	private CheckBox vSyncCheckBox, fullScreenCheckBox;
@@ -50,15 +50,15 @@ public class MenuOption implements Screen {
 	private KeyMap keyMap;
 	private KeyLabel kLeft, kRight, kRun, kJump, kCrouch, kAction, remapLabel;
 	private List<KeyLabel> keyLabelList;
+
+	private Label displayModeLabel, selectedModeLabel, selectModeNow;
+	private ScrollPane scrollPane;
+	private com.badlogic.gdx.scenes.scene2d.ui.List displayModeList;
 	
 	final private Color HOVER = new Color(1,1,0.6f,1);
 	final private Color SELECT = new Color(1,0.8f,0,1);
 	
 	private Actor warning;
-	
-//	TMP
-	private Texture backgroundTexture;
-	private Sprite backgroundSprite;
 	private ShaderBatch shaderBatch;
 	
 	private boolean debug = false;
@@ -67,9 +67,6 @@ public class MenuOption implements Screen {
 	@Override
 	public void show() {
 		shaderBatch = new ShaderBatch(100);
-		backgroundTexture = new Texture(Gdx.files.internal(FilePath.graphic_menuMain));
-		backgroundSprite = new Sprite(backgroundTexture);
-		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		width = GameProperties.SCALE_WIDTH;
 		height = GameProperties.SCALE_HEIGHT;
@@ -81,11 +78,24 @@ public class MenuOption implements Screen {
 		clickHandler = new ClickHandler();
 		Gdx.input.setInputProcessor(stage);
 		stage.addListener(clickHandler);
-		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SCALE_HEIGHT, true);
+		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
 		
 		keyMap = new KeyMap();
 		keyLabelList = new LinkedList<KeyLabel>();
 		keyMap.initFromFile();
+		
+		displayModeLabel = new Label("DisplayMode", skin, "baoli44", Color.WHITE);
+		selectedModeLabel = new Label(GameProperties.prefDisplayMode.width+"x"+
+									GameProperties.prefDisplayMode.height, skin, "baoli32", Color.WHITE);
+		selectModeNow = new Label("Select", skin, "baoli32", Color.WHITE);
+		
+		displayModeLabel.setTouchable(Touchable.enabled);
+		selectModeNow.setTouchable(Touchable.enabled);
+	
+		displayModeLabel.addListener(clickHandler);
+		selectModeNow.addListener(clickHandler);
+
+
 		iniKeyLabels();
 
 		mainTable = new Table(skin);
@@ -95,6 +105,9 @@ public class MenuOption implements Screen {
 		checkboxTable = new Table(skin);
 		soundTable = new Table(skin);
 		inputTable = new Table(skin);
+		displayModeTable = new Table(skin);
+		displaySelectTable = new Table(skin);
+		displaySelectTable.setFillParent(true);
 		
 		stage.addActor(mainTable);
 		
@@ -107,9 +120,10 @@ public class MenuOption implements Screen {
 		mainTable.add(leftMainTable);
 		mainTable.add(rightMainTable);
 		
-		leftMainTable.add(graphicTable).pad(0, 0, 0, width/20);
+		leftMainTable.add(graphicTable).pad(0, width/20, 0, width/20);
 		leftMainTable.add(checkboxTable).padRight(width/10).row();
-		leftMainTable.add(soundTable).colspan(2).pad(height/20, width/2, height/10, 0).row();
+		leftMainTable.add(displayModeTable);
+		leftMainTable.add(soundTable).row();
 		rightMainTable.add(inputTable);
 		
 		graphicTable.left();
@@ -123,19 +137,49 @@ public class MenuOption implements Screen {
 		soundTable.debug();
 		inputTable.debug();
 		checkboxTable.debug();
-		
-		
-//		levelDirectoryInput = new TextField(levelDirectory().path(),skin);
-//		levelDirectoryInput.setMessageText("level directory");
+		displayModeTable.debug();
 		
 		backButton = new TextButton("back", skin);
 		backButton.setPosition(width/10, height/10);
 		stage.addActor(backButton);
 		backButton.addListener(clickHandler);
 		
+		displayModeTable.add(displayModeLabel).row();
+		displayModeTable.add(selectedModeLabel);
+		
 		iniGraphicSection();
 		iniAudioSection();
 		iniKeyMapSection();
+		iniDisplaySelectTable();
+	
+	}
+	
+	private void updateDisplaySelect() {
+		String[] modes = new String[LwjglApplicationConfiguration.getDisplayModes().length];
+		for(int i = 0; i < modes.length; i++)
+			modes[i] = LwjglApplicationConfiguration.getDisplayModes()[i].width+"x"+LwjglApplicationConfiguration.getDisplayModes()[i].height;
+		
+		displayModeList = new com.badlogic.gdx.scenes.scene2d.ui.List(modes, skin);
+
+		if(scrollPane != null)
+			scrollPane.setWidget(displayModeList);
+	}
+	
+	private void updateDisplayModeSection() {
+		selectedModeLabel.setText(GameProperties.prefDisplayMode.width+"x"+
+				GameProperties.prefDisplayMode.height);
+		GameProperties.refreshDisplayMode();
+		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2);
+	}
+	
+	private void iniDisplaySelectTable() {
+		updateDisplaySelect();
+		updateDisplayModeSection();
+		
+		scrollPane = new ScrollPane(displayModeList, skin);
+		displaySelectTable.add(new Label("Display Mode", skin, "baoli96", Color.WHITE)).padBottom(height/5).colspan(2).row();
+		displaySelectTable.add(scrollPane).size(width/3,height*0.6f).padBottom(height/10).row();
+		displaySelectTable.add(selectModeNow);
 	}
 	
 	private void iniGraphicSection() {
@@ -238,6 +282,7 @@ public class MenuOption implements Screen {
 		keyLabelList.add(kCrouch);
 		keyLabelList.add(kAction);
 		
+		
 		for(KeyLabel l : keyLabelList)
 			l.addListener(clickHandler);
 	}
@@ -258,7 +303,7 @@ public class MenuOption implements Screen {
 		shaderBatch.brightness = GameProperties.brightness; // 0.0 -> no change
 		shaderBatch.contrast = GameProperties.contrast; // 1.0 -> no change
 		shaderBatch.begin();
-		backgroundSprite.draw(shaderBatch);
+		AnimatedBackground.getInstance().draw(shaderBatch, delta);
 		shaderBatch.end();	
 		
 		stage.act(delta);
@@ -304,7 +349,6 @@ public class MenuOption implements Screen {
 
 	@Override
 	public void dispose() {
-		backgroundTexture.dispose();
 		stage.dispose();
 		skin.dispose();
 	}
@@ -330,7 +374,8 @@ public class MenuOption implements Screen {
 			}
 			
 			Actor a = stage.hit(x, y, true);
-			if(a != null && remapLabel == null && a instanceof KeyLabel && a.getColor().equals(Color.WHITE)) {
+			if(a != null && ((remapLabel == null && a instanceof KeyLabel && a.getColor().equals(Color.WHITE))
+					|| a == displayModeLabel || a == selectModeNow)) {
 				hoverList.add(a);
 				a.setColor(HOVER);
 			} 
@@ -382,7 +427,7 @@ public class MenuOption implements Screen {
 //			FULLSCREEN
 			} else if(event.getListenerActor() == fullScreenCheckBox) {
 				GameProperties.toogleFullScreen();
-				stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT);
+				stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
 				mainTable.invalidateHierarchy();
 				
 //			SLIDER
@@ -400,7 +445,7 @@ public class MenuOption implements Screen {
 //			BACK
 			} else if(event.getListenerActor() == backButton) {
 				if(!keyMap.hasUnmappedActions())
-					((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
+					GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
 				else {
 					if(warning != null)
 						warning.remove();
@@ -410,14 +455,30 @@ public class MenuOption implements Screen {
 					stage.addActor(warning);
 				}
 				
-//				KEYLABELS
-				} else if(remapLabel == null) {
-					for(KeyLabel l : keyLabelList)
-						if(l == event.getListenerActor()) {
-							remapLabel = l;
-							remapLabel.setColor(SELECT);
-						}
-				}
+
+				
+//			DISPLAYMODE
+			} else if(event.getListenerActor() == displayModeLabel) {
+				updateDisplaySelect();
+				mainTable.remove();
+				stage.addActor(displaySelectTable);
+				
+				
+			} else if(event.getListenerActor() == selectModeNow) {
+				GameProperties.prefDisplayMode = LwjglApplicationConfiguration.getDisplayModes()[displayModeList.getSelectedIndex()];
+				updateDisplayModeSection();
+				displaySelectTable.remove();
+				stage.addActor(mainTable);
+				
+//			KEYLABELS
+			} else if(remapLabel == null) {
+				for(KeyLabel l : keyLabelList)
+					if(l == event.getListenerActor()) {
+						remapLabel = l;
+						remapLabel.setColor(SELECT);
+					}	
+			}
+	
 		}
 	}
 	

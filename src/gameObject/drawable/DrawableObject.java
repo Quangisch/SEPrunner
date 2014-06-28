@@ -13,7 +13,7 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 	private int layer = 0;
 	private float alpha = 1;
 	private float scale = 1;
-	private float rotation = 0;
+	private int rotation = 180;
 	private Vector2 position;
 	
 	private boolean active;
@@ -31,7 +31,6 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 		batch.draw(textureRegion.getTexture(), position.x, position.y, textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2, /* origin */
 				textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), scale, scale, rotation, textureRegion.getRegionX(),
 				textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
-		
 		
 		
 		batch.setColor(Color.WHITE);
@@ -91,6 +90,10 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 	@Override
 	public float getScale() {
 		return scale;
+	}
+	
+	public void setRotation(int rotation) {
+		this.rotation = rotation;
 	}
 	
 	@Override

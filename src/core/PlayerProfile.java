@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -20,6 +21,8 @@ public class PlayerProfile {
 	public String name;
 	public int shuriken, hookRadius, stylePoints, experience;
 	
+	private static FileHandle file;
+	
 	public PlayerProfile(int index) throws ProfileNotFoundException {
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.profile));
@@ -27,14 +30,17 @@ public class PlayerProfile {
 			e.printStackTrace();
 		}
 		
+		if(file == null)
+			file = Gdx.files.local(FilePath.profile);
+		
 		if(index > root.size || index < 0)
 			throw new ProfileNotFoundException();
 		
 		this.index = index;
 		
 		if(root.size == 0)
-			initNewFile();
-		
+			initNewProfile();
+
 		loadProfile();
 	}
 	
@@ -42,11 +48,9 @@ public class PlayerProfile {
 		this(0);
 	}
 	
-	private void initNewFile() {
+	private void initNewProfile() {
 		if(root.size == 0) {
-			FileHandle file = Gdx.files.local(FilePath.profile);
-			file.writeString("[{name: NewPlayer,shuriken: 10,hookRadius: 100,stylePoints: 0,experience: 0}]", false);
-			
+			file.writeString(getDefaultProfileAsString(), false);
 			try {
 				root = new JsonReader().parse(new FileReader(FilePath.profile));
 			} catch (FileNotFoundException e) {
@@ -55,13 +59,20 @@ public class PlayerProfile {
 		}
 	}
 	
+	private static String getDefaultProfileAsString() {
+		return String.format("[{name: NewPlayer,shuriken: %d,hookRadius: %d,stylePoints: %d,experience: %d}]", 
+				10,GameProperties.HOOK_RADIUS_MIN, 20, 0).toString();
+	}
+	
+	
 	private void loadProfile() {
-		
+		if(root == null || root.size == 0)
+			return;
 		name = root.get(index).getString("name");
-		experience = root.get(index).getInt("experience");
 		shuriken = root.get(index).getInt("shuriken");
 		hookRadius = root.get(index).getInt("hookRadius");
 		stylePoints = root.get(index).getInt("stylePoints");
+		experience = root.get(index).getInt("experience");
 		
 		applyNameCheat(this);
 	}
@@ -76,7 +87,6 @@ public class PlayerProfile {
 		applyNameCheat(this);
 		
 		if(Gdx.files != null) {
-			FileHandle file = Gdx.files.local(FilePath.profile);
 			file.writeString(root.toString(), false);
 		} else {
 			System.err.println(this.getClass()+": No Gdx Instance found\n");
@@ -88,13 +98,13 @@ public class PlayerProfile {
 	public void reset() {
 		name = "NewPlayer";
 		shuriken = 10;
-		hookRadius = 100;
+		hookRadius = GameProperties.HOOK_RADIUS_MIN;
 		experience = stylePoints = 0;
 	}
 	
+//	TODO BUG: game crashs after two sucessive calls of deleteProfile() - heapSpace
 	public void deleteProfile() {
 		root.remove(index);
-		FileHandle file = Gdx.files.local(FilePath.profile);
 		file.writeString(root.toString(), false);
 	}
 	
@@ -141,7 +151,7 @@ public class PlayerProfile {
 		
 		newProfile.name = name;
 		newProfile.experience = newProfile.stylePoints = 0;
-		newProfile.hookRadius = 100;
+		newProfile.hookRadius = GameProperties.HOOK_RADIUS_MIN;
 		newProfile.shuriken = 10;
 		
 		applyNameCheat(newProfile);
@@ -167,6 +177,12 @@ public class PlayerProfile {
 		return false;
 	}
 	
+	public static void deletePlayerProfiles() {
+		if(file == null)
+			file = Gdx.files.local(FilePath.profile);
+		file.writeString("[]", false);
+	}
+	
 	public static int getProfileCount() {
 		JsonValue root = null;
 		try {
@@ -174,7 +190,25 @@ public class PlayerProfile {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
 		return root == null ? 0 : root.size;
+	}
+	
+	public static boolean isEmptyProfile() {
+		JsonValue root = null;
+		try {
+			root = new JsonReader().parse(new FileReader(FilePath.profile));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		if(root != null && root.size == 1) {
+			Json j = new Json();
+			String s1 = j.prettyPrint(root);
+			String s2 = j.prettyPrint(getDefaultProfileAsString());
+			return s1.compareTo(s2) == 0;
+		}
+		return false;
 	}
 	
 	public static List<String> getNameList() {

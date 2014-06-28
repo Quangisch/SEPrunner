@@ -18,10 +18,14 @@
 				
 				{
 					"scrollFactor":	0.9,
-					"texture" : 	"res/map/background/groundSky.png"
+					"texture" : 	"res/map/background/sky.png"
 				},
 				{
 					"scrollFactor":	0.8,
+					"texture" : 	"res/map/background/ground.png"
+				},
+				{
+					"scrollFactor":	0.7,
 					"texture" : 	"res/map/background/skyline1.png"
 				},
 				{

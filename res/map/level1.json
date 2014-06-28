@@ -18,10 +18,14 @@
 				
 				{
 					"scrollFactor":	0.9,
-					"texture" : 	"res/map/background/groundSky.png"
+					"texture" : 	"res/map/background/sky.png"
 				},
 				{
 					"scrollFactor":	0.8,
+					"texture" : 	"res/map/background/ground.png"
+				},
+				{
+					"scrollFactor":	0.7,
 					"texture" : 	"res/map/background/skyline1.png"
 				},
 				{
@@ -82,7 +86,7 @@
 						"color"		:	[1, 1, 0.7, 0.9],
 						"distance"	:	1000,
 						"x"			:	600,
-						"y"			:	800,
+						"y"			:	850,
 						"directionDegree"	:	270,
 						"coneDegree"		:	30
 					},
@@ -92,7 +96,7 @@
 						"color"		:	[1, 1, 0.7, 0.9],
 						"distance"	:	500,
 						"x"			:	1480,
-						"y"			:	1150,
+						"y"			:	1200,
 						"directionDegree"	:	200,
 						"coneDegree"		:	13
 					},
@@ -102,7 +106,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	1770,
-						"y"			:	900
+						"y"			:	950
 					},
 					{
 						"type"		:	"pointLight",
@@ -110,7 +114,7 @@
 						"color"		:	[1, 1, 0.7, 0.5],
 						"distance"	:	1000,
 						"x"			:	2400,
-						"y"			:	1500
+						"y"			:	1550
 					},
 					{
 						"type"		:	"coneLight",
@@ -118,7 +122,7 @@
 						"color"		:	[0.5, 1, 0.7, 0.9],
 						"distance"	:	1000,
 						"x"			:	3770,
-						"y"			:	930,
+						"y"			:	980,
 						"directionDegree"	:	230,
 						"coneDegree"		:	30
 					},
@@ -128,7 +132,7 @@
 						"color"		:	[0.5, 1, 0.7, 0.9],
 						"distance"	:	1000,
 						"x"			:	3970,
-						"y"			:	880,
+						"y"			:	1230,
 						"directionDegree"	:	270,
 						"coneDegree"		:	40
 					},
@@ -138,7 +142,7 @@
 						"color"		:	[1, 1, 0.7, 0.9],
 						"distance"	:	500,
 						"x"			:	2470,
-						"y"			:	1020,
+						"y"			:	1070,
 						"directionDegree"	:	220,
 						"coneDegree"		:	18
 					},
@@ -148,7 +152,7 @@
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	500,
 						"x"			:	2670,
-						"y"			:	880,
+						"y"			:	930,
 						"directionDegree"	:	300,
 						"coneDegree"		:	13
 					},
@@ -158,7 +162,7 @@
 						"color"		:	[1, 1, 0.7, 0.9],
 						"distance"	:	500,
 						"x"			:	4775,
-						"y"			:	1235,
+						"y"			:	1285,
 						"directionDegree"	:	330,
 						"coneDegree"		:	23
 					},
@@ -168,7 +172,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	4600,
-						"y"			:	1000
+						"y"			:	1050
 					},
 					{
 						"type"		:	"coneLight",
@@ -176,7 +180,7 @@
 						"color"		:	[0.5, 1, 0.7, 0.9],
 						"distance"	:	500,
 						"x"			:	5470,
-						"y"			:	1030,
+						"y"			:	1080,
 						"directionDegree"	:	270,
 						"coneDegree"		:	35
 					},
@@ -187,7 +191,7 @@
 						"distance"	:	500,
 						"x"			:	5770,
 						"y"			:	950,
-						"directionDegree"	:	310,
+						"directionDegree"	:	360,
 						"coneDegree"		:	30
 					},
 					{
@@ -196,7 +200,7 @@
 						"color"		:	[0.6, 1, 1, 1],
 						"distance"	:	500,
 						"x"			:	6380,
-						"y"			:	780,
+						"y"			:	830,
 						"directionDegree"	:	230,
 						"coneDegree"		:	25
 					},
@@ -206,7 +210,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	6100,
-						"y"			:	600
+						"y"			:	650
 					},
 					{
 						"type"		:	"pointLight",
@@ -214,7 +218,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	6700,
-						"y"			:	1200
+						"y"			:	1250
 					},
 					{
 						"type"		:	"coneLight",
@@ -222,7 +226,7 @@
 						"color"		:	[0.6, 1, 1, 1],
 						"distance"	:	500,
 						"x"			:	5570,
-						"y"			:	520,
+						"y"			:	570,
 						"directionDegree"	:	230,
 						"coneDegree"		:	20
 					},
@@ -232,7 +236,7 @@
 						"color"		:	[1, 1, 0.7, 0.9],
 						"distance"	:	750,
 						"x"			:	5570,
-						"y"			:	0,
+						"y"			:	50,
 						"directionDegree"	:	270,
 						"coneDegree"		:	35
 					},
@@ -242,7 +246,7 @@
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	500,
 						"x"			:	6100,
-						"y"			:	100,
+						"y"			:	150,
 						"directionDegree"	:	270,
 						"coneDegree"		:	17
 					},
@@ -252,7 +256,7 @@
 						"color"		:	[0.5, 1, 0.7, 0.9],
 						"distance"	:	1000,
 						"x"			:	7100,
-						"y"			:	250,
+						"y"			:	300,
 						"directionDegree"	:	220,
 						"coneDegree"		:	35
 					},
@@ -262,7 +266,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	7700,
-						"y"			:	600
+						"y"			:	650
 					},
 					{
 						"type"		:	"coneLight",
@@ -271,7 +275,7 @@
 						"distance"	:	500,
 						"x"			:	7450,
 						"y"			:	910,
-						"directionDegree"	:	220,
+						"directionDegree"	:	270,
 						"coneDegree"		:	25
 					},
 					{
@@ -280,7 +284,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	7900,
-						"y"			:	1300
+						"y"			:	1350
 					},
 					{
 						"type"		:	"coneLight",
@@ -288,7 +292,7 @@
 						"color"		:	[1, 1, 0.7, 0.9],
 						"distance"	:	500,
 						"x"			:	8070,
-						"y"			:	420,
+						"y"			:	470,
 						"directionDegree"	:	270,
 						"coneDegree"		:	25
 					},
@@ -298,7 +302,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	8600,
-						"y"			:	600
+						"y"			:	650
 					},
 					{
 						"type"		:	"coneLight",
@@ -306,7 +310,7 @@
 						"color"		:	[1, 1, 0.7, 0.9],
 						"distance"	:	1000,
 						"x"			:	9400,
-						"y"			:	500,
+						"y"			:	550,
 						"directionDegree"	:	270,
 						"coneDegree"		:	30
 					},
@@ -316,7 +320,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	10000,
-						"y"			:	850
+						"y"			:	900
 					},
 					{
 						"type"		:	"pointLight",
@@ -324,7 +328,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	11200,
-						"y"			:	1100
+						"y"			:	1150
 					},
 					{
 						"type"		:	"coneLight",
@@ -332,7 +336,7 @@
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
 						"x"			:	10000,
-						"y"			:	850,
+						"y"			:	900,
 						"directionDegree"	:	310,
 						"coneDegree"		:	30
 					},
@@ -342,7 +346,7 @@
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
 						"x"			:	10500,
-						"y"			:	850,
+						"y"			:	900,
 						"directionDegree"	:	290,
 						"coneDegree"		:	30
 					},
@@ -352,7 +356,7 @@
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
 						"x"			:	11100,
-						"y"			:	850,
+						"y"			:	900,
 						"directionDegree"	:	270,
 						"coneDegree"		:	40
 					},
@@ -362,7 +366,7 @@
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
 						"x"			:	11700,
-						"y"			:	850,
+						"y"			:	900,
 						"directionDegree"	:	250,
 						"coneDegree"		:	30
 					},
@@ -372,7 +376,7 @@
 						"color"		:	[0.2, 0.3, 1, 0.6],
 						"distance"	:	1000,
 						"x"			:	12000,
-						"y"			:	1100
+						"y"			:	1150
 					}
 	
 	

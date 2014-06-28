@@ -6,7 +6,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import misc.ShaderBatch;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -32,13 +31,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.PlayerProfile;
 
 public class MenuProfile implements Screen {
 
-
-	private Texture backgroundTexture = new Texture(Gdx.files.internal("res/img/main menu.png"));
-	private Sprite backgroundSprite = new Sprite(backgroundTexture);
 	private Stage stage;
 	
 	private Table mainTable, contentTable, shopTable, shopTableContent, shopTableBuy, profileTable, itemTable, 
@@ -87,7 +84,7 @@ public class MenuProfile implements Screen {
 		backButton = new TextButton("Back", skin);
 		backButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());
+				GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
 			}
 		});
 		backButton.pad(10);
@@ -115,8 +112,7 @@ public class MenuProfile implements Screen {
 		warningMaxProfileTable.setFillParent(true);
 		
 		
-		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		stage.setViewport(GameProperties.SIZE_WIDTH, GameProperties.SIZE_HEIGHT, true);
+		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
 		stage.addActor(mainTable);
 		mainTable.setFillParent(true);
 		stage.addListener(clickHandler);
@@ -165,7 +161,7 @@ public class MenuProfile implements Screen {
 //		TEXTFIELD
 		label_createProfile = new Label("Enter your name", skin, "baoli96", Color.WHITE);
 		
-		pixmap = new Pixmap(2, height*5, Format.RGB888);
+		pixmap = new Pixmap(2, 2, Format.RGB888);
 		pixmap.setColor(Color.WHITE);
 		pixmap.fill();
 		texture = new Texture(pixmap);
@@ -340,7 +336,7 @@ public class MenuProfile implements Screen {
 		shaderBatch.contrast = GameProperties.contrast;
 		
 		shaderBatch.begin();
-		backgroundSprite.draw(shaderBatch);
+		AnimatedBackground.getInstance().draw(shaderBatch, delta);
 		shaderBatch.end();
 		
 		Table.drawDebug(stage);
@@ -402,7 +398,6 @@ public class MenuProfile implements Screen {
 		stage.dispose();
 		skin.dispose();
 		shaderBatch.dispose();
-		backgroundTexture.dispose();
 		pixmap.dispose();
 		texture.dispose();
 	}
