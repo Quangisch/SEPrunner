@@ -101,7 +101,7 @@ public class MainLauncher {
 		return null;
 	}
 	
-//	TODO
+//	TODO buggy
 	private boolean handleInput(String input) {
 		if(input.compareTo("yes") == 0) { 
 			GameProperties.resetUserData();
