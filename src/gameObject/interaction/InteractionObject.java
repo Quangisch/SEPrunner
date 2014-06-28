@@ -78,6 +78,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 			if(!getInteractionState().equals(InteractionState.GRAB_PULL)
 					&& !grabTarget.getInteractionState().equals(InteractionState.STUNNED))
 				grabTarget.applyInteraction(InteractionState.STUNNED);
+			
 		} else
 			disposeTarget = null;
 	}
@@ -285,8 +286,13 @@ public abstract class InteractionObject extends InteractionManager implements IC
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
 						&& other.getParent().isStunned() && !isGrabbing()) {
 					grabTarget = start ? other.getParent() : null;
-					other.getParent().getAnimationObject().setActive(canGrab());	
+					other.getParent().getAnimationObject().setActive(canGrab());
 					
+					if(hideTarget != null) {
+						hideTarget.getAnimationObject().setActive(false);
+						disposeTarget = hideTarget;
+						hideTarget = null;
+					}
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& grabTarget != null && isGrabbing()) {
 					disposeTarget = start ? other.getParent() : null;
@@ -296,7 +302,9 @@ public abstract class InteractionObject extends InteractionManager implements IC
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& !isInAction() && !isStunned()) {
 					hideTarget = start ? other.getParent() : null;
-					other.getParent().getAnimationObject().setActive(canHide());
+					
+					if(getBodyObject().getBodyObjectType().equals(BodyObjectType.Player))
+						other.getParent().getAnimationObject().setActive(canHide());
 					return true;
 					
 				} 

@@ -27,11 +27,10 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 		if (!visible || textureRegion == null) 
 			return;
 		
-		batch.setColor(1, 1, active ? getActiveAlpha() : 1, active ? getActiveAlpha() : alpha);
+		batch.setColor(1, active ? getActiveAlpha() : 1, active ? getActiveAlpha() : 1, active ? getActiveAlpha() : alpha);
 		batch.draw(textureRegion.getTexture(), position.x, position.y, textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2, /* origin */
 				textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), scale, scale, rotation, textureRegion.getRegionX(),
 				textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
-		
 		
 		batch.setColor(Color.WHITE);
 	}
@@ -118,7 +117,7 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 		this.active = active;
 	}
 	
-	private float ACTIVE_MIN = 0.65f;
+	private float ACTIVE_MIN = 0.35f;
 	private float activeAlpha = 1;
 	private boolean up;
 	private float getActiveAlpha() {

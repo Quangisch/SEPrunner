@@ -45,6 +45,8 @@ public class MainLauncher {
 		new LwjglApplication(new Project(startScreen), cfg);
 	}
 	
+	
+	
 	private void checkArguments(String[] args) {
 		if(args == null)
 			return;
