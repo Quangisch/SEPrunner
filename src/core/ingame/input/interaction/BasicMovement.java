@@ -119,12 +119,12 @@ public class BasicMovement {
 		case CROUCH_DOWN:
 			nextState = InteractionState.CROUCH_SNEAK;
 			break;
+		
 		case GRAB:
 			if((!gameObject.getAnimationObject().isFlipped() && iHandler.isKeyDown(ActionKey.LEFT))
 					|| (gameObject.getAnimationObject().isFlipped() && iHandler.isKeyDown(ActionKey.RIGHT)))
 				nextState = InteractionState.GRAB_PULL;
-			
-			return null;
+			break;
 		case JUMP:
 			nextState = InteractionState.JUMP_MOVE;
 			break;
