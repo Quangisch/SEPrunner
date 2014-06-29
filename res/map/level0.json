@@ -505,7 +505,7 @@
 					{
 						"ID" : "enemy",
 						"resources" : 	{
-									"texture"	:	"enemy_simple.png",
+									"texture"	:	"enemy_hard.png",
 									"json":	"body.json"
 								},
 						"position" : [2500, 500],
@@ -514,7 +514,7 @@
 						"initialAction" : [],
 						"forceMultiplier" : [0.55, 1.2, 0.8, 1.5],
 						"AI" : {
-							"ID" : "SimplePatrolAI",
+							"ID" : "HardAI",
 							"Actions" : 	[
 										{
 											"between"	: [3100],
@@ -526,7 +526,8 @@
 											"horizontal" 	: true,
 											"key"		: "RIGHT"
 										}
-									]
+									],
+								"Advanced" : [2500, 3100]
 						}
 					},
 					{
@@ -708,7 +709,7 @@
 											"between"	: [10720, 11030],
 											"horizontal" 	: true,
 											"key"		: "JUMP"
-										},
+										}
 									]
 						}
 					},
@@ -774,6 +775,17 @@
 									"json"		:	"tree.json"
 								},
 						"position" : [9600, 760],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"trashbin.json"
+								},
+						"position" : [11100, 230],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}

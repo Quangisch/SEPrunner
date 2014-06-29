@@ -28,6 +28,7 @@ public abstract class EnemyAI implements IEnemyAI {
 
 	protected UnresolvedAction unresolvedAction = UnresolvedAction.NORMAL;
 	protected float[] advancedValues;
+	private boolean skipScript;
 
 	protected BodyObject actionObj;
 	private float lastX, lastY;
@@ -79,7 +80,7 @@ public abstract class EnemyAI implements IEnemyAI {
 		if(!unresolvedAction.equals(UnresolvedAction.NORMAL))
 			contScript = resolveAction();
 		
-		if(contScript)
+		if(contScript && !skipScript)
 			applyScriptedAction();
 		
 	}
@@ -181,8 +182,19 @@ public abstract class EnemyAI implements IEnemyAI {
 	 * @return continue with regular scriptedActions
 	 */
 	protected boolean resolveAction() {
+		boolean again = false;
 		switch(unresolvedAction) {
 		case ALARM_TRIGGERD:
+			if(advancedValues != null){
+				if(Alarm.isActive()){
+					actionAfterAlarm();
+					skipScript = true;
+					again = true;
+				}else{
+					again = false;
+					skipScript = false;
+				}
+			}
 			break;
 		case HIT_BY_SHURIKEN:
 			break;
@@ -196,7 +208,9 @@ public abstract class EnemyAI implements IEnemyAI {
 			break;
 		
 		}
-		unresolvedAction = UnresolvedAction.NORMAL;
+		if(!again){
+			unresolvedAction = UnresolvedAction.NORMAL;
+		}
 		return true;
 	}
 	
@@ -209,6 +223,29 @@ public abstract class EnemyAI implements IEnemyAI {
 //	TODO
 	protected void actionAfterHit() {
 		
+	}
+	
+//	TODO
+	protected void actionAfterAlarm() {
+		float playerX = getEnemy().getGameWorld().getPlayer().getBodyObject().getPosition().x;				
+		//
+		if(playerX<getEnemy().getBodyObject().getX()){
+			if(advancedValues[0]<getEnemy().getBodyObject().getX()){
+				keyDown(ActionKey.LEFT);
+			}else{
+				if(advancedValues[0]>=getEnemy().getBodyObject().getX()){
+					keyUp(ActionKey.LEFT);
+				}
+			}
+		}else{
+			if(advancedValues[1]>getEnemy().getBodyObject().getX()){
+				keyDown(ActionKey.RIGHT);
+			}else{
+				if(advancedValues[1]<=getEnemy().getBodyObject().getX()){
+					keyUp(ActionKey.RIGHT);
+				}
+			}
+		}
 	}
 
 	//	IInputHandler
@@ -269,6 +306,7 @@ public abstract class EnemyAI implements IEnemyAI {
 						|| (other.getBodyObjectType().equals(BodyObjectType.Enemy) && other.getParent().isStunned())) {	//triggered by stunned fellow enemy
 						
 						Alarm.trigger();
+						unresolvedAction = UnresolvedAction.ALARM_TRIGGERD;
 						return true;
 					}
 				} //sensor == viewSensor
