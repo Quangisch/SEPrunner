@@ -411,7 +411,27 @@
 						"rays"		:	100,
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
-						"x"			:	10700,
+						"x"			:	10400,
+						"y"			:	700,
+						"directionDegree"	:	320,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	10800,
+						"y"			:	800,
+						"directionDegree"	:	320,
+						"coneDegree"		:	20
+					},
+					{
+						"type"		:	"coneLight",
+						"rays"		:	100,
+						"color"		:	[1, 1, 1, 1],
+						"distance"	:	1000,
+						"x"			:	11200,
 						"y"			:	800,
 						"directionDegree"	:	300,
 						"coneDegree"		:	20
@@ -421,7 +441,7 @@
 						"rays"		:	100,
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
-						"x"			:	11100,
+						"x"			:	11600,
 						"y"			:	800,
 						"directionDegree"	:	270,
 						"coneDegree"		:	35
@@ -431,7 +451,7 @@
 						"rays"		:	100,
 						"color"		:	[1, 1, 1, 1],
 						"distance"	:	1000,
-						"x"			:	11500,
+						"x"			:	12000,
 						"y"			:	800,
 						"directionDegree"	:	240,
 						"coneDegree"		:	20
@@ -589,7 +609,8 @@
 											"horizontal" 	: true,
 											"key"		: "RIGHT"
 										}
-									]
+									],
+									"Advanced" : [4700, 5800]
 						}
 					},
 					{
@@ -649,7 +670,7 @@
 					{
 						"ID" : "enemy",
 						"resources" : 	{
-									"texture"	:	"enemy_medium.png",
+									"texture"	:	"enemy_hard.png",
 									"json"		:	"body.json"
 								},
 						"position" : [4100, 250],
@@ -670,7 +691,8 @@
 											"horizontal" 	: true,
 											"key"		: "RIGHT"
 										}
-									]
+									],
+									"Advanced" : [3800, 4900]
 						}
 					},
 					{
@@ -800,8 +822,18 @@
 						"AI" : {
 							"ID" : "HardAI",
 							"Actions" : 	[
-										
-									]
+										{
+											"between"	: [11150],
+											"horizontal" 	: true,
+											"key"		: "LEFT"
+										},
+										{
+											"between"	: [10550],
+											"horizontal" 	: true,
+											"key"		: "RIGHT"
+										},
+									],
+								"Advanced" : [10550, 11150]
 						}
 					},
 					{

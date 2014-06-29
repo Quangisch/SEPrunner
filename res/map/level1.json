@@ -415,7 +415,7 @@
 					{
 						"ID" : "enemy",
 						"resources" : 	{
-									"texture"	:	"enemy_simple.png",
+									"texture"	:	"enemy_medium.png",
 									"json"		:	"body.json"
 								},
 						"position" : [2700, 910],
@@ -423,7 +423,7 @@
 						"flip" : false,
 						"initialAction" : [],
 						"AI" : {
-							"ID" : "SimplePatrolAI",
+							"ID" : "MediumAI",
 							"Actions" : 	[
 										{
 											"between"	: [2010],
@@ -534,14 +534,14 @@
 										{
 						"ID" : "enemy",
 						"resources" : 	{
-									"texture"	:	"enemy_simple.png",
+									"texture"	:	"enemy_medium.png",
 									"json"		:	"body.json"
 								},
 						"position" : [5550, 760],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
-							"ID" : "SimplePatrolAI",
+							"ID" : "MediumAI",
 							"Actions" : 	[
 										{
 											"between"	: [5550],
@@ -590,14 +590,14 @@
 					{
 						"ID" : "enemy",
 						"resources" : 	{
-									"texture"	:	"enemy_simple.png",
+									"texture"	:	"enemy_medium.png",
 									"json"		:	"body.json"
 								},
 						"position" : [5830, 1610],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
-							"ID" : "SimplePatrolAI",
+							"ID" : "MediumAI",
 							"Actions" : 	[
 										{
 											"between"	: [5830],
@@ -686,14 +686,14 @@
 					{
 						"ID" : "enemy",
 						"resources" : 	{
-									"texture"	:	"enemy_simple.png",
+									"texture"	:	"enemy_hard.png",
 									"json"		:	"body.json"
 								},
 						"position" : [10000, 1010],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
-							"ID" : "SimplePatrolAI",
+							"ID" : "HardAI",
 							"Actions" : 	[
 										{
 											"between"	: [10000],
@@ -705,7 +705,8 @@
 											"horizontal" 	: true,
 											"key"		: "LEFT"
 										}
-									]
+									],
+								"Advanced" : [10000, 10500]
 						}
 					},
 
@@ -738,17 +739,6 @@
 									"json"		:	"trashbin.json"
 								},
 						"position" : [5200, 640],
-						"scale" : 1.0,
-						"flip" : false,
-						"AI" : {	}
-					},
-					{
-						"ID" : "hideable",
-						"resources" : 	{
-									"texture"	:	"mapObjects.png",
-									"json"		:	"trashbin.json"
-								},
-						"position" : [5950, 360],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}
