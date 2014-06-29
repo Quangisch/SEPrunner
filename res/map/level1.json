@@ -35,7 +35,7 @@
 				
 			],
 	"gravity" 	: [0, -20],
-	"timelimit" : 0,
+	"timelimit" : 300,
 	"goal"		: [11200,1220 , 400,1000],
 	"ground" 	:	[
 
