@@ -497,8 +497,12 @@
 											"horizontal" 	: true,
 											"key"		: "RIGHT"
 										}
+<<<<<<< HEAD
 									],
 							"Advanced" : [0,6.7,19000]
+=======
+									]
+>>>>>>> 133751d3687915b8ddfd21bcc91f60e4da737b55
 						}
 					},
 					{

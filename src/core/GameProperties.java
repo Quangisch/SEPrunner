@@ -146,25 +146,26 @@ public class GameProperties {
 	public static final int P_ALARM_MUL = -5;
 	public static final int P_UNSEEN = 50;
 
+//	TODO
 	public static int calcStylePoints(int shurikenThrown, int disposedBodies, int hiddenFrom) {
-		System.out.println(String.format(
-				  "Disposed Enemies : %d * %d = %d\n"
-				+ "Hidden from Enemy: %d * %d = %d\n"
-				+ (Alarm.getTotalAlarmTime() <= 0 
-				? "Total Alarm time : %.2f * %d = %d\n"
-				: "Unseen Bonus     : %d\n")
-				+ (shurikenThrown == 0
-				? "Unharmed Enemies : %d" : ""
-				+ "Level Completed  : %d\n"
-				+ "=================\n"
-				+ "TOTAL: %d"
-				+ "=================\n"),
-				disposedBodies, P_DISPOSED_MUL, disposedBodies*P_DISPOSED_MUL,
-				hiddenFrom, P_HIDDEN_MUL, hiddenFrom * P_HIDDEN_MUL,
-				Alarm.getTotalAlarmTime(), P_ALARM_MUL, (int)(Alarm.getTotalAlarmTime()*P_ALARM_MUL), P_UNSEEN, 
-				P_WITHOUT_SHURIKENS, P_LEVEL_COMPLETE, 
-				disposedBodies*P_DISPOSED_MUL+hiddenFrom * P_HIDDEN_MUL+Alarm.getTotalAlarmTime()*P_ALARM_MUL+P_LEVEL_COMPLETE+
-				shurikenThrown == 0 ? P_WITHOUT_SHURIKENS : 0 + Alarm.getTotalAlarmTime() == 0 ? P_UNSEEN : 0));
+//		System.out.println(String.format(
+//				  "Disposed Enemies : %d * %d = %d\n"
+//				+ "Hidden from Enemy: %d * %d = %d\n"
+//				+ (Alarm.getTotalAlarmTime() > 0 
+//				? String.format("Total Alarm time : %f * %d = %d\n", Alarm.getTotalAlarmTime(), P_ALARM_MUL, (int)(Alarm.getTotalAlarmTime()*P_ALARM_MUL))
+//				: String.format("Unseen Bonus     : %d\n",  P_UNSEEN))
+//				+ (shurikenThrown == 0
+//				? "Unharmed Enemies : %d\n" : "\n")
+//				+ "Level Completed  : %d\n"
+//				+ "=================\n"
+//				+ "TOTAL: %d\n"
+//				+ "=================\n",
+//				disposedBodies, P_DISPOSED_MUL, disposedBodies*P_DISPOSED_MUL,
+//				hiddenFrom, P_HIDDEN_MUL, hiddenFrom * P_HIDDEN_MUL,
+//				P_WITHOUT_SHURIKENS, P_LEVEL_COMPLETE));
+//				(int)(disposedBodies*P_DISPOSED_MUL + hiddenFrom*P_HIDDEN_MUL + P_LEVEL_COMPLETE +
+//				shurikenThrown == 0 ? P_WITHOUT_SHURIKENS : 0 + Alarm.getTotalAlarmTime() == 0 ? P_UNSEEN : 0)));
+		
 		return Math.max(P_LEVEL_COMPLETE, shurikenThrown == 0 ? P_WITHOUT_SHURIKENS : 0 //
 				+ disposedBodies * P_DISPOSED_MUL //
 				+ hiddenFrom * P_HIDDEN_MUL //
