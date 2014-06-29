@@ -30,7 +30,7 @@ public class GameProperties {
 	public static final int SCALE_WIDTH = 640;
 	public static final int SCALE_HEIGHT = 360;
 
-	public static GameState gameState = GameState.NORMAL;
+	private static GameState gameState = GameState.NORMAL;
 	public static GameScreen gameScreen = GameScreen.MENU_SPLASH;
 
 
@@ -127,18 +127,37 @@ public class GameProperties {
 		}
 	}
 
-	public static final int SHU_MUL = -1;
-	public static final int DISPOSED_MUL = 10;
-	public static final int HIDDEN_MUL = 20;
-	public static final int LEVEL_COMPLETE = 1000;
-	public static final int ALARM_MUL = -10;
+	public static final int WITHOUT_SHURIKENS = 100;
+	public static final int DISPOSED_MUL = 5;
+	public static final int HIDDEN_MUL = 5;
+	public static final int LEVEL_COMPLETE = 50;
+	public static final int ALARM_MUL = -5;
+	public static final int UNSEEN = 50;
 
 	public static int calcStylePoints(int shurikenThrown, int disposedBodies, int hiddenFrom) {
-		return Math.max(0, shurikenThrown * SHU_MUL //
+		System.out.println(String.format(
+				  "Disposed Enemies : %d * %d = %d\n"
+				+ "Hidden from Enemy: %d * %d = %d\n"
+				+ (Alarm.getTotalAlarmTime() <= 0 
+				? "Total Alarm time : %.2f * %d = %d\n"
+				: "Unseen Bonus     : %d\n")
+				+ (shurikenThrown == 0
+				? "Unharmed Enemies : %d" : ""
+				+ "Level Completed  : %d\n"
+				+ "=================\n"
+				+ "TOTAL: %d"
+				+ "=================\n"),
+				disposedBodies, DISPOSED_MUL, disposedBodies*DISPOSED_MUL,
+				hiddenFrom, HIDDEN_MUL, hiddenFrom * HIDDEN_MUL,
+				Alarm.getTotalAlarmTime(), ALARM_MUL, (int)(Alarm.getTotalAlarmTime()*ALARM_MUL), UNSEEN, 
+				WITHOUT_SHURIKENS, LEVEL_COMPLETE, 
+				disposedBodies*DISPOSED_MUL+hiddenFrom * HIDDEN_MUL+Alarm.getTotalAlarmTime()*ALARM_MUL+LEVEL_COMPLETE+
+				shurikenThrown == 0 ? WITHOUT_SHURIKENS : 0 + Alarm.getTotalAlarmTime() == 0 ? UNSEEN : 0));
+		return Math.max(LEVEL_COMPLETE, shurikenThrown == 0 ? WITHOUT_SHURIKENS : 0 //
 				+ disposedBodies * DISPOSED_MUL //
 				+ hiddenFrom * HIDDEN_MUL //
 				+ LEVEL_COMPLETE //
-				+ (int) (Alarm.getTotalAlarmTime() * ALARM_MUL) //
+				+ Alarm.getTotalAlarmTime() == 0 ? UNSEEN : (int) (Alarm.getTotalAlarmTime() * ALARM_MUL)
 		);
 	}
 
@@ -178,6 +197,15 @@ public class GameProperties {
 					screen = s;
 			return screen;
 		}
+	}
+	
+	public static GameState getGameState() {
+		return gameState;
+	}
+	
+	public static void switchGameState(GameState state) {
+		gameState = state;
+		ResourceManager.getInstance().startMusic(state);
 	}
 	
 	public static boolean switchGameScreen(GameScreen screen) throws LevelNotFoundException {
@@ -220,8 +248,9 @@ public class GameProperties {
 		
 		}
 		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
-		ResourceManager.getInstance().startMusic();
 		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
+
+		ResourceManager.getInstance().startMusic(screen);
 		return true;
 
 	}
@@ -256,6 +285,7 @@ public class GameProperties {
 			gameState = GameState.PAUSE;
 		else if(gameState.equals(GameState.PAUSE))
 			gameState = GameState.NORMAL;
+		ResourceManager.getInstance().startMusic(gameState);
 	}
 	
 	public static void setGameOver(String message) {
@@ -263,12 +293,12 @@ public class GameProperties {
 			return;
 		loseMessage = message;
 		gameState = GameState.LOSE;
-		ResourceManager.getInstance().startMusic();
+		ResourceManager.getInstance().startMusic(GameState.LOSE);
 	}
 
 	public static void setWin() {
 		gameState = GameState.WIN;
-		ResourceManager.getInstance().startMusic();
+		ResourceManager.getInstance().startMusic(GameState.WIN);
 	}
 	
 	public static boolean isCurrentGameState(GameState state) {

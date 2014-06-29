@@ -1,9 +1,7 @@
 package core;
 
-import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -12,56 +10,105 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 
+import core.GameProperties.GameScreen;
+import core.GameProperties.GameState;
+
 public class ResourceManager extends AssetManager {
 	
 	private static ResourceManager manager;
 	private ScheduledExecutorService exec;
-	private Music currentMusic;
+	private List<Music> currentMusic;
 	private List<Music> fadeOuts;
 	private List<Music> currentSounds;
 	
+	private GameState currentMusicState;
+	private GameScreen currentMusicScreen;
+	
 	private ResourceManager() {
-		fadeOuts = new CopyOnWriteArrayList<Music>();
+		fadeOuts = new LinkedList<Music>();
 		currentSounds = new LinkedList<Music>();
+		currentMusic = new LinkedList<Music>();
 		
 		exec = Executors.newSingleThreadScheduledExecutor();
-		exec.scheduleAtFixedRate(new FadeOut(), 20, 100, TimeUnit.MILLISECONDS);
+		exec.scheduleAtFixedRate(new FadeOut(), 20, 200, TimeUnit.MILLISECONDS);
 	}
 	
-	public void startMusic() {
-		
-		if(currentMusic != null)
-			fadeOuts.add(currentMusic);
-		if(GameProperties.isInMenu()) {
-			currentMusic = (Gdx.audio.newMusic(Gdx.files.local(FilePath.music_menu)));
-//			Debug.println("startMenuMusic");
-		} else {
-			if(GameProperties.isCurrentGameState(GameProperties.GameState.NORMAL)) {
-				currentMusic = (Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_soundScape)));
-//				Debug.println("ingameMusic");
-			} else if(GameProperties.isCurrentGameState(GameProperties.GameState.WIN)) {
-				currentMusic = (Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_win)));
-//				Debug.println("winMusic");
-			} else if(GameProperties.isCurrentGameState(GameProperties.GameState.LOSE)) {
-				currentMusic = (Gdx.audio.newMusic(Gdx.files.internal(FilePath.music_lose)));
-//				Debug.println("loseMusic");
-			}
+	private void startAudio(List<Music> list, String filePath, boolean fadeoutPrevious) {
+		if(fadeoutPrevious) {
+			for(Music m : list)
+				fadeOuts.add(m);
+			list.clear();
 		}
 		
-
+		list.add(0,Gdx.audio.newMusic(Gdx.files.local(filePath)));
 		
-		
-		currentMusic.setVolume(GameProperties.musicVolume);
-		currentMusic.setLooping(true);
-		currentMusic.play();
+		list.get(0).setVolume(list.equals(currentMusic) ? GameProperties.musicVolume : GameProperties.soundVolume);
+		list.get(0).setLooping(true);
+		list.get(0).play();
+	}
+	
+	private float prevVolume;
+	public void startMusic(GameState state) {
+		if(!state.equals(currentMusicState))
+			switch(state) {
+			case LOSE:
+				startAudio(currentMusic, FilePath.music_lose, true);
+				break;
+			case NORMAL:
+				if(prevVolume != 0 && currentMusic.size() > 0) {
+					currentMusic.get(0).setVolume(prevVolume);
+					currentSounds.get(0).setVolume(GameProperties.soundVolume);
+					prevVolume = 0;
+				}
+				break;
+			case PAUSE:
+				prevVolume = currentMusic.get(0).getVolume();
+				currentMusic.get(0).setVolume(prevVolume * 0.3f);
+				currentSounds.get(0).setVolume(GameProperties.soundVolume * 0.3f);
+				break;
+			case WIN:
+				startAudio(currentMusic, FilePath.music_win, true);
+				break;
+			default:
+				break;
+			}
+		currentMusicState = state;
+	}
+	
+	public void startMusic(GameScreen screen) {
+		if(currentMusicScreen == null
+				|| screen.INDEX >= 0
+				|| (!screen.equals(currentMusicScreen) && screen.INDEX > 0)
+				|| (screen.INDEX * currentMusicScreen.INDEX <= 0)) {
 
-//		inMenu = GameProperties.isInMenu();
-//		System.out.println(currentState + " "+ inMenu);
+			switch(screen) {
+			case LEVEL1:
+			case LEVEL2:
+			case LEVEL3:
+				startAudio(currentMusic, FilePath.music_soundScape, true);
+				startAudio(currentSounds, FilePath.sound_atmo, true);
+				break;
+			case MENU_BACKGROUND:
+			case MENU_HIGHSCORE:
+			case MENU_LEVELSELECT:
+			case MENU_MAIN:
+			case MENU_OPTION:
+			case MENU_PROFILE:
+			case MENU_SPLASH:
+				startAudio(currentMusic, FilePath.music_menu, true);
+				startAudio(currentSounds, FilePath.sound_atmo, true);
+				break;
+			default:
+				break;
+			
+			}
+		}
+		currentMusicScreen = screen;
 	}
 	
 	public void adjustMusicVolume() {
 		if(currentMusic != null)
-			currentMusic.setVolume(GameProperties.musicVolume);
+			currentMusic.get(0).setVolume(GameProperties.musicVolume);
 	}
 	
 	public void adjustSoundVolume() {
@@ -88,8 +135,8 @@ public class ResourceManager extends AssetManager {
 			m.dispose();
 		for(Music m : currentSounds)
 			m.dispose();
-		if(currentMusic != null)
-			currentMusic.dispose();
+		for(Music m : currentMusic)
+			m.dispose();
 	}
 	
 	private class FadeOut implements Runnable {
@@ -98,19 +145,19 @@ public class ResourceManager extends AssetManager {
 		}
 		
 		public void run() {
-			try{
-				for(Music m : fadeOuts) {
-					m.setVolume(Math.max(m.getVolume()-0.05f, 0));
-					if(m.getVolume() <= 0) {
-						fadeOuts.remove(m);
-						m.dispose();
-					}
-				}
-			} catch(ConcurrentModificationException e) {
+			for(Music m : fadeOuts) {
+				m.setVolume(Math.max(m.getVolume()-0.05f, 0));
 				
+				if(m.getVolume() <= 0) {
+					m.stop();
+					m.dispose();
+					fadeOuts.remove(m);
+					break;
+				}
 			}
-			
 		}
+		
 	}
+	
 
 }

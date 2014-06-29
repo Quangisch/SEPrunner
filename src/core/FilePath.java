@@ -20,6 +20,7 @@ public interface FilePath {
 			music_soundScape = "res/audio/music/soundScape.mp3",
 			music_win = "res/audio/music/win.mp3",
 			music_lose = "res/audio/music/lose.mp3",
+			sound_atmo = "res/audio/sounds/atmo_wind.mp3",
 	
 //			GRAPHICS
 			graphic_menuMain = "res/img/main menu.png",

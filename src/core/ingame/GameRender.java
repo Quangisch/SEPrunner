@@ -75,7 +75,7 @@ public class GameRender implements Screen {
 	public void render(float delta) {
 		float realdelta = delta;
 
-		switch (GameProperties.gameState) {
+		switch (GameProperties.getGameState()) {
 		case WIN:
 		case LOSE:
 			break;
@@ -102,7 +102,7 @@ public class GameRender implements Screen {
 
 		gameWorld.draw(batch, delta); //map
 
-		switch (GameProperties.gameState) {
+		switch (GameProperties.getGameState()) {
 		case NORMAL:
 			hud.draw(batch, delta); //userInterface
 			break;

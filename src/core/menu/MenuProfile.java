@@ -433,25 +433,27 @@ public class MenuProfile implements Screen {
 			if(incHook < 0)
 				buy_hook = Math.max(0, buy_hook - INC_SPEED);
 			else if(incHook > 0 && profile.hookRadius + buy_hook <= GameProperties.HOOK_RADIUS_MAX) {
-				if(buy_costs <= profile.stylePoints)	buy_hook += INC_SPEED;
-				else									warningCostsAlpha = 1f;
+				if(buy_costs + PRICE_HOOK <= profile.stylePoints)	
+					buy_hook += INC_SPEED;
+				else									
+					warningCostsAlpha = 1f;
 			}	
-			
-			buy_costs = (int)buy_hook * PRICE_HOOK;
-			updateShopLabels();
 	
 		} else if(incShu != 0) {
 			if(incShu < 0)
 				buy_shu = Math.max(0, buy_shu - INC_SPEED);
 			else if(incShu > 0) {
-				if(buy_costs <= profile.stylePoints)	buy_shu += INC_SPEED;
-				else									warningCostsAlpha = 1f;
+				if(buy_costs + PRICE_SHU <= profile.stylePoints)	
+					buy_shu += INC_SPEED;
+				else
+					warningCostsAlpha = 1f;
 			}
-
-			buy_costs = (int)buy_shu * PRICE_SHU;
-			updateShopLabels();
 		}
 		
+		if(incShu != 0 || incHook != 0) {
+			buy_costs = (int)buy_hook * PRICE_HOOK + (int)buy_shu * PRICE_SHU;;
+			updateShopLabels();
+		}
 	}
 	
 	

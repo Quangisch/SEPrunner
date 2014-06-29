@@ -120,8 +120,8 @@ public class MenuOption implements Screen {
 		mainTable.add(leftMainTable);
 		mainTable.add(rightMainTable);
 		
-		leftMainTable.add(graphicTable).pad(0, width/20, 0, width/20);
-		leftMainTable.add(checkboxTable).padRight(width/10).row();
+		leftMainTable.add(graphicTable).pad(0, width/20, 0, 0);
+		leftMainTable.add(checkboxTable).row();
 		leftMainTable.add(displayModeTable);
 		leftMainTable.add(soundTable).row();
 		rightMainTable.add(inputTable);
@@ -422,7 +422,6 @@ public class MenuOption implements Screen {
 			} else if(event.getListenerActor() == vSyncCheckBox) {
 				Gdx.app.getPreferences(Project.TITLE).putBoolean("vsync", vSyncCheckBox.isChecked());
 				Gdx.graphics.setVSync(Gdx.app.getPreferences(Project.TITLE).getBoolean("vsync"));
-				Gdx.app.log(Project.TITLE, "vSync " + (Gdx.app.getPreferences(Project.TITLE).getBoolean("vsync") ? "enabled" : "disabled"));
 				
 //			FULLSCREEN
 			} else if(event.getListenerActor() == fullScreenCheckBox) {
