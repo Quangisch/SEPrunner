@@ -231,9 +231,9 @@ public class MenuHighscore implements Screen {
 			int next = 0;
 			
 			if(event.getListenerActor() == prevLevel)
-				next = 1;
-			else if(event.getListenerActor() == nextLevel)
 				next = -1;
+			else if(event.getListenerActor() == nextLevel)
+				next = 1;
 			
 			if(next == 0)
 				return;

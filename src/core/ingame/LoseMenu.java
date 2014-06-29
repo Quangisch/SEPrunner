@@ -130,25 +130,6 @@ public class LoseMenu implements IDrawable {
 			font.setColor(restart.getTextColor());
 		font.draw(b, restart.getText(), (width - tB.width) * 0.05f, height * 0.25f + tB.height);
 		//
-		Button highScore = new Button() {
-
-			public String getText() {
-				return "Score";
-			}
-
-			public void onClick() {
-				// TODO Level Auswahl
-				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_LEVELSELECT));
-			}
-		};
-		tB = font.getBounds(highScore.getText());
-		if (new Rectangle((width - tB.width) * 0.05f, height * 0.25f, tB.width, tB.height).contains(v)) {
-			font.setColor(highScore.getHoverColor());
-			if (cl != null) highScore.onClick();
-		} else
-			font.setColor(highScore.getTextColor());
-		font.draw(b, highScore.getText(), (width - tB.width) * 0.05f, height * 0.25f + tB.height);
-		//
 		font.setColor(Color.WHITE);
 
 		b.end();
