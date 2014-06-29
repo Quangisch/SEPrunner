@@ -80,7 +80,7 @@ public class PauseMenu implements IDrawable {
 		Button cont = new Button() {
 
 			public String getText() {
-				return "Weiter";
+				return "Resume";
 			}
 
 			public void onClick() {
@@ -88,17 +88,17 @@ public class PauseMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(cont.getText());
-		if (new Rectangle((width - tB.width) * 0.25f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.5f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(cont.getHoverColor());
 			if (cl != null) cont.onClick();
 		} else
 			font.setColor(cont.getTextColor());
-		font.draw(b, cont.getText(), (width - tB.width) * 0.25f, height * 0.25f + tB.height);
+		font.draw(b, cont.getText(), (width - tB.width) * 0.5f, height * 0.25f + tB.height);
 		//
 		Button back = new Button() {
 
 			public String getText() {
-				return "Menu";
+				return "Back To Menu";
 			}
 
 			public void onClick() {
@@ -106,17 +106,17 @@ public class PauseMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(back.getText());
-		if (new Rectangle((width - tB.width) * 0.75f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.95f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(back.getHoverColor());
 			if (cl != null) back.onClick();
 		} else
 			font.setColor(back.getTextColor());
-		font.draw(b, back.getText(), (width - tB.width) * 0.75f, height * 0.25f + tB.height);
+		font.draw(b, back.getText(), (width - tB.width) * 0.95f, height * 0.25f + tB.height);
 		//
 		Button restart = new Button() {
 
 			public String getText() {
-				return "Neustart";
+				return "Restart Level";
 			}
 
 			public void onClick() {
@@ -124,12 +124,12 @@ public class PauseMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(restart.getText());
-		if (new Rectangle((width - tB.width) * 0.5f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.05f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(restart.getHoverColor());
 			if (cl != null) restart.onClick();
 		} else
 			font.setColor(restart.getTextColor());
-		font.draw(b, restart.getText(), (width - tB.width) * 0.5f, height * 0.25f + tB.height);
+		font.draw(b, restart.getText(), (width - tB.width) * 0.05f, height * 0.25f + tB.height);
 		//
 		font.setColor(Color.WHITE);
 

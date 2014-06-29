@@ -9,7 +9,7 @@ public class HighscoreServerAddHighscore {
 	}
 
 	public static void test(boolean expect) {
-		new HighscoreServer().addHighScore(0, "Test", 123);;
+		new HighscoreServer().addHighScore(0, "Test", 123);
 		
 		//System.out.println(" out: " + outBool + " expect: " + expect + " success: " + (outBool == expect));
 	}

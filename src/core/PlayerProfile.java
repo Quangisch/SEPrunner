@@ -2,6 +2,8 @@ package core;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class PlayerProfile {
 
 	private JsonValue root;
 	private int index;
-	public String name;
+	public String name = "";
 	public int shuriken, hookRadius, stylePoints, experience;
 	
 	private static FileHandle file;
@@ -27,7 +29,12 @@ public class PlayerProfile {
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.profile));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			deletePlayerProfiles();
+			try {
+				root = new JsonReader().parse(new FileReader(FilePath.profile));
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
 		if(file == null)
@@ -180,9 +187,14 @@ public class PlayerProfile {
 	}
 	
 	public static void deletePlayerProfiles() {
-		if(file == null)
-			file = Gdx.files.local(FilePath.profile);
-		file.writeString("[]", false);
+		FileWriter f;
+		try {
+			f = new FileWriter(FilePath.profile);
+			f.write("[]");
+			f.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static int getProfileCount() {
@@ -190,7 +202,7 @@ public class PlayerProfile {
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.profile));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			deletePlayerProfiles();
 		}
 		
 		return root == null ? 0 : root.size;

@@ -2,6 +2,8 @@ package core;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,10 +12,9 @@ import java.util.Map;
 
 import misc.StringFunctions;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonValue.ValueType;
 
 
 public class Highscore {
@@ -23,19 +24,23 @@ public class Highscore {
 	
 	private Highscore() {
 		highscoreMap = new HashMap<Integer, List<Score>>();
-		loadHighscoreList();
+		highscoreMap = loadHighscoreList(FilePath.highscore);
 	}
 	
-	private boolean loadHighscoreList() {
+	public static Map<Integer, List<Score>> loadHighscoreList(String filePath) {
 		JsonValue root = null;
-		try {
-			root = new JsonReader().parse(new FileReader(FilePath.highscore));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		Map<Integer, List<Score>> highscoreMap = new HashMap<Integer, List<Score>>();
 		
-		if(root == null)
-			return false;
+		try {
+			root = new JsonReader().parse(new FileReader(filePath));
+		} catch (FileNotFoundException e) {
+			deleteAll();
+			try {
+				root = new JsonReader().parse(new FileReader(filePath));
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+		}
 		
 		for(int levelIndex = 0; levelIndex < GameProperties.IMPLEMENTED_LEVEL.length; levelIndex++) {
 			highscoreMap.put(levelIndex, new LinkedList<Score>());
@@ -46,27 +51,47 @@ public class Highscore {
 				}
 		}
 		
-		return true;
+		return highscoreMap;
 	}
 	
 	public static void saveHighscoreList() {
 		getInstance().sortAll();
 		
-		StringBuilder sBuilder = new StringBuilder("[");
+		JsonValue root = new JsonValue(ValueType.array);
+		JsonValue jLevel = root.child;
+		
 		for(int i = 0; i < getInstance().highscoreMap.size(); i++) {
+			
 			List<Score> scoreList = getInstance().highscoreMap.get(i);
-			sBuilder.append("[");
+			
+			jLevel = new JsonValue(ValueType.array);
+			JsonValue jScore = jLevel.child;
+			
 			for(int s = 0; s < scoreList.size(); s++) {
-				sBuilder.append(String.format("{\"name\":\"%s\",\"time\":%s},",scoreList.get(s).PLAYER_NAME, Float.toString(scoreList.get(s).TIME)));
+				
+				jScore = new JsonValue(ValueType.array);
+				jScore.child = new JsonValue(ValueType.object);
+				jScore.child.name = "name";
+				jScore.child.set(scoreList.get(s).PLAYER_NAME);
+				jScore.child.next = new JsonValue(ValueType.object);
+				jScore.child.next.name = "time";
+				jScore.child.next.set(scoreList.get(s).TIME);
+
+				if(s+1 < scoreList.size())
+					jScore = jScore.next;
 			}
-			sBuilder.deleteCharAt(sBuilder.length()-1);
-			sBuilder.append("],");
+			
+			if(i+1 < getInstance().highscoreMap.size())
+				jLevel = jLevel.next;
 		}
-					
-		sBuilder.deleteCharAt(sBuilder.length()-1);
-		sBuilder.append("]");
-		FileHandle file = Gdx.files.local(FilePath.highscore);
-		file.writeString(sBuilder.toString(), false);
+		
+		try {
+			FileWriter f = new FileWriter(FilePath.highscore);
+			f.write(root.toString());
+			f.close();
+		} catch (IOException e1) {
+			return;
+		}
 
 	}
 	
@@ -120,12 +145,19 @@ public class Highscore {
 			add = getInstance().highscoreMap.get(score.LEVEL_INDEX).add(score);
 		
 		getInstance().sortLevel(score.LEVEL_INDEX);
+		saveHighscoreList();
 		return add;
 	}
 	
 	public static void deleteAll() {
-		FileHandle file = Gdx.files.local(FilePath.highscore);
-		file.writeString("[]", false);
+		FileWriter f;
+		try {
+			f = new FileWriter(FilePath.highscore);
+			f.write("[]");
+			f.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static List<List<Score>> getHighscoreLists() {

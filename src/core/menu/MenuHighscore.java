@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -24,6 +25,7 @@ import core.GameProperties;
 import core.GameProperties.GameScreen;
 import core.Highscore;
 import core.Highscore.Score;
+import core.PlayerProfile;
 
 public class MenuHighscore implements Screen {
 	
@@ -36,11 +38,22 @@ public class MenuHighscore implements Screen {
 	private int levelIndex = 0;
 	private Label levelName;
 	private ClickHandler clickHandler;
+	private ScrollPane scrollPane;
 	
 	private int width, height;
 	final private Color NORMAL = new Color(1,1,0.90f,1);
 	final private Color HOVER = new Color(1,1,0f,1);
-	final private int HIGHSCORE_TABLE_COUNT = 5;
+	private PlayerProfile profile;
+	
+	final private GameScreen NEXT_SCREEN;
+	
+	public MenuHighscore() {
+		this(GameScreen.MENU_MAIN);
+	}
+	
+	public MenuHighscore(GameScreen nextScreen) {
+		NEXT_SCREEN = nextScreen;
+	}
 	
 	@Override
 	public void render(float delta) {
@@ -62,9 +75,7 @@ public class MenuHighscore implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-//		backgroundSprite.setSize(width, height);
-//		stage.setViewport(1280, 800, true);
-//		table.invalidateHierarchy();
+
 	}
 
 	@Override
@@ -74,6 +85,7 @@ public class MenuHighscore implements Screen {
 		
 		clickHandler = new ClickHandler();
 		shaderBatch = new ShaderBatch(100);
+		profile = new PlayerProfile();
 		
 		stage = new Stage();
 		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
@@ -92,7 +104,7 @@ public class MenuHighscore implements Screen {
 		backButton = new TextButton("Back", skin);
 		backButton.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
-				GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
+				GameProperties.switchGameScreen(NEXT_SCREEN);
 			}
 		});
 		backButton.pad(10);
@@ -119,7 +131,16 @@ public class MenuHighscore implements Screen {
 		mainTable.add(prevLevel).right();
 		mainTable.add(levelName).center();
 		mainTable.add(nextLevel).left().row();
-		mainTable.add(scoreTable).padTop(height/10).colspan(3);
+
+		scrollPane = new ScrollPane(scoreTable);
+		mainTable.add().size(width/10, 0);
+		mainTable.add().size(width, 0);
+		mainTable.add().size(width/3, 0).row().padTop(height/10);
+		
+		mainTable.add(new Label("Place", skin));
+		mainTable.add(new Label("Name", skin));
+		mainTable.add(new Label("Time", skin)).row();
+		mainTable.top().add(scrollPane).height(stage.getHeight()/2).colspan(3);
 		
 		iniScoreTable();
 		
@@ -144,24 +165,17 @@ public class MenuHighscore implements Screen {
 		scoreTable.add().size(width, 0);
 		scoreTable.add().size(width/3, 0).row();
 		
-		scoreTable.add(new Label("Place", skin));
-		scoreTable.add(new Label("Name", skin));
-		scoreTable.add(new Label("Time", skin)).row();
-		
 		iniScoreTableList(Highscore.getHighscoreList(levelIndex));
-		
-		scoreTable.setSize(10, 0);
-		scoreTable.invalidate();
-		
 	}
 	
 	private void iniScoreTableList(java.util.List<Score> scores) {
 		if(scores != null)
-		for(int i = 0; i < scores.size() && i < HIGHSCORE_TABLE_COUNT; i++) {
-			scoreTable.add(new Label(Integer.toString(i+1), skin));
-			scoreTable.add(scores.get(i).PLAYER_NAME);
-			scoreTable.add(scores.get(i).TIME_STRING).row();
-		}
+			for(int i = 0; i < scores.size(); i++) {
+				scoreTable.add(new Label(Integer.toString(i+1), skin));
+				scoreTable.add(scores.get(i).PLAYER_NAME, "baoli44", 
+						profile.name.equals(scores.get(i).PLAYER_NAME) ? Color.YELLOW : Color.WHITE);
+				scoreTable.add(scores.get(i).TIME_STRING).row();
+			}
 	}
 	
 

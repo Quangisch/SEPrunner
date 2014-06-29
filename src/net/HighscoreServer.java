@@ -1,5 +1,6 @@
 package net;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -11,6 +12,9 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -18,6 +22,8 @@ import com.badlogic.gdx.utils.JsonValue.ValueType;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import core.FilePath;
+import core.Highscore;
+import core.Highscore.Score;
 
 public class HighscoreServer {
 
@@ -35,13 +41,13 @@ public class HighscoreServer {
 	public void addHighScore(int level, String name, float score) {
 		JsonValue root;
 		try {
-			root = new JsonReader().parse(new FileReader("res/upload.json"));
+			root = new JsonReader().parse(new FileReader(FilePath.highscoreTemp));
 		} catch (FileNotFoundException e) {
 			try {
-				FileWriter f = new FileWriter("res/upload.json");
+				FileWriter f = new FileWriter(FilePath.highscoreTemp);
 				f.write("[]");
 				f.close();
-				root = new JsonReader().parse(new FileReader("res/upload.json"));
+				root = new JsonReader().parse(new FileReader(FilePath.highscoreTemp));
 			} catch (IOException e1) {
 				return;
 			}
@@ -66,7 +72,7 @@ public class HighscoreServer {
 		}
 
 		try {
-			FileWriter f = new FileWriter("res/upload.json");
+			FileWriter f = new FileWriter(FilePath.highscoreTemp);
 			JsonWriter j = new JsonWriter(f);
 			j.array();
 			for (JsonValue p = root.child; p != null; p = p.next) {
@@ -84,10 +90,28 @@ public class HighscoreServer {
 		}
 	}
 
+	public boolean uploadScore(Score score) {
+		try {
+			HttpURLConnection c = (HttpURLConnection) new URL( //
+					"http://" + addr + "/Eintragen.php?Index=" + score.LEVEL_INDEX //
+							+ "&Name=" + score.PLAYER_NAME //
+							+ "&Score=" + score.TIME //
+			).openConnection();
+			c.setRequestMethod("GET");
+			c.setConnectTimeout(1000);
+			c.setReadTimeout(5000);
+			if (c.getInputStream().read() != '1') 
+				return true;
+		} catch (IOException e) {
+		}
+		
+		return false;
+	}
+	
 	public void tryUpload() {
 		JsonValue root;
 		try {
-			root = new JsonReader().parse(new FileReader("res/upload.json"));
+			root = new JsonReader().parse(new FileReader(FilePath.highscoreTemp));
 		} catch (FileNotFoundException e) {
 			return;
 		}
@@ -111,21 +135,37 @@ public class HighscoreServer {
 		}
 
 		try {
-			FileWriter f = new FileWriter("res/upload.json");
+			FileWriter f = new FileWriter(FilePath.highscoreTemp);
 			f.close();
+			File fl = new File(FilePath.highscoreTemp);
+			fl.delete();
 		} catch (IOException e) {
 			return;
 		}
 	}
 
 	public void updateLocalHighscoreFile() {
+		if(!isConnected())
+			return;
+		
 		try {
 			URL website = new URL("http://"+addr+"/Auslesen.php");
 			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-			FileOutputStream fos = new FileOutputStream(FilePath.highscore);
+			FileOutputStream fos = new FileOutputStream(FilePath.highscoreServer);
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 			fos.close();
-		} catch (IOException e) {
+
+		} catch (IOException e) {		
+			return;
 		}
+
+		Map<Integer, List<Score>> scoreMap = Highscore.loadHighscoreList(FilePath.highscoreServer);
+		for(Entry<Integer, List<Score>> l : scoreMap.entrySet())
+			for(Score s : l.getValue())
+				Highscore.addHighscore(s);
+		
+		File f = new File(FilePath.highscoreServer);
+		f.delete();
+		
 	}
 }

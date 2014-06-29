@@ -3,6 +3,7 @@ package gameObject.interaction.player;
 import gameObject.body.BodyObjectType;
 import gameWorld.GameWorld;
 import misc.Debug;
+import net.HighscoreServer;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
@@ -30,6 +31,11 @@ public class Player extends PlayerCollision {
 	public void run() {
 		if(Debug.isMode(Debug.Mode.CAMERA))
 			return;
+		if(GameProperties.isCurrentGameState(GameState.WIN) && score == null) {
+			saveProfile();
+			saveHighscore();
+		}
+
 		super.run();
 		interactionHandler.run();
 	}
@@ -72,15 +78,19 @@ public class Player extends PlayerCollision {
 			
 			score = new Score(GameProperties.gameScreen.INDEX, profile.name, getGameWorld().getTime());
 			Highscore.addHighscore(score); // add score to local Highscore
-			
-//			TODO
-//			HighscoreServer server = new HighscoreServer();
-//			if(server.isConnected()) {
-//				server.updateLocalHighscoreFile();
-//				if(Highscore.getPosition(score) < MAX_SCOREPOSITION_TO_SERVER)
-//					server.addHighScore(score.LEVEL_INDEX, score.PLAYER_NAME, score.TIME);
-//			} else
-//				System.err.println("HighscoreServer offline");
+		
+			HighscoreServer server = new HighscoreServer();
+			if(server.isConnected() && GameProperties.uploadScore) {
+				
+				server.updateLocalHighscoreFile();
+				if(Highscore.getPosition(score) < GameProperties.MAX_SCOREPOSITION_TO_SERVER) {
+					
+					boolean uploaded = server.uploadScore(score);
+					if(!uploaded)
+						server.addHighScore(score.LEVEL_INDEX, score.PLAYER_NAME, score.TIME);
+				}
+			} else
+				System.err.println("HighscoreServer offline");
 		}
 	}
 

@@ -64,7 +64,7 @@ public class EnterNameScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		
 
-		pixmap = new Pixmap(2, GameProperties.SCALE_HEIGHT*5, Format.RGB888);
+		pixmap = new Pixmap(2, 2, Format.RGB888);
 		pixmap.setColor(Color.WHITE);
 		pixmap.fill();
 		texture = new Texture(pixmap);
@@ -86,9 +86,7 @@ public class EnterNameScreen implements Screen {
 		nameField.addListener(new ClickListener() {
 			public boolean keyDown(InputEvent event, int keycode) {
 				if(keycode == Keys.ENTER && event.getListenerActor().equals(nameField)) {
-					
-					PlayerProfile profile = PlayerProfile.createNewProfile(nameField.getText());
-					profile.updateAndSaveProfile();
+					PlayerProfile.createNewProfile(nameField.getText()).updateAndSaveProfile();
 					((Game) Gdx.app.getApplicationListener()).setScreen(PREVIOUS_SCREEN);
 					return true;
 				}

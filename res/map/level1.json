@@ -10,7 +10,7 @@
 							"texture" : "res/map/levelTextures/level1_2.png"
 						},
 						{
-							"position" : [7100, 0], 
+							"position" : [8192, 0], 
 							"texture" : "res/map/levelTextures/level1_3.png"
 						}
 					],

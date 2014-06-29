@@ -2,23 +2,25 @@ package core;
 
 import gameObject.interaction.enemy.Alarm;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.exception.LevelNotFoundException;
 import core.ingame.GameRender;
+import core.menu.EnterNameScreen;
 import core.menu.MenuHighscore;
 import core.menu.MenuLevelSelect;
 import core.menu.MenuMain;
@@ -29,10 +31,11 @@ import core.menu.Splash;
 public class GameProperties {
 
 	public static final int SCALE_WIDTH = 640;
-	public static final int SCALE_HEIGHT = 360;
+	public static final int SCALE_HEIGHT = 400;
 
 	public static GameState gameState = GameState.NORMAL;
 	public static GameScreen gameScreen;
+	private static Screen gdxScreen;
 
 	public static DisplayMode prefDisplayMode;
 	public static float brightness = 0.0f;
@@ -55,6 +58,7 @@ public class GameProperties {
 	public static final int MAX_HOOK_RADIUS = 500;
 	public static final int MAX_SCOREPOSITION_TO_SERVER = 50;
 	
+	public static boolean uploadScore = true;
 	
 	public static String getInitialName() {
 		return INITIAL_NAME + (new Random().nextInt(999-100) + 100);
@@ -89,35 +93,24 @@ public class GameProperties {
 			musicVolume = root.getFloat("musicVolume");
 			soundVolume = root.getFloat("soundVolume");
 
-		} catch (FileNotFoundException e) {
-			//			e.printStackTrace();
-			System.err.println("settings.json not found");
-			return;
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			brightness = contrast = musicVolume = soundVolume = 1;
+		} catch (Exception e) {
+			saveToFile();
 			return;
 		}
 	}
 
 	public static void saveToFile() {
-		JsonValue root = null;
+		FileWriter f;
 		try {
-			root = new JsonReader().parse(new FileReader(FilePath.settings));
-		} catch (FileNotFoundException e) {
-			//			e.printStackTrace();
-			System.out.println("settings.json not found");
-			return;
+			f = new FileWriter(FilePath.settings);
+			f.write(new Json().prettyPrint(String.format("{keymap: { left: %d, right: %d, run: %d, jump: %d, crouch: %d, action: %d},"
+					+ "brightness: %s,contrast: %s,musicVolume: %s,soundVolume: %s}",
+					Keys.A, Keys.D, Keys.F, Keys.SPACE, Keys.S, Keys.E,
+					Float.toString(brightness), Float.toString(contrast), Float.toString(musicVolume), Float.toString(soundVolume))));
+			f.close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
-
-		root.get("brightness").set(brightness);
-		root.get("contrast").set(contrast);
-		root.get("soundVolume").set(soundVolume);
-		root.get("musicVolume").set(musicVolume);
-
-		FileHandle file = Gdx.files.local(FilePath.settings);
-		file.writeString(root.toString(), false);
-
 	}
 
 	//	RANK, EXPERIENCE
@@ -261,8 +254,15 @@ public class GameProperties {
 		}
 
 		refreshDisplayMode();
+
+		if(PlayerProfile.getProfileCount() == 0 && !nextScreen.equals(GameScreen.MENU_SPLASH))
+			nextScreen = new EnterNameScreen(nextScreen);
+		if(GameProperties.gameScreen != null && GameProperties.gameScreen.INDEX >= 0)
+			gdxScreen.dispose();
+		gdxScreen = nextScreen;
 		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
 		AudioManager.getInstance().startMusic(screen);
+
 		gameScreen = screen;
 		return true;
 
@@ -293,7 +293,7 @@ public class GameProperties {
 	}
 
 	public static void toogleIngamePause() {
-
+		
 		if(gameState.equals(GameState.NORMAL))
 			gameState = GameState.PAUSE;
 		else if(gameState.equals(GameState.PAUSE))
@@ -332,39 +332,40 @@ public class GameProperties {
 	
 	
 	public static void resetUserData() {
-		TMP tmp = new TMP();
-		new LwjglApplication(tmp);
 		Highscore.deleteAll();
 		PlayerProfile.deletePlayerProfiles();
-		
 		brightness = 0.0f;
 		contrast = musicVolume = soundVolume = 1.0f;
 		saveToFile();
-		
-		System.exit(0);
-		
 	}
 	
 
 	public static class GameScreenSwitcher implements Runnable {
 		private GameScreen screen;
+		private Screen gdxScreen;
+		private boolean disposeNewScreen = true;
 		public GameScreenSwitcher(GameScreen screen) {
 			this.screen = screen;
-
 		}
 
-		public void run() {
-			GameProperties.switchGameScreen(screen);
-		}
-	}
-	
-//	HACK
-	private static class TMP extends Game {
-		@Override
-		public void create() {
-			
+		public GameScreenSwitcher(Screen gdxScreen) {
+			this.gdxScreen = gdxScreen;
 		}
 		
+		public GameScreenSwitcher(Screen gdxScreen, boolean disposeNewScreen) {
+			this.gdxScreen = gdxScreen;
+			this.disposeNewScreen = disposeNewScreen;
+		}
+		
+		public void run() {
+			if(screen != null)
+				GameProperties.switchGameScreen(screen);
+			else if(gdxScreen != null) {
+				if(GameProperties.gameScreen != null && GameProperties.gameScreen.INDEX >= 0 && disposeNewScreen)
+					gdxScreen.dispose();
+				((Game) Gdx.app.getApplicationListener()).setScreen(gdxScreen);
+			}
+		}
 	}
 
 }

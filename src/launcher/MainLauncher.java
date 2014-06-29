@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import net.HighscoreServer;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -22,21 +24,22 @@ public class MainLauncher {
 	private GameScreen startScreen;
 	
 	private MainLauncher(String[] args) {
-		GameProperties.initPrefDisplayMode();
-		checkArguments(args);
 		
 		cfg = new LwjglApplicationConfiguration();
 		cfg.title = "SEPrunner";
 		cfg.resizable = false;
 		cfg.width = GameProperties.SCALE_WIDTH;
 		cfg.height = GameProperties.SCALE_HEIGHT;
-		
-		cfg.fullscreen = false;
 		cfg.useGL20 = true;
-		
-		startScreen = GameScreen.LEVEL2;
+		cfg.fullscreen = false;
 
+		GameProperties.uploadScore = true;
+		startScreen = GameScreen.MENU_SPLASH;
 		
+		new HighscoreServer().updateLocalHighscoreFile();
+		GameProperties.initPrefDisplayMode();
+		checkArguments(args);
+
 		if(cfg.fullscreen) {
 			cfg.width = GameProperties.prefDisplayMode.width;
 			cfg.height = GameProperties.prefDisplayMode.height;
@@ -79,15 +82,31 @@ public class MainLauncher {
 					startScreen = GameScreen.LEVEL2;
 				else if(args[i].compareTo("level3") == 0)
 					startScreen = GameScreen.LEVEL3;
+				else if(args[i].compareTo("main") == 0)
+					startScreen = GameScreen.MENU_MAIN;
+				else if(args[i].compareTo("levelSelect") == 0)
+					startScreen = GameScreen.MENU_LEVELSELECT;
+				else if(args[i].compareTo("profile") == 0)
+					startScreen = GameScreen.MENU_PROFILE;
+				else if(args[i].compareTo("option") == 0)
+					startScreen = GameScreen.MENU_OPTION;
+				else if(args[i].compareTo("highscore") == 0)
+					startScreen = GameScreen.MENU_HIGHSCORE;
 				else
 					invalidArgument = true;
 				
+			} else if(args[i].compareTo("--help") == 0) {
+				System.out.println("-s startScreen\n\tlevel1\n\tlevel2\n\tlevel3\n\tmain\n\tlevelSelect\n\tprofile\n\toption\n\thighscore");
+				System.out.println("-r resetProfile");
+				System.out.println("-f fullscreen");
+				System.out.println("-gl10 useGL10");
+				System.exit(0);
 			} else
 				invalidArgument = true;
 			
 			if(invalidArgument) {
 				System.err.println("Invalid Arguments");
-				return;
+				System.exit(-1);
 			}
 		
 		} //for

@@ -5,7 +5,6 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -22,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.GameProperties;
 import core.GameProperties.GameScreen;
-import core.PlayerProfile;
 import core.Project;
 import core.menu.tween.ActorAccessor;
 
@@ -158,10 +156,7 @@ public class MenuMain implements Screen {
 		Tween.from(table, ActorAccessor.Y, .5f).target(Gdx.graphics.getHeight()/8).start(tweenManager);
 		
 		tweenManager.update(Gdx.graphics.getDeltaTime());
-		
-		if(PlayerProfile.getProfileCount() == 0)
-			((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(this));
-	
+
 	}
 
 	@Override

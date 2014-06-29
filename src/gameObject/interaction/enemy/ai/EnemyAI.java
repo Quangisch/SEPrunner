@@ -26,11 +26,14 @@ public abstract class EnemyAI implements IEnemyAI {
 	private Set<ActionKey> currentAction;
 	private List<ScriptedAction> scriptedActions;
 
-	private float lastX, lastY;
-	protected int armor;
 	protected UnresolvedAction unresolvedAction = UnresolvedAction.NORMAL;
 	protected float[] advancedValues;
 
+	protected BodyObject actionObj;
+	private float lastX, lastY;
+	protected int armor;
+	
+	
 	protected EnemyAI() {
 		currentAction = new HashSet<ActionKey>();
 		scriptedActions = new LinkedList<ScriptedAction>();
@@ -275,7 +278,10 @@ public abstract class EnemyAI implements IEnemyAI {
 					
 					armor--;
 					if(armor < 0)	getEnemy().setStun();
-					else 			actionAfterHit();
+					else {
+						unresolvedAction = UnresolvedAction.HIT_BY_SHURIKEN;
+						actionObj = other;
+					}
 					
 					other.getParent().dispose();
 					return true;

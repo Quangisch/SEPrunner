@@ -1,5 +1,7 @@
 package core;
 
+import java.io.File;
+
 import com.badlogic.gdx.Game;
 
 import core.GameProperties.GameScreen;
@@ -47,9 +49,11 @@ public class Project extends Game{
 
 	@Override
 	public void dispose() {
-		AudioManager.resetInstance();
 		super.dispose();
+		AudioManager.resetInstance();
 		AnimatedBackground.getInstance().dispose();
+		new File(FilePath.highscoreServer).delete();
+		new File(FilePath.highscoreTemp).delete();
 	}
 
 }

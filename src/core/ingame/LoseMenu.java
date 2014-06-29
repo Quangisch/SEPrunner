@@ -78,7 +78,7 @@ public class LoseMenu implements IDrawable {
 		Button cont = new Button() {
 
 			public String getText() {
-				return "Nochmal";
+				return "Retry";
 			}
 
 			public void onClick() {
@@ -86,17 +86,17 @@ public class LoseMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(cont.getText());
-		if (new Rectangle((width - tB.width) * 0.2f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.5f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(cont.getHoverColor());
 			if (cl != null) cont.onClick();
 		} else
 			font.setColor(cont.getTextColor());
-		font.draw(b, cont.getText(), (width - tB.width) * 0.2f, height * 0.25f + tB.height);
+		font.draw(b, cont.getText(), (width - tB.width) * 0.5f, height * 0.25f + tB.height);
 		//
 		Button back = new Button() {
 
 			public String getText() {
-				return "Menu";
+				return "Back To Menu";
 			}
 
 			public void onClick() {
@@ -104,17 +104,17 @@ public class LoseMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(back.getText());
-		if (new Rectangle((width - tB.width) * 0.8f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.95f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(back.getHoverColor());
 			if (cl != null) back.onClick();
 		} else
 			font.setColor(back.getTextColor());
-		font.draw(b, back.getText(), (width - tB.width) * 0.8f, height * 0.25f + tB.height);
+		font.draw(b, back.getText(), (width - tB.width) * 0.95f, height * 0.25f + tB.height);
 		//
 		Button restart = new Button() {
 
 			public String getText() {
-				return "Level";
+				return "Select Level";
 			}
 
 			public void onClick() {
@@ -123,12 +123,31 @@ public class LoseMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(restart.getText());
-		if (new Rectangle((width - tB.width) * 0.5f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.05f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(restart.getHoverColor());
 			if (cl != null) restart.onClick();
 		} else
 			font.setColor(restart.getTextColor());
-		font.draw(b, restart.getText(), (width - tB.width) * 0.5f, height * 0.25f + tB.height);
+		font.draw(b, restart.getText(), (width - tB.width) * 0.05f, height * 0.25f + tB.height);
+		//
+		Button highScore = new Button() {
+
+			public String getText() {
+				return "Score";
+			}
+
+			public void onClick() {
+				// TODO Level Auswahl
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_LEVELSELECT));
+			}
+		};
+		tB = font.getBounds(highScore.getText());
+		if (new Rectangle((width - tB.width) * 0.05f, height * 0.25f, tB.width, tB.height).contains(v)) {
+			font.setColor(highScore.getHoverColor());
+			if (cl != null) highScore.onClick();
+		} else
+			font.setColor(highScore.getTextColor());
+		font.draw(b, highScore.getText(), (width - tB.width) * 0.05f, height * 0.25f + tB.height);
 		//
 		font.setColor(Color.WHITE);
 

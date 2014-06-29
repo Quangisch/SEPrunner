@@ -76,7 +76,7 @@ public class WinMenu implements IDrawable {
 
 		font.setScale(MAX_FONT_SCALE * 0.9f);
 
-		String title = "Level Abgeschlossen!";
+		String title = "Level Completed!";
 		TextBounds tB = font.getBounds(title);
 		font.draw(b, title, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2 * 1.2f);
 
@@ -94,7 +94,7 @@ public class WinMenu implements IDrawable {
 		Button cont = new Button() {
 
 			public String getText() {
-				return "Weiter";
+				return "Next Level";
 			}
 
 			public void onClick() {
@@ -104,17 +104,17 @@ public class WinMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(cont.getText());
-		if (new Rectangle((width - tB.width) * 0.2f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.5f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(cont.getHoverColor());
 			if (cl != null) cont.onClick();
 		} else
 			font.setColor(cont.getTextColor());
-		font.draw(b, cont.getText(), (width - tB.width) * 0.2f, height * 0.25f + tB.height);
+		font.draw(b, cont.getText(), (width - tB.width) * 0.5f, height * 0.25f + tB.height);
 		//
 		Button back = new Button() {
 
 			public String getText() {
-				return "Menu";
+				return "Back To Menu";
 			}
 
 			public void onClick() {
@@ -122,17 +122,17 @@ public class WinMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(back.getText());
-		if (new Rectangle((width - tB.width) * 0.8f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.95f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(back.getHoverColor());
 			if (cl != null) back.onClick();
 		} else
 			font.setColor(back.getTextColor());
-		font.draw(b, back.getText(), (width - tB.width) * 0.8f, height * 0.25f + tB.height);
+		font.draw(b, back.getText(), (width - tB.width) * 0.95f, height * 0.25f + tB.height);
 		//
 		Button restart = new Button() {
 
 			public String getText() {
-				return "Wiederholen";
+				return "Retry";
 			}
 
 			public void onClick() {
@@ -140,12 +140,12 @@ public class WinMenu implements IDrawable {
 			}
 		};
 		tB = font.getBounds(restart.getText());
-		if (new Rectangle((width - tB.width) * 0.5f, height * 0.25f, tB.width, tB.height).contains(v)) {
+		if (new Rectangle((width - tB.width) * 0.05f, height * 0.25f, tB.width, tB.height).contains(v)) {
 			font.setColor(restart.getHoverColor());
 			if (cl != null) restart.onClick();
 		} else
 			font.setColor(restart.getTextColor());
-		font.draw(b, restart.getText(), (width - tB.width) * 0.5f, height * 0.25f + tB.height);
+		font.draw(b, restart.getText(), (width - tB.width) * 0.05f, height * 0.25f + tB.height);
 		//
 		font.setColor(Color.WHITE);
 

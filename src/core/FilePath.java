@@ -5,6 +5,8 @@ public interface FilePath {
 	public static final String 
 //			JSON
 			highscore = "res/highscore.json",
+			highscoreServer = "res/highscoreServer.json",
+			highscoreTemp = "res/upload.json",
 			level0 = "res/map/level0.json",
 			level1 = "res/map/level1.json",
 			level2 = "res/map/level2.json",

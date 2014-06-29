@@ -15,9 +15,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.Disposable;
 
+import core.AudioManager;
 import core.GameProperties;
 import core.GameProperties.GameScreen;
-import core.AudioManager;
 import core.exception.LevelNotFoundException;
 import core.ingame.input.InputHandler;
 
@@ -40,9 +40,8 @@ public class GameRender implements Screen {
 		gameWorld = new GameWorld(level, iHandler, camera);
 		hud = new HUD(gameWorld);
 		pauseMenu = new PauseMenu();
-		winMenu = new WinMenu(gameWorld);
 		loseMenu = new LoseMenu();
-
+		winMenu = new WinMenu(gameWorld);
 		// TODO TMP for debugging
 		Debug.init(iHandler, camera);
 		GeometricObject.setRender(this);
@@ -61,6 +60,8 @@ public class GameRender implements Screen {
 		gameWorld.dispose();
 		for (Disposable d : geometrics)
 			d.dispose();
+//		if(winMenu != null)
+//			winMenu.dispose();
 	}
 
 	public boolean addGeometricObject(GeometricObject geo) {
@@ -77,6 +78,8 @@ public class GameRender implements Screen {
 
 		switch (GameProperties.getGameState()) {
 		case WIN:
+//			if(winMenu == null)
+//				winMenu = new WinMenu(gameWorld);
 		case LOSE:
 			break;
 		case PAUSE:
@@ -110,6 +113,7 @@ public class GameRender implements Screen {
 			pauseMenu.draw(batch, realdelta);
 			break;
 		case WIN:
+//			Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(new WinMenu2(gameWorld)));
 			winMenu.draw(batch, realdelta);
 			break;
 		case LOSE:
@@ -127,6 +131,7 @@ public class GameRender implements Screen {
 			// 	e.printStackTrace();
 		}
 
+
 		batch.end();
 
 		gameWorld.step(delta, 6, 4);
@@ -143,6 +148,6 @@ public class GameRender implements Screen {
 
 	@Override
 	public void hide() {
-		dispose();
+		
 	}
 }
