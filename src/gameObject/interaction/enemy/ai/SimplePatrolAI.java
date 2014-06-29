@@ -78,6 +78,8 @@ int z = 0;
 			if(mySensor != null 
 					&& mySensor.getSensorType() == SensorTypes.BODY
 					&& other.getBodyObjectType().equals(BodyObjectType.Shuriken)){
+
+					other.getParent().dispose();
 					armour--;
 					if(armour ==0){
 						getEnemy().setStun();

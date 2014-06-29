@@ -437,23 +437,25 @@ public class MenuProfile implements Screen {
 					buy_hook += INC_SPEED;
 				else									
 					warningCostsAlpha = 1f;
-			}	
-	
+			}
+
 		} else if(incShu != 0) {
 			if(incShu < 0)
 				buy_shu = Math.max(0, buy_shu - INC_SPEED);
 			else if(incShu > 0) {
-				if(buy_costs + PRICE_SHU <= profile.stylePoints)	
+				if(buy_costs + PRICE_SHU <= profile.stylePoints)
 					buy_shu += INC_SPEED;
 				else
 					warningCostsAlpha = 1f;
 			}
+
 		}
 		
 		if(incShu != 0 || incHook != 0) {
-			buy_costs = (int)buy_hook * PRICE_HOOK + (int)buy_shu * PRICE_SHU;;
+			buy_costs = (int) buy_shu * PRICE_SHU + (int) buy_hook * PRICE_HOOK;;
 			updateShopLabels();
 		}
+
 	}
 	
 	

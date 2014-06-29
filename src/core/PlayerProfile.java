@@ -61,7 +61,7 @@ public class PlayerProfile {
 	
 	private static String getDefaultProfileAsString() {
 		return String.format("[{name: NewPlayer,shuriken: %d,hookRadius: %d,stylePoints: %d,experience: %d}]", 
-				10,GameProperties.HOOK_RADIUS_MIN, 20, 0).toString();
+				10,GameProperties.HOOK_RADIUS_MIN, GameProperties.INITIAL_STYLEPOINTS, 0).toString();
 	}
 	
 	
@@ -99,7 +99,8 @@ public class PlayerProfile {
 		name = "NewPlayer";
 		shuriken = 10;
 		hookRadius = GameProperties.HOOK_RADIUS_MIN;
-		experience = stylePoints = 0;
+		experience = 0;
+		stylePoints = GameProperties.INITIAL_STYLEPOINTS;
 	}
 	
 //	TODO BUG: game crashs after two sucessive calls of deleteProfile() - heapSpace
@@ -153,6 +154,7 @@ public class PlayerProfile {
 		newProfile.experience = newProfile.stylePoints = 0;
 		newProfile.hookRadius = GameProperties.HOOK_RADIUS_MIN;
 		newProfile.shuriken = 10;
+		newProfile.stylePoints = GameProperties.INITIAL_STYLEPOINTS;
 		
 		applyNameCheat(newProfile);
 		

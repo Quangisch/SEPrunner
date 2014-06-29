@@ -28,7 +28,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 
 	private int grounded, bodyBlocked;
 	private boolean hookable;
-	private GameObject grabTarget, disposeTarget, hideTarget;
+	protected GameObject grabTarget, disposeTarget, hideTarget;
 
 	private Vector2 hookPoint;
 	private List<Vector2> hookPoints = new LinkedList<Vector2>();
@@ -79,6 +79,12 @@ public abstract class InteractionObject extends InteractionManager implements IC
 					&& !grabTarget.getInteractionState().equals(InteractionState.STUNNED))
 				grabTarget.applyInteraction(InteractionState.STUNNED);
 			
+			if(grabTarget.hideTarget != null && hideTarget == null) { 
+				hideTarget = grabTarget.hideTarget;
+				hideTarget.getAnimationObject().setActive(true);
+			}
+			
+			grabTarget.getAnimationObject().setActive(false);
 		} else
 			disposeTarget = null;
 	}

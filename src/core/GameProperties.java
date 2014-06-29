@@ -30,8 +30,8 @@ public class GameProperties {
 	public static final int SCALE_WIDTH = 640;
 	public static final int SCALE_HEIGHT = 360;
 
-	private static GameState gameState = GameState.NORMAL;
-	public static GameScreen gameScreen = GameScreen.MENU_SPLASH;
+	public static GameState gameState = GameState.NORMAL;
+	public static GameScreen gameScreen;
 
 
 	public static DisplayMode prefDisplayMode;
@@ -46,6 +46,7 @@ public class GameProperties {
 	public static final int HOOK_RADIUS_MIN = 300;
 	public static final int HOOK_RADIUS_MAX = 500;
 	public static final int MAX_PROFILE_COUNT = 5;
+	public static final int INITIAL_STYLEPOINTS = 20;
 	
 	
 	
@@ -126,6 +127,7 @@ public class GameProperties {
 			return rank;
 		}
 	}
+
 
 	public static final int WITHOUT_SHURIKENS = 100;
 	public static final int DISPOSED_MUL = 5;
@@ -247,10 +249,11 @@ public class GameProperties {
 			break;
 		
 		}
-		Gdx.graphics.setDisplayMode(SCALE_WIDTH, SCALE_HEIGHT, Gdx.graphics.isFullscreen());
-		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
 
+		refreshDisplayMode();
+		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
 		ResourceManager.getInstance().startMusic(screen);
+		
 		return true;
 
 	}

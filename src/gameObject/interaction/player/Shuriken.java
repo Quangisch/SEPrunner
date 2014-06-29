@@ -47,8 +47,8 @@ public class Shuriken extends GameObject {
 					ttl = 5;
 					return true;
 				case Enemy :
-					if(otherSensor != null && otherSensor.getSensorType() == SensorTypes.CORE) {
-//						((Enemy) other.getParent()).setStun();
+					if(otherSensor != null && otherSensor.getSensorType() == SensorTypes.CORE
+							&& !otherSensor.getBodyObject().getParent().isStunned()) {
 						dispose();
 						return true;
 					}

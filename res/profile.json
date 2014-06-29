@@ -1,0 +1,30 @@
+[
+{
+	name: NewP,
+	shuriken: 10,
+	hookRadius: 300,
+	stylePoints: 20,
+	experience: 0
+},
+{
+	name: NewPla,
+	shuriken: 10,
+	hookRadius: 321,
+	stylePoints: -1,
+	experience: 0
+},
+{
+	name: NewPla,
+	shuriken: 10,
+	hookRadius: 300,
+	stylePoints: 0,
+	experience: 0
+},
+{
+	name: NewP,
+	shuriken: 10,
+	hookRadius: 300,
+	stylePoints: 0,
+	experience: 0
+}
+]

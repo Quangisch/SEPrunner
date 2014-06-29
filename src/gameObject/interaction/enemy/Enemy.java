@@ -92,7 +92,6 @@ public class Enemy extends GameObject {
 			view.setActive(false);
 	}
 
-
 	@Override
 	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor,
 			BodyObject other, Sensor otherSensor) {
