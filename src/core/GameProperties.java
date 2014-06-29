@@ -13,6 +13,7 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
@@ -94,12 +95,30 @@ public class GameProperties {
 			soundVolume = root.getFloat("soundVolume");
 
 		} catch (Exception e) {
-			saveToFile();
+			saveSettings();
+			return;
+		}
+	}
+	
+	public static void saveSettings() {
+		JsonValue root = null;
+		try {
+			root = new JsonReader().parse(new FileReader(FilePath.settings));
+
+			root.get("brightness").set(brightness);
+			root.get("contrast").set(contrast);
+			root.get("musicVolume").set(musicVolume);
+			root.get("soundVolume").set(soundVolume);
+
+			FileHandle file = Gdx.files.local(FilePath.settings);
+			file.writeString(root.toString(), false);
+		} catch (Exception e) {
+			resetSettings();
 			return;
 		}
 	}
 
-	public static void saveToFile() {
+	public static void resetSettings() {
 		FileWriter f;
 		try {
 			f = new FileWriter(FilePath.settings);
@@ -336,7 +355,7 @@ public class GameProperties {
 		PlayerProfile.deletePlayerProfiles();
 		brightness = 0.0f;
 		contrast = musicVolume = soundVolume = 1.0f;
-		saveToFile();
+		resetSettings();
 	}
 	
 

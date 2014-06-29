@@ -333,7 +333,7 @@ public class MenuOption implements Screen {
 		GameProperties.soundVolume = soundSlider.getValue();
 		
 		keyMap.saveToFile();
-		GameProperties.saveToFile();
+		GameProperties.saveSettings();
 		dispose();
 	}
 
