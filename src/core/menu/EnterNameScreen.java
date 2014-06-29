@@ -2,13 +2,13 @@ package core.menu;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -79,18 +79,16 @@ public class EnterNameScreen implements Screen {
 
 		nameField = new TextField("", skin);
 		nameField.setStyle(style);
-		nameField.setMaxLength(10);
-		nameField.setText("NewPlayer");
+		nameField.setMaxLength(GameProperties.MAX_NAME_LENGTH);
+		nameField.setText(GameProperties.getInitialName());
 		nameField.setCursorPosition(nameField.getText().length());
-		nameField.setCursorPosition(9);
 		stage.setKeyboardFocus(nameField);
 		nameField.addListener(new ClickListener() {
 			public boolean keyDown(InputEvent event, int keycode) {
 				if(keycode == Keys.ENTER && event.getListenerActor().equals(nameField)) {
 					
-					PlayerProfile profile = new PlayerProfile();
-					profile.name = nameField.getText();
-					profile.saveProfile();
+					PlayerProfile profile = PlayerProfile.createNewProfile(nameField.getText());
+					profile.updateAndSaveProfile();
 					((Game) Gdx.app.getApplicationListener()).setScreen(PREVIOUS_SCREEN);
 					return true;
 				}

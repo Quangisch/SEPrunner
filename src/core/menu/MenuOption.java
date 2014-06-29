@@ -30,7 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import core.GameProperties;
 import core.GameProperties.GameScreen;
 import core.Project;
-import core.ResourceManager;
+import core.AudioManager;
 import core.ingame.input.KeyMap;
 import core.ingame.input.KeyMap.ActionKey;
 
@@ -436,10 +436,10 @@ public class MenuOption implements Screen {
 				GameProperties.contrast = contrastSlider.getValue();
 			} else if(event.getListenerActor() == musicSlider){
 				GameProperties.musicVolume = musicSlider.getValue();
-				ResourceManager.getInstance().adjustMusicVolume();
+				AudioManager.getInstance().adjustMusicVolume();
 			} else if(event.getListenerActor() == soundSlider){
 				GameProperties.soundVolume = soundSlider.getValue();
-				ResourceManager.getInstance().adjustSoundVolume();
+				AudioManager.getInstance().adjustSoundVolume();
 				
 //			BACK
 			} else if(event.getListenerActor() == backButton) {

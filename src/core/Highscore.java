@@ -110,8 +110,10 @@ public class Highscore {
 	}
 	
 	public static boolean addHighscore(Score score) {
-		if(!getInstance().highscoreMap.containsKey(score.LEVEL_INDEX))
-			getInstance().highscoreMap.put(score.LEVEL_INDEX, new LinkedList<Score>());
+		if(!getInstance().highscoreMap.containsKey(score.LEVEL_INDEX)) {
+			System.err.println(Highscore.class.toString()+" @addHighscore(...) : Illegal LevelIndex");
+			return false;
+		}
 		
 		boolean add = false;
 		if(!getInstance().highscoreMap.get(score.LEVEL_INDEX).contains(score))

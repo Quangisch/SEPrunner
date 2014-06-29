@@ -1,5 +1,11 @@
 package gameObject.interaction.enemy.ai;
 
+import gameObject.body.BodyObject;
+import gameObject.body.BodyObjectType;
+import gameObject.body.ISensorTypes;
+import gameObject.body.ISensorTypes.SensorTypes;
+import gameObject.body.Sensor;
+import gameObject.interaction.enemy.Alarm;
 import gameObject.interaction.enemy.Enemy;
 
 import java.util.HashSet;
@@ -21,6 +27,9 @@ public abstract class EnemyAI implements IEnemyAI {
 	private List<ScriptedAction> scriptedActions;
 
 	private float lastX, lastY;
+	protected int armor;
+	protected UnresolvedAction unresolvedAction = UnresolvedAction.NORMAL;
+	protected float[] advancedValues;
 
 	protected EnemyAI() {
 		currentAction = new HashSet<ActionKey>();
@@ -38,11 +47,44 @@ public abstract class EnemyAI implements IEnemyAI {
 		lastX = enemy.getBodyObject().getX();
 		lastY = enemy.getBodyObject().getY();
 	}
+	
+	
+	@Override
+	public void init(JsonValue actions, JsonValue advanced) {
+		for (JsonValue action : actions) {
+			float a = action.get("between").getFloat(0);
+			float b = action.get("between").size == 2 ? action.get("between").getFloat(1) : a;
+			ActionKey aKey = ActionKey.valueOf(action.getString("key"));
+			boolean horizontal = action.getBoolean("horizontal");
+			scriptedActions.add(new ScriptedAction(aKey, horizontal, a, b));
+		}
+		
+		if(advanced != null && advanced.size > 0) {
+			advancedValues = new float[advanced.size];
+			for(int i = 0; i < advancedValues.length; i++)
+				advancedValues[i] = advanced.getFloat(i);
+		}
+	}
 
 	@Override
 	public void run() {
-		if (link == null) return;
-
+		if (link == null) 
+			return;
+		
+		boolean contScript = true;
+		
+		if(!unresolvedAction.equals(UnresolvedAction.NORMAL))
+			contScript = resolveAction();
+		
+		if(contScript)
+			applyScriptedAction();
+		
+	}
+	
+	private void applyScriptedAction() {
+		if (Alarm.isActive())	keyDown(ActionKey.RUN);
+		else					keyUp(ActionKey.RUN);
+		
 		link.getBodyObject().getSensors().get(1).setActive(!getEnemy().getAnimationObject().isFlipped());//deaktiviert rechten sensor
 		link.getBodyObject().getSensors().get(0).setActive(getEnemy().getAnimationObject().isFlipped());
 
@@ -66,18 +108,6 @@ public abstract class EnemyAI implements IEnemyAI {
 
 		lastX = link.getBodyObject().getX();
 		lastY = link.getBodyObject().getY();
-	}
-
-	//	TODO testing
-	@Override
-	public void init(JsonValue actions) {
-		for (JsonValue action : actions) {
-			float a = action.get("between").getFloat(0);
-			float b = action.get("between").size == 2 ? action.get("between").getFloat(1) : a;
-			ActionKey aKey = ActionKey.valueOf(action.getString("key"));
-			boolean horizontal = action.getBoolean("horizontal");
-			scriptedActions.add(new ScriptedAction(aKey, horizontal, a, b));
-		}
 	}
 
 	private void addAction(ActionKey action) {
@@ -141,6 +171,42 @@ public abstract class EnemyAI implements IEnemyAI {
 			return trigger;
 		}
 	}
+	
+//	UNRESOLVED ACTION
+	/**
+	 * Overwrite for correct usage
+	 * @return continue with regular scriptedActions
+	 */
+	protected boolean resolveAction() {
+		switch(unresolvedAction) {
+		case ALARM_TRIGGERD:
+			break;
+		case HIT_BY_SHURIKEN:
+			break;
+		case NORMAL:
+			break;
+		case SEE_PLAYER:
+			break;
+		case SEE_STUNNED_ENEMY:
+			break;
+		default:
+			break;
+		
+		}
+		unresolvedAction = UnresolvedAction.NORMAL;
+		return true;
+	}
+	
+//	TODO
+	protected boolean scanArea(float radius) {
+		
+		return false;
+	}
+	
+//	TODO
+	protected void actionAfterHit() {
+		
+	}
 
 	//	IInputHandler
 	@Override
@@ -177,6 +243,48 @@ public abstract class EnemyAI implements IEnemyAI {
 	@Override
 	public void keyDown(ActionKey action) {
 		currentAction.add(action);
+	}
+	
+	protected enum UnresolvedAction {
+		NORMAL, HIT_BY_SHURIKEN, SEE_PLAYER, SEE_STUNNED_ENEMY, ALARM_TRIGGERD 
+	}
+	
+	@Override
+	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor, BodyObject other, Sensor otherSensor) {
+	
+		if(!postSolve) {
+			
+			if(mySensor != null) {
+				
+				boolean meFlipped = mySensor.getBodyObject().getParent().getAnimationObject().isFlipped();
+				
+//				viewSensor triggered
+				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
+							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)) {
+					
+					if((other.getBodyObjectType().equals(BodyObjectType.Player) && !other.getParent().isHiding())		//triggered by player
+						|| (other.getBodyObjectType().equals(BodyObjectType.Enemy) && other.getParent().isStunned())) {	//triggered by stunned fellow enemy
+						
+						Alarm.trigger();
+						return true;
+					}
+				} //sensor == viewSensor
+				
+//				bodySensor triggered by shuriken
+				else if(mySensor.getSensorType() == SensorTypes.BODY && other.getBodyObjectType().equals(BodyObjectType.Shuriken)) {
+					
+					armor--;
+					if(armor < 0)	getEnemy().setStun();
+					else 			actionAfterHit();
+					
+					other.getParent().dispose();
+					return true;
+				}
+				
+			}  // end if (sensor != null)
+			
+		} //postSolve
+		return false;
 	}
 
 }

@@ -47,7 +47,7 @@ public class Project extends Game{
 
 	@Override
 	public void dispose() {
-		ResourceManager.resetInstance();
+		AudioManager.resetInstance();
 		super.dispose();
 		AnimatedBackground.getInstance().dispose();
 	}

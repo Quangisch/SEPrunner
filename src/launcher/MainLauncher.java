@@ -34,7 +34,7 @@ public class MainLauncher {
 		cfg.fullscreen = false;
 		cfg.useGL20 = true;
 		
-		startScreen = GameScreen.MENU_PROFILE;
+		startScreen = GameScreen.LEVEL2;
 
 		
 		if(cfg.fullscreen) {

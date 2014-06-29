@@ -13,5 +13,6 @@ public interface IEnemyAI extends IInputHandler, Runnable, ICollisionable {
 
 	public void setEnemy(Enemy enemy);
 
-	public void init(JsonValue jsonValue);
+	public void init(JsonValue actions, JsonValue advanced);
+	
 }

@@ -40,11 +40,14 @@ public class Enemy extends GameObject {
 		setBodyObjectType(BodyObjectType.Enemy);
 		getAnimationObject().setLayer(3);
 
-		getBodyObject().addSensor(Type.Circle, new float[] { 0, 1, 1f },
+		float lx = 0.6f, rx = 0.8f;
+		float y = 1f, w = 1.5f, h = 0.5f; 
+		getBodyObject().addSensor(Type.Polygon, new float[] { lx-w,y-h/2 , lx-w,y+h/2 , lx,y+h/2 , lx,y-h/2 },
 				SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
 		// NILS
-		getBodyObject().addSensor(Type.Circle, new float[] { 1.3f, 1, 1f },
+		getBodyObject().addSensor(Type.Polygon, new float[] { rx,y-h/2 , rx,y+h/2 , rx+w,y+h/2 , rx+w,y-h/2 },
 				SensorTypes.VISION_RIGHT, Sensor.HANDLE_FIRST);
+
 	}
 
 	@Override
@@ -125,7 +128,7 @@ public class Enemy extends GameObject {
 			break;
 		}
 		if (ai != null)
-			ai.init(jAI.get("Actions"));
+			ai.init(jAI.get("Actions"), jAI.get("Advanced"));
 		
 		if(jMul == null)	setAI(ai);
 		else				setAI(ai, jMul.getFloat(0), jMul.getFloat(1), 
@@ -135,5 +138,10 @@ public class Enemy extends GameObject {
 	
 	public InteractionHandler getInteractionHandler(){
 		return interactionHandler;
+	}
+	
+//	TODO
+	public boolean scanArea(GameObject obj) {
+		return view.contains(obj.getBodyObject().getX(), obj.getBodyObject().getY());
 	}
 }

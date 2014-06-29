@@ -497,7 +497,8 @@
 											"horizontal" 	: true,
 											"key"		: "RIGHT"
 										}
-									]
+									],
+							"Advanced" : [0,6.7,19000]
 						}
 					},
 					{

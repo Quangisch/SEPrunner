@@ -7,9 +7,9 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonValue.ValueType;
 
 import core.exception.ProfileNotFoundException;
 
@@ -33,14 +33,22 @@ public class PlayerProfile {
 		if(file == null)
 			file = Gdx.files.local(FilePath.profile);
 		
-		if(index > root.size || index < 0)
-			throw new ProfileNotFoundException();
-		
-		this.index = index;
+		if(root == null)
+			root = new JsonValue(ValueType.array);
 		
 		if(root.size == 0)
-			initNewProfile();
-
+			root.child = initNewProfile();
+		else if(root.size <= index) {
+			this.index = root.size;
+			root.get(this.index-1).child = initNewProfile();
+		} else if(index < 0) {
+			this.index = 0;
+			JsonValue newProfile = initNewProfile();
+			newProfile.next = root.get(0);
+			root.child = newProfile;
+		}
+		
+		this.index = index;
 		loadProfile();
 	}
 	
@@ -48,22 +56,30 @@ public class PlayerProfile {
 		this(0);
 	}
 	
-	private void initNewProfile() {
-		if(root.size == 0) {
-			file.writeString(getDefaultProfileAsString(), false);
-			try {
-				root = new JsonReader().parse(new FileReader(FilePath.profile));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
+	private static JsonValue initNewProfile() {
+		JsonValue singleProfile = new JsonValue(ValueType.object);
+		singleProfile.child = new JsonValue(ValueType.object);
+		singleProfile.child.name = "name";
+		singleProfile.child.set(GameProperties.getInitialName());
+		
+		singleProfile.child.next = new JsonValue(ValueType.object);
+		singleProfile.child.next.name = "shuriken";
+		singleProfile.child.next.set(GameProperties.INITIAL_SHURIKENS);
+		
+		singleProfile.child.next.next = new JsonValue(ValueType.object);
+		singleProfile.child.next.next.name = "hookRadius";
+		singleProfile.child.next.next.set(GameProperties.INITIAL_HOOK_RADIUS);
+		
+		singleProfile.child.next.next.next = new JsonValue(ValueType.object);
+		singleProfile.child.next.next.next.name = "stylepoints";
+		singleProfile.child.next.next.next.set(GameProperties.INITIAL_STYLEPOINTS);
+		
+		singleProfile.child.next.next.next.next = new JsonValue(ValueType.object);
+		singleProfile.child.next.next.next.next.name = "experience";
+		singleProfile.child.next.next.next.next.set(0);
+		
+		return singleProfile;
 	}
-	
-	private static String getDefaultProfileAsString() {
-		return String.format("[{name: NewPlayer,shuriken: %d,hookRadius: %d,stylePoints: %d,experience: %d}]", 
-				10,GameProperties.HOOK_RADIUS_MIN, GameProperties.INITIAL_STYLEPOINTS, 0).toString();
-	}
-	
 	
 	private void loadProfile() {
 		if(root == null || root.size == 0)
@@ -77,7 +93,7 @@ public class PlayerProfile {
 		applyNameCheat(this);
 	}
 	
-	public void saveProfile() {
+	public void updateAndSaveProfile() {
 		root.get(index).get("name").set(name);
 		root.get(index).get("experience").set(experience);
 		root.get(index).get("shuriken").set(shuriken);
@@ -97,15 +113,16 @@ public class PlayerProfile {
 	
 	public void reset() {
 		name = "NewPlayer";
-		shuriken = 10;
-		hookRadius = GameProperties.HOOK_RADIUS_MIN;
-		experience = 0;
+		shuriken = GameProperties.INITIAL_SHURIKENS;
+		hookRadius = GameProperties.INITIAL_HOOK_RADIUS;
 		stylePoints = GameProperties.INITIAL_STYLEPOINTS;
+		experience = 0;
 	}
 	
-//	TODO BUG: game crashs after two sucessive calls of deleteProfile() - heapSpace
 	public void deleteProfile() {
-		root.remove(index);
+		if(root.size == 1)	root = new JsonValue(ValueType.array);
+		else				root.child = root.child.next;
+		
 		file.writeString(root.toString(), false);
 	}
 	
@@ -131,7 +148,7 @@ public class PlayerProfile {
 		}
 		
 		this.index = newIndex;
-		saveProfile();
+		updateAndSaveProfile();
 	}
 
 	public String toString() {
@@ -141,33 +158,16 @@ public class PlayerProfile {
 	
 //	STATIC METHODS
 	public static PlayerProfile createNewProfile(String name) {
-		PlayerProfile newProfile = new PlayerProfile();
-		
-		JsonValue root = null;
-		try {
-			root = new JsonReader().parse(new FileReader(FilePath.profile));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
+		PlayerProfile newProfile = new PlayerProfile(-1);
+		newProfile.reset();
 		newProfile.name = name;
-		newProfile.experience = newProfile.stylePoints = 0;
-		newProfile.hookRadius = GameProperties.HOOK_RADIUS_MIN;
-		newProfile.shuriken = 10;
-		newProfile.stylePoints = GameProperties.INITIAL_STYLEPOINTS;
-		
-		applyNameCheat(newProfile);
-		
-		newProfile.root.get(newProfile.index).setNext(root.get(0));
-		root.child = newProfile.root.get(newProfile.index);
-		newProfile.saveProfile();
-		
+		newProfile.updateAndSaveProfile();
 		return newProfile;
 	}
 	
 	private static boolean applyNameCheat(PlayerProfile profile) {
 		if(profile.name.compareTo("Cheater") == 0) {
-			profile.hookRadius = GameProperties.HOOK_RADIUS_MAX;
+			profile.hookRadius = GameProperties.MAX_HOOK_RADIUS;
 			profile.shuriken = profile.stylePoints = profile.experience = 999;
 			return true;
 		}
@@ -194,23 +194,6 @@ public class PlayerProfile {
 		}
 		
 		return root == null ? 0 : root.size;
-	}
-	
-	public static boolean isEmptyProfile() {
-		JsonValue root = null;
-		try {
-			root = new JsonReader().parse(new FileReader(FilePath.profile));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		if(root != null && root.size == 1) {
-			Json j = new Json();
-			String s1 = j.prettyPrint(root);
-			String s2 = j.prettyPrint(getDefaultProfileAsString());
-			return s1.compareTo(s2) == 0;
-		}
-		return false;
 	}
 	
 	public static List<String> getNameList() {

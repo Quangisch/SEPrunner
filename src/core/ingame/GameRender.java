@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import core.GameProperties;
 import core.GameProperties.GameScreen;
-import core.ResourceManager;
+import core.AudioManager;
 import core.exception.LevelNotFoundException;
 import core.ingame.input.InputHandler;
 
@@ -57,7 +57,7 @@ public class GameRender implements Screen {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		ResourceManager.getInstance().dispose();
+		AudioManager.getInstance().dispose();
 		gameWorld.dispose();
 		for (Disposable d : geometrics)
 			d.dispose();
@@ -129,7 +129,7 @@ public class GameRender implements Screen {
 
 		batch.end();
 
-		gameWorld.step(Gdx.graphics.getDeltaTime(), 6, 4);
+		gameWorld.step(delta, 6, 4);
 	}
 
 	@Override

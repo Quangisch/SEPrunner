@@ -18,10 +18,13 @@ public interface FilePath {
 //			AUDIO
 			music_menu = "res/audio/music/mainMenu.mp3",
 			music_soundScape = "res/audio/music/soundScape.mp3",
+			music_nAction = "res/audio/music/nactionv2.mp3",
 			music_win = "res/audio/music/win.mp3",
 			music_lose = "res/audio/music/lose.mp3",
+			
 			sound_atmo = "res/audio/sounds/atmo_wind.mp3",
-	
+			sound_get = "res/audio/sounds/get.mp3",
+			
 //			GRAPHICS
 			graphic_menuMain = "res/img/main menu.png",
 			ground = "res/map/background/ground.png",

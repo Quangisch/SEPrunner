@@ -6,15 +6,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import misc.ShaderBatch;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -25,17 +22,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
+import core.FilePath;
 import core.GameProperties;
 import core.GameProperties.GameScreen;
 import core.PlayerProfile;
 
 public class MenuProfile implements Screen {
 
+	private final MenuProfile INSTANCE;
 	private Stage stage;
 	
 	private Table mainTable, contentTable, shopTable, shopTableContent, shopTableBuy, profileTable, itemTable, 
@@ -56,18 +52,20 @@ public class MenuProfile implements Screen {
 	
 	private com.badlogic.gdx.scenes.scene2d.ui.List profileList;
 	private ScrollPane scrollPane;
-	private Label label_createProfile, label_delProfile, label_chooseProfile, label_selectProfile;
-	private TextField nameField;
-	private Pixmap pixmap;
-	private Texture texture;
+	private Label label_delProfile, label_chooseProfile, label_selectProfile;
 	
 	private PlayerProfile profile;
+	private Sound sound_buy;
 
 //	SHOP
 	private final int PRICE_SHU = 5, PRICE_HOOK = 1;
 	private float warningCostsAlpha = 0f, warningProfileAlpha = 0f;
 	private float buy_shu, buy_hook, buy_costs, incShu, incHook;
 	private final float INC_SPEED = 0.1f;
+	
+	public MenuProfile() {
+		INSTANCE = this;
+	}
 	
 	@Override
 	public void show() {
@@ -79,6 +77,7 @@ public class MenuProfile implements Screen {
 		stage = new Stage();
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		profile = new PlayerProfile();
+		sound_buy = Gdx.audio.newSound(Gdx.files.local(FilePath.sound_get));
 		
 //		BACK BUTTON
 		backButton = new TextButton("Back", skin);
@@ -118,29 +117,29 @@ public class MenuProfile implements Screen {
 		stage.addListener(clickHandler);
 		Gdx.input.setInputProcessor(stage);
 		
-//		mainTable.debug();
-//		contentTable.debug();
-//		shopTable.debug();
-//		shopTableContent.debug();
-//		shopTableBuy.debug();
-//		profileTable.debug();
-//		itemTable.debug();
-//		delProfileTable.debug();
-//		newProfileTable.debug();
-//		warningBuyTable.debug();
-//		chooseProfileTable.debug();
+		mainTable.debug();
+		contentTable.debug();
+		shopTable.debug();
+		shopTableContent.debug();
+		shopTableBuy.debug();
+		profileTable.debug();
+		itemTable.debug();
+		delProfileTable.debug();
+		newProfileTable.debug();
+		warningBuyTable.debug();
+		chooseProfileTable.debug();
 		
 //		HEAD
 		mainTable.top().add(new Label("Profile", skin, "big")).pad(height/5, 0, height/5, 0).row();
 		mainTable.add(contentTable);
-		contentTable.add(shopTable).left().padRight(width/10);
-		contentTable.add(profileTable).right();
+		contentTable.add(shopTable);
+		contentTable.add().size(width/20, 0);
+		contentTable.add(profileTable).padRight(width/20);
 		
 		iniLabel();
 		iniShopTable();
 		iniProfileTable();
 		iniWarningLabels();
-		iniNewProfileTable();
 
 		profileList = new com.badlogic.gdx.scenes.scene2d.ui.List(PlayerProfile.getNameList().toArray(), skin);
 		scrollPane = new ScrollPane(profileList, skin);
@@ -154,37 +153,6 @@ public class MenuProfile implements Screen {
 		profileList = new com.badlogic.gdx.scenes.scene2d.ui.List(PlayerProfile.getNameList().toArray(), skin);
 		scrollPane.clear();
 		scrollPane.setWidget(profileList);
-	}
-	
-	
-	private void iniNewProfileTable() {
-//		TEXTFIELD
-		label_createProfile = new Label("Enter your name", skin, "baoli96", Color.WHITE);
-		
-		pixmap = new Pixmap(2, 2, Format.RGB888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fill();
-		texture = new Texture(pixmap);
-		SpriteDrawable spriteDrawable = new SpriteDrawable(new Sprite(texture));
-		
-		TextFieldStyle style = new TextFieldStyle();
-		style.fontColor = Color.YELLOW;
-		style.focusedFontColor = Color.YELLOW;
-		style.font = skin.getFont("baoli96");
-		style.cursor = spriteDrawable;
-		style.selection = spriteDrawable;
-
-		nameField = new TextField("", skin);
-		nameField.setStyle(style);
-		nameField.setMaxLength(10);
-		nameField.setText("NewPlayer");
-		nameField.setCursorPosition(nameField.getText().length());
-		nameField.addListener(clickHandler);
-
-		newProfileTable.add(label_createProfile).row();
-		newProfileTable.add(nameField).size(width, height/4).row();
-		newProfileTable.add(label_selectProfile);
-
 	}
 	
 	private void iniLabel() {
@@ -259,10 +227,10 @@ public class MenuProfile implements Screen {
 		shopTable.add(shopTableBuy).row();
 		
 		shopTableContent.add(getLabel44("Items"));
-		shopTableContent.add(getLabel44("Price")).pad(0, width/20, 0, width/20);
+		shopTableContent.add(getLabel44("Price"));//.pad(0, width/20, 0, width/20);
 		shopTableContent.add(getLabel44("Quantity")).colspan(3).row();
 		
-		shopTableContent.add(getLabel44("shuriken")).left();
+		shopTableContent.add(getLabel44("shuriken"));
 		shopTableContent.add(getLabel44(Integer.toString(PRICE_SHU)));
 		shopTableContent.add(label_lessShu);
 		shopTableContent.add(label_quantityshuriken);
@@ -286,10 +254,10 @@ public class MenuProfile implements Screen {
 	private void iniProfileTable() {
 		updateProfileLabels();
 		
-		profileTable.add(getLabel44("Name")).left();
-		profileTable.add(label_name).size(width/10, height/10).row();
-		profileTable.add(getLabel44("Rank")).left();
-		profileTable.add(label_rank).size(width/10, height/10).row();
+		profileTable.add(getLabel44("Name")).left().padRight(width/20);
+		profileTable.add(label_name).left().row();
+		profileTable.add(getLabel44("Rank")).left().padRight(width/20);
+		profileTable.add(label_rank).left().row();
 		
 		profileTable.add().size(0, height/10);
 		profileTable.add().row();
@@ -339,7 +307,6 @@ public class MenuProfile implements Screen {
 		AnimatedBackground.getInstance().draw(shaderBatch, delta);
 		shaderBatch.end();
 		
-		Table.drawDebug(stage);
 		stage.act(delta);
 		stage.draw();
 		
@@ -362,14 +329,12 @@ public class MenuProfile implements Screen {
 			warningProfileAlpha = Math.max(0, warningProfileAlpha-0.01f);
 			if(warningProfileAlpha == 0) {
 				warningMaxProfileTable.remove();
-				stage.addActor(mainTable);
 			}
 		}
 		
-		
-
 		processBuySelection();
 		
+//		Table.drawDebug(stage);
 	}
 
 	@Override
@@ -394,12 +359,10 @@ public class MenuProfile implements Screen {
 
 	@Override
 	public void dispose() {
-		profile.saveProfile();
 		stage.dispose();
 		skin.dispose();
 		shaderBatch.dispose();
-		pixmap.dispose();
-		texture.dispose();
+		sound_buy.dispose();
 	}
 	
 	private void updateShopLabels() {
@@ -410,13 +373,17 @@ public class MenuProfile implements Screen {
 	}
 	
 	private void purchaseItems() {
-		profile.stylePoints -= (int)buy_costs;
-		profile.shuriken += (int)buy_shu;
-		profile.hookRadius += (int)buy_hook;
-		buy_costs = buy_shu = buy_hook = 0;
-		profile.saveProfile();
-		updateProfileLabels();
-		updateShopLabels();
+		if(buy_costs > 0) {
+			sound_buy.play(GameProperties.soundVolume);
+			
+			profile.stylePoints -= (int)buy_costs;
+			profile.shuriken += (int)buy_shu;
+			profile.hookRadius += (int)buy_hook;
+			buy_costs = buy_shu = buy_hook = 0;
+			profile.updateAndSaveProfile();
+			updateProfileLabels();
+			updateShopLabels();
+		}
 	}
 
 	private void updateProfileLabels() {
@@ -432,7 +399,7 @@ public class MenuProfile implements Screen {
 		if(incHook != 0) {
 			if(incHook < 0)
 				buy_hook = Math.max(0, buy_hook - INC_SPEED);
-			else if(incHook > 0 && profile.hookRadius + buy_hook <= GameProperties.HOOK_RADIUS_MAX) {
+			else if(incHook > 0 && profile.hookRadius + buy_hook <= GameProperties.MAX_HOOK_RADIUS) {
 				if(buy_costs + PRICE_HOOK <= profile.stylePoints)	
 					buy_hook += INC_SPEED;
 				else									
@@ -494,13 +461,9 @@ public class MenuProfile implements Screen {
 				
 //			PROFILES
 			} else if(event.getListenerActor().equals(label_newProfile)) {
-				if(PlayerProfile.getProfileCount() < GameProperties.MAX_PROFILE_COUNT) {
-					 mainTable.remove();
-					backButton.remove();
-					stage.addActor(newProfileTable);
-					stage.setKeyboardFocus(nameField);
-					
-				 } else
+				if(PlayerProfile.getProfileCount() < GameProperties.MAX_PROFILE_COUNT)
+					((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(INSTANCE));
+				else
 					 warningProfileAlpha = 1f;
 				
 			} else if(event.getListenerActor().equals(label_chooseProfile)) {
@@ -518,13 +481,12 @@ public class MenuProfile implements Screen {
 				profile.deleteProfile();
 				
 				if(PlayerProfile.getProfileCount() > 0) {
-					profile = new PlayerProfile();
+					profile = new PlayerProfile(0);
 					updateProfileLabels();
 					stage.addActor(mainTable);
-				} else {
-					stage.addActor(newProfileTable);
-					stage.setKeyboardFocus(nameField);
-				}
+				} else
+					((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(INSTANCE));
+				
 				
 			} else if(event.getListenerActor().equals(label_delProfile_decline)) {
 				delProfileTable.remove();
@@ -538,25 +500,6 @@ public class MenuProfile implements Screen {
 				stage.addActor(mainTable);
 				updateProfileLabels();
 			}
-		}
-		
-		
-		public boolean keyDown(InputEvent event, int keycode) {
-			if(keycode == Keys.ENTER && event.getListenerActor().equals(nameField)) {
-				
-				profile = PlayerProfile.createNewProfile(nameField.getText());
-				
-				newProfileTable.remove();
-				stage.addActor(backButton);
-				stage.addActor(mainTable);
-				
-				updateProfileLabels();
-
-				nameField.setText("NewPlayer");
-				nameField.setCursorPosition(9);
-				return true;
-			}
-			return false;
 		}
 		
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

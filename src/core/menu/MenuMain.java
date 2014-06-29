@@ -159,8 +159,7 @@ public class MenuMain implements Screen {
 		
 		tweenManager.update(Gdx.graphics.getDeltaTime());
 		
-
-		if(PlayerProfile.isEmptyProfile())
+		if(PlayerProfile.getProfileCount() == 0)
 			((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(this));
 	
 	}
