@@ -72,7 +72,10 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		switch (keycode) {
 		// toogle Fullscreen
 		case Keys.ESCAPE:
-			GameProperties.toogleFullScreen();
+			if(GameProperties.debug)
+				GameProperties.toogleFullScreen();
+			else
+				GameProperties.toogleIngamePause();
 			break;
 
 		// toogle pause
@@ -82,17 +85,20 @@ public class InputHandler implements IInputHandler, InputProcessor {
 
 		// back to menu
 		case Keys.BACKSPACE:
-			GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
+			if(GameProperties.debug)
+				GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
 			break;
 
 		// toogle debug
 		case Keys.TAB:
-			Debug.toogleOnOff();
+			if(GameProperties.debug)
+				Debug.toogleOnOff();
 			break;
 
 		// set WIN
 		case Keys.C:
-			GameProperties.setWin();
+			if(GameProperties.debug)
+				GameProperties.setWin();
 			break;
 		}
 

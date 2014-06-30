@@ -62,8 +62,9 @@ public class Player extends PlayerCollision {
 		return score;
 	}
 	
+	
 	public void saveProfile() {
-		int points = GameProperties.calcStylePoints(getShurikenThrown(), getEnemiesHidden(), getUnseenFrom());
+		int points = GameProperties.calcStylePoints(getGameWorld());
 		
 		profile.shuriken = getShurikenQuantity();
 		profile.hookRadius = getHookRadius();
@@ -80,7 +81,7 @@ public class Player extends PlayerCollision {
 			Highscore.addHighscore(score); // add score to local Highscore
 		
 			HighscoreServer server = new HighscoreServer();
-			if(server.isConnected() && GameProperties.uploadScore) {
+			if(server.isConnected()) {
 				
 				server.updateLocalHighscoreFile();
 				if(Highscore.getPosition(score) < GameProperties.MAX_SCOREPOSITION_TO_SERVER) {

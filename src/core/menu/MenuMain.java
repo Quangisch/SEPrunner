@@ -100,7 +100,7 @@ public class MenuMain implements Screen {
 		});
 		buttonOption.pad(15);
 		
-		TextButton buttonHighscore = new TextButton("Highscore", skin);
+		TextButton buttonHighscore = new TextButton("   Highscore   ", skin);
 		buttonHighscore.addListener(new ClickListener(){
 			public void clicked(InputEvent event, float x, float y){
 				GameProperties.switchGameScreen(GameScreen.MENU_HIGHSCORE);

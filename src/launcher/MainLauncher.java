@@ -33,7 +33,9 @@ public class MainLauncher {
 		cfg.useGL20 = true;
 		cfg.fullscreen = false;
 
-		GameProperties.uploadScore = true;
+		GameProperties.deleteUserFiles = false;
+		GameProperties.offline = false;
+		GameProperties.debug = false;
 		startScreen = GameScreen.MENU_SPLASH;
 		
 		new HighscoreServer().updateLocalHighscoreFile();
@@ -70,6 +72,12 @@ public class MainLauncher {
 				while(!handleInput(input))
 					input = parseInput();
 				
+			} else if(args[i].compareTo("-d") == 0) {
+				GameProperties.debug = true;
+				
+			} else if(args[i].compareTo("-o") == 0) {
+				GameProperties.offline = true;	
+			
 			} else if(args[i].compareTo("-s") == 0) {
 				if(++i > args.length)
 					invalidArgument = true;
@@ -100,6 +108,8 @@ public class MainLauncher {
 				System.out.println("-r resetProfile");
 				System.out.println("-f fullscreen");
 				System.out.println("-gl10 useGL10");
+				System.out.println("-d debug");
+				System.out.println("-o offline");
 				System.exit(0);
 			} else
 				invalidArgument = true;
@@ -122,7 +132,6 @@ public class MainLauncher {
 		return null;
 	}
 	
-//	TODO buggy
 	private boolean handleInput(String input) {
 		if(input.compareTo("yes") == 0) { 
 			GameProperties.resetUserData();

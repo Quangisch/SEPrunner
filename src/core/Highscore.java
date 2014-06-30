@@ -55,36 +55,40 @@ public class Highscore {
 	}
 	
 	public static void saveHighscoreList() {
+		
 		getInstance().sortAll();
-		
 		JsonValue root = new JsonValue(ValueType.array);
-		JsonValue jLevel = root.child;
+		root.child = new JsonValue(ValueType.array);
 		
+		JsonValue array = root.child;
+		for(int i = 1; i < getInstance().highscoreMap.size(); i++) {
+			array.next = new JsonValue(ValueType.array);
+			array = array.next; 
+		}
+
 		for(int i = 0; i < getInstance().highscoreMap.size(); i++) {
 			
 			List<Score> scoreList = getInstance().highscoreMap.get(i);
-			
-			jLevel = new JsonValue(ValueType.array);
-			JsonValue jScore = jLevel.child;
+			JsonValue jScore = new JsonValue(ValueType.object);
+			root.get(i).child = jScore;
 			
 			for(int s = 0; s < scoreList.size(); s++) {
 				
-				jScore = new JsonValue(ValueType.array);
-				jScore.child = new JsonValue(ValueType.object);
+				jScore.child = new JsonValue(ValueType.stringValue);
 				jScore.child.name = "name";
 				jScore.child.set(scoreList.get(s).PLAYER_NAME);
-				jScore.child.next = new JsonValue(ValueType.object);
+				
+				jScore.child.next = new JsonValue(ValueType.doubleValue);
 				jScore.child.next.name = "time";
 				jScore.child.next.set(scoreList.get(s).TIME);
 
-				if(s+1 < scoreList.size())
+				if(s+1 < scoreList.size()) {
+					jScore.next = new JsonValue(ValueType.object);
 					jScore = jScore.next;
+				}
 			}
-			
-			if(i+1 < getInstance().highscoreMap.size())
-				jLevel = jLevel.next;
 		}
-		
+
 		try {
 			FileWriter f = new FileWriter(FilePath.highscore);
 			f.write(root.toString());
@@ -92,7 +96,6 @@ public class Highscore {
 		} catch (IOException e1) {
 			return;
 		}
-
 	}
 	
 	private void sortAll() {

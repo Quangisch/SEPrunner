@@ -82,8 +82,7 @@ public class WinMenu implements IDrawable {
 
 		font.setScale(MAX_FONT_SCALE * 0.4f);
 
-		int points = GameProperties.calcStylePoints(world.getPlayer().getShurikenThrown(), world.getPlayer()
-				.getEnemiesHidden(), world.getPlayer().getUnseenFrom());
+		int points = GameProperties.calcStylePoints(world);
 		String secondLine = points + " StylePoints";
 		tB = font.getBounds(secondLine);
 		font.draw(b, secondLine, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2 * 0.9f);

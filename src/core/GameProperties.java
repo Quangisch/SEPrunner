@@ -1,6 +1,7 @@
 package core;
 
 import gameObject.interaction.enemy.Alarm;
+import gameWorld.GameWorld;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -36,7 +37,6 @@ public class GameProperties {
 
 	public static GameState gameState = GameState.NORMAL;
 	public static GameScreen gameScreen;
-	private static Screen gdxScreen;
 
 	public static DisplayMode prefDisplayMode;
 	public static float brightness = 0.0f;
@@ -47,19 +47,29 @@ public class GameProperties {
 	public static String loseMessage = "";
 	
 	public static final String[] IMPLEMENTED_LEVEL = {"Slums", "City", "Undergrounds"};
-	
 	private static final String INITIAL_NAME = "NewPlayer";
-	public static final int INITIAL_SHURIKENS = 10;
-	public static final int INITIAL_HOOK_RADIUS = 300;
-	public static final int INITIAL_STYLEPOINTS = 20;
+	public static final int 
+		INITIAL_SHURIKENS = 10,
+		INITIAL_HOOK_RADIUS = 300,
+		INITIAL_STYLEPOINTS = 150,
 
-
-	public static final int MAX_NAME_LENGTH = 12;
-	public static final int MAX_PROFILE_COUNT = 5;
-	public static final int MAX_HOOK_RADIUS = 500;
-	public static final int MAX_SCOREPOSITION_TO_SERVER = 50;
+		MAX_NAME_LENGTH = 12,
+		MAX_PROFILE_COUNT = 5,
+		MAX_HOOK_RADIUS = 500,
+		MAX_SCOREPOSITION_TO_SERVER = 50,
+		
+		POINTS_DISPOSED_MUL = 20,
+		POINTS_HIDDEN_MUL = 30,
+		POINTS_ALARM_MUL = -5,
+		POINTS_UNSEEN = 500,
+		POINTS_WITHOUT_SHURIKENS = 500,
+		
+		PRICE_SHURIKEN = 30,
+		PRICE_HOOK = 20;
 	
-	public static boolean uploadScore = true;
+	public static boolean debug = false,
+			offline = false,
+			deleteUserFiles = false;
 	
 	public static String getInitialName() {
 		return INITIAL_NAME + (new Random().nextInt(999-100) + 100);
@@ -134,7 +144,7 @@ public class GameProperties {
 
 	//	RANK, EXPERIENCE
 	public enum Rank {
-		Noob(0), Rookie(30), Expert(100);
+		Noob(0), Rookie(1000), Tryhard(10000), Expert(100000);
 
 		final private int EXPERIENCE;
 
@@ -150,40 +160,17 @@ public class GameProperties {
 		}
 	}
 
-
-	public static final int P_WITHOUT_SHURIKENS = 100;
-	public static final int P_DISPOSED_MUL = 5;
-	public static final int P_HIDDEN_MUL = 5;
-	public static final int P_LEVEL_COMPLETE = 50;
-	public static final int P_ALARM_MUL = -5;
-	public static final int P_UNSEEN = 50;
-
-//	TODO
-	public static int calcStylePoints(int shurikenThrown, int disposedBodies, int hiddenFrom) {
-//		System.out.println(String.format(
-//				  "Disposed Enemies : %d * %d = %d\n"
-//				+ "Hidden from Enemy: %d * %d = %d\n"
-//				+ (Alarm.getTotalAlarmTime() > 0 
-//				? String.format("Total Alarm time : %f * %d = %d\n", Alarm.getTotalAlarmTime(), P_ALARM_MUL, (int)(Alarm.getTotalAlarmTime()*P_ALARM_MUL))
-//				: String.format("Unseen Bonus     : %d\n",  P_UNSEEN))
-//				+ (shurikenThrown == 0
-//				? "Unharmed Enemies : %d\n" : "\n")
-//				+ "Level Completed  : %d\n"
-//				+ "=================\n"
-//				+ "TOTAL: %d\n"
-//				+ "=================\n",
-//				disposedBodies, P_DISPOSED_MUL, disposedBodies*P_DISPOSED_MUL,
-//				hiddenFrom, P_HIDDEN_MUL, hiddenFrom * P_HIDDEN_MUL,
-//				P_WITHOUT_SHURIKENS, P_LEVEL_COMPLETE));
-//				(int)(disposedBodies*P_DISPOSED_MUL + hiddenFrom*P_HIDDEN_MUL + P_LEVEL_COMPLETE +
-//				shurikenThrown == 0 ? P_WITHOUT_SHURIKENS : 0 + Alarm.getTotalAlarmTime() == 0 ? P_UNSEEN : 0)));
+	public static int calcStylePoints(GameWorld world) {
+		int earnedPoints = world.getPlayer().getEnemiesHidden()*GameProperties.POINTS_DISPOSED_MUL 
+				+ world.getPlayer().getUnseenFrom() * GameProperties.POINTS_HIDDEN_MUL 
+				+ (int)(world.getTimeLimit()-world.getTime())
+				+ (int)Alarm.getTotalAlarmTime()*GameProperties.POINTS_ALARM_MUL;
 		
-		return Math.max(P_LEVEL_COMPLETE, shurikenThrown == 0 ? P_WITHOUT_SHURIKENS : 0 //
-				+ disposedBodies * P_DISPOSED_MUL //
-				+ hiddenFrom * P_HIDDEN_MUL //
-				+ P_LEVEL_COMPLETE //
-				+ Alarm.getTotalAlarmTime() == 0 ? P_UNSEEN : (int) (Alarm.getTotalAlarmTime() * P_ALARM_MUL)
-		);
+		if(Alarm.getTotalAlarmTime() <= 0)
+			earnedPoints += GameProperties.POINTS_UNSEEN;
+		if(world.getPlayer().getShurikenThrown() == 0)
+			earnedPoints += GameProperties.POINTS_WITHOUT_SHURIKENS;
+		return Math.max(earnedPoints, 0);
 	}
 
 	
@@ -221,6 +208,19 @@ public class GameProperties {
 				if(s.INDEX == index)
 					screen = s;
 			return screen;
+		}
+		
+		public GameScreen getNext() {
+			switch(this) {
+			case LEVEL1:
+				return GameScreen.LEVEL2;
+			case LEVEL2:
+				return GameScreen.LEVEL3;
+			case LEVEL3:
+				return GameScreen.MENU_LEVELSELECT;
+			default:
+				return GameScreen.MENU_MAIN;
+			}
 		}
 	}
 	
@@ -276,9 +276,6 @@ public class GameProperties {
 
 		if(PlayerProfile.getProfileCount() == 0 && !nextScreen.equals(GameScreen.MENU_SPLASH))
 			nextScreen = new EnterNameScreen(nextScreen);
-		if(GameProperties.gameScreen != null && GameProperties.gameScreen.INDEX >= 0)
-			gdxScreen.dispose();
-		gdxScreen = nextScreen;
 		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
 		AudioManager.getInstance().startMusic(screen);
 
@@ -357,12 +354,10 @@ public class GameProperties {
 		contrast = musicVolume = soundVolume = 1.0f;
 		resetSettings();
 	}
-	
 
 	public static class GameScreenSwitcher implements Runnable {
 		private GameScreen screen;
 		private Screen gdxScreen;
-		private boolean disposeNewScreen = true;
 		public GameScreenSwitcher(GameScreen screen) {
 			this.screen = screen;
 		}
@@ -370,18 +365,11 @@ public class GameProperties {
 		public GameScreenSwitcher(Screen gdxScreen) {
 			this.gdxScreen = gdxScreen;
 		}
-		
-		public GameScreenSwitcher(Screen gdxScreen, boolean disposeNewScreen) {
-			this.gdxScreen = gdxScreen;
-			this.disposeNewScreen = disposeNewScreen;
-		}
-		
+	
 		public void run() {
 			if(screen != null)
 				GameProperties.switchGameScreen(screen);
 			else if(gdxScreen != null) {
-				if(GameProperties.gameScreen != null && GameProperties.gameScreen.INDEX >= 0 && disposeNewScreen)
-					gdxScreen.dispose();
 				((Game) Gdx.app.getApplicationListener()).setScreen(gdxScreen);
 			}
 		}

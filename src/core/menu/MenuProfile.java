@@ -58,10 +58,9 @@ public class MenuProfile implements Screen {
 	private Sound sound_buy;
 
 //	SHOP
-	private final int PRICE_SHU = 5, PRICE_HOOK = 1;
 	private float warningCostsAlpha = 0f, warningProfileAlpha = 0f;
 	private float buy_shu, buy_hook, buy_costs, incShu, incHook;
-	private final float INC_SPEED = 0.1f;
+	private final float INC_SPEED = 0.3f;
 	
 	public MenuProfile() {
 		INSTANCE = this;
@@ -231,13 +230,13 @@ public class MenuProfile implements Screen {
 		shopTableContent.add(getLabel44("Quantity")).colspan(3).row();
 		
 		shopTableContent.add(getLabel44("shuriken"));
-		shopTableContent.add(getLabel44(Integer.toString(PRICE_SHU)));
+		shopTableContent.add(getLabel44(Integer.toString(GameProperties.PRICE_SHURIKEN)));
 		shopTableContent.add(label_lessShu);
 		shopTableContent.add(label_quantityshuriken);
 		shopTableContent.add(label_moreShu).row();
 		
 		shopTableContent.add(getLabel44("Hook Radius")).left();
-		shopTableContent.add(getLabel44(Integer.toString(PRICE_HOOK)));
+		shopTableContent.add(getLabel44(Integer.toString(GameProperties.PRICE_HOOK)));
 		
 		shopTableContent.add(label_lessHook);
 		shopTableContent.add(label_quantityHook).pad(0, width/20, 0, width/20);
@@ -400,7 +399,7 @@ public class MenuProfile implements Screen {
 			if(incHook < 0)
 				buy_hook = Math.max(0, buy_hook - INC_SPEED);
 			else if(incHook > 0 && profile.hookRadius + buy_hook <= GameProperties.MAX_HOOK_RADIUS) {
-				if(buy_costs + PRICE_HOOK <= profile.stylePoints)	
+				if(buy_costs + GameProperties.PRICE_HOOK <= profile.stylePoints)	
 					buy_hook += INC_SPEED;
 				else									
 					warningCostsAlpha = 1f;
@@ -410,7 +409,7 @@ public class MenuProfile implements Screen {
 			if(incShu < 0)
 				buy_shu = Math.max(0, buy_shu - INC_SPEED);
 			else if(incShu > 0) {
-				if(buy_costs + PRICE_SHU <= profile.stylePoints)
+				if(buy_costs + GameProperties.PRICE_SHURIKEN <= profile.stylePoints)
 					buy_shu += INC_SPEED;
 				else
 					warningCostsAlpha = 1f;
@@ -419,7 +418,7 @@ public class MenuProfile implements Screen {
 		}
 		
 		if(incShu != 0 || incHook != 0) {
-			buy_costs = (int) buy_shu * PRICE_SHU + (int) buy_hook * PRICE_HOOK;;
+			buy_costs = (int) buy_shu * GameProperties.PRICE_SHURIKEN + (int) buy_hook * GameProperties.PRICE_HOOK;
 			updateShopLabels();
 		}
 

@@ -31,7 +31,7 @@ public class GameRender implements Screen {
 	private Camera camera;
 	private HUD hud;
 	private PauseMenu pauseMenu;
-	private WinMenu winMenu;
+	private WinMenu2 winMenu;
 	private LoseMenu loseMenu;
 
 	public GameRender(GameScreen level) throws LevelNotFoundException {
@@ -41,7 +41,7 @@ public class GameRender implements Screen {
 		hud = new HUD(gameWorld);
 		pauseMenu = new PauseMenu();
 		loseMenu = new LoseMenu();
-		winMenu = new WinMenu(gameWorld);
+		
 		// TODO TMP for debugging
 		Debug.init(iHandler, camera);
 		GeometricObject.setRender(this);
@@ -60,8 +60,8 @@ public class GameRender implements Screen {
 		gameWorld.dispose();
 		for (Disposable d : geometrics)
 			d.dispose();
-//		if(winMenu != null)
-//			winMenu.dispose();
+		if(winMenu != null)
+			winMenu.dispose();
 	}
 
 	public boolean addGeometricObject(GeometricObject geo) {
@@ -78,8 +78,8 @@ public class GameRender implements Screen {
 
 		switch (GameProperties.getGameState()) {
 		case WIN:
-//			if(winMenu == null)
-//				winMenu = new WinMenu(gameWorld);
+			if(winMenu == null)
+				winMenu = new WinMenu2(gameWorld, batch);
 		case LOSE:
 			break;
 		case PAUSE:
@@ -114,7 +114,7 @@ public class GameRender implements Screen {
 			break;
 		case WIN:
 //			Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(new WinMenu2(gameWorld)));
-			winMenu.draw(batch, realdelta);
+//			winMenu.render(batch, realdelta);
 			break;
 		case LOSE:
 			loseMenu.draw(batch, realdelta);
@@ -133,6 +133,9 @@ public class GameRender implements Screen {
 
 
 		batch.end();
+		
+		if(winMenu != null)
+			winMenu.render(realdelta);
 
 		gameWorld.step(delta, 6, 4);
 	}
@@ -148,6 +151,6 @@ public class GameRender implements Screen {
 
 	@Override
 	public void hide() {
-		
+		dispose();
 	}
 }

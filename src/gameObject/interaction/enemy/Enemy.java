@@ -144,4 +144,8 @@ public class Enemy extends GameObject {
 	public boolean scanArea(GameObject obj) {
 		return view.contains(obj.getBodyObject().getX(), obj.getBodyObject().getY());
 	}
+	
+	public ConeLight getView(){
+		return view;
+	}
 }
