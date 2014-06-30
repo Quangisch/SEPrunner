@@ -88,7 +88,7 @@ public class InteractionToWorld {
 			multipliedForce = baseForce.scl(sneakMul);
 			break;
 		case GRAB_PULL:
-			multipliedForce = baseForce.scl(-pullMul, 0);
+			multipliedForce = baseForce.scl(-pullMul, pullMul/3);
 			break;
 		case JUMP:
 		case JUMP_MOVE:

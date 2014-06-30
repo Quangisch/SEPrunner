@@ -689,14 +689,14 @@
 									"texture"	:	"enemy_hard.png",
 									"json"		:	"body.json"
 								},
-						"position" : [10000, 1010],
+						"position" : [9950, 1010],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {
 							"ID" : "HardAI",
 							"Actions" : 	[
 										{
-											"between"	: [10000],
+											"between"	: [9950],
 											"horizontal" 	: true,
 											"key"		: "RIGHT"
 										},
@@ -706,7 +706,7 @@
 											"key"		: "LEFT"
 										}
 									],
-								"Advanced" : [10000, 10500]
+								"Advanced" : [9950, 10500]
 						}
 					},
 

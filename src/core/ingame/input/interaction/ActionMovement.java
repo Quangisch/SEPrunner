@@ -54,9 +54,7 @@ public class ActionMovement  {
 			nextState = processGrabbing();
 		processHiding();
 		
-
-		
-		
+		iHandler.popClick();
 		return nextState;
 	}
 	
@@ -66,7 +64,7 @@ public class ActionMovement  {
 		case GRAB_START:
 			return InteractionState.GRAB;
 		case GRAB_END:
-			return InteractionState.STAND;
+			return gameObject.isBodyBlocked() ? InteractionState.CROUCH_DOWN : InteractionState.STAND;
 		case GRAB_PULL:
 			if(!(actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
 				return InteractionState.GRAB;

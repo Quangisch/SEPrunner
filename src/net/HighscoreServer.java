@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.JsonValue.ValueType;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import core.FilePath;
+import core.GameProperties;
 import core.Highscore;
 import core.Highscore.Score;
 
@@ -32,7 +33,7 @@ public class HighscoreServer {
 	public boolean isConnected() {
 		try {
 			InetAddress.getByName(addr);
-			return true;//.isReachable(500);
+			return !GameProperties.offline && true;//.isReachable(500);
 		} catch (UnknownHostException e) {} // catch (IOException e) {
 											// }
 		return false;

@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import core.GameProperties;
+import core.GameProperties.GameState;
 
 public class Camera extends OrthographicCamera implements MoveableCamera {
 	
@@ -24,6 +25,12 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		
 		if(Debug.isMode(Debug.Mode.CAMERA)) {
 			Debug.processCamera(this);
+			return;
+		}
+		
+		if(GameProperties.gameState.equals(GameState.WIN)) {
+			if(zoom > 1.7f)
+				zoom -= 0.01f;
 			return;
 		}
 		
@@ -55,6 +62,10 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 	
 	public void updateOrtho() {
 		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());	
+	}
+	
+	public void setZoom(float zoom) {
+		this.zoom = zoom;
 	}
 	
 	@Override

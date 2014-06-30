@@ -2,6 +2,7 @@ package misc;
 
 import com.badlogic.gdx.Input.Keys;
 
+import core.GameProperties;
 import core.ingame.Camera;
 import core.ingame.input.InputHandler;
 
@@ -17,7 +18,7 @@ public abstract class Debug {
 	}
 
 	public static boolean isOn() {
-		return on;
+		return on && GameProperties.debug;
 	}
 
 	public static void toogleOnOff() {

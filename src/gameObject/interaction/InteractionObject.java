@@ -33,15 +33,8 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	private Vector2 hookPoint;
 	private List<Vector2> hookPoints = new LinkedList<Vector2>();
 	private int shuriken, hookRadius;
-	private int shurikenThrown, enemiesHidden, unseen;
-	private Set<GameObject> hiddenFrom = new HashSet<GameObject>();
-	
-	public void wasHiddenFrom(GameObject gameObject) {
-		if(!hiddenFrom.contains(gameObject)) {
-			unseen++;
-			hiddenFrom.add(gameObject);
-		}
-	}
+	private int shurikenThrown, enemiesHidden;
+	private Set<BodyObject> hiddenFrom = new HashSet<BodyObject>();
 	
 	protected InteractionObject(GameWorld gameWorld) {
 		super(gameWorld);
@@ -188,7 +181,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	}
 	
 	public int getUnseenFrom() {
-		return unseen;
+		return hiddenFrom.size();
 	}
 	
 	@Override
@@ -299,6 +292,10 @@ public abstract class InteractionObject extends InteractionManager implements IC
 						disposeTarget = hideTarget;
 						hideTarget = null;
 					}
+					
+				} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
+						&& isHiding() && hiddenFrom.add(other)) {
+					return true;
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& grabTarget != null && isGrabbing()) {
 					disposeTarget = start ? other.getParent() : null;
@@ -312,7 +309,6 @@ public abstract class InteractionObject extends InteractionManager implements IC
 					if(getBodyObject().getBodyObjectType().equals(BodyObjectType.Player))
 						other.getParent().getAnimationObject().setActive(canHide());
 					return true;
-					
 				} 
 			}
 		}
