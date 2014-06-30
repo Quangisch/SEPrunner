@@ -54,6 +54,12 @@ public class Project extends Game{
 		AnimatedBackground.getInstance().dispose();
 		new File(FilePath.highscoreServer).delete();
 		new File(FilePath.highscoreTemp).delete();
+		if(GameProperties.deleteUserFiles) {
+			new File(FilePath.profile).delete();
+			new File(FilePath.highscore).delete();
+			new File(FilePath.settings).delete();
+			System.out.println("Deleted userFiles");
+		}
 	}
 
 }

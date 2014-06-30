@@ -33,6 +33,7 @@ public class MainLauncher {
 		cfg.useGL20 = true;
 		cfg.fullscreen = false;
 
+		GameProperties.deleteUserFiles = false;
 		GameProperties.offline = false;
 		GameProperties.debug = false;
 		startScreen = GameScreen.MENU_SPLASH;

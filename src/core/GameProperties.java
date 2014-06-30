@@ -68,7 +68,8 @@ public class GameProperties {
 		PRICE_HOOK = 20;
 	
 	public static boolean debug = false,
-			offline = false;
+			offline = false,
+			deleteUserFiles = false;
 	
 	public static String getInitialName() {
 		return INITIAL_NAME + (new Random().nextInt(999-100) + 100);
@@ -162,13 +163,14 @@ public class GameProperties {
 	public static int calcStylePoints(GameWorld world) {
 		int earnedPoints = world.getPlayer().getEnemiesHidden()*GameProperties.POINTS_DISPOSED_MUL 
 				+ world.getPlayer().getUnseenFrom() * GameProperties.POINTS_HIDDEN_MUL 
-				+ (int)(world.getTimeLimit()-world.getTime());
+				+ (int)(world.getTimeLimit()-world.getTime())
+				+ (int)Alarm.getTotalAlarmTime()*GameProperties.POINTS_ALARM_MUL;
 		
 		if(Alarm.getTotalAlarmTime() <= 0)
 			earnedPoints += GameProperties.POINTS_UNSEEN;
 		if(world.getPlayer().getShurikenThrown() == 0)
 			earnedPoints += GameProperties.POINTS_WITHOUT_SHURIKENS;
-		return earnedPoints;
+		return Math.max(earnedPoints, 0);
 	}
 
 	
