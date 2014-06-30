@@ -15,6 +15,7 @@ import java.util.Set;
 
 import misc.Debug;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.input.InputHandler.Click;
@@ -197,6 +198,28 @@ public abstract class EnemyAI implements IEnemyAI {
 			}
 			break;
 		case HIT_BY_SHURIKEN:
+			keyDown(ActionKey.CROUCH);
+				keyUp(ActionKey.LEFT);
+				keyUp(ActionKey.RIGHT);
+				if(Gdx.graphics.isGL20Available()){
+					getEnemy().getView().setActive(false);
+				}
+				if(Alarm.isActive()){
+					skipScript = true;
+					again = true;
+				}else{
+					keyUp(ActionKey.CROUCH); 
+					if(Gdx.graphics.isGL20Available()){
+						getEnemy().getView().setActive(true);
+					}
+					if(getEnemy().getGameWorld().getPlayer().getAnimationObject().isFlipped()){
+						keyDown(ActionKey.LEFT);
+					}else{
+						keyDown(ActionKey.RIGHT);
+					}
+					again = false;
+					skipScript = false;
+				}
 			break;
 		case NORMAL:
 			break;
@@ -220,12 +243,7 @@ public abstract class EnemyAI implements IEnemyAI {
 		return false;
 	}
 	
-//	TODO
-	protected void actionAfterHit() {
-		
-	}
 	
-//	TODO
 	protected void actionAfterAlarm() {
 		float playerX = getEnemy().getGameWorld().getPlayer().getBodyObject().getPosition().x;				
 		//
@@ -317,6 +335,7 @@ public abstract class EnemyAI implements IEnemyAI {
 					armor--;
 					if(armor < 0)	getEnemy().setStun();
 					else {
+						Alarm.trigger(2);
 						unresolvedAction = UnresolvedAction.HIT_BY_SHURIKEN;
 						actionObj = other;
 					}
