@@ -35,7 +35,7 @@ public class MainLauncher {
 
 		GameProperties.deleteUserFiles = false;
 		GameProperties.offline = false;
-		GameProperties.debug = true;//
+		GameProperties.debug = false;
 		startScreen = GameScreen.MENU_SPLASH;
 		
 		new HighscoreServer().updateLocalHighscoreFile();
