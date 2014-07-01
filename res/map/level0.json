@@ -498,7 +498,8 @@
 											"key"		: "RIGHT"
 										}
 
-									]
+									],
+							"Advanced" : [0,6.7,19000]
 						}
 					},
 					{
@@ -573,11 +574,11 @@
 									"texture"	:	"enemy_simple.png",
 									"json":	"body.json"
 								},
-						"position" : [4900, 1100],
+						"position" : [4850, 1100],
 						"scale" : 1.0,
 						"flip" : false,
 						"initialAction" : [],
-						"forceMultiplier" : [0.55, 1.4, 0.77, 1.5],
+						"forceMultiplier" : [0.38, 1.4, 0.77, 1.5],
 						"AI" : {
 							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
@@ -587,7 +588,7 @@
 											"key"		: "LEFT"
 										},
 										{
-											"between"	: [4900],
+											"between"	: [4850],
 											"horizontal" 	: true,
 											"key"		: "RIGHT"
 										}
@@ -741,6 +742,17 @@
 									"json"		:	"trashbin.json"
 								},
 						"position" : [2800, 470],
+						"scale" : 1.0,
+						"flip" : false,
+						"AI" : {	}
+					},
+					{
+						"ID" : "hideable",
+						"resources" : 	{
+									"texture"	:	"mapObjects.png",
+									"json"		:	"tree.json"
+								},
+						"position" : [5000, 1070],
 						"scale" : 1.0,
 						"flip" : false,
 						"AI" : {	}
