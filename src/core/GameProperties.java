@@ -51,21 +51,21 @@ public class GameProperties {
 	public static final int 
 		INITIAL_SHURIKENS = 10,
 		INITIAL_HOOK_RADIUS = 300,
-		INITIAL_STYLEPOINTS = 150,
+		INITIAL_STYLEPOINTS = 125,
 
 		MAX_NAME_LENGTH = 12,
 		MAX_PROFILE_COUNT = 5,
 		MAX_HOOK_RADIUS = 500,
 		MAX_SCOREPOSITION_TO_SERVER = 50,
 		
-		POINTS_DISPOSED_MUL = 20,
-		POINTS_HIDDEN_MUL = 30,
+		POINTS_DISPOSED_MUL = 30,
+		POINTS_HIDDEN_MUL = 10,
 		POINTS_ALARM_MUL = -5,
-		POINTS_UNSEEN = 500,
-		POINTS_WITHOUT_SHURIKENS = 500,
+		POINTS_UNSEEN = 100,
+		POINTS_WITHOUT_SHURIKENS = 100,
 		
-		PRICE_SHURIKEN = 30,
-		PRICE_HOOK = 20;
+		PRICE_SHURIKEN = 50,
+		PRICE_HOOK = 25;
 	
 	public static boolean debug = false,
 			offline = false,
@@ -144,7 +144,8 @@ public class GameProperties {
 
 	//	RANK, EXPERIENCE
 	public enum Rank {
-		Noob(0), Rookie(1000), Tryhard(10000), Expert(100000);
+		//Noob(0), Rookie(1000), Tryhard(10000), Expert(100000);
+		Novice(0), Scout(4000), Spy(8000), Saboteur(12000), Assassin(16000);
 
 		final private int EXPERIENCE;
 
@@ -153,7 +154,7 @@ public class GameProperties {
 		}
 
 		public static Rank getRank(int expPoints) {
-			Rank rank = Noob;
+			Rank rank = Novice;
 			for (Rank r : Rank.values())
 				if (expPoints > r.EXPERIENCE && r.EXPERIENCE > rank.EXPERIENCE) rank = r;
 			return rank;
