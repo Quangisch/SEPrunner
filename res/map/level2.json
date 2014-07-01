@@ -518,7 +518,7 @@
 					{
 						"ID" : "enemy",
 						"resources" : 	{
-									"texture"	:	"enemy_medium.png",
+									"texture"	:	"enemy_simple.png",
 									"json"		:	"body.json"
 								},
 						"position" : [3300, 900],
@@ -527,7 +527,7 @@
 						"initialAction" : [],
 						"forceMultiplier" : [0.55, 1.4, 0.77, 1.5],
 						"AI" : {
-							"ID" : "MediumAI",
+							"ID" : "SimplePatrolAI",
 							"Actions" : 	[
 										{
 											"between"	: [3900],
