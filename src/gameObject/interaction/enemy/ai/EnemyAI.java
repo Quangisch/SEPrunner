@@ -24,21 +24,24 @@ import core.ingame.input.KeyMap.ActionKey;
 public abstract class EnemyAI implements IEnemyAI {
 
 	protected Enemy link;
-	private Set<ActionKey> currentAction;
+	protected Set<ActionKey> currentAction;
 	private List<ScriptedAction> scriptedActions;
-
+	
 	protected UnresolvedAction unresolvedAction = UnresolvedAction.NORMAL;
 	protected float[] advancedValues;
-	private boolean skipScript;
 
-	protected BodyObject actionObj;
-	private float lastX, lastY;
-	protected int armor;
+	protected float lastX, lastY, triggerX, triggerY;
+	private float INITIAL_STUN_TIME;
+	private float armor, stunTime;
+	protected List<ActionKey> storedActions;
 	
-	
-	protected EnemyAI() {
+	protected EnemyAI(float armor, float initialStunTime) {
+		INITIAL_STUN_TIME = initialStunTime;
+		this.armor = armor;
+		
 		currentAction = new HashSet<ActionKey>();
 		scriptedActions = new LinkedList<ScriptedAction>();
+		storedActions = new LinkedList<ActionKey>();
 	}
 
 	@Override
@@ -77,16 +80,46 @@ public abstract class EnemyAI implements IEnemyAI {
 			return;
 		
 		boolean contScript = true;
+		if(stunTime != 0)
+			System.out.println(stunTime);
+		if(stunTime > 0) {
+			
+			if(stunTime == INITIAL_STUN_TIME) {
+				for(ActionKey a : currentAction)
+					storedActions.add(a);
+				currentAction.clear();
+			}
+			
+			currentAction.add(ActionKey.CROUCH);
+			stunTime -= Gdx.graphics.getDeltaTime();
+			if(Gdx.graphics.isGL20Available())
+				getEnemy().getView().setActive(stunTime <= 0);
+			
+			if(stunTime <= 0) {
+
+				currentAction.clear();
+				for(ActionKey a : storedActions)
+					currentAction.add(a);
+				storedActions.clear();
+			}
+			
+			return;
+		}
 		
 		if(!unresolvedAction.equals(UnresolvedAction.NORMAL))
 			contScript = resolveAction();
-		
-		if(contScript && !skipScript)
+		else
+			getEnemy().resetView();
+		if(contScript) {
 			applyScriptedAction();
+		}
 		
+
 	}
 	
 	private void applyScriptedAction() {
+		if(Math.abs(lastX - getEnemy().getGameWorld().getPlayer().getBodyObject().getX()) < 1000)
+		
 		if (Alarm.isActive())	keyDown(ActionKey.RUN);
 		else					keyUp(ActionKey.RUN);
 		
@@ -133,7 +166,7 @@ public abstract class EnemyAI implements IEnemyAI {
 		case RIGHT:
 			currentAction.remove(ActionKey.LEFT);
 			break;
-		case RUN:System.out.println("RUN");
+		case RUN:
 			currentAction.remove(ActionKey.CROUCH);
 			break;
 		case THROW:
@@ -183,43 +216,21 @@ public abstract class EnemyAI implements IEnemyAI {
 	 * @return continue with regular scriptedActions
 	 */
 	protected boolean resolveAction() {
-		boolean again = false;
+		System.out.println(unresolvedAction);
 		switch(unresolvedAction) {
 		case ALARM_TRIGGERD:
-			if(advancedValues != null){
-				if(Alarm.isActive()){
-					actionAfterAlarm();
-					skipScript = true;
-					again = true;
-				}else{
-					again = false;
-					skipScript = false;
-				}
-			}
+			if(Alarm.isActive()) {
+				getEnemy().scanArea(getEnemy().getGameWorld().getPlayer().getBodyObject().getX(), 
+						getEnemy().getGameWorld().getPlayer().getBodyObject().getY());
+				boolean action = actionAfterAlarm();
+				if(!action)
+					break;
+				return !action;
+			} else
+				addAction(lastX < getEnemy().getBodyObject().getX() ? ActionKey.LEFT : ActionKey.RIGHT);
+			
 			break;
 		case HIT_BY_SHURIKEN:
-			keyDown(ActionKey.CROUCH);
-				keyUp(ActionKey.LEFT);
-				keyUp(ActionKey.RIGHT);
-				if(Gdx.graphics.isGL20Available()){
-					getEnemy().getView().setActive(false);
-				}
-				if(Alarm.isActive()){
-					skipScript = true;
-					again = true;
-				}else{
-					keyUp(ActionKey.CROUCH); 
-					if(Gdx.graphics.isGL20Available()){
-						getEnemy().getView().setActive(true);
-					}
-					if(getEnemy().getGameWorld().getPlayer().getAnimationObject().isFlipped()){
-						keyDown(ActionKey.LEFT);
-					}else{
-						keyDown(ActionKey.RIGHT);
-					}
-					again = false;
-					skipScript = false;
-				}
 			break;
 		case NORMAL:
 			break;
@@ -231,40 +242,36 @@ public abstract class EnemyAI implements IEnemyAI {
 			break;
 		
 		}
-		if(!again){
-			unresolvedAction = UnresolvedAction.NORMAL;
+		
+		unresolvedAction = UnresolvedAction.NORMAL;
+		return true;
+	}
+		
+	protected boolean actionAfterAlarm() {
+		if(advancedValues == null)
+			return false;
+		
+		float playerX = getEnemy().getGameWorld().getPlayer().getBodyObject().getX();		
+		//
+		if(playerX < getEnemy().getBodyObject().getX()){
+			
+			if(advancedValues[0] < getEnemy().getBodyObject().getX())
+				addAction(ActionKey.LEFT);
+			
+			else if(advancedValues[0] > getEnemy().getBodyObject().getX())
+				keyUp(ActionKey.LEFT);
+			
+		} else {
+			
+			if(advancedValues[1] > getEnemy().getBodyObject().getX())
+				addAction(ActionKey.RIGHT);
+			
+			else if(advancedValues[1] < getEnemy().getBodyObject().getX())
+					keyUp(ActionKey.RIGHT);
 		}
 		return true;
 	}
 	
-//	TODO
-	protected boolean scanArea(float radius) {
-		
-		return false;
-	}
-	
-	
-	protected void actionAfterAlarm() {
-		float playerX = getEnemy().getGameWorld().getPlayer().getBodyObject().getPosition().x;				
-		//
-		if(playerX<getEnemy().getBodyObject().getX()){
-			if(advancedValues[0]<getEnemy().getBodyObject().getX()){
-				keyDown(ActionKey.LEFT);
-			}else{
-				if(advancedValues[0]>=getEnemy().getBodyObject().getX()){
-					keyUp(ActionKey.LEFT);
-				}
-			}
-		}else{
-			if(advancedValues[1]>getEnemy().getBodyObject().getX()){
-				keyDown(ActionKey.RIGHT);
-			}else{
-				if(advancedValues[1]<=getEnemy().getBodyObject().getX()){
-					keyUp(ActionKey.RIGHT);
-				}
-			}
-		}
-	}
 
 	//	IInputHandler
 	@Override
@@ -332,13 +339,14 @@ public abstract class EnemyAI implements IEnemyAI {
 //				bodySensor triggered by shuriken
 				else if(mySensor.getSensorType() == SensorTypes.BODY && other.getBodyObjectType().equals(BodyObjectType.Shuriken)) {
 					
-					armor--;
+//					armor--;
 					if(armor < 0)	getEnemy().setStun();
-					else {
-						Alarm.trigger(2);
-						unresolvedAction = UnresolvedAction.HIT_BY_SHURIKEN;
-						actionObj = other;
-					}
+					else			unresolvedAction = UnresolvedAction.HIT_BY_SHURIKEN;
+				
+					triggerX = other.getX();
+					triggerY = other.getY();
+//					armor++;
+					stunTime = INITIAL_STUN_TIME;
 					
 					other.getParent().dispose();
 					return true;

@@ -13,6 +13,7 @@ import gameObject.interaction.enemy.ai.SimplePatrolAI;
 import gameWorld.GameWorld;
 import misc.StringFunctions;
 import box2dLight.ConeLight;
+import box2dLight.Light;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -27,11 +28,17 @@ public class Enemy extends GameObject {
 	protected IEnemyAI AI;
 	private InteractionHandler interactionHandler;
 	private ConeLight view;
+	private final int INITAL_VIEW_LENGTH = 150;
+	private int viewLength = INITAL_VIEW_LENGTH;
+	private final Color INITIAL_COLOR = new Color(1,1,0.5f,0.8f),
+			SCAN_COLOR = new Color(1,1,0,1),
+			DETECT_COLOR = new Color(1,0.5f,0,1f);
+	private boolean scannedArea, seePlayer;
 	
 	public Enemy(GameWorld world, Vector2 position) {
 		super(world, position);
 		if(Gdx.graphics.isGL20Available())
-			view = new ConeLight(world.getRayHandler(), 32, new Color(1,1,0.5f,0.8f), 200, 0, 0, 0, 30);
+			view = new ConeLight(world.getRayHandler(), 32, INITIAL_COLOR, INITAL_VIEW_LENGTH, 0, 0, 0, 30);
 	}
 
 	@Override
@@ -64,12 +71,31 @@ public class Enemy extends GameObject {
 			Vector2 head = getBodyObject().getPosition();
 			
 			head.x += getAnimationObject().isFlipped() ? 40 : 110;
-			head.y += 100;
+			head.y += 102;
 			if(isCrouching())
 				head.y -= 25;
 			view.setPosition(head);
-			view.setDirection(getAnimationObject().isFlipped() ? 180 : 0);
+			
+			if(viewLength == INITAL_VIEW_LENGTH)
+				view.setDirection(getAnimationObject().isFlipped() ? 180 : 0);
+
+			seePlayer = view.contains(getGameWorld().getPlayer().getBodyObject().getX(), 
+					getGameWorld().getPlayer().getBodyObject().getY());
+			
+			if(seePlayer) {
+				Alarm.trigger(Gdx.graphics.getDeltaTime()*2);
+				if(!scannedArea)
+					scanArea(getGameWorld().getPlayer().getBodyObject().getX(), 
+							getGameWorld().getPlayer().getBodyObject().getY(),
+							viewLength, viewLength);
+			}
+			
+			
+			view.setDistance(viewLength);
+			view.setColor(seePlayer ? DETECT_COLOR : viewLength != INITAL_VIEW_LENGTH ? SCAN_COLOR : INITIAL_COLOR);
 		}
+
+		scannedArea = false;
 	}
 
 	public void setAI(IEnemyAI ai, float walkMul, float runMul, float sneakMul, float pullMul) {
@@ -98,15 +124,11 @@ public class Enemy extends GameObject {
 	@Override
 	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor,
 			BodyObject other, Sensor otherSensor) {
-		// return super.handleCollision(start, sender, other, otherSensor) //
-		// || getAI() != null || getAI().handleCollision(start, sender, other,
-		// otherSensor);
-		// NILS
+		
 		super.handleCollision(start, postSolve, mySensor, other, otherSensor);
-		return !isStunned() && (AI.handleCollision(start, postSolve, mySensor, other, otherSensor) //
+		return !isStunned() && (AI.handleCollision(start, postSolve, mySensor, other, otherSensor)
 				|| getAI() != null
 				|| getAI().handleCollision(start, postSolve, mySensor, other, otherSensor));
-		// NILS
 	}
 	
 	public void setNewAI(JsonValue jAI, JsonValue jMul) {
@@ -140,12 +162,31 @@ public class Enemy extends GameObject {
 		return interactionHandler;
 	}
 	
-//	TODO
-	public boolean scanArea(GameObject obj) {
-		return view.contains(obj.getBodyObject().getX(), obj.getBodyObject().getY());
+	public boolean scanArea(float triggerX, float triggerY) {
+		return scanArea(triggerX, triggerY, viewLength, viewLength);
 	}
 	
-	public ConeLight getView(){
+	public boolean scanArea(float triggerX, float triggerY, int scanLength, int scanSpeed) {
+		scannedArea = true;
+		float dx = triggerX - getBodyObject().getX();
+		float dy = triggerY - getBodyObject().getY();
+		
+		float direction = (float)(Math.atan2(dy,  dx) / Math.PI * 180);
+		
+		viewLength = (int)Math.min(scanLength, view.getDistance()+scanSpeed);
+		
+		if((Math.abs(direction) < 90 && !getAnimationObject().isFlipped())
+				||Math.abs(direction) > 90 && getAnimationObject().isFlipped())
+			view.setDirection(direction);
+		view.setDistance(viewLength);
+		return view.contains(triggerX, triggerY);
+	}
+	
+	public void resetView() {
+		viewLength = INITAL_VIEW_LENGTH;
+	}
+	
+	public Light getView() {
 		return view;
 	}
 }

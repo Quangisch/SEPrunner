@@ -2,11 +2,16 @@ package gameObject.interaction.enemy.ai;
 
 import gameObject.body.BodyObject;
 import gameObject.body.Sensor;
+import gameObject.interaction.enemy.Alarm;
+
+import com.badlogic.gdx.Gdx;
+
+import core.ingame.input.KeyMap.ActionKey;
 
 public class MediumAI extends EnemyAI {
 
 	public MediumAI() {
-		armor = 1;
+		super(3,0.5f);
 	}
 	
 	@Override
@@ -17,8 +22,55 @@ public class MediumAI extends EnemyAI {
 
 	}
 	
-	protected void actionAfterHit() {
-		System.out.println(this.getClass().toString()+" actionTime");
+	private boolean hit;
+	
+	protected boolean resolveAction() {
+		switch(unresolvedAction) {
+		case ALARM_TRIGGERD:
+			break;
+		case HIT_BY_SHURIKEN:
+			if(!hit){
+				hit = true;
+				Alarm.trigger(3);
+				
+				storedActions.clear();
+				for(ActionKey a : currentAction)
+					storedActions.add(a);
+				currentAction.clear();
+				
+				if(Gdx.graphics.isGL20Available())
+					getEnemy().getView().setActive(false);
+				
+				return false;
+			}
+
+			currentAction.add(ActionKey.CROUCH);
+			
+			if(!Alarm.isActive()){
+				if(Gdx.graphics.isGL20Available())
+					getEnemy().getView().setActive(true);
+				
+				currentAction.clear();
+				for(ActionKey a : storedActions)
+					currentAction.add(a);
+				storedActions.clear();
+				
+				hit = false;
+				break;
+			} else
+				return false;
+		case NORMAL:
+			break;
+		case SEE_PLAYER:
+			break;
+		case SEE_STUNNED_ENEMY:
+			break;
+		default:
+			break;
+
+		}
+		
+		return super.resolveAction();
 	}
 
 	@Override

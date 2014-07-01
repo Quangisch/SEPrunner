@@ -55,6 +55,7 @@ public class MenuLevelSelect implements Screen {
 		stage.act(delta);
 		stage.draw();
 		
+//		AnimatedBackground.getInstance().updateAndRenderRays();
 		
 		
 //		Table.drawDebug(stage);            // case debuglines needed 1/2
@@ -72,8 +73,7 @@ public class MenuLevelSelect implements Screen {
 		
 		shaderBatch = new ShaderBatch(50);
 		
-		stage = new Stage();
-		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
+		stage = new Stage(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true, shaderBatch);
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));

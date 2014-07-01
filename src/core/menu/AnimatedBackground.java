@@ -84,6 +84,11 @@ public class AnimatedBackground implements IInputHandler, Runnable, Disposable, 
 		
 		world.moveMapTextures(-moveSpeed, 0);
 		moved += moveSpeed;
+		
+	}
+	
+	public void updateAndRenderRays() {
+		world.getRayHandler().updateAndRender();
 	}
 
 	

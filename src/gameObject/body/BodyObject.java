@@ -172,7 +172,7 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	public float getY() {
 		return GameProperties.meterToPixel(body.getPosition().y);
 	}
-
+	
 	@Override
 	public void applyImpulse(Vector2 impulse) {
 		body.applyLinearImpulse(impulse, getLocalCenterInWorld(), true);
@@ -187,16 +187,11 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 	public Vector2 getPosition() {
 		return new Vector2(getX(), getY());
 	}
-	
-	public void setPixelPosition(Vector2 position) {
-		body.setTransform(GameProperties.pixelToMeter(position), body.getAngle());
-	}
 
 	@Override
 	public Vector2 getLocalCenterInWorld() {
 		return body.getWorldPoint(body.getLocalCenter());
 	}
-
 
 	// DISPOSABLE
 	private boolean disposeNextStep = false;

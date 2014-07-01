@@ -51,7 +51,7 @@ public class MenuOption implements Screen {
 	private KeyLabel kLeft, kRight, kRun, kJump, kCrouch, kAction, remapLabel;
 	private List<KeyLabel> keyLabelList;
 
-	private Label displayModeLabel, selectedModeLabel, selectModeNow;
+	private Label selectedModeLabel, selectModeNow;
 	private ScrollPane scrollPane;
 	private com.badlogic.gdx.scenes.scene2d.ui.List displayModeList;
 	
@@ -84,15 +84,14 @@ public class MenuOption implements Screen {
 		keyLabelList = new LinkedList<KeyLabel>();
 		keyMap.initFromFile();
 		
-		displayModeLabel = new Label("DisplayMode", skin, "baoli44", Color.WHITE);
 		selectedModeLabel = new Label(GameProperties.prefDisplayMode.width+"x"+
 									GameProperties.prefDisplayMode.height, skin, "baoli32", Color.WHITE);
 		selectModeNow = new Label("Select", skin, "baoli32", Color.WHITE);
 		
-		displayModeLabel.setTouchable(Touchable.enabled);
+		selectedModeLabel.setTouchable(Touchable.enabled);
 		selectModeNow.setTouchable(Touchable.enabled);
 	
-		displayModeLabel.addListener(clickHandler);
+		selectedModeLabel.addListener(clickHandler);
 		selectModeNow.addListener(clickHandler);
 
 
@@ -144,7 +143,7 @@ public class MenuOption implements Screen {
 		stage.addActor(backButton);
 		backButton.addListener(clickHandler);
 		
-		displayModeTable.add(displayModeLabel).row();
+		displayModeTable.add("DisplayMode").row();
 		displayModeTable.add(selectedModeLabel);
 		
 		iniGraphicSection();
@@ -160,7 +159,7 @@ public class MenuOption implements Screen {
 			modes[i] = LwjglApplicationConfiguration.getDisplayModes()[i].width+"x"+LwjglApplicationConfiguration.getDisplayModes()[i].height;
 		
 		displayModeList = new com.badlogic.gdx.scenes.scene2d.ui.List(modes, skin);
-
+		
 		if(scrollPane != null)
 			scrollPane.setWidget(displayModeList);
 	}
@@ -375,7 +374,7 @@ public class MenuOption implements Screen {
 			
 			Actor a = stage.hit(x, y, true);
 			if(a != null && ((remapLabel == null && a instanceof KeyLabel && a.getColor().equals(Color.WHITE))
-					|| a == displayModeLabel || a == selectModeNow)) {
+					|| a == selectedModeLabel || a == selectModeNow)) {
 				hoverList.add(a);
 				a.setColor(HOVER);
 			} 
@@ -457,7 +456,7 @@ public class MenuOption implements Screen {
 
 				
 //			DISPLAYMODE
-			} else if(event.getListenerActor() == displayModeLabel) {
+			} else if(event.getListenerActor() == selectedModeLabel) {
 				updateDisplaySelect();
 				mainTable.remove();
 				stage.addActor(displaySelectTable);

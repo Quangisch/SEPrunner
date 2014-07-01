@@ -69,6 +69,10 @@ public class Highscore {
 		for(int i = 0; i < getInstance().highscoreMap.size(); i++) {
 			
 			List<Score> scoreList = getInstance().highscoreMap.get(i);
+			
+			if(scoreList.size() <= 0)
+				continue;
+			
 			JsonValue jScore = new JsonValue(ValueType.object);
 			root.get(i).child = jScore;
 			
@@ -88,7 +92,7 @@ public class Highscore {
 				}
 			}
 		}
-
+	
 		try {
 			FileWriter f = new FileWriter(FilePath.highscore);
 			f.write(root.toString());

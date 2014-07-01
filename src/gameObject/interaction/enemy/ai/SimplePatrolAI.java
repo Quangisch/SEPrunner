@@ -5,15 +5,15 @@ import gameObject.body.Sensor;
 
 public class SimplePatrolAI extends EnemyAI {
 
+	public SimplePatrolAI() {
+		super(1,1);
+	}
+	
 	@Override
 	public void run() {
 		super.run();
 		if (getEnemy() == null) 
 			return;
-	}
-
-	protected void actionAfterHit() {
-		System.out.println(this.getClass().toString()+" actionTime");
 	}
 
 	@Override
