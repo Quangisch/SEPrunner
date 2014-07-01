@@ -6,7 +6,7 @@ import gameObject.body.Sensor;
 public class SimplePatrolAI extends EnemyAI {
 
 	public SimplePatrolAI() {
-		super(1,1);
+		super(0,1);
 	}
 	
 	@Override

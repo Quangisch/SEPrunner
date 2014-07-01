@@ -15,7 +15,7 @@ public class HardAI extends EnemyAI {
 	private final float SCAN_TIME_MAX = 5;
 	
 	public HardAI() {
-		super(3, 1.5f);
+		super(3, 1f);
 	}
 	
 	@Override

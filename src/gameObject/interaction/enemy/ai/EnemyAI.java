@@ -80,8 +80,6 @@ public abstract class EnemyAI implements IEnemyAI {
 			return;
 		
 		boolean contScript = true;
-		if(stunTime != 0)
-			System.out.println(stunTime);
 		if(stunTime > 0) {
 			
 			if(stunTime == INITIAL_STUN_TIME) {
@@ -216,7 +214,6 @@ public abstract class EnemyAI implements IEnemyAI {
 	 * @return continue with regular scriptedActions
 	 */
 	protected boolean resolveAction() {
-		System.out.println(unresolvedAction);
 		switch(unresolvedAction) {
 		case ALARM_TRIGGERD:
 			if(Alarm.isActive()) {
@@ -339,13 +336,12 @@ public abstract class EnemyAI implements IEnemyAI {
 //				bodySensor triggered by shuriken
 				else if(mySensor.getSensorType() == SensorTypes.BODY && other.getBodyObjectType().equals(BodyObjectType.Shuriken)) {
 					
-//					armor--;
+					armor -= getEnemy().isCrouching() ? 0.5f : 1;   
 					if(armor < 0)	getEnemy().setStun();
 					else			unresolvedAction = UnresolvedAction.HIT_BY_SHURIKEN;
 				
 					triggerX = other.getX();
 					triggerY = other.getY();
-//					armor++;
 					stunTime = INITIAL_STUN_TIME;
 					
 					other.getParent().dispose();

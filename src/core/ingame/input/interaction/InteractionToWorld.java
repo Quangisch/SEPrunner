@@ -68,7 +68,7 @@ public class InteractionToWorld {
 		return baseForce;
 	}
 
-	private float walkMul = 1, runMul = 1.5f, sneakMul = 0.6f, pullMul = 1.5f;
+	private float walkMul = 1, runMul = 1.5f, sneakMul = 0.6f, pullMul = 1f;
 	
 	protected void setForceMultiplier(float walkMul, float runMul, float sneakMul, float pullMull) {
 		this.walkMul = walkMul;
@@ -88,7 +88,7 @@ public class InteractionToWorld {
 			multipliedForce = baseForce.scl(sneakMul);
 			break;
 		case GRAB_PULL:
-			multipliedForce = baseForce.scl(-pullMul, pullMul/3);
+			multipliedForce = baseForce.scl(-pullMul, 1);
 			break;
 		case JUMP:
 		case JUMP_MOVE:

@@ -76,10 +76,13 @@ public abstract class InteractionObject extends InteractionManager implements IC
 				hideTarget = grabTarget.hideTarget;
 				hideTarget.getAnimationObject().setActive(true);
 			}
-			
+			grabTarget.getBodyObject().setGravityScale(0);
 			grabTarget.getAnimationObject().setActive(false);
-		} else
+		} else {
 			disposeTarget = null;
+			if(grabTarget != null)
+				grabTarget.getBodyObject().setGravityScale(1);
+		}
 	}
 	
 	private void processHideTarget() {
