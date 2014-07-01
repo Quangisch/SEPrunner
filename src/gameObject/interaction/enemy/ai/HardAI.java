@@ -10,7 +10,7 @@ import core.ingame.input.KeyMap.ActionKey;
 
 public class HardAI extends EnemyAI {
 
-	private final int SCAN_SPEED = 3, SCAN_LENGTH = 600;
+	private final int SCAN_SPEED = 3, SCAN_LENGTH = 350;
 	private float scanTime;
 	private final float SCAN_TIME_MAX = 5;
 	

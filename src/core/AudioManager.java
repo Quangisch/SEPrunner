@@ -94,7 +94,7 @@ public class AudioManager implements Runnable, OnCompletionListener, Disposable 
 	}
 	
 	private float prevVolume;
-	public void startMusic(GameState state) {
+	private void startMusic(GameState state) {
 		if(!state.equals(currentMusicState))
 			switch(state) {
 			case LOSE:
@@ -121,7 +121,7 @@ public class AudioManager implements Runnable, OnCompletionListener, Disposable 
 		currentMusicState = state;
 	}
 	
-	public void startMusic(GameScreen screen) {
+	private void startMusic(GameScreen screen) {
 		if(currentMusicScreen == null
 				|| screen.INDEX >= 0
 				|| (!screen.equals(currentMusicScreen) && screen.INDEX > 0)
@@ -243,4 +243,27 @@ public class AudioManager implements Runnable, OnCompletionListener, Disposable 
 		
 	}
 
+	public static class AudioStarter implements Runnable {
+
+		private GameScreen screen;
+		private GameState state;
+		
+		public AudioStarter(GameScreen screen) {
+			this.screen = screen;
+		}
+		
+		public AudioStarter(GameState state) {
+			this.state = state;
+		}
+		
+		@Override
+		public void run() {
+			if(screen != null)
+				getInstance().startMusic(screen);
+			else if(state != null)
+				getInstance().startMusic(state);
+		}
+		
+	}
+	
 }

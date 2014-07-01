@@ -231,7 +231,7 @@ public class GameProperties {
 	
 	public static void switchGameState(GameState state) {
 		gameState = state;
-		AudioManager.getInstance().startMusic(state);
+		Gdx.app.postRunnable(new AudioManager.AudioStarter(state));
 	}
 	
 	public static boolean switchGameScreen(GameScreen screen) throws LevelNotFoundException {
@@ -278,7 +278,7 @@ public class GameProperties {
 		if(PlayerProfile.getProfileCount() == 0 && !nextScreen.equals(GameScreen.MENU_SPLASH))
 			nextScreen = new EnterNameScreen(nextScreen);
 		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
-		AudioManager.getInstance().startMusic(screen);
+		Gdx.app.postRunnable(new AudioManager.AudioStarter(screen));
 
 		gameScreen = screen;
 		return true;
@@ -315,7 +315,7 @@ public class GameProperties {
 			gameState = GameState.PAUSE;
 		else if(gameState.equals(GameState.PAUSE))
 			gameState = GameState.NORMAL;
-		AudioManager.getInstance().startMusic(gameState);
+		Gdx.app.postRunnable(new AudioManager.AudioStarter(gameState));
 	}
 	
 	public static void setGameOver(String message) {
@@ -323,12 +323,12 @@ public class GameProperties {
 			return;
 		loseMessage = message;
 		gameState = GameState.LOSE;
-		AudioManager.getInstance().startMusic(GameState.LOSE);
+		Gdx.app.postRunnable(new AudioManager.AudioStarter(GameState.LOSE));
 	}
 
 	public static void setWin() {
 		gameState = GameState.WIN;
-		AudioManager.getInstance().startMusic(GameState.WIN);
+		Gdx.app.postRunnable(new AudioManager.AudioStarter(GameState.WIN));
 	}
 	
 	public static boolean isCurrentGameState(GameState state) {
