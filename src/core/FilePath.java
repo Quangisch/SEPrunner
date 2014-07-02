@@ -30,8 +30,8 @@ public interface FilePath {
 //			GRAPHICS
 			graphic_menuMain = "res/img/main menu.png",
 			ground = "res/map/background/ground.png",
-			preview_level1 = "res/map/preview/city.png",
-			preview_level2 = "res/map/preview/slums.png",
+			preview_level1 = "res/map/preview/slums.png",
+			preview_level2 = "res/map/preview/city.png",
 			preview_level3 = "res/map/preview/underground.png"
 			
 			

@@ -3,15 +3,27 @@
 	"mapTexture" : [
 						{
 							"position" : [0, 0], 
-							"texture" : "res/map/levelTextures/level0_1.png"
+							"texture" : "res/map/levelTextures/level0-01.png"
+						},
+						{
+							"position" : [2048, 0], 
+							"texture" : "res/map/levelTextures/level0-02.png"
 						},
 						{
 							"position" : [4096, 0], 
-							"texture" : "res/map/levelTextures/level0_2.png"
+							"texture" : "res/map/levelTextures/level0-03.png"
+						},
+						{
+							"position" : [6144, 0], 
+							"texture" : "res/map/levelTextures/level0-04.png"
 						},
 						{
 							"position" : [8192, 0], 
-							"texture" : "res/map/levelTextures/level0_3.png"
+							"texture" : "res/map/levelTextures/level0-05.png"
+						},
+						{
+							"position" : [10240, 0], 
+							"texture" : "res/map/levelTextures/level0-06.png"
 						}
 					],
 	"background" : 	[
