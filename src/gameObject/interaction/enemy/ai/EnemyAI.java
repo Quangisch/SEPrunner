@@ -79,6 +79,9 @@ public abstract class EnemyAI implements IEnemyAI {
 		if (link == null) 
 			return;
 		
+		if(Math.abs(lastX - getEnemy().getGameWorld().getPlayer().getBodyObject().getX()) < 1000)
+			Debug.println("Nearby Enemy, distance@"+Math.abs(lastX - getEnemy().getGameWorld().getPlayer().getBodyObject().getX())+" armor@"+armor+" type@"+this.getClass());
+		
 		boolean contScript = true;
 		if(stunTime > 0) {
 			
@@ -245,7 +248,7 @@ public abstract class EnemyAI implements IEnemyAI {
 	}
 		
 	protected boolean actionAfterAlarm() {
-		if(advancedValues == null)
+		if(advancedValues == null || getEnemy().getGameWorld().getPlayer().isHiding())
 			return false;
 		
 		float playerX = getEnemy().getGameWorld().getPlayer().getBodyObject().getX();		
@@ -336,8 +339,8 @@ public abstract class EnemyAI implements IEnemyAI {
 //				bodySensor triggered by shuriken
 				else if(mySensor.getSensorType() == SensorTypes.BODY && other.getBodyObjectType().equals(BodyObjectType.Shuriken)) {
 					
-					armor -= getEnemy().isCrouching() ? 0.5f : 1;   
-					if(armor < 0)	getEnemy().setStun();
+					armor -= getEnemy().isCrouching() ? 0.4f : 1;   
+					if(armor <= 0)	getEnemy().setStun();
 					else			unresolvedAction = UnresolvedAction.HIT_BY_SHURIKEN;
 				
 					triggerX = other.getX();

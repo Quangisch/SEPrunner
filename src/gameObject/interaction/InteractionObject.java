@@ -35,9 +35,14 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	private int shuriken, hookRadius;
 	private int shurikenThrown, enemiesHidden;
 	private Set<BodyObject> hiddenFrom = new HashSet<BodyObject>();
+	private int feetGrounded;
 	
 	protected InteractionObject(GameWorld gameWorld) {
 		super(gameWorld);
+	}
+	
+	private void calcFeetsContact(boolean start) {
+		feetGrounded += start ? 1 : -1;
 	}
 	
 	private void calcBodyBlockedContact(boolean start) {
@@ -54,7 +59,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 		
 		if(this.getBodyObject().getBodyObjectType().equals(BodyObjectType.Player)) {
 //			System.out.println(String.format("thrown:%d, hidden:%d, unseen:%d", shurikenThrown, enemiesHidden, unseen));
-		
+//			System.out.println(feetGrounded + " "+areBothFeetsGrounded());
 		}
 	}
 	
@@ -76,7 +81,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 				hideTarget = grabTarget.hideTarget;
 				hideTarget.getAnimationObject().setActive(true);
 			}
-			grabTarget.getBodyObject().setGravityScale(0);
+			grabTarget.getBodyObject().setGravityScale(0.01f);
 			grabTarget.getAnimationObject().setActive(false);
 		} else {
 			disposeTarget = null;
@@ -101,6 +106,10 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	@Override
 	public boolean isGrounded() {
 		return grounded > 0;
+	}
+	
+	public boolean areBothFeetsGrounded() {
+		return feetGrounded == 2;
 	}
 
 	@Override
@@ -279,6 +288,10 @@ public abstract class InteractionObject extends InteractionManager implements IC
 						calcGroundedContact(start);
 						if(!hookable && isGrounded())
 							hookable = true;
+						return true;
+					case SensorTypes.LEFT_FOOT :
+					case SensorTypes.RIGHT_FOOT :
+						calcFeetsContact(start);
 						return true;
 					default:
 						break;

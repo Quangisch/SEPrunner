@@ -79,7 +79,7 @@ public class Enemy extends GameObject {
 			if(viewLength == INITAL_VIEW_LENGTH)
 				view.setDirection(getAnimationObject().isFlipped() ? 180 : 0);
 
-			seePlayer = view.contains(getGameWorld().getPlayer().getBodyObject().getX(), 
+			seePlayer = !getGameWorld().getPlayer().isHiding() && view.contains(getGameWorld().getPlayer().getBodyObject().getX(), 
 					getGameWorld().getPlayer().getBodyObject().getY());
 			
 			if(seePlayer) {

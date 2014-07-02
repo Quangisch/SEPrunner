@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import misc.ShaderBatch;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.FilePath;
 import core.GameProperties;
@@ -37,6 +37,8 @@ public class MenuLevelSelect implements Screen {
 	private int width, height;
 	private java.util.List<Texture> previewTextures;
 	private String[] levelList = {"Level 1", "Level 2", "Level 3"};
+	private InputHandler iHandler;
+	private TextButton playButton;
 	
 	private ShaderBatch shaderBatch;
 		
@@ -63,7 +65,8 @@ public class MenuLevelSelect implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+		stage.setViewport(width*2, height*2, true);
+		table.invalidateHierarchy();
 	}
 
 	@Override
@@ -72,8 +75,9 @@ public class MenuLevelSelect implements Screen {
 		height = GameProperties.SCALE_HEIGHT;
 		
 		shaderBatch = new ShaderBatch(50);
-		
-		stage = new Stage(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true, shaderBatch);
+		stage = new Stage(width*2, height*2, true, shaderBatch);
+		iHandler = new InputHandler(stage);
+		stage.addListener(iHandler);
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
@@ -97,28 +101,11 @@ public class MenuLevelSelect implements Screen {
 		
 		ScrollPane scrollPane = new ScrollPane(levelSelectionList, skin);
 		
-		TextButton playButton = new TextButton("Start Level", skin);
-		playButton.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				try {
-					GameProperties.switchGameScreen(GameScreen.getScreen(levelSelectionList.getSelectedIndex()));
-				} catch (LevelNotFoundException e) {
-					GameProperties.switchGameScreen(GameScreen.MENU_LEVELSELECT);
-					e.printStackTrace();
-				}
-			}
-		});
+		playButton = new TextButton("Start Level", skin);
+		playButton.addListener(iHandler);
 		playButton.setPosition(width*2 - playButton.getWidth(), height/10);
 		stage.addActor(playButton);
-		
-		TextButton backButton = new TextButton("Back", skin); //small da ungleich defaultgroesse
-		backButton.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
-			}
-		});
-		backButton.setPosition(width/10, height/10);
-		stage.addActor(backButton);
+		iHandler.setBackButton(skin);
 		
 		previewTextures = new LinkedList<Texture>();
 		previewTextures.add(new Texture(Gdx.files.internal(FilePath.preview_level1)));
@@ -136,8 +123,6 @@ public class MenuLevelSelect implements Screen {
 		table.add().padLeft(Gdx.graphics.getWidth()/20).row();
 		table.add().colspan(3).padTop(Gdx.graphics.getHeight()/2);
 		previewTable.add(previewImage);
-		
-		
 		
 		stage.addActor(table);
 	}
@@ -164,6 +149,58 @@ public class MenuLevelSelect implements Screen {
 			t.dispose();
 		stage.dispose();
 		skin.dispose();
+	}
+	
+	private boolean startGame() {
+		try {
+			Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.getScreen(levelSelectionList.getSelectedIndex())));
+			return true;
+		} catch (LevelNotFoundException e) {
+			GameProperties.switchGameScreen(GameScreen.MENU_LEVELSELECT);
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	private class InputHandler extends ClickHandler {
+		private InputHandler(Stage stage) {
+			super(stage);
+		}
+		
+		public void clicked(InputEvent event, float x, float y) {
+			if(event.getListenerActor() == playButton) 
+				startGame();
+		}
+		
+		public boolean keyDown(InputEvent event, int keycode) {
+			super.keyDown(event, keycode);
+			
+			switch(keycode) {
+			case Keys.NUM_1:
+				levelSelectionList.setSelectedIndex(0);
+				break;
+			case Keys.NUM_2:
+				levelSelectionList.setSelectedIndex(1);
+				break;
+			case Keys.NUM_3:
+				levelSelectionList.setSelectedIndex(2);
+				break;
+			case Keys.UP:
+				levelSelectionList.setSelectedIndex(
+						(levelSelectionList.getSelectedIndex()-1+GameProperties.IMPLEMENTED_LEVEL.length)
+							%GameProperties.IMPLEMENTED_LEVEL.length);
+				break;
+			case Keys.DOWN:
+				levelSelectionList.setSelectedIndex(
+						(levelSelectionList.getSelectedIndex()+1)%GameProperties.IMPLEMENTED_LEVEL.length);
+				break;
+			case Keys.ENTER:
+				startGame();
+				break;
+			}
+			
+			return false;
+		}
 	}
 
 }

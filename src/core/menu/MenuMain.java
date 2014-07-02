@@ -6,6 +6,7 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.GameProperties;
 import core.GameProperties.GameScreen;
@@ -32,7 +32,9 @@ public class MenuMain implements Screen {
 	private Table table; //objects get organized on here
 	private TweenManager tweenManager; //tween-engine starter, stuff like fade-in/out animations
 	 //textButtonStyle pushed in json-file, put in skin
-		
+	private InputHandler iHandler;
+	private TextButton buttonPlay, buttonProfile, buttonOption, buttonHighscore, buttonExit; 
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);	//black background
@@ -53,17 +55,18 @@ public class MenuMain implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
+		table.invalidate();
 	}
 
 	@Override
 	public void show() {
-		
-		stage = new Stage();
-		shaderBatch = new ShaderBatch(100);		//background laden
-		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
-		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
 
+		shaderBatch = new ShaderBatch(100);		//background laden
+		stage = new Stage(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true, shaderBatch);
+		Gdx.input.setInputProcessor(stage);	//eventhandler in input, enables to push the button
+		iHandler = new InputHandler(stage);
+		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		table = new Table(skin);
 		table.setFillParent(true);
@@ -76,44 +79,24 @@ public class MenuMain implements Screen {
 		
 		
 		//creating buttons
-		TextButton buttonPlay = new TextButton("Play", skin);
-		buttonPlay.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				GameProperties.switchGameScreen(GameScreen.MENU_LEVELSELECT);	
-			}
-		});
+		buttonPlay = new TextButton("Play", skin);
+		buttonPlay.addListener(iHandler);
 		buttonPlay.pad(15);  //puffer zwischen buchstaben & buttonrand
 		
-		TextButton buttonProfile = new TextButton("Profile", skin);
-		buttonProfile.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				GameProperties.switchGameScreen(GameScreen.MENU_PROFILE);
-			}
-		});
+		buttonProfile = new TextButton("Profile", skin);
+		buttonProfile.addListener(iHandler);
 		buttonProfile.pad(15);
 		
-		TextButton buttonOption = new TextButton("Options", skin);
-		buttonOption.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				GameProperties.switchGameScreen(GameScreen.MENU_OPTION);
-			}
-		});
+		buttonOption = new TextButton("Options", skin);
+		buttonOption.addListener(iHandler);
 		buttonOption.pad(15);
 		
-		TextButton buttonHighscore = new TextButton("   Highscore   ", skin);
-		buttonHighscore.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				GameProperties.switchGameScreen(GameScreen.MENU_HIGHSCORE);
-			}
-		});
+		buttonHighscore = new TextButton("   Highscore   ", skin);
+		buttonHighscore.addListener(iHandler);
 		buttonHighscore.pad(15);
 		
-		TextButton buttonExit = new TextButton("Quit", skin);
-		buttonExit.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				Gdx.app.exit();
-			}
-		});
+		buttonExit = new TextButton("Quit", skin);
+		buttonExit.addListener(iHandler);
 		buttonExit.pad(15);
 
 		//putting stuff together
@@ -127,6 +110,7 @@ public class MenuMain implements Screen {
 		
 //table.debug();            // case debuglines needed 2/2
 		
+		stage.addListener(iHandler);
 		stage.addActor(table);
 		
 		//creating animations
@@ -179,6 +163,53 @@ public class MenuMain implements Screen {
 		stage.dispose();
 		skin.dispose();
 		shaderBatch.dispose();
+	}
+	
+	private class InputHandler extends ClickHandler {
+		private InputHandler(Stage stage) {
+			super(stage);
+		}
+		
+		public void clicked(InputEvent event, float x, float y){
+			if(event.getListenerActor().equals(buttonPlay))
+				GameProperties.switchGameScreen(GameScreen.MENU_LEVELSELECT);
+			
+			else if(event.getListenerActor().equals(buttonProfile))
+				GameProperties.switchGameScreen(GameScreen.MENU_PROFILE);
+			
+			else if(event.getListenerActor().equals(buttonOption))
+				GameProperties.switchGameScreen(GameScreen.MENU_OPTION);
+			
+			else if(event.getListenerActor().equals(buttonHighscore))
+				GameProperties.switchGameScreen(GameScreen.MENU_HIGHSCORE);
+			
+			else if(event.getListenerActor().equals(buttonExit))
+				Gdx.app.exit();
+			
+		}
+		
+		public boolean keyDown(InputEvent event, int keycode) {
+			super.keyDown(event, keycode);
+			switch(keycode) {
+			case Keys.NUM_1:
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_LEVELSELECT));
+				break;
+			case Keys.NUM_2:
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_PROFILE));
+				break;
+			case Keys.NUM_3:
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_OPTION));
+				break;
+			case Keys.NUM_4:
+				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_HIGHSCORE));
+				break;
+			case Keys.NUM_5:
+				Gdx.app.exit();
+				break;
+			}
+			
+			return true;
+		}
 	}
 
 }

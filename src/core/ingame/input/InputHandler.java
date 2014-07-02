@@ -72,10 +72,7 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		switch (keycode) {
 		// toogle Fullscreen
 		case Keys.ESCAPE:
-			if(GameProperties.debug)
-				GameProperties.toogleFullScreen();
-			else
-				GameProperties.toogleIngamePause();
+			GameProperties.toogleFullScreen();
 			break;
 
 		// toogle pause

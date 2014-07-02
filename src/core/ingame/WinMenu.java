@@ -1,172 +1,244 @@
 package core.ingame;
 
+import gameObject.interaction.enemy.Alarm;
 import gameWorld.GameWorld;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.GameProperties;
+import core.Highscore;
 import core.GameProperties.GameScreen;
-import core.ingame.input.InputHandler;
-import core.ingame.input.InputHandler.Click;
+import core.Highscore.Score;
 
-public class WinMenu implements IDrawable {
-
+public class WinMenu implements Screen {
+//	TODO
 	private GameWorld world;
-	private SpriteBatch b;
-	private BitmapFont font;
-
-	public WinMenu(GameWorld world) {
+	private Stage stage;
+	private Table mainTable, scoreTable, highscoreTable, pointsTable, bonusTable, buttonTable;
+	private Label label_continue, label_retry, label_menu;
+	private ScrollPane scrollPane;
+	private Skin skin;
+	private ClickHandler clickHandler;
+	
+	final private Color NORMAL = new Color(1,1,0.90f,1);
+	final private Color HOVER = new Color(1,1,0f,1);
+	private int width, height;
+	private SpriteBatch batch;
+	
+	public WinMenu(GameWorld world, SpriteBatch batch) {
 		this.world = world;
-		b = new SpriteBatch();
-		font = new BitmapFont(Gdx.files.internal("res/font/baoli64.fnt"), //
-				Gdx.files.internal("res/font/baoli64.png"), false);
-		font.setScale(2f);
+		show();
+	}
+	
+	public void show() {
+		width = GameProperties.SCALE_WIDTH;
+		height = GameProperties.SCALE_HEIGHT;
+		world.getPlayer().saveHighscore();
+		
+		stage = new Stage(10,10, true, batch);
+		stage.setCamera(world.getCamera());
+		
+		clickHandler = new ClickHandler();
+		world.getCamera().zoom = 3;
+		Gdx.input.setInputProcessor(stage);
+		
+		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
+		mainTable = new Table(skin);
+		mainTable.setFillParent(true);
+		
+		stage.addActor(mainTable);
+		stage.addListener(clickHandler);
+		
+		pointsTable = new Table(skin);
+		bonusTable = new Table(skin);
+		scoreTable = new Table(skin);
+		highscoreTable = new Table(skin);
+		buttonTable = new Table(skin);
+		
+		scrollPane = new ScrollPane(scoreTable, skin);
+		mainTable.add(new Label("Level Cleared", skin, "baoli96", Color.WHITE)).colspan(3).padBottom(height/10).row();
+		mainTable.add(pointsTable);
+		mainTable.add().size(width/10, 0);
+		mainTable.add(highscoreTable).row();
+		mainTable.add(buttonTable).colspan(3);
+		
+		
+		pointsTable.add(new Label("StylePoints", skin, "baoli44", Color.WHITE)).colspan(4).row();
+		
+		pointsTable.add(new Label("Hidden from Enemy", skin, "baoli32", Color.WHITE)).left();
+		pointsTable.add(new Label(world.getPlayer().getUnseenFrom()+"", skin, "baoli32", Color.WHITE));
+		pointsTable.add(new Label("x", skin, "baoli32", Color.WHITE));
+		pointsTable.add(new Label(GameProperties.POINTS_HIDDEN_MUL+"", skin, "baoli32", Color.WHITE)).row();
+		
+		pointsTable.add(new Label("Hidden Bodies", skin, "baoli32", Color.WHITE)).left();
+		pointsTable.add(new Label(world.getPlayer().getEnemiesHidden()+"", skin, "baoli32", Color.WHITE));
+		pointsTable.add(new Label("x", skin, "baoli32", Color.WHITE));
+		pointsTable.add(new Label(GameProperties.POINTS_DISPOSED_MUL+"", skin, "baoli32", Color.WHITE)).row();
+		
+		pointsTable.add(new Label("Total Alarm Time", skin, "baoli32", Color.WHITE)).left();
+		pointsTable.add(new Label((int)Alarm.getTotalAlarmTime()+"", skin, "baoli32", Color.WHITE));
+		pointsTable.add(new Label("x", skin, "baoli32", Color.WHITE));
+		pointsTable.add(new Label(GameProperties.POINTS_ALARM_MUL+"", skin, "baoli32", Color.WHITE)).row();
+		
+		pointsTable.add(bonusTable).left().colspan(4);
+		
+		bonusTable.add(new Label("Bonus", skin, "baoli32", Color.WHITE)).left().row();
+		if(Alarm.getTotalAlarmTime() <= 0) {
+			bonusTable.add(new Label("Unseen", skin, "baoli32", Color.WHITE)).left();
+			bonusTable.add(new Label(GameProperties.POINTS_UNSEEN+"", skin, "baoli32", Color.WHITE)).row();
+		}
+		if(world.getPlayer().getShurikenThrown() <= 0) {
+			bonusTable.add(new Label("Untouched", skin, "baoli32", Color.WHITE)).left();
+			bonusTable.add(new Label(GameProperties.POINTS_WITHOUT_SHURIKENS+"", skin, "baoli32", Color.WHITE)).row();
+		}
+		bonusTable.add(new Label("Remaining Time", skin, "baoli32", Color.WHITE)).left();
+		bonusTable.add(new Label((int)(world.getTimeLimit()-world.getTime())+"", skin, "baoli32", Color.WHITE)).row();
+		bonusTable.add(new Label("Earned Stylepoints ", skin, "baoli44", Color.YELLOW)).left().padLeft(width/10).padTop(height/10);
+		bonusTable.add(new Label(GameProperties.calcStylePoints(world)+"", skin, "baoli44", Color.YELLOW)).padTop(height/10);
+		
+		highscoreTable.add(new Label("Highscore", skin, "baoli64", Color.WHITE)).colspan(3).row();
+		highscoreTable.add().size(width/10, 0);
+		highscoreTable.add().size(width/3, 0);
+		highscoreTable.add().size(width/4, 0).row();
+		highscoreTable.add(new Label("Rank", skin, "baoli32", Color.WHITE));
+		highscoreTable.add(new Label("Name", skin, "baoli32", Color.WHITE));
+		highscoreTable.add(new Label("Time", skin, "baoli32", Color.WHITE)).row();
+		highscoreTable.add(scrollPane).colspan(3);
+
+		addToListener(label_continue = new Label("Continue", skin, "baoli44", Color.WHITE));
+		addToListener(label_retry = new Label("Retry", skin, "baoli44", Color.WHITE));
+		addToListener(label_menu = new Label("Back To Menu", skin, "baoli44", Color.WHITE));
+		
+		
+		
+		buttonTable.add(label_retry);
+		buttonTable.add(label_menu).pad(height/10, width/3, height/10, width/3);
+		buttonTable.add(label_continue);
+		
+		initScoreTable();
+		mainTable.setBounds(stage.getCamera().position.x, stage.getCamera().position.y, width, height);
+		world.getPlayer().saveProfile();
+	}
+	
+	private void addToListener(Actor a) {
+		a.setTouchable(Touchable.enabled);
+		a.addListener(clickHandler);
+		clickHandler.hoverCandidateList.add(a);
+	}
+	
+	private float scrollToY = 0;
+	private void initScoreTable() {
+		int rank = 0;
+		int i = 0;
+		
+		Score ps = world.getPlayer().getScore();
+		Color c = Color.WHITE;
+		
+		for(Score s : Highscore.getHighscoreList(GameProperties.gameScreen.INDEX)) {
+			c = s.equals(ps) ? Color.YELLOW : Color.WHITE;
+			
+			scoreTable.add(new Label(rank+++"", skin, "baoli32", c));
+			scoreTable.add(new Label(s.PLAYER_NAME, skin, "baoli32", c)).pad(0, width/30, 0, width/30);
+			scoreTable.add(new Label(s.TIME_STRING, skin, "baoli32", c)).row();
+			
+			if(s.equals(ps) && scrollToY == 0)
+				scrollToY = i * new Label("+", skin, "baoli32", Color.WHITE).getHeight();
+			i++;
+		}
+		
+	}
+
+	public void dispose() {
+		skin.dispose();
+		stage.dispose();
 	}
 
 	@Override
-	public void draw(final SpriteBatch batch, float delta) {
-		batch.end();
-		b.setProjectionMatrix(b.getProjectionMatrix().setToOrtho2D(0, 0, //
-				Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-		font.setScale((float) Gdx.graphics.getWidth() / 1280 * 2f);
-		final float MAX_FONT_SCALE = font.getScaleY();
-		b.begin();
-
-		float width = Gdx.graphics.getWidth();
-		float height = Gdx.graphics.getHeight();
-
-		final byte[] colordot = { 0x42, 0x4D, 0x3A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00,
-				0x28, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, -60, 0x0E, 0x00, 0x00, -60, 0x0E, 0x00, 0x00, 0x00, 0x00,
-				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1, -1, -1, 0x00 };
-
-		// TODO ??
-		b.setColor(205, 25, 201, 0.8f);
-		Pixmap pixmap = new Pixmap(colordot, 0, colordot.length);
-		Texture texture = new Texture(pixmap);
-		b.draw(texture, 0, height * 0.2f, width, height * 0.6f);
-		pixmap.dispose();
-		texture.dispose();
-		b.setColor(Color.WHITE);
-
-		//
-		// Point m = MouseInfo.getPointerInfo().getLocation();
-		// System.out.println(m.x + "," + m.y);
-
-		Vector2 v = new Vector2(Gdx.input.getX(), Gdx.input.getY()).scl(1, -1).add(0, height);
-		// new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
-		//
-
-		InputHandler in = (InputHandler) Gdx.app.getInput().getInputProcessor();
-		Click cl = in.popClick();
-
-		if (cl != null) {
-			v = new Vector2(cl.screenX, height - cl.screenY);
-			// System.out.println("Click: (" + cl.screenX + "|" + cl.screenY + ")");
-			// new GeometricObject(new Circle(v.add(-5, -5), 5), Color.GREEN).draw(b);
+	public void render(float delta) {
+		stage.act(delta);
+		stage.draw();
+		
+		if(scrollToY != 0) {
+			scrollPane.setScrollY(scrollToY-scrollPane.getHeight()/2);
+			scrollToY = 0;
 		}
+	}
 
-		font.setScale(MAX_FONT_SCALE * 0.9f);
+	@Override
+	public void resize(int width, int height) {
+		
+	}
 
-		String title = "Level Completed!";
-		TextBounds tB = font.getBounds(title);
-		font.draw(b, title, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2 * 1.2f);
+	@Override
+	public void hide() {
+		dispose();
+		
+	}
 
-		font.setScale(MAX_FONT_SCALE * 0.4f);
+	@Override
+	public void pause() {
+		
+	}
 
-		int points = GameProperties.calcStylePoints(world);
-		String secondLine = points + " StylePoints";
-		tB = font.getBounds(secondLine);
-		font.draw(b, secondLine, (width - tB.width) / 2, /* height * 0.75f */(height + tB.height) / 2 * 0.9f);
-
-		font.setScale(MAX_FONT_SCALE * 0.5f);
-
-		//
-		Button cont = new Button() {
-
-			public String getText() {
-				return "Next Level";
+	@Override
+	public void resume() {
+		show();
+	}
+	
+	private class ClickHandler extends ClickListener {
+		private List<Actor> hoverList = new CopyOnWriteArrayList<Actor>();
+		private List<Actor> hoverCandidateList = new LinkedList<Actor>();
+		
+		private void resetLabel(Actor label) {
+			if(label != null) {
+				label.setColor(NORMAL);
+				hoverList.remove(label);
 			}
-
-			public void onClick() {
+			
+		}
+		
+		public boolean mouseMoved(InputEvent event, float x, float y) {
+			for(Actor h : hoverList) {
+				if(h.getColor().equals(HOVER))
+					resetLabel(h);
+			}
+			
+			Actor a = stage.hit(x, y, true);
+			if(a != null && hoverCandidateList.contains(a)) {
+				hoverList.add(a);
+				a.setColor(HOVER);
+			} 
+		
+			return false;
+		}
+		
+		public void clicked(InputEvent event, float x, float y){
+			if(event.getListenerActor() == label_continue) {
+				GameProperties.switchGameScreen(GameProperties.gameScreen.getNext());
+			} else if(event.getListenerActor() == label_retry) {
+				GameProperties.switchGameScreen(GameProperties.gameScreen);
+			} else if(event.getListenerActor() == label_menu) {
+				GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
+			}
 				
-				int nextScreenIndex = GameProperties.gameScreen.INDEX + 1 > GameProperties.IMPLEMENTED_LEVEL.length ? -2 : GameProperties.gameScreen.INDEX + 1;
-				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.getScreen(nextScreenIndex)));
-			}
-		};
-		tB = font.getBounds(cont.getText());
-		if (new Rectangle((width - tB.width) * 0.5f, height * 0.25f, tB.width, tB.height).contains(v)) {
-			font.setColor(cont.getHoverColor());
-			if (cl != null) cont.onClick();
-		} else
-			font.setColor(cont.getTextColor());
-		font.draw(b, cont.getText(), (width - tB.width) * 0.5f, height * 0.25f + tB.height);
-		//
-		Button back = new Button() {
-
-			public String getText() {
-				return "Back To Menu";
-			}
-
-			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameScreen.MENU_MAIN));
-			}
-		};
-		tB = font.getBounds(back.getText());
-		if (new Rectangle((width - tB.width) * 0.95f, height * 0.25f, tB.width, tB.height).contains(v)) {
-			font.setColor(back.getHoverColor());
-			if (cl != null) back.onClick();
-		} else
-			font.setColor(back.getTextColor());
-		font.draw(b, back.getText(), (width - tB.width) * 0.95f, height * 0.25f + tB.height);
-		//
-		Button restart = new Button() {
-
-			public String getText() {
-				return "Retry";
-			}
-
-			public void onClick() {
-				Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(GameProperties.gameScreen));
-			}
-		};
-		tB = font.getBounds(restart.getText());
-		if (new Rectangle((width - tB.width) * 0.05f, height * 0.25f, tB.width, tB.height).contains(v)) {
-			font.setColor(restart.getHoverColor());
-			if (cl != null) restart.onClick();
-		} else
-			font.setColor(restart.getTextColor());
-		font.draw(b, restart.getText(), (width - tB.width) * 0.05f, height * 0.25f + tB.height);
-		//
-		font.setColor(Color.WHITE);
-
-		b.end();
-		batch.begin();
+		}
 	}
-
-	public abstract static class Button {
-
-		public String getText() {
-			return "Button";
-		}
-
-		public Color getTextColor() {
-			return Color.WHITE;
-		}
-
-		public Color getHoverColor() {
-			return Color.YELLOW;
-		}
-
-		public abstract void onClick();
-	}
-
+	
 }

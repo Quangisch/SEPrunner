@@ -1,9 +1,5 @@
 package core.menu;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import misc.ShaderBatch;
 
 import com.badlogic.gdx.Game;
@@ -13,10 +9,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -30,19 +24,17 @@ import core.GameProperties.GameScreen;
 import core.PlayerProfile;
 
 public class MenuProfile implements Screen {
-
-	private final MenuProfile INSTANCE;
+	
 	private Stage stage;
+	private Skin skin;
 	
 	private Table mainTable, contentTable, shopTable, shopTableContent, shopTableBuy, profileTable, itemTable, 
 					newProfileTable, delProfileTable, warningBuyTable, warningMaxProfileTable, chooseProfileTable;
-	private Skin skin;
 	
 	private TextButton backButton;
 	private int width, height;
-	final private Color NORMAL = new Color(1,1,0.90f,1);
-	final private Color HOVER = new Color(1,1,0f,1);
-	private ClickHandler clickHandler;
+	
+	private InputHandler iHandler;
 	private ShaderBatch shaderBatch;
 	
 	private Label label_quantityshuriken, label_quantityHook, label_price;
@@ -62,18 +54,15 @@ public class MenuProfile implements Screen {
 	private float buy_shu, buy_hook, buy_costs, incShu, incHook;
 	private final float INC_SPEED = 0.3f;
 	
-	public MenuProfile() {
-		INSTANCE = this;
-	}
-	
 	@Override
 	public void show() {
 		width = GameProperties.SCALE_WIDTH;
 		height = GameProperties.SCALE_HEIGHT;
 		
-		clickHandler = new ClickHandler();
 		shaderBatch = new ShaderBatch(100);
-		stage = new Stage();
+		stage = new Stage(width*2, height*2, true, shaderBatch);
+		iHandler = new InputHandler(stage);
+		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		profile = new PlayerProfile();
 		sound_buy = Gdx.audio.newSound(Gdx.files.local(FilePath.sound_get));
@@ -113,7 +102,7 @@ public class MenuProfile implements Screen {
 		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
 		stage.addActor(mainTable);
 		mainTable.setFillParent(true);
-		stage.addListener(clickHandler);
+		stage.addListener(iHandler);
 		Gdx.input.setInputProcessor(stage);
 		
 		mainTable.debug();
@@ -181,16 +170,16 @@ public class MenuProfile implements Screen {
 
 
 //		LISTENER
-		addListener(label_buy);
-		addListener(label_moreShu);
-		addListener(label_lessShu);
-		addListener(label_lessHook);
-		addListener(label_moreHook);
+		iHandler.addToListener(label_buy);
+		iHandler.addToListener(label_moreShu);
+		iHandler.addToListener(label_lessShu);
+		iHandler.addToListener(label_lessHook);
+		iHandler.addToListener(label_moreHook);
 		
-		addListener(label_newProfile);
-		addListener(label_delProfile);
-		addListener(label_chooseProfile);
-		addListener(label_selectProfile);
+		iHandler.addToListener(label_newProfile);
+		iHandler.addToListener(label_delProfile);
+		iHandler.addToListener(label_chooseProfile);
+		iHandler.addToListener(label_selectProfile);
 		
 	}
 	
@@ -209,16 +198,9 @@ public class MenuProfile implements Screen {
 		delProfileTable.add(label_delProfile_accept).padRight(width/10);
 		delProfileTable.add(label_delProfile_decline).padLeft(width/10);
 		
-		addListener(label_delProfile_accept);
-		addListener(label_delProfile_decline);
+		iHandler.addToListener(label_delProfile_accept);
+		iHandler.addToListener(label_delProfile_decline);
 	}
-	
-	private void addListener(Label label) {
-		label.addListener(clickHandler);
-		label.setTouchable(Touchable.enabled);
-		clickHandler.hoverCandidateList.add(label);
-	}
-	
 	
 	private void iniShopTable() {
 		shopTable.add(getLabel64("Shop")).row();
@@ -338,7 +320,8 @@ public class MenuProfile implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+		stage.setViewport(width*2, height*2, true);
+		mainTable.invalidateHierarchy();
 	}
 
 	@Override
@@ -425,31 +408,10 @@ public class MenuProfile implements Screen {
 	}
 	
 	
-	private class ClickHandler extends ClickListener {
-		private List<Actor> hoverList = new CopyOnWriteArrayList<Actor>();
-		private List<Actor> hoverCandidateList = new LinkedList<Actor>();
+	private class InputHandler extends ClickHandler {
 		
-		private void resetLabel(Actor label) {
-			if(label != null) {
-				label.setColor(NORMAL);
-				hoverList.remove(label);
-			}
-			
-		}
-		
-		public boolean mouseMoved(InputEvent event, float x, float y) {
-			for(Actor h : hoverList) {
-				if(h.getColor().equals(HOVER))
-					resetLabel(h);
-			}
-			
-			Actor a = stage.hit(x, y, true);
-			if(a != null && hoverCandidateList.contains(a)) {
-				hoverList.add(a);
-				a.setColor(HOVER);
-			} 
-		
-			return false;
+		private InputHandler(Stage stage) {
+			super(stage);
 		}
 		
 		public void clicked(InputEvent event, float x, float y){
@@ -461,7 +423,7 @@ public class MenuProfile implements Screen {
 //			PROFILES
 			} else if(event.getListenerActor().equals(label_newProfile)) {
 				if(PlayerProfile.getProfileCount() < GameProperties.MAX_PROFILE_COUNT)
-					((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(INSTANCE));
+					((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(GameProperties.GameScreen.MENU_PROFILE));
 				else
 					 warningProfileAlpha = 1f;
 				
@@ -484,7 +446,7 @@ public class MenuProfile implements Screen {
 					updateProfileLabels();
 					stage.addActor(mainTable);
 				} else
-					((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(INSTANCE));
+					((Game) Gdx.app.getApplicationListener()).setScreen(new EnterNameScreen(GameProperties.GameScreen.MENU_PROFILE));
 				
 				
 			} else if(event.getListenerActor().equals(label_delProfile_decline)) {

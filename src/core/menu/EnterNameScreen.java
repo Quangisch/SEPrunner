@@ -1,6 +1,5 @@
 package core.menu;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -22,11 +21,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.PlayerProfile;
 
 public class EnterNameScreen implements Screen {
 
-	private final Screen PREVIOUS_SCREEN;
+	private final GameScreen NEXT_SCREEN;
 
 	private Stage stage;
 	private Table mainTable;
@@ -35,8 +35,8 @@ public class EnterNameScreen implements Screen {
 	private Pixmap pixmap;
 	private TextField nameField;
 	
-	public EnterNameScreen(Screen currentScreen) {
-		PREVIOUS_SCREEN = currentScreen;
+	public EnterNameScreen(GameScreen screen) {
+		NEXT_SCREEN = screen;
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class EnterNameScreen implements Screen {
 			public boolean keyDown(InputEvent event, int keycode) {
 				if(keycode == Keys.ENTER && event.getListenerActor().equals(nameField)) {
 					PlayerProfile.createNewProfile(nameField.getText()).updateAndSaveProfile();
-					((Game) Gdx.app.getApplicationListener()).setScreen(PREVIOUS_SCREEN);
+					GameProperties.switchGameScreen(NEXT_SCREEN);
 					return true;
 				}
 				return false;

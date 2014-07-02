@@ -31,7 +31,7 @@ public class GameRender implements Screen {
 	private Camera camera;
 	private HUD hud;
 	private PauseMenu pauseMenu;
-	private WinMenu2 winMenu;
+	private WinMenu winMenu;
 	private LoseMenu loseMenu;
 
 	public GameRender(GameScreen level) throws LevelNotFoundException {
@@ -79,7 +79,7 @@ public class GameRender implements Screen {
 		switch (GameProperties.getGameState()) {
 		case WIN:
 			if(winMenu == null)
-				winMenu = new WinMenu2(gameWorld, batch);
+				winMenu = new WinMenu(gameWorld, batch);
 		case LOSE:
 			break;
 		case PAUSE:
@@ -113,8 +113,7 @@ public class GameRender implements Screen {
 			pauseMenu.draw(batch, realdelta);
 			break;
 		case WIN:
-//			Gdx.app.postRunnable(new GameProperties.GameScreenSwitcher(new WinMenu2(gameWorld)));
-//			winMenu.render(batch, realdelta);
+//			winMenu drawn with stage
 			break;
 		case LOSE:
 			loseMenu.draw(batch, realdelta);

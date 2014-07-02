@@ -61,8 +61,8 @@ public class GameProperties {
 		POINTS_DISPOSED_MUL = 30,
 		POINTS_HIDDEN_MUL = 10,
 		POINTS_ALARM_MUL = -5,
-		POINTS_UNSEEN = 100,
-		POINTS_WITHOUT_SHURIKENS = 100,
+		POINTS_UNSEEN = 300,
+		POINTS_WITHOUT_SHURIKENS = 300,
 		
 		PRICE_SHURIKEN = 50,
 		PRICE_HOOK = 25;
@@ -240,43 +240,44 @@ public class GameProperties {
 		
 		Screen nextScreen;
 		gameState = GameState.NORMAL;
-		
-		switch(screen) {
-		case LEVEL1:
-		case LEVEL2:
-		case LEVEL3:
-			nextScreen = new GameRender(screen);
-			break;
+	
+		if(PlayerProfile.getProfileCount() == 0 && !screen.equals(GameScreen.MENU_SPLASH))
+			nextScreen = new EnterNameScreen(screen);
+		else {
+			switch(screen) {
+			case LEVEL1:
+			case LEVEL2:
+			case LEVEL3:
+				nextScreen = new GameRender(screen);
+				break;
+				
+			case MENU_HIGHSCORE:
+				nextScreen = new MenuHighscore();
+				break;
+			case MENU_LEVELSELECT:
+				nextScreen = new MenuLevelSelect();
+				break;
+			case MENU_OPTION:
+				nextScreen = new MenuOption();
+				break;
+			case MENU_PROFILE:
+				nextScreen = new MenuProfile();
+				break;
+			case MENU_SPLASH:
+				nextScreen = new Splash();
+				break;
+	
+			case MENU_BACKGROUND:
+			case MENU_MAIN:
+			default:
+				nextScreen = new MenuMain();
+	//			throw new LevelNotFoundException();
+				break;
 			
-		case MENU_HIGHSCORE:
-			nextScreen = new MenuHighscore();
-			break;
-		case MENU_LEVELSELECT:
-			nextScreen = new MenuLevelSelect();
-			break;
-		case MENU_OPTION:
-			nextScreen = new MenuOption();
-			break;
-		case MENU_PROFILE:
-			nextScreen = new MenuProfile();
-			break;
-		case MENU_SPLASH:
-			nextScreen = new Splash();
-			break;
-
-		case MENU_BACKGROUND:
-		case MENU_MAIN:
-		default:
-			nextScreen = new MenuMain();
-//			throw new LevelNotFoundException();
-			break;
-		
+			}
 		}
 
 		refreshDisplayMode();
-
-		if(PlayerProfile.getProfileCount() == 0 && !nextScreen.equals(GameScreen.MENU_SPLASH))
-			nextScreen = new EnterNameScreen(nextScreen);
 		((Game) Gdx.app.getApplicationListener()).setScreen(nextScreen);
 		Gdx.app.postRunnable(new AudioManager.AudioStarter(screen));
 

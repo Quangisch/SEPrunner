@@ -11,7 +11,7 @@ import core.ingame.input.KeyMap.ActionKey;
 public class MediumAI extends EnemyAI {
 
 	public MediumAI() {
-		super(3,0.5f);
+		super(2.5f,1.5f);
 	}
 	
 	@Override
@@ -30,6 +30,9 @@ public class MediumAI extends EnemyAI {
 			break;
 		case HIT_BY_SHURIKEN:
 			if(!hit){
+				if(getEnemy().getGameWorld().getPlayer().isHiding())
+					break;
+				
 				hit = true;
 				Alarm.trigger(3);
 				

@@ -53,8 +53,11 @@ public class BasicMovement {
 //	END
 	private InteractionState end(Set<ActionKey> actions) {
 		switch(gameObject.getInteractionState()) {
-		case CROUCH_DOWN:
 		case CROUCH_SNEAK:
+			if(actions.contains(ActionKey.CROUCH) && 
+					!(actions.contains(ActionKey.LEFT) || actions.contains(ActionKey.RIGHT)))
+				return InteractionState.CROUCH_STAND;
+		case CROUCH_DOWN:
 		case CROUCH_STAND:
 			if(!gameObject.isBodyBlocked() && (autoCrouch || !actions.contains(ActionKey.CROUCH))) {
 				autoCrouch = false;

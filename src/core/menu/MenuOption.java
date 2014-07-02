@@ -2,7 +2,6 @@ package core.menu;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import misc.ShaderBatch;
 import sk.maniacs.KeyCodeMap;
@@ -25,12 +24,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import core.AudioManager;
 import core.GameProperties;
 import core.GameProperties.GameScreen;
 import core.Project;
-import core.AudioManager;
 import core.ingame.input.KeyMap;
 import core.ingame.input.KeyMap.ActionKey;
 
@@ -45,7 +43,7 @@ public class MenuOption implements Screen {
 	private CheckBox vSyncCheckBox, fullScreenCheckBox;
 	private Slider brightnessSlider, contrastSlider, musicSlider, soundSlider;
 	private TextButton backButton;
-	private ClickHandler clickHandler;
+	private InputHandler iHandler;
 	
 	private KeyMap keyMap;
 	private KeyLabel kLeft, kRight, kRun, kJump, kCrouch, kAction, remapLabel;
@@ -54,10 +52,7 @@ public class MenuOption implements Screen {
 	private Label selectedModeLabel, selectModeNow;
 	private ScrollPane scrollPane;
 	private com.badlogic.gdx.scenes.scene2d.ui.List displayModeList;
-	
-	final private Color HOVER = new Color(1,1,0.6f,1);
-	final private Color SELECT = new Color(1,0.8f,0,1);
-	
+
 	private Actor warning;
 	private ShaderBatch shaderBatch;
 	
@@ -74,11 +69,10 @@ public class MenuOption implements Screen {
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"), 
 				new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
 		
-		stage = new Stage();
-		clickHandler = new ClickHandler();
+		stage = new Stage(width*2, height*2, true, shaderBatch);
+		iHandler = new InputHandler(stage);
 		Gdx.input.setInputProcessor(stage);
-		stage.addListener(clickHandler);
-		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
+		stage.addListener(iHandler);
 		
 		keyMap = new KeyMap();
 		keyLabelList = new LinkedList<KeyLabel>();
@@ -91,8 +85,8 @@ public class MenuOption implements Screen {
 		selectedModeLabel.setTouchable(Touchable.enabled);
 		selectModeNow.setTouchable(Touchable.enabled);
 	
-		selectedModeLabel.addListener(clickHandler);
-		selectModeNow.addListener(clickHandler);
+		iHandler.addToListener(selectedModeLabel);
+		iHandler.addToListener(selectModeNow);
 
 
 		iniKeyLabels();
@@ -141,7 +135,7 @@ public class MenuOption implements Screen {
 		backButton = new TextButton("back", skin);
 		backButton.setPosition(width/10, height/10);
 		stage.addActor(backButton);
-		backButton.addListener(clickHandler);
+		backButton.addListener(iHandler);
 		
 		displayModeTable.add("DisplayMode").row();
 		displayModeTable.add(selectedModeLabel);
@@ -207,10 +201,10 @@ public class MenuOption implements Screen {
 		checkboxTable.add(fullScreenCheckBox);
 		
 //		HANDLER
-		brightnessSlider.addListener(clickHandler);
-		contrastSlider.addListener(clickHandler);
-		vSyncCheckBox.addListener(clickHandler);
-		fullScreenCheckBox.addListener(clickHandler);
+		brightnessSlider.addListener(iHandler);
+		contrastSlider.addListener(iHandler);
+		vSyncCheckBox.addListener(iHandler);
+		fullScreenCheckBox.addListener(iHandler);
 	}
 	
 	private void iniAudioSection() {
@@ -228,8 +222,8 @@ public class MenuOption implements Screen {
 		soundTable.add(soundSlider).fillX();
 		
 //		SLIDER
-		musicSlider.addListener(clickHandler);
-		soundSlider.addListener(clickHandler);
+		musicSlider.addListener(iHandler);
+		soundSlider.addListener(iHandler);
 	}
 	
 	private void iniKeyMapSection() {
@@ -283,7 +277,7 @@ public class MenuOption implements Screen {
 		
 		
 		for(KeyLabel l : keyLabelList)
-			l.addListener(clickHandler);
+			iHandler.addToListener(l);
 	}
 	
 	private KeyLabel getKeyLabel(ActionKey action) {
@@ -321,7 +315,8 @@ public class MenuOption implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+		stage.setViewport(width*2, height*2, true);
+		mainTable.invalidateHierarchy();
 	}
 
 	@Override
@@ -352,44 +347,25 @@ public class MenuOption implements Screen {
 		skin.dispose();
 	}
 	
-	private class ClickHandler extends ClickListener {
-		private List<Actor> hoverList = new CopyOnWriteArrayList<Actor>();
+	private class InputHandler extends ClickHandler {
 		
-		private void resetLabel(Actor label) {
-			if(label != null) {
-				label.setColor(Color.WHITE);
-				hoverList.remove(label);
-			}
-			if(remapLabel != null && label.equals(remapLabel))
-				remapLabel = null;
-			label = null;
-			
-		}
-		
-		public boolean mouseMoved(InputEvent event, float x, float y) {
-			for(Actor h : hoverList) {
-				if(h.getColor().equals(HOVER))
-					resetLabel(h);
-			}
-			
-			Actor a = stage.hit(x, y, true);
-			if(a != null && ((remapLabel == null && a instanceof KeyLabel && a.getColor().equals(Color.WHITE))
-					|| a == selectedModeLabel || a == selectModeNow)) {
-				hoverList.add(a);
-				a.setColor(HOVER);
-			} 
-		
-			return false;
+		private InputHandler(Stage stage) {
+			super(stage);
 		}
 		
 		public boolean keyDown(InputEvent event, int keycode) {
-			if(keycode == Keys.TAB) {
+			super.keyDown(event, keycode);
+			
+			switch(keycode) {
+			case Keys.TAB:
 				debug = !debug;
 				return true;
-			}
-			
-			if(keycode == Keys.ESCAPE || keycode == Keys.SYM) {
+			case Keys.ESCAPE:
+			case Keys.SYM:
 				resetLabel(remapLabel);
+				return true;
+			case Keys.F:
+				GameProperties.toogleFullScreen();
 				return true;
 			}
 			
@@ -425,9 +401,6 @@ public class MenuOption implements Screen {
 //			FULLSCREEN
 			} else if(event.getListenerActor() == fullScreenCheckBox) {
 				GameProperties.toogleFullScreen();
-				stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
-				mainTable.invalidateHierarchy();
-				
 //			SLIDER
 			} else if(event.getListenerActor() == brightnessSlider){
 				GameProperties.brightness = brightnessSlider.getValue();
@@ -473,7 +446,7 @@ public class MenuOption implements Screen {
 				for(KeyLabel l : keyLabelList)
 					if(l == event.getListenerActor()) {
 						remapLabel = l;
-						remapLabel.setColor(SELECT);
+						setAsSelected(remapLabel);
 					}	
 			}
 	

@@ -59,7 +59,7 @@ public class InteractionToWorld {
 		case RUN:
 		case CROUCH_SNEAK:
 		case WALK:
-			baseForce.add(walkMul, gameObject.isGrounded() ? 2-walkMul : 0);
+			baseForce.add(walkMul, gameObject.isGrounded() ? gameObject.areBothFeetsGrounded() ? 1 : 1.5f : 0);
 			break;
 		default:
 			break;
@@ -68,7 +68,7 @@ public class InteractionToWorld {
 		return baseForce;
 	}
 
-	private float walkMul = 1, runMul = 1.5f, sneakMul = 0.6f, pullMul = 1f;
+	private float walkMul = 1, runMul = 1.5f, sneakMul = 0.65f, pullMul = 0.75f;
 	
 	protected void setForceMultiplier(float walkMul, float runMul, float sneakMul, float pullMull) {
 		this.walkMul = walkMul;
@@ -85,7 +85,7 @@ public class InteractionToWorld {
 			multipliedForce = baseForce.scl(runMul, 1);
 			break;
 		case CROUCH_SNEAK:
-			multipliedForce = baseForce.scl(sneakMul);
+			multipliedForce = baseForce.scl(sneakMul, 1);
 			break;
 		case GRAB_PULL:
 			multipliedForce = baseForce.scl(-pullMul, 1);

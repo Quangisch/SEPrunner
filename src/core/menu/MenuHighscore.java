@@ -1,28 +1,21 @@
 package core.menu;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import misc.ShaderBatch;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.GameProperties;
-import core.GameProperties.GameScreen;
 import core.Highscore;
 import core.Highscore.Score;
 import core.PlayerProfile;
@@ -33,27 +26,14 @@ public class MenuHighscore implements Screen {
 	private Stage stage;
 	private Table mainTable, scoreTable;
 	private Skin skin;
-	private TextButton backButton;
 	private Label prevLevel, nextLevel;
 	private int levelIndex = 0;
 	private Label levelName;
-	private ClickHandler clickHandler;
+	private InputHandler iHandler;
 	private ScrollPane scrollPane;
 	
 	private int width, height;
-	final private Color NORMAL = new Color(1,1,0.90f,1);
-	final private Color HOVER = new Color(1,1,0f,1);
 	private PlayerProfile profile;
-	
-	final private GameScreen NEXT_SCREEN;
-	
-	public MenuHighscore() {
-		this(GameScreen.MENU_MAIN);
-	}
-	
-	public MenuHighscore(GameScreen nextScreen) {
-		NEXT_SCREEN = nextScreen;
-	}
 	
 	@Override
 	public void render(float delta) {
@@ -70,12 +50,14 @@ public class MenuHighscore implements Screen {
 		stage.act(delta);
 		stage.draw();
 		
+		scroll();
 //		Table.drawDebug(stage);            // case debuglines needed 1/2
 	}
 
 	@Override
 	public void resize(int width, int height) {
-
+		stage.setViewport(width*2, height*2, true);
+		mainTable.invalidateHierarchy();
 	}
 
 	@Override
@@ -83,12 +65,11 @@ public class MenuHighscore implements Screen {
 		width = GameProperties.SCALE_WIDTH;
 		height = GameProperties.SCALE_HEIGHT;
 		
-		clickHandler = new ClickHandler();
+
 		shaderBatch = new ShaderBatch(100);
+		stage = new Stage(width*2, height*2, true, shaderBatch);
+		iHandler = new InputHandler(stage);
 		profile = new PlayerProfile();
-		
-		stage = new Stage();
-		stage.setViewport(GameProperties.SCALE_WIDTH*2, GameProperties.SCALE_HEIGHT*2, true);
 		Gdx.input.setInputProcessor(stage);
 		
 		skin = new Skin(Gdx.files.internal("res/ui/menuSkin.json"),new TextureAtlas(Gdx.files.internal("res/ui/atlas.pack")));
@@ -99,26 +80,15 @@ public class MenuHighscore implements Screen {
 		mainTable.top();
 		
 		scoreTable = new Table(skin);
-		
-		
-		backButton = new TextButton("Back", skin);
-		backButton.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				GameProperties.switchGameScreen(NEXT_SCREEN);
-			}
-		});
-		backButton.pad(10);
-		backButton.setPosition(width/10, height/10);
-		stage.addActor(backButton);
+		iHandler.setBackButton(skin);
 		
 //		HEAD
-		nextLevel = new Label(">>", skin, "baoli32", NORMAL);
-		nextLevel.addListener(clickHandler);
-		nextLevel.setTouchable(Touchable.enabled);
+		nextLevel = new Label(">>", skin, "baoli32", Color.WHITE);
+		iHandler.addToListener(nextLevel);
 		
-		prevLevel = new Label("<<", skin, "baoli32", NORMAL);
-		prevLevel.addListener(clickHandler);
-		prevLevel.setTouchable(Touchable.enabled);
+		
+		prevLevel = new Label("<<", skin, "baoli32", Color.WHITE);
+		iHandler.addToListener(prevLevel);
 
 		mainTable.add(new Label("Highscore", skin, "big")).padTop(height/5).colspan(3).row();
 		mainTable.add();
@@ -147,9 +117,8 @@ public class MenuHighscore implements Screen {
 		//putting stuff together
 		
 		stage.addActor(mainTable);
-		stage.addListener(clickHandler);
-		
-		
+		stage.addListener(iHandler);
+
 	}
 	
 	
@@ -201,30 +170,19 @@ public class MenuHighscore implements Screen {
 		shaderBatch.dispose();
 	}
 	
-	private class ClickHandler extends ClickListener {
-		private List<Actor> hoverList = new CopyOnWriteArrayList<Actor>();
-		
-		private void resetLabel(Actor label) {
-			if(label != null) {
-				label.setColor(NORMAL);
-				hoverList.remove(label);
-			}
-			
-		}
-		
-		public boolean mouseMoved(InputEvent event, float x, float y) {
-			for(Actor h : hoverList) {
-				if(h.getColor().equals(HOVER))
-					resetLabel(h);
-			}
-			
-			Actor a = stage.hit(x, y, true);
-			if(a != null && (a.equals(nextLevel) || a.equals(prevLevel))) {
-				hoverList.add(a);
-				a.setColor(HOVER);
-			} 
-		
-			return false;
+	private void nextLevelPage(int next) {
+		levelIndex = ((levelIndex + next % GameProperties.IMPLEMENTED_LEVEL.length) + GameProperties.IMPLEMENTED_LEVEL.length) % GameProperties.IMPLEMENTED_LEVEL.length;
+		iniScoreTable();
+	}
+	
+	private int scrollY;
+	private void scroll() {
+		scrollPane.setScrollY(scrollPane.getScrollY()+scrollY);
+	}
+	
+	private class InputHandler extends ClickHandler {
+		private InputHandler(Stage stage) {
+			super(stage);
 		}
 		
 		public void clicked(InputEvent event, float x, float y){
@@ -238,10 +196,40 @@ public class MenuHighscore implements Screen {
 			if(next == 0)
 				return;
 			
-			levelIndex = ((levelIndex + next % GameProperties.IMPLEMENTED_LEVEL.length) + GameProperties.IMPLEMENTED_LEVEL.length) % GameProperties.IMPLEMENTED_LEVEL.length;
-			iniScoreTable();
+			nextLevelPage(next);
 		}
 		
+		public boolean keyDown(InputEvent event, int keycode) {
+			super.keyDown(event, keycode);
+			
+			switch(keycode) {
+			case Keys.UP:
+				scrollY = -10;
+				break;
+			case Keys.DOWN:
+				scrollY = 10;
+				break;
+			case Keys.LEFT:
+				nextLevelPage(-1);
+				break;
+			case Keys.RIGHT:
+				nextLevelPage(1);
+				break;
+			}
+			
+			return false;
+		}
+		
+		public boolean keyUp(InputEvent event, int keycode) {
+			switch(keycode) {
+			case Keys.UP:
+			case Keys.DOWN:
+				scrollY = 0;
+				break;
+			}
+			
+			return super.keyUp(event, keycode);
+		}
 	}
 
 }
