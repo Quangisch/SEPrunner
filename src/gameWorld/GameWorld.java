@@ -132,27 +132,23 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		debugMatrix = new Matrix4(camera.combined);
 		debugMatrix.scale(GameProperties.PIXELPROMETER, GameProperties.PIXELPROMETER, 0);
 
-//		 batch.disableBlending();
-		 for(Background b : backgrounds) {
-//			 float moveX = camera.position.x*b.mapTexture.width/mapWidth;
-//			 float moveY = camera.position.y*b.mapTexture.height/mapHeight;
-
-			 b.move(camera.position.x, camera.position.y);
-			 b.sprite.draw(batch);
-//			 batch.draw(b.mapTexture.texture, moveX, moveY, mapWidth, mapHeight);
-			 
-		 }
-//		 batch.enableBlending();
-
-		for (MapTexture mT : mapTextures)
-			if (mT.texture != null) batch.draw(mT.texture, mT.x, mT.y);
-
+		if(!GameProperties.lowQuality) {
+			for(Background b : backgrounds) {
+				b.move(camera.position.x, camera.position.y);
+				b.sprite.draw(batch);
+			}
+			
+			for (MapTexture mT : mapTextures)
+				if (mT.texture != null)
+					batch.draw(mT.texture, mT.x, mT.y);
+		}
+			
 		for (GameObject o : objects)
 			o.getAnimationObject().draw(batch, deltaTime);
 
 		batch.end();
 
-		if (debugRender != null && (Debug.isMode(Debug.Mode.BOXRENDERER) || Debug.isMode(Debug.Mode.CAMERA)))
+		if (debugRender != null && (GameProperties.lowQuality || Debug.isMode(Debug.Mode.BOXRENDERER) || Debug.isMode(Debug.Mode.CAMERA)))
 			debugRender.render(world, debugMatrix);
 
 		if (!Debug.isMode(Debug.Mode.LIGHTS_OFF) && Gdx.graphics.isGL20Available()) {
@@ -328,7 +324,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 	}
 
 	public void step(float timeStep, int velocityIterations, int positionIterations) {
-		world.step(timeStep, velocityIterations, positionIterations);
+		world.step(GameProperties.fixedWorldStep ? 1f/60 : timeStep, velocityIterations, positionIterations);
 	}
 
 	public boolean addGameObject(GameObject object) {

@@ -7,7 +7,6 @@
 					 "sensor"			: true, 
 					 "bodyType"			: 0
 					},
-		"texture" : "res/sprites/mapObjects.png",
 		"defaultState" : 0,
 		"animationen" : ["stand"],
 		"stateframes" :	{

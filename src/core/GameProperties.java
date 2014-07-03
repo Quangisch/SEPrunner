@@ -69,7 +69,9 @@ public class GameProperties {
 	
 	public static boolean debug = false,
 			offline = false,
-			deleteUserFiles = false;
+			deleteUserFiles = false,
+			fixedWorldStep = false,
+			lowQuality = false;
 	
 	public static String getInitialName() {
 		return INITIAL_NAME + (new Random().nextInt(999-100) + 100);

@@ -133,7 +133,11 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	
 	@Override
 	public boolean canHide() {
-		return hideTarget != null;
+		if(hideTarget != null)
+			if(Math.abs(hideTarget.getBodyObject().getX() - getBodyObject().getX()) < 100)
+				return true;
+		hideTarget = null;
+		return false;
 	}
 	
 	@Override

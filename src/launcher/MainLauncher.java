@@ -30,13 +30,18 @@ public class MainLauncher {
 		cfg.resizable = false;
 		cfg.width = GameProperties.SCALE_WIDTH;
 		cfg.height = GameProperties.SCALE_HEIGHT;
+		
+		
 		cfg.useGL20 = true;
-		cfg.fullscreen = false;
-
+		cfg.fullscreen = true;
+		
 		GameProperties.deleteUserFiles = false;
 		GameProperties.offline = false;
 		GameProperties.debug = false;
-		startScreen = GameScreen.MENU_SPLASH;
+		GameProperties.fixedWorldStep = false;
+		GameProperties.lowQuality = false;
+		startScreen = GameScreen.MENU_MAIN;
+		
 		
 		new HighscoreServer().updateLocalHighscoreFile();
 		GameProperties.initPrefDisplayMode();
@@ -62,7 +67,7 @@ public class MainLauncher {
 			if(args[i].compareTo("-f") == 0) {
 				cfg.fullscreen = true;
 			
-			} else if(args[i].compareTo("-gl10") == 0) {
+			} else if(args[i].compareTo("-gl1x") == 0) {
 				cfg.useGL20 = false;
 			
 			} else if(args[i].compareTo("-r") == 0) {
@@ -72,9 +77,15 @@ public class MainLauncher {
 				while(!handleInput(input))
 					input = parseInput();
 				
+			} else if(args[i].compareTo("-fixed") == 0) {
+					GameProperties.fixedWorldStep = true;	
+				
 			} else if(args[i].compareTo("-d") == 0) {
 				GameProperties.debug = true;
 				
+			} else if(args[i].compareTo("-l") == 0) {
+				GameProperties.lowQuality = true;	
+			
 			} else if(args[i].compareTo("-o") == 0) {
 				GameProperties.offline = true;	
 			
@@ -107,9 +118,11 @@ public class MainLauncher {
 				System.out.println("-s startScreen\n\tlevel1\n\tlevel2\n\tlevel3\n\tmain\n\tlevelSelect\n\tprofile\n\toption\n\thighscore");
 				System.out.println("-r resetProfile");
 				System.out.println("-f fullscreen");
-				System.out.println("-gl10 useGL10");
+				System.out.println("-gl1x useGL1.x");
 				System.out.println("-d debug");
 				System.out.println("-o offline");
+				System.out.println("-fixed worldStep fixed at 1/60");
+				System.out.println("-l lowQuality");
 				System.exit(0);
 			} else
 				invalidArgument = true;

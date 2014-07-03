@@ -74,8 +74,8 @@ public class GameRender implements Screen {
 
 	@Override
 	public void render(float delta) {
-		float realdelta = delta;
-
+		final float REAL_DELTA = delta;
+		
 		switch (GameProperties.getGameState()) {
 		case WIN:
 			if(winMenu == null)
@@ -93,7 +93,7 @@ public class GameRender implements Screen {
 
 		gameWorld.run();
 
-		Gdx.gl.glClearColor(0, 0, 0, 1); //(0,0,0,1)
+		Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1); //(0,0,0,1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
@@ -110,13 +110,13 @@ public class GameRender implements Screen {
 			hud.draw(batch, delta); //userInterface
 			break;
 		case PAUSE:
-			pauseMenu.draw(batch, realdelta);
+			pauseMenu.draw(batch, REAL_DELTA);
 			break;
 		case WIN:
-//			winMenu drawn with stage
+//			winMenu drawn not between batch.begin/end
 			break;
 		case LOSE:
-			loseMenu.draw(batch, realdelta);
+			loseMenu.draw(batch, REAL_DELTA);
 			break;
 		default:
 			break;
@@ -134,7 +134,7 @@ public class GameRender implements Screen {
 		batch.end();
 		
 		if(winMenu != null)
-			winMenu.render(realdelta);
+			winMenu.render(REAL_DELTA);
 
 		gameWorld.step(delta, 6, 4);
 	}

@@ -251,6 +251,7 @@ public abstract class EnemyAI implements IEnemyAI {
 		if(advancedValues == null || getEnemy().getGameWorld().getPlayer().isHiding())
 			return false;
 		
+		currentAction.add(ActionKey.RUN);
 		float playerX = getEnemy().getGameWorld().getPlayer().getBodyObject().getX();		
 		//
 		if(playerX < getEnemy().getBodyObject().getX()){

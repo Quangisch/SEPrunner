@@ -66,6 +66,7 @@ public class MenuLevelSelect implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		stage.setViewport(width*2, height*2, true);
+		table.setFillParent(true);
 		table.invalidateHierarchy();
 	}
 
@@ -161,6 +162,13 @@ public class MenuLevelSelect implements Screen {
 		}
 	}
 	
+	private void selectLevel(int index) {
+		levelSelectionList.setSelectedIndex(index);
+		previewImage = new Image(previewTextures.get(index));
+		previewTable.clear();
+		previewTable.add(previewImage);
+	}
+	
 	private class InputHandler extends ClickHandler {
 		private InputHandler(Stage stage) {
 			super(stage);
@@ -176,22 +184,20 @@ public class MenuLevelSelect implements Screen {
 			
 			switch(keycode) {
 			case Keys.NUM_1:
-				levelSelectionList.setSelectedIndex(0);
+				selectLevel(0);
 				break;
 			case Keys.NUM_2:
-				levelSelectionList.setSelectedIndex(1);
+				selectLevel(1);
 				break;
 			case Keys.NUM_3:
-				levelSelectionList.setSelectedIndex(2);
+				selectLevel(2);
 				break;
 			case Keys.UP:
-				levelSelectionList.setSelectedIndex(
-						(levelSelectionList.getSelectedIndex()-1+GameProperties.IMPLEMENTED_LEVEL.length)
+				selectLevel((levelSelectionList.getSelectedIndex()-1+GameProperties.IMPLEMENTED_LEVEL.length)
 							%GameProperties.IMPLEMENTED_LEVEL.length);
 				break;
 			case Keys.DOWN:
-				levelSelectionList.setSelectedIndex(
-						(levelSelectionList.getSelectedIndex()+1)%GameProperties.IMPLEMENTED_LEVEL.length);
+				selectLevel((levelSelectionList.getSelectedIndex()+1)%GameProperties.IMPLEMENTED_LEVEL.length);
 				break;
 			case Keys.ENTER:
 				startGame();

@@ -167,6 +167,9 @@ public class Enemy extends GameObject {
 	}
 	
 	public boolean scanArea(float triggerX, float triggerY, int scanLength, int scanSpeed) {
+		if(!Gdx.graphics.isGL20Available())
+			return false;
+		
 		scannedArea = true;
 		float dx = triggerX - getBodyObject().getX();
 		float dy = triggerY - getBodyObject().getY();

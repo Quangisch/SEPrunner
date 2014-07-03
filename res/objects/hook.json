@@ -11,14 +11,10 @@
 	"animationen" 	: ["hook_fly"],
 	"stateframes" 	: {
 				"hook_fly" :	{
-							"frameDuration":0.05,
-							"boundingBox" : [0,0, 0,30, 30,30, 30, 0],
+							"frameDuration":1,
+							"boundingBox" : [20,5, 20,10, 22,10, 22, 5],
 							"textureMap" : [
-										[0, 0, 30, 30],
-										[0, 30, 30, 30],
-										[0, 60, 30, 30],
-										[0, 90, 30, 30],
-										[0, 120, 30, 30]
+										[400, 10, 22, 15]
 									]
 						}
 			}
