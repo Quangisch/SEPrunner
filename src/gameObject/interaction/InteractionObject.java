@@ -5,6 +5,7 @@ import gameObject.body.BodyObjectType;
 import gameObject.body.ICollisionable;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
+import gameObject.interaction.player.Hook;
 import gameWorld.GameWorld;
 
 import java.util.HashSet;
@@ -26,9 +27,10 @@ import core.GameProperties;
 public abstract class InteractionObject extends InteractionManager implements ICollisionable, RayCastCallback,
 		IInteractable {
 
-	private int grounded, bodyBlocked;
+	private int groundedCounter, bodyBlockedCounter, grabCounter, hideCounter;
 	private boolean hookable;
 	protected GameObject grabTarget, disposeTarget, hideTarget;
+	private Hook hook;
 
 	private Vector2 hookPoint;
 	private List<Vector2> hookPoints = new LinkedList<Vector2>();
@@ -46,11 +48,20 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	}
 	
 	private void calcBodyBlockedContact(boolean start) {
-		bodyBlocked += start ? 1 : -1;
+		bodyBlockedCounter += start ? 1 : -1;
 	}
 	
 	private void calcGroundedContact(boolean start) {
-		grounded += start ? 1 : -1;
+		groundedCounter += start ? 1 : -1;
+	}
+	
+	private void calcHideContact(boolean start) {
+		hideCounter += start ? 1 : -1;
+	}
+	
+	private void calcGrabContact(boolean start) {
+		grabCounter += start ? 1 : -1;
+		grabCounter = Math.min(grabCounter, 2);
 	}
 	
 	protected void processInteractionTransitions() {
@@ -100,12 +111,12 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	
 	@Override
 	public boolean isBodyBlocked() {
-		return bodyBlocked > 0;
+		return bodyBlockedCounter > 0;
 	}
 
 	@Override
 	public boolean isGrounded() {
-		return grounded > 0;
+		return groundedCounter > 0;
 	}
 	
 	public boolean areBothFeetsGrounded() {
@@ -129,7 +140,6 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	protected void setShurikenQuantity(int shuriken) {
 		this.shuriken = shuriken;
 	}
-	
 	
 	@Override
 	public boolean canHide() {
@@ -175,6 +185,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	public boolean disposeGrab() {
 		if(isGrabbing() && canDispose()) {
 			endGrab();
+			grabCounter = 0;
 			grabTarget.dispose();
 			grabTarget = null;
 			enemiesHidden++;
@@ -215,6 +226,9 @@ public abstract class InteractionObject extends InteractionManager implements IC
 		if(!hookable)
 			return false;
 		
+		if(hook == null)
+			hook = new Hook((GameObject) this);
+		
 		Vector2 endPoint = clickPoint.cpy();
 		endPoint = GameProperties.pixelToMeter(endPoint);
 		Vector2 startPoint = getBodyObject().getLocalCenterInWorld();
@@ -222,6 +236,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 		hookPoints.clear();
 		getGameWorld().getWorld().rayCast(this, 
 				startPoint,endPoint.sub(startPoint).clamp(hRiM, hRiM).add(startPoint));
+		getAnimationObject().setFlip(clickPoint.x < getBodyObject().getX());
 		
 		if(hookPoints.size() > 0) {
 			hookPoint = hookPoints.get(0);
@@ -236,9 +251,15 @@ public abstract class InteractionObject extends InteractionManager implements IC
 				getBodyObject().applyImpulse(new Vector2(0,7));
 				getBodyObject().setGravityScale(0);
 				hookable = false;
+				
+				hook.activate(GameProperties.meterToPixel(hookPoint));
+				
 				return true;
 			}
 		} 
+		
+		hook.activate(clickPoint);
+		
 		return false;
 	}
 	
@@ -302,9 +323,12 @@ public abstract class InteractionObject extends InteractionManager implements IC
 					}
 				
 
-				} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
+				} else if(mySensor.getSensorType() == SensorTypes.BODY
+						&& otherSensor != null && otherSensor.getSensorType() == SensorTypes.BODY
+						&& other.getBodyObjectType().equals(BodyObjectType.Enemy)
 						&& other.getParent().isStunned() && !isGrabbing()) {
-					grabTarget = start ? other.getParent() : null;
+					calcGrabContact(start);
+					grabTarget = grabCounter > 0 ? other.getParent() : null;
 					other.getParent().getAnimationObject().setActive(canGrab());
 					
 					if(hideTarget != null) {
@@ -318,13 +342,15 @@ public abstract class InteractionObject extends InteractionManager implements IC
 					return true;
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& grabTarget != null && isGrabbing()) {
-					disposeTarget = start ? other.getParent() : null;
+					calcHideContact(start);
+					disposeTarget = hideCounter > 0 ? other.getParent() : null;
 					other.getParent().getAnimationObject().setActive(canDispose());
 					return true;
 					
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
 						&& !isInAction() && !isStunned()) {
-					hideTarget = start ? other.getParent() : null;
+					calcHideContact(start);
+					hideTarget = hideCounter > 0 ? other.getParent() : null;
 					
 					if(getBodyObject().getBodyObjectType().equals(BodyObjectType.Player))
 						other.getParent().getAnimationObject().setActive(canHide());

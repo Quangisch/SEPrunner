@@ -328,7 +328,8 @@ public abstract class EnemyAI implements IEnemyAI {
 				if((mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_LEFT && meFlipped)
 							|| (mySensor.getSensorType() == ISensorTypes.SensorTypes.VISION_RIGHT && !meFlipped)) {
 					
-					if((other.getBodyObjectType().equals(BodyObjectType.Player) && !other.getParent().isHiding())		//triggered by player
+					if((other.getBodyObjectType().equals(BodyObjectType.Player) && 
+							!other.getParent().isHiding()) && !(currentAction.size() == 1 && getEnemy().isCrouching())	//triggered by player
 						|| (other.getBodyObjectType().equals(BodyObjectType.Enemy) && other.getParent().isStunned())) {	//triggered by stunned fellow enemy
 						
 						Alarm.trigger();
@@ -340,7 +341,7 @@ public abstract class EnemyAI implements IEnemyAI {
 //				bodySensor triggered by shuriken
 				else if(mySensor.getSensorType() == SensorTypes.BODY && other.getBodyObjectType().equals(BodyObjectType.Shuriken)) {
 					
-					armor -= getEnemy().isCrouching() ? 0.4f : 1;   
+					armor -= currentAction.size() == 1 && currentAction.contains(ActionKey.CROUCH) ? 0.4f : 1;   
 					if(armor <= 0)	getEnemy().setStun();
 					else			unresolvedAction = UnresolvedAction.HIT_BY_SHURIKEN;
 				

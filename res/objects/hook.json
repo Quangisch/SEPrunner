@@ -8,14 +8,16 @@
 					 "bodyType"			: 2
 			},
 	"defaultState" 	: 0,
-	"animationen" 	: ["hook_fly"],
+	"animationen" 	: ["hook_fly", "stand"],
 	"stateframes" 	: {
 				"hook_fly" :	{
 							"frameDuration":1,
-							"boundingBox" : [20,5, 20,10, 22,10, 22, 5],
+							"boundingBox" : [5,6, 5,13, 10,13, 10,6],
 							"textureMap" : [
-										[400, 10, 22, 15]
+										
+									[970, 0, 54, 51],
 									]
 						}
 			}
+
 }

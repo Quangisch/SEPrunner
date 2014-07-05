@@ -65,8 +65,7 @@ public class MenuLevelSelect implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.setViewport(width*2, height*2, true);
-		table.setFillParent(true);
+		stage.setViewport(this.width*2, this.height*2, true);
 		table.invalidateHierarchy();
 	}
 
@@ -119,10 +118,10 @@ public class MenuLevelSelect implements Screen {
 
 		table.top().add().size(width,0).row();
 		table.add(new Label("Level Selection", skin, "big")).pad(height/10, 0, height/2, 0).colspan(3).row();
-		table.add(scrollPane).padRight(Gdx.graphics.getWidth()/20).right();
+		table.add(scrollPane).padRight(width/20).right();
 		table.add(previewTable).left();
 		table.add().padLeft(Gdx.graphics.getWidth()/20).row();
-		table.add().colspan(3).padTop(Gdx.graphics.getHeight()/2);
+		table.add().colspan(3).padTop(height/2);
 		previewTable.add(previewImage);
 		
 		stage.addActor(table);

@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonValue;
 
 import core.FilePath;
+import core.GameProperties;
 
 public class GameObject extends ObjectInitializer implements IIdentifiable, IGameObject, Comparable<GameObject>,
 		Runnable, Disposable {
@@ -47,7 +48,12 @@ public class GameObject extends ObjectInitializer implements IIdentifiable, IGam
 	@Override
 	public void dispose() {
 		getBodyObject().dispose();
-		//		disposeTextures(); TODO
+	}
+	
+	public void disposeAll() {
+		getBodyObject().dispose();
+		if(GameProperties.isInMenu())
+			disposeTextures();
 	}
 
 	@Override

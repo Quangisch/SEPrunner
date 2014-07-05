@@ -30,7 +30,7 @@ abstract class ObjectInitializer extends InteractionObject {
 	}
 	
 	
-	protected void init(String texturePath, String jsonPath) {
+	public void init(String texturePath, String jsonPath) {
 		JsonReader reader = new JsonReader();
 		JsonValue objectDataJson;
 		try {

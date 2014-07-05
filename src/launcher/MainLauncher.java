@@ -33,14 +33,14 @@ public class MainLauncher {
 		
 		
 		cfg.useGL20 = true;
-		cfg.fullscreen = true;
+		cfg.fullscreen = false;
 		
 		GameProperties.deleteUserFiles = false;
 		GameProperties.offline = false;
 		GameProperties.debug = false;
 		GameProperties.fixedWorldStep = false;
 		GameProperties.lowQuality = false;
-		startScreen = GameScreen.MENU_MAIN;
+		startScreen = GameScreen.MENU_SPLASH;
 		
 		
 		new HighscoreServer().updateLocalHighscoreFile();

@@ -6,6 +6,7 @@ import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
+import gameObject.interaction.enemy.Enemy;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;
@@ -39,7 +40,8 @@ abstract class PlayerCollision extends GameObject {
 						&& otherSensor != null
 						&& otherSensor.getSensorType() == SensorTypes.BODY
 						&& !other.getParent().isStunned()
-						&& !isHiding()) {//
+						&& !isHiding()
+						&& !((Enemy) other.getParent()).getInteractionHandler().isOnlyCrouching()) {//
 
 					GameProperties.setGameOver("You were caught!");
 					applyInteraction(InteractionState.LOSE);

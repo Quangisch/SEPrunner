@@ -61,6 +61,10 @@ public class InteractionHandler implements Runnable {
 		}
 	}
 	
+	public boolean isOnlyCrouching() {
+		return pressedActionKeys.size() == 1 && pressedActionKeys.contains(ActionKey.CROUCH);
+	}
+	
 	protected Set<ActionKey> getPressedActionKeys() {
 		return pressedActionKeys;
 	}

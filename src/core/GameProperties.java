@@ -146,8 +146,7 @@ public class GameProperties {
 
 	//	RANK, EXPERIENCE
 	public enum Rank {
-		//Noob(0), Rookie(1000), Tryhard(10000), Expert(100000);
-		Novice(0), Scout(4000), Spy(8000), Saboteur(12000), Assassin(16000);
+		Novice(0), Scout(4000), Spy(8000), Saboteur(12000), Shadow(16000);
 
 		final private int EXPERIENCE;
 

@@ -315,7 +315,7 @@ public class MenuOption implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		stage.setViewport(width*2, height*2, true);
+		stage.setViewport(this.width*2, this.height*2, true);
 		mainTable.invalidateHierarchy();
 	}
 

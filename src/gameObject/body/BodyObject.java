@@ -261,6 +261,23 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 		return (int)Math.toDegrees(body.getAngle());
 	}
 	
+	public void setPositionInMeter(Vector2 position) {
+		body.setTransform(position.x, position.y, body.getAngle());
+	}
+	
+	public void moveYInMeter(float dy) {
+		body.setTransform(body.getPosition().x, body.getPosition().y + dy, body.getAngle());
+	}
+	
+	public void setRotation(float rotation) {
+		body.setTransform(body.getPosition().x, body.getPosition().y, (float)Math.toRadians(rotation));
+	}
+	
+	public void resetVelocity() {
+		body.setAngularVelocity(0);
+		body.setLinearVelocity(new Vector2());
+	}
+	
 	@Override
 	public GameObject uncoupleBodies() {
 		if(joint != null) {
@@ -271,6 +288,10 @@ public class BodyObject implements IBodyInitializer, ISensorTypes,
 			return g;
 		}
 		return null;
+	}
+	
+	public void setBullet() {
+		body.setBullet(true);
 	}
 	
 	@Override

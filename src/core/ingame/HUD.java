@@ -53,7 +53,7 @@ public class HUD implements IDrawable {
 
 		b.begin();
 
-		shuriken.setPosition(new Vector2(0, Gdx.graphics.getHeight() - 30));
+		shuriken.setPosition(new Vector2(30, Gdx.graphics.getHeight()));
 		shuriken.draw(b, deltaTime * 0.2f);
 		font.draw(b, shurikenQuantity, 30, Gdx.graphics.getHeight() - 5);
 		font.draw(b, time, Gdx.graphics.getWidth() / 2 - font.getBounds(time).width / 2, Gdx.graphics.getHeight() - 5);

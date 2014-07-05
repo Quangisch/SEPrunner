@@ -263,7 +263,6 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		goal = new BodyObject(world, gVecs[0]);
 		goal.addFixture(0, 0, 0, true, g, true);
 		goal.setBodyObjectType(BodyObjectType.Goal);
-		
 	}
 
 	private Light loadSingleLight(JsonValue jLight) {
@@ -351,7 +350,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 	public RayHandler getRayHandler() {
 		return rayHandler;
 	}
-
+	
 	@Override
 	public void dispose() {
 		if(Gdx.graphics.isGL20Available())
@@ -361,7 +360,7 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 			t.texture.dispose();
 		world.dispose();
 		for (GameObject g : objects)
-			g.dispose();
+			g.disposeAll();
 		for(Background b : backgrounds)
 			b.dispose();
 	}

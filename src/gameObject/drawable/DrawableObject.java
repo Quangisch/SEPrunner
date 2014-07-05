@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObject> {
+public abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObject> {
 
 	// DRAW
 	private boolean flip = false;
@@ -15,6 +15,7 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 	private float scale = 1;
 	private int rotation = 180;
 	private Vector2 position;
+	
 	
 	private boolean active;
 	
@@ -28,9 +29,10 @@ abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObj
 			return;
 		
 		batch.setColor(1, active ? getActiveAlpha() : 1, active ? getActiveAlpha() : 1, active ? getActiveAlpha() : alpha);
-		batch.draw(textureRegion.getTexture(), position.x, position.y, textureRegion.getRegionWidth() / 2, textureRegion.getRegionHeight() / 2, /* origin */
+		batch.draw(textureRegion.getTexture(), position.x, position.y, 0,0,//textureRegion.getRegionWidth()/2, textureRegion.getRegionHeight()/2, /* origin */
 				textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), scale, scale, rotation, textureRegion.getRegionX(),
 				textureRegion.getRegionY(), textureRegion.getRegionWidth(), textureRegion.getRegionHeight(), flip, false);
+		
 		
 		batch.setColor(Color.WHITE);
 	}

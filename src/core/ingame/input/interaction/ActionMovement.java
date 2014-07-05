@@ -90,11 +90,10 @@ public class ActionMovement  {
 //	HOOK
 	private InteractionState processHookStart(Click click) {
 		if(click != null && !gameObject.isInAction() && !gameObject.isCrouching()) {
-			if(gameObject.getHookPoint() == null && click != null)
+			if(gameObject.getHookPoint() == null && click != null) {
 				gameObject.tryToHook(getClickPoint(click));
-			
-			if(gameObject.getHookPoint() != null)
 				return InteractionState.HOOK;
+			}
 		} 
 		
 		return null;
