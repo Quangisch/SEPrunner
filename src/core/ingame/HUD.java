@@ -45,32 +45,39 @@ public class HUD implements IDrawable {
 
 		font.setScale((float) Gdx.graphics.getWidth() / 1280 * 0.7f);
 
+		boolean timeOut = world.getTimeLimit() - world.getTime() < 30;
+		float time = timeOut ? Math.max(0, world.getTimeLimit() - world.getTime()) : world.getTime();
+
 		String shurikenQuantity = String.valueOf(world.getPlayer().getShurikenQuantity());
-		String time = StringFunctions.getTimeAsString(world.getTime());
+		String displayTime = StringFunctions.getTimeAsString(time);
 		String distance = String.valueOf((int) (goal.x - world.getPlayer().getBodyObject().getWorldPosition().x)) + "m";
 		String alarm = StringFunctions.getTimeAsString(Alarm.getTimer());
-		String fps = Gdx.graphics.getFramesPerSecond()+"fps@delta "+Gdx.graphics.getDeltaTime();
+		String fps = Gdx.graphics.getFramesPerSecond() + "fps@delta " + Gdx.graphics.getDeltaTime();
 
 		b.begin();
 
 		shuriken.setPosition(new Vector2(30, Gdx.graphics.getHeight()));
 		shuriken.draw(b, deltaTime * 0.2f);
 		font.draw(b, shurikenQuantity, 30, Gdx.graphics.getHeight() - 5);
-		font.draw(b, time, Gdx.graphics.getWidth() / 2 - font.getBounds(time).width / 2, Gdx.graphics.getHeight() - 5);
+
+		if (timeOut && (int) (((time % 1) * 3) % 3) != 0) font.setColor(Color.RED);
+		font.draw(b, displayTime, Gdx.graphics.getWidth() / 2 - font.getBounds(displayTime).width / 2,
+				Gdx.graphics.getHeight() - 5);
+		font.setColor(Color.WHITE);
+
 		if (goal != null) font.draw(b, distance, //
 				Gdx.graphics.getWidth() - font.getBounds(distance).width, Gdx.graphics.getHeight() - 5);
 
-		if(Debug.isOn())
-			font.draw(b, fps, 10, Gdx.graphics.getHeight() - 40);
-		if(Alarm.isActive()) {
+		if (Debug.isOn()) font.draw(b, fps, 10, Gdx.graphics.getHeight() - 40);
+		if (Alarm.isActive()) {
 			font.setColor(Color.RED);
-			font.draw(b, alarm, Gdx.graphics.getWidth() / 2 - font.getBounds(alarm).width / 2, Gdx.graphics.getHeight() - font.getBounds(time).height - 10);
+			font.draw(b, alarm, Gdx.graphics.getWidth() / 2 - font.getBounds(alarm).width / 2, Gdx.graphics.getHeight()
+					- font.getBounds(displayTime).height - 10);
 			font.setColor(Color.WHITE);
 		}
-		
+
 		Alarm.getInstance().draw(batch, deltaTime);
-		
-		
+
 		b.end();
 		batch.begin();
 	}
