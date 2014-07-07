@@ -84,20 +84,17 @@ public class InputHandler implements IInputHandler, InputProcessor {
 
 		// back to menu
 		case Keys.BACKSPACE:
-			if(GameProperties.debug)
-				GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
+			if (GameProperties.debug) GameProperties.switchGameScreen(GameScreen.MENU_MAIN);
 			break;
 
 		// toogle debug
 		case Keys.TAB:
-			if(GameProperties.debug)
-				Debug.toogleOnOff();
+			if (GameProperties.debug) Debug.toogleOnOff();
 			break;
 
 		// set WIN
 		case Keys.C:
-			if(GameProperties.debug)
-				GameProperties.setWin();
+			if (GameProperties.debug) GameProperties.setWin();
 			break;
 		}
 
@@ -169,6 +166,8 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		private GeometricObject geo;
 
 		private Click(int screenX, int screenY, int pointer, int button) {
+			final Click Empty = new Click(0, 0, 0, 0);
+
 			this.screenX = screenX;
 			this.screenY = screenY;
 			this.pointer = pointer;

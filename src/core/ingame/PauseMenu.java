@@ -45,7 +45,7 @@ public class PauseMenu implements IDrawable {
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1, -1, -1, 0x00 };
 
 		// TODO ??
-		b.setColor(205, 25, 201, 0.8f);
+		b.setColor(201, 201, 201, 0.8f);
 		Pixmap pixmap = new Pixmap(colordot, 0, colordot.length);
 		Texture texture = new Texture(pixmap);
 		b.draw(texture, 0, height * 0.2f, width, height * 0.6f);
