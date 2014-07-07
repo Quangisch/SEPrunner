@@ -27,7 +27,7 @@ import core.GameProperties;
  * @author SEP SS14 GruppeA
  *
  */
-public class BodyObject implements IBodyInitializer, ISensorTypes, 
+public class BodyObject implements IBodyInitializer, 
 		Disposable, Runnable, IIdentifiable {
 
 //	private GameWorld gameWorld;

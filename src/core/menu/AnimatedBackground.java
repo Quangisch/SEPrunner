@@ -151,6 +151,11 @@ public class AnimatedBackground implements IInputHandler, Runnable, Disposable, 
 		return null;
 	}
 	
+	@Override
+	public boolean isKeyDown(int[] keys) {
+		return false;
+	}
+	
 	public void dispose() {
 		world.dispose();
 	}
@@ -186,5 +191,5 @@ public class AnimatedBackground implements IInputHandler, Runnable, Disposable, 
 		}
 		
 	}
-	
+
 }

@@ -24,12 +24,11 @@ public class Highscore {
 	
 	private Highscore() {
 		highscoreMap = new HashMap<Integer, List<Score>>();
-		highscoreMap = loadHighscoreList(FilePath.highscore);
+		loadLocalHighscores(FilePath.highscore);
 	}
 	
-	public static Map<Integer, List<Score>> loadHighscoreList(String filePath) {
+	public Map<Integer, List<Score>> loadLocalHighscores(String filePath) {
 		JsonValue root = null;
-		Map<Integer, List<Score>> highscoreMap = new HashMap<Integer, List<Score>>();
 		
 		try {
 			root = new JsonReader().parse(new FileReader(filePath));
@@ -54,21 +53,21 @@ public class Highscore {
 		return highscoreMap;
 	}
 	
-	public static void saveHighscoreList() {
+	public void saveHighscoreList() {
 		
-		getInstance().sortAll();
+		sortAll();
 		JsonValue root = new JsonValue(ValueType.array);
 		root.child = new JsonValue(ValueType.array);
 		
 		JsonValue array = root.child;
-		for(int i = 1; i < getInstance().highscoreMap.size(); i++) {
+		for(int i = 1; i < highscoreMap.size(); i++) {
 			array.next = new JsonValue(ValueType.array);
 			array = array.next; 
 		}
 
-		for(int i = 0; i < getInstance().highscoreMap.size(); i++) {
+		for(int i = 0; i < highscoreMap.size(); i++) {
 			
-			List<Score> scoreList = getInstance().highscoreMap.get(i);
+			List<Score> scoreList = highscoreMap.get(i);
 			
 			if(scoreList.size() <= 0)
 				continue;
@@ -111,26 +110,14 @@ public class Highscore {
 		Collections.sort(highscoreMap.get(level));
 	}
 	
-	public static List<Score> getHighscoreList(int levelIndex) {
-		for(Integer index : getInstance().highscoreMap.keySet())
+	public List<Score> getHighscoreList(int levelIndex) {
+		for(Integer index : highscoreMap.keySet())
 			if(index == levelIndex)
-				return getInstance().highscoreMap.get(index);
+				return highscoreMap.get(index);
 		return null;
 	}
 	
-	public static List<Score> getHighscoreList(Score score, int listSize) {
-		List<Score> list = new LinkedList<Score>();
-		for(int i = 0; i < listSize; i++)
-			list.add(getHighscoreList(score.LEVEL_INDEX).get(i));
-		
-		if(getPosition(score) > listSize)
-			list.remove(listSize - 1);
-		
-		return list;
-			
-	}
-	
-	public static int getPosition(Score score) {
+	public int getPosition(Score score) {
 		addHighscore(score);
 		int i = 0;
 		for(Score s : getHighscoreList(score.LEVEL_INDEX)) {
@@ -141,17 +128,17 @@ public class Highscore {
 		return i+1;
 	}
 	
-	public static boolean addHighscore(Score score) {
-		if(!getInstance().highscoreMap.containsKey(score.LEVEL_INDEX)) {
+	public boolean addHighscore(Score score) {
+		if(!highscoreMap.containsKey(score.LEVEL_INDEX)) {
 			System.err.println(Highscore.class.toString()+" @addHighscore(...) : Illegal LevelIndex");
 			return false;
 		}
 		
 		boolean add = false;
-		if(!getInstance().highscoreMap.get(score.LEVEL_INDEX).contains(score))
-			add = getInstance().highscoreMap.get(score.LEVEL_INDEX).add(score);
+		if(!highscoreMap.get(score.LEVEL_INDEX).contains(score))
+			add = highscoreMap.get(score.LEVEL_INDEX).add(score);
 		
-		getInstance().sortLevel(score.LEVEL_INDEX);
+		sortLevel(score.LEVEL_INDEX);
 		saveHighscoreList();
 		return add;
 	}
@@ -165,13 +152,6 @@ public class Highscore {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static List<List<Score>> getHighscoreLists() {
-		List<List<Score>> highscoreLists = new LinkedList<List<Score>>();
-		for(int i = 0; i < 3; i++)
-			highscoreLists.add(getHighscoreList(i));
-		return highscoreLists;
 	}
 	
 	public String toString() {

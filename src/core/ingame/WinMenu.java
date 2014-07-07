@@ -93,14 +93,14 @@ public class WinMenu implements Screen {
 		pointsTable.add(new Label(GameProperties.POINTS_DISPOSED_MUL+"", skin, "baoli32", Color.WHITE)).row();
 		
 		pointsTable.add(new Label("Total Alarm Time", skin, "baoli32", Color.WHITE)).left();
-		pointsTable.add(new Label((int)Alarm.getTotalAlarmTime()+"", skin, "baoli32", Color.WHITE));
+		pointsTable.add(new Label((int)Alarm.getInstance().getTotalAlarmTime()+"", skin, "baoli32", Color.WHITE));
 		pointsTable.add(new Label("x", skin, "baoli32", Color.WHITE));
 		pointsTable.add(new Label(GameProperties.POINTS_ALARM_MUL+"", skin, "baoli32", Color.WHITE)).row();
 		
 		pointsTable.add(bonusTable).left().colspan(4);
 		
 		bonusTable.add(new Label("Bonus", skin, "baoli32", Color.WHITE)).left().row();
-		if(Alarm.getTotalAlarmTime() <= 0) {
+		if(Alarm.getInstance().getTotalAlarmTime() <= 0) {
 			bonusTable.add(new Label("Unseen", skin, "baoli32", Color.WHITE)).left();
 			bonusTable.add(new Label(GameProperties.POINTS_UNSEEN+"", skin, "baoli32", Color.WHITE)).row();
 		}
@@ -151,7 +151,7 @@ public class WinMenu implements Screen {
 		Score ps = world.getPlayer().getScore();
 		Color c = Color.WHITE;
 		
-		for(Score s : Highscore.getHighscoreList(GameProperties.gameScreen.INDEX)) {
+		for(Score s : Highscore.getInstance().getHighscoreList(GameProperties.gameScreen.INDEX)) {
 			c = s.equals(ps) ? Color.YELLOW : Color.WHITE;
 			
 			scoreTable.add(new Label(rank+++"", skin, "baoli32", c));

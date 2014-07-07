@@ -51,7 +51,7 @@ public class HUD implements IDrawable {
 		String shurikenQuantity = String.valueOf(world.getPlayer().getShurikenQuantity());
 		String displayTime = StringFunctions.getTimeAsString(time);
 		String distance = String.valueOf((int) (goal.x - world.getPlayer().getBodyObject().getWorldPosition().x)) + "m";
-		String alarm = StringFunctions.getTimeAsString(Alarm.getTimer());
+		String alarm = StringFunctions.getTimeAsString(Alarm.getInstance().getTimer());
 		String fps = Gdx.graphics.getFramesPerSecond() + "fps@delta " + Gdx.graphics.getDeltaTime();
 
 		b.begin();
@@ -69,7 +69,7 @@ public class HUD implements IDrawable {
 				Gdx.graphics.getWidth() - font.getBounds(distance).width, Gdx.graphics.getHeight() - 5);
 
 		if (Debug.isOn()) font.draw(b, fps, 10, Gdx.graphics.getHeight() - 40);
-		if (Alarm.isActive()) {
+		if (Alarm.getInstance().isActive()) {
 			font.setColor(Color.RED);
 			font.draw(b, alarm, Gdx.graphics.getWidth() / 2 - font.getBounds(alarm).width / 2, Gdx.graphics.getHeight()
 					- font.getBounds(displayTime).height - 10);

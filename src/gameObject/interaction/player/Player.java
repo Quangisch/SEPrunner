@@ -16,7 +16,7 @@ import core.PlayerProfile;
 import core.ingame.input.IInputHandler;
 import core.ingame.input.interaction.InteractionHandler;
 
-public class Player extends PlayerCollision {
+public class Player extends PlayerCollision implements IPlayer {
 
 	private InteractionHandler interactionHandler;
 	private PlayerProfile profile;
@@ -78,13 +78,13 @@ public class Player extends PlayerCollision {
 		if(GameProperties.isCurrentGameState(GameState.WIN) && score == null) {
 			
 			score = new Score(GameProperties.gameScreen.INDEX, profile.name, getGameWorld().getTime());
-			Highscore.addHighscore(score); // add score to local Highscore
+			Highscore.getInstance().addHighscore(score); // add score to local Highscore
 		
 			HighscoreServer server = new HighscoreServer();
 			if(server.isConnected()) {
 				
 				server.updateLocalHighscoreFile();
-				if(Highscore.getPosition(score) < GameProperties.MAX_SCOREPOSITION_TO_SERVER) {
+				if(Highscore.getInstance().getPosition(score) < GameProperties.MAX_SCOREPOSITION_TO_SERVER) {
 					
 					boolean uploaded = server.uploadScore(score);
 					if(!uploaded)

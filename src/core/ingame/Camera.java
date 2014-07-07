@@ -4,7 +4,6 @@ import gameObject.body.IBodyInitializer;
 import gameObject.interaction.InteractionState;
 import misc.Debug;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -60,23 +59,9 @@ public class Camera extends OrthographicCamera implements MoveableCamera {
 		}
 	}
 	
-	public void updateOrtho() {
-		super.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());	
-	}
-	
-	public void setZoom(float zoom) {
-		this.zoom = zoom;
-	}
-	
 	@Override
 	public void setToFollowMoveable(IBodyInitializer moveable) {
 		this.follow = moveable;
-	}
-
-	@Override
-	public void jumpTo(Vector2 position) {
-		this.position.x = position.x;
-		this.position.y = position.y;
 	}
 	
 	/**

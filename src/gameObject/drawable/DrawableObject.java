@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class DrawableObject implements IDrawableObject, Comparable<DrawableObject> {
+abstract class DrawableObject implements Comparable<DrawableObject> {
 
 	// DRAW
 	private boolean flip = false;
@@ -20,7 +20,7 @@ public abstract class DrawableObject implements IDrawableObject, Comparable<Draw
 	private boolean active;
 	
 	
-	public DrawableObject(Vector2 position) {
+	protected DrawableObject(Vector2 position) {
 		this.position = position;
 	}
 	
@@ -37,33 +37,33 @@ public abstract class DrawableObject implements IDrawableObject, Comparable<Draw
 		batch.setColor(Color.WHITE);
 	}
 	
-	@Override
+	
 	public void setPosition(Vector2 position) {
 		this.position = position;
 	}
 	
-	@Override
+	
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
 
-	@Override
+	
 	public boolean isVisible() {
 		return visible;
 	}
 
-	@Override
+	
 	public void setFlip(boolean flip) {
 		if (this.flip == flip) return;
 		flip();
 	}
 
-	@Override
+	
 	public void flip() {
 		flip = !flip;
 	}
 
-	@Override
+	
 	public boolean isFlipped() {
 		return flip;
 	}
@@ -73,22 +73,22 @@ public abstract class DrawableObject implements IDrawableObject, Comparable<Draw
 		return layer;
 	}
 
-	@Override
+	
 	public void setLayer(int layer) {
 		this.layer = layer;
 	}
 
-	@Override
+	
 	public float getAlpha() {
 		return alpha;
 	}
 
-	@Override
+	
 	public void setAlpha(float alpha) {
 		this.alpha = Math.abs(alpha > 1 ? 1 : alpha < 0 ? 0 : alpha);
 	}
 
-	@Override
+	
 	public float getScale() {
 		return scale;
 	}
@@ -97,24 +97,24 @@ public abstract class DrawableObject implements IDrawableObject, Comparable<Draw
 		this.rotation = rotation;
 	}
 	
-	@Override
+	
 	public int compareTo(DrawableObject other) {
 		return this.getLayer() - other.getLayer();
 	}
 
-	@Override
+	
 	public void setScale(float scale) {
 		// TODO
 		// BodyFunctions.scaleShape(primaryFixture.getShape(), getLocalCenterInWorld(), scale / this.scale, true);
 		this.scale = scale;
 	}
 	
-	@Override
+	
 	public boolean isActive() {
 		return active;
 	}
 	
-	@Override
+	
 	public void setActive(boolean active) {
 		this.active = active;
 	}

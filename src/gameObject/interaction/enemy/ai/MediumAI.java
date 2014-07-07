@@ -34,7 +34,7 @@ public class MediumAI extends EnemyAI {
 					break;
 				
 				hit = true;
-				Alarm.trigger(3);
+				Alarm.getInstance().trigger(3);
 				
 				storedActions.clear();
 				for(ActionKey a : currentAction)
@@ -49,7 +49,7 @@ public class MediumAI extends EnemyAI {
 
 			currentAction.add(ActionKey.CROUCH);
 			
-			if(!Alarm.isActive()){
+			if(!Alarm.getInstance().isActive()){
 				if(Gdx.graphics.isGL20Available())
 					getEnemy().getView().setActive(true);
 				

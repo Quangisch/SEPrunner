@@ -11,7 +11,7 @@ import core.ingame.input.IInputHandler;
 import core.ingame.input.InputHandler.Click;
 import core.ingame.input.KeyMap.ActionKey;
 
-public class InteractionHandler implements Runnable {
+public class InteractionHandler implements IInteractionHandler {
 	
 	private IInputHandler iHandler;
 	private GameObject gameObject;

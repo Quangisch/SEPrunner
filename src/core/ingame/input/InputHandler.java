@@ -11,7 +11,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import core.GameProperties;
@@ -52,6 +51,7 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		return false;
 	}
 
+	@Override
 	public boolean isKeyDown(int[] keys) {
 		for (int k : keys)
 			if (isKeyDown(k)) return true;
@@ -156,20 +156,6 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		return false;
 	}
 
-	Vector2 mousePos = new Vector2();
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		mousePos.set(screenX, screenY);
-		return true;
-	}
-
-	public Vector2 getMousePos() {
-		Vector2 v = mousePos.cpy();
-		mousePos.set(0, 0);
-		return v;
-	}
-
 	@Override
 	public boolean scrolled(int amount) {
 		return false;
@@ -214,6 +200,12 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		public String toString() {
 			return "Click@" + screenX + "x" + screenY + ", pointer:" + pointer + ", button:" + button;
 		}
+	}
+
+	@Override
+	public boolean mouseMoved(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

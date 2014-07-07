@@ -2,7 +2,6 @@ package gameObject.interaction;
 
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
-import gameObject.body.ICollisionable;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
 import gameObject.interaction.player.Hook;
@@ -24,8 +23,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.GameProperties;
 
-public abstract class InteractionObject extends InteractionManager implements ICollisionable, RayCastCallback,
-		IInteractable {
+abstract class InteractionObject extends InteractionManager implements RayCastCallback, ICollisionable {
 
 	private int groundedCounter, bodyBlockedCounter, grabCounter, hideCounter;
 	private boolean hookable;
@@ -70,7 +68,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 		if(this.getBodyObject().getBodyObjectType().equals(BodyObjectType.Player)) {
 //			System.out.println(String.format("thrown:%d, hidden:%d, unseen:%d", shurikenThrown, enemiesHidden, unseen));
 //			System.out.println(feetGrounded + " "+areBothFeetsGrounded());
-//			System.out.println("grabC@"+grabCounter+", hideC@"+hideCounter);
+//			System.out.println("grabC@"+grabCounter+", hideC@"+hideCounter+"->"+hideTarget);
 		}
 	}
 	
@@ -120,6 +118,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 		return groundedCounter > 0;
 	}
 	
+	@Override
 	public boolean areBothFeetsGrounded() {
 		return feetGrounded == 2;
 	}
@@ -342,8 +341,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 //				HIDEABLE	
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)) {
 					calcHideContact(start);
-					hideTarget = hideCounter > 0 && !isInAction() && !isStunned() 
-									? other.getParent() : null;
+					hideTarget = hideCounter > 0 ? other.getParent() : null;
 					
 					if(getBodyObject().getBodyObjectType().equals(BodyObjectType.Player))
 						other.getParent().getAnimationObject().setActive(canHide());

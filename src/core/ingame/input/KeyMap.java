@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.FilePath;
 
-public class KeyMap {
+public class KeyMap implements IKeyMapable {
 
 	public static enum ActionKey {
 		LEFT, RIGHT, RUN,
@@ -31,30 +31,11 @@ public class KeyMap {
 		add(ActionKey.HOOK, Input.Buttons.RIGHT);
 	}
 	
-	public void add(ActionKey action, int...keys) {
-		if(!kMap.containsKey(action))
-			kMap.put(action, new HashSet<Integer>());
-		for(int k : keys) {
-			for(Map.Entry<ActionKey, Set<Integer>> m : kMap.entrySet())
-				m.getValue().remove(k);
-			kMap.get(action).add(k);
-		}
-	}
-	
-	public boolean remove(int key) {
-		for(Map.Entry<ActionKey, Set<Integer>> e : kMap.entrySet()) {
-			boolean rm = e.getValue().remove(key);
-			if(rm)
-				return true;
-		}
-		return false;
-	}
-	
 	public void init() {
 		initFromFile();
 	}
 	
-	public void initDefault() {
+	private void initDefault() {
 		add(ActionKey.LEFT, Keys.A, Keys.LEFT);
 		add(ActionKey.RIGHT, Keys.D, Keys.RIGHT);
 		add(ActionKey.RUN, Keys.F, Keys.SHIFT_LEFT);
@@ -68,7 +49,7 @@ public class KeyMap {
 		add(ActionKey.RUN, Keys.SHIFT_LEFT, Keys.SHIFT_RIGHT);
 	}
 	
-	public boolean initFromFile() {
+	protected boolean initFromFile() {
 		JsonValue root = null;
 		try {
 			root = new JsonReader().parse(new FileReader(FilePath.settings));
@@ -89,6 +70,25 @@ public class KeyMap {
 			}
 		}
 		return true;
+	}
+	
+	public void add(ActionKey action, int...keys) {
+		if(!kMap.containsKey(action))
+			kMap.put(action, new HashSet<Integer>());
+		for(int k : keys) {
+			for(Map.Entry<ActionKey, Set<Integer>> m : kMap.entrySet())
+				m.getValue().remove(k);
+			kMap.get(action).add(k);
+		}
+	}
+	
+	public boolean remove(int key) {
+		for(Map.Entry<ActionKey, Set<Integer>> e : kMap.entrySet()) {
+			boolean rm = e.getValue().remove(key);
+			if(rm)
+				return true;
+		}
+		return false;
 	}
 	
 	public void saveToFile() {
@@ -130,7 +130,7 @@ public class KeyMap {
 	}
 
 	
-	public Set<Integer> get(ActionKey action) {
+	protected Set<Integer> get(ActionKey action) {
 		return kMap.get(action);
 	}
 	

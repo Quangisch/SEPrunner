@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import core.GameProperties;
 
-public class Hook extends GameObject implements Runnable {
+public class Hook extends GameObject implements IHookable {
 
 	private float ttl;
 	private Vector2 direction;

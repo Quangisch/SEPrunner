@@ -160,13 +160,12 @@ public class HighscoreServer {
 			return;
 		}
 
-		Map<Integer, List<Score>> scoreMap = Highscore.loadHighscoreList(FilePath.highscoreServer);
+		Map<Integer, List<Score>> scoreMap = Highscore.getInstance().loadLocalHighscores(FilePath.highscoreServer);
 		for(Entry<Integer, List<Score>> l : scoreMap.entrySet())
 			for(Score s : l.getValue())
-				Highscore.addHighscore(s);
+				Highscore.getInstance().addHighscore(s);
 		
-		File f = new File(FilePath.highscoreServer);
-		f.delete();
+		new File(FilePath.highscoreServer).delete();
 		
 	}
 }

@@ -1,7 +1,10 @@
-package gameObject.body;
+package gameObject.interaction;
+
+import gameObject.body.BodyObject;
+import gameObject.body.Sensor;
 
 public interface ICollisionable {
-	
+
 	/** 
 	 * Handle collision on impact.
 	 * 
@@ -14,6 +17,7 @@ public interface ICollisionable {
 	 *            <code>null</code>
 	 * @return return whether the handling is done or should be passed to the
 	 *         other */
-	boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor, BodyObject other, Sensor otherSensor);
-
+	boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor,
+			BodyObject other, Sensor otherSensor);
+	
 }

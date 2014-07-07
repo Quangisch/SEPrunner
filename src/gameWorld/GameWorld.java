@@ -46,10 +46,9 @@ import core.GameProperties.GameScreen;
 import core.GameProperties.GameState;
 import core.exception.LevelNotFoundException;
 import core.ingame.Camera;
-import core.ingame.IDrawable;
 import core.ingame.input.IInputHandler;
 
-public class GameWorld implements IDrawable, Runnable, Disposable {
+public class GameWorld implements IGameWorld, Runnable, Disposable {
 
 	private IInputHandler iHandler;
 	private Box2DDebugRenderer debugRender;

@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Disposable;
 
-public class Sensor implements Disposable {
+public class Sensor implements Disposable, ISensorTypes {
 
 	protected boolean active;
 	protected BodyObject link;
@@ -24,7 +24,7 @@ public class Sensor implements Disposable {
 	 * @param shapeType Type of Shape of Sensor
 	 * @param shapePoints Points to initianize Shape
 	 * @param eventData Data passed to Handler on collision */
-	public Sensor(BodyObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType) {
+	protected Sensor(BodyObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType) {
 		this(parent, shapeType, shapePoints, sensorType, HANDLE_SECOND);
 	}
 
@@ -36,31 +36,14 @@ public class Sensor implements Disposable {
 	 * @param eventData Data passed to Handler on collision
 	 * @param priority Determine on Sensor-Sensor collision which Sensor is
 	 *            activated */
-	public Sensor(BodyObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType, int priority) {
+	protected Sensor(BodyObject parent, Shape.Type shapeType, float[] shapePoints, int sensorType, int priority) {
 		active = true;
 		this.sensorType = sensorType;
 		this.priority = priority;
 		setShape(shapeType, shapePoints);
 		setBodyObject(parent);
 	}
-
-	/** @return true if collision is handled */
-	public boolean isActive() {
-		return active;
-	}
-
-	/** Set if collision is handled
-	 * 
-	 * @param active true, if collision raises event */
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	/** @return the BodyObject linked to */
-	public BodyObject getBodyObject() {
-		return link;
-	}
-
+	
 	/** Set the BodyObject linked to
 	 * 
 	 * @param link the BodyObject */
@@ -79,6 +62,23 @@ public class Sensor implements Disposable {
 		this.sensorPoints = points;
 		
 		// TODO Fixture aktualisieren
+	}
+
+	/** @return true if collision is handled */
+	public boolean isActive() {
+		return active;
+	}
+
+	/** Set if collision is handled
+	 * 
+	 * @param active true, if collision raises event */
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	/** @return the BodyObject linked to */
+	public BodyObject getBodyObject() {
+		return link;
 	}
 
 	/** FixtureDef for internal use

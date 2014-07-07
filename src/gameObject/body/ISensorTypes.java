@@ -1,5 +1,7 @@
 package gameObject.body;
 
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+
 public interface ISensorTypes {
 
 	public abstract class SensorTypes {
@@ -19,4 +21,33 @@ public interface ISensorTypes {
 		public static final int VISION_LEFT = 11;
 		public static final int VISION_RIGHT = 12;
 	}
+	
+	/** Set if collision is handled
+	 * 
+	 * @param active true, if collision raises event */
+	void setActive(boolean active);
+
+	/** @return the BodyObject linked to */
+	BodyObject getBodyObject();
+
+	/** FixtureDef for internal use
+	 * 
+	 * @return FixtureDef */
+	FixtureDef getFixtureDef();
+
+	/** custom event data
+	 * 
+	 * @return event data */
+	int getSensorType();
+
+	/** Set custom event data
+	 * 
+	 * @param eventData the event data */
+	void setSensorType(int sensorType);
+
+	/** @return the priority */
+	int getPriority();
+
+	/** @param priority the priority to set */
+	void setPriority(int priority);
 }

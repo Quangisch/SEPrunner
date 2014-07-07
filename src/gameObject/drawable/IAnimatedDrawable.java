@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 
 import core.ingame.IDrawable;
 
-public interface IAnimatedDrawable extends IDrawable, IDrawableObject {
+public interface IAnimatedDrawable extends IDrawable {
 
 	void addAnimation(InteractionState state, Animation animation);
 	

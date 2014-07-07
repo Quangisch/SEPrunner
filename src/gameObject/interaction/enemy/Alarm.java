@@ -11,7 +11,7 @@ import core.GameProperties;
 import core.ingame.Camera;
 import core.ingame.IDrawable;
 
-public class Alarm implements IDrawable {
+public class Alarm implements IDrawable, IAlarmTriggerable {
 
 	private static Alarm alarm;
 	private float totalAlarmTime = 0;
@@ -74,11 +74,11 @@ public class Alarm implements IDrawable {
 		}
 	}
 
-	public static void trigger() {
+	public void trigger() {
 		trigger(0.5f);
 	}
 
-	public static void trigger(float time) {
+	public void trigger(float time) {
 		if (getInstance() == null) return;
 			getInstance().timer += time;
 		
@@ -87,15 +87,15 @@ public class Alarm implements IDrawable {
 				l.setActive(true);
 	}
 	
-	public static float getTimer() {
+	public float getTimer() {
 		return getInstance().timer;
 	}
 
-	public static boolean isActive() {
+	public boolean isActive() {
 		return getInstance() != null && getInstance().timer > 0;
 	}
 
-	public static float getTotalAlarmTime() {
+	public float getTotalAlarmTime() {
 		return getInstance().totalAlarmTime;
 	}
 }

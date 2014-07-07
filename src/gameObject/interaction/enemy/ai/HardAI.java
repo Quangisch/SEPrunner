@@ -33,9 +33,9 @@ public class HardAI extends EnemyAI {
 			break;
 		case HIT_BY_SHURIKEN:
 			
-			if(Alarm.isActive()) {
+			if(Alarm.getInstance().isActive()) {
 				scanTime = 0;
-				Alarm.trigger(3);
+				Alarm.getInstance().trigger(3);
 				currentAction.clear();
 				unresolvedAction = UnresolvedAction.ALARM_TRIGGERD;
 				keyDown(getEnemy().getGameWorld().getPlayer().getBodyObject().getX() 
@@ -106,5 +106,5 @@ public class HardAI extends EnemyAI {
 		
 		return handled;
 	}
-	
+
 }

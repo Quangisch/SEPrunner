@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import core.GameProperties;
 
-public class ClickHandler extends ClickListener {
+class ClickHandler extends ClickListener {
 	private List<Actor> hoverList = new CopyOnWriteArrayList<Actor>();
 	private List<Actor> hoverCandidateList = new LinkedList<Actor>();
 	
@@ -26,7 +26,7 @@ public class ClickHandler extends ClickListener {
 	final public static Color COLOR_SELECT = new Color(1,0.8f,0,1);
 	final private Stage STAGE;
 	
-	public ClickHandler(Stage stage) {
+	protected ClickHandler(Stage stage) {
 		this.STAGE = stage;
 	}
 	

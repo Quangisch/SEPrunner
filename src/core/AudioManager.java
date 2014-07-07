@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Disposable;
 import core.GameProperties.GameScreen;
 import core.GameProperties.GameState;
 
-public class AudioManager implements Runnable, OnCompletionListener, Disposable {
+public class AudioManager implements Runnable, OnCompletionListener, Disposable, IAudioManageable {
 	
 	private static AudioManager manager;
 	private ScheduledExecutorService exec;
@@ -243,7 +243,7 @@ public class AudioManager implements Runnable, OnCompletionListener, Disposable 
 		
 	}
 
-	public static class AudioStarter implements Runnable {
+	protected static class AudioStarter implements Runnable {
 
 		private GameScreen screen;
 		private GameState state;

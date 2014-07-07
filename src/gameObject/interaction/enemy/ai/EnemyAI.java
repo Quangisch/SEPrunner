@@ -121,7 +121,7 @@ public abstract class EnemyAI implements IEnemyAI {
 	private void applyScriptedAction() {
 		if(Math.abs(lastX - getEnemy().getGameWorld().getPlayer().getBodyObject().getX()) < 1000)
 		
-		if (Alarm.isActive())	keyDown(ActionKey.RUN);
+		if (Alarm.getInstance().isActive())	keyDown(ActionKey.RUN);
 		else					keyUp(ActionKey.RUN);
 		
 		link.getBodyObject().getSensors().get(1).setActive(!getEnemy().getAnimationObject().isFlipped());//deaktiviert rechten sensor
@@ -219,7 +219,7 @@ public abstract class EnemyAI implements IEnemyAI {
 	protected boolean resolveAction() {
 		switch(unresolvedAction) {
 		case ALARM_TRIGGERD:
-			if(Alarm.isActive()) {
+			if(Alarm.getInstance().isActive()) {
 				getEnemy().scanArea(getEnemy().getGameWorld().getPlayer().getBodyObject().getX(), 
 						getEnemy().getGameWorld().getPlayer().getBodyObject().getY());
 				boolean action = actionAfterAlarm();
@@ -305,6 +305,11 @@ public abstract class EnemyAI implements IEnemyAI {
 	public Click getClick() {
 		return null;
 	}
+	
+	@Override
+	public boolean isKeyDown(int[] keys) {
+		return false;
+	}
 
 	@Override
 	public void keyDown(ActionKey action) {
@@ -315,7 +320,6 @@ public abstract class EnemyAI implements IEnemyAI {
 		NORMAL, HIT_BY_SHURIKEN, SEE_PLAYER, SEE_STUNNED_ENEMY, ALARM_TRIGGERD 
 	}
 	
-	@Override
 	public boolean handleCollision(boolean start, boolean postSolve, Sensor mySensor, BodyObject other, Sensor otherSensor) {
 	
 		if(!postSolve) {
@@ -332,7 +336,7 @@ public abstract class EnemyAI implements IEnemyAI {
 							!other.getParent().isHiding()) && !(currentAction.size() == 1 && getEnemy().isCrouching())	//triggered by player
 						|| (other.getBodyObjectType().equals(BodyObjectType.Enemy) && other.getParent().isStunned())) {	//triggered by stunned fellow enemy
 						
-						Alarm.trigger();
+						Alarm.getInstance().trigger();
 						unresolvedAction = UnresolvedAction.ALARM_TRIGGERD;
 						return true;
 					}

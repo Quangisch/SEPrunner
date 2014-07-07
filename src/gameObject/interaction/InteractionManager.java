@@ -5,7 +5,7 @@ import gameObject.drawable.AnimationObject;
 import gameWorld.GameWorld;
 import misc.Debug;
 
-public abstract class InteractionManager implements IInteractionManageable {
+abstract class InteractionManager implements IGameObject {
 	
 	private GameWorld gameWorld;
 	private AnimationObject aniObject;
@@ -23,15 +23,15 @@ public abstract class InteractionManager implements IInteractionManageable {
 		this.bodyObject = bodyObject;
 	}
 	
-	protected GameWorld getGameWorld() {
+	public GameWorld getGameWorld() {
 		return gameWorld;
 	}
 	
-	protected AnimationObject getAnimationObject() {
+	public AnimationObject getAnimationObject() {
 		return aniObject;
 	}
 	
-	protected BodyObject getBodyObject() {
+	public BodyObject getBodyObject() {
 		return bodyObject;
 	}
 	

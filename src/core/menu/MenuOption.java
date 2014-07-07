@@ -76,7 +76,7 @@ public class MenuOption implements Screen {
 		
 		keyMap = new KeyMap();
 		keyLabelList = new LinkedList<KeyLabel>();
-		keyMap.initFromFile();
+		keyMap.init();
 		
 		selectedModeLabel = new Label(GameProperties.prefDisplayMode.width+"x"+
 									GameProperties.prefDisplayMode.height, skin, "baoli32", Color.WHITE);

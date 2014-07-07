@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import core.ingame.input.interaction.InteractionHandler;
 
-public class Enemy extends GameObject {
+public class Enemy extends GameObject implements IEnemy {
 
 	protected IEnemyAI AI;
 	private InteractionHandler interactionHandler;
@@ -40,23 +40,7 @@ public class Enemy extends GameObject {
 		if(Gdx.graphics.isGL20Available())
 			view = new ConeLight(world.getRayHandler(), 32, INITIAL_COLOR, INITAL_VIEW_LENGTH, 0, 0, 0, 30);
 	}
-
-	@Override
-	public void init(JsonValue resources) {
-		super.init(resources);
-		setBodyObjectType(BodyObjectType.Enemy);
-		getAnimationObject().setLayer(3);
-
-		float lx = 0.6f, rx = 0.8f;
-		float y = 1f, w = 1.5f, h = 0.5f; 
-		getBodyObject().addSensor(Type.Polygon, new float[] { lx-w,y-h/2 , lx-w,y+h/2 , lx,y+h/2 , lx,y-h/2 },
-				SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
-		// NILS
-		getBodyObject().addSensor(Type.Polygon, new float[] { rx,y-h/2 , rx,y+h/2 , rx+w,y+h/2 , rx+w,y-h/2 },
-				SensorTypes.VISION_RIGHT, Sensor.HANDLE_FIRST);
-
-	}
-
+	
 	@Override
 	public void run() {
 		super.run();
@@ -83,7 +67,7 @@ public class Enemy extends GameObject {
 					getGameWorld().getPlayer().getBodyObject().getY());
 			
 			if(seePlayer) {
-				Alarm.trigger(Gdx.graphics.getDeltaTime()*2);
+				Alarm.getInstance().trigger(Gdx.graphics.getDeltaTime()*2);
 				if(!scannedArea)
 					scanArea(getGameWorld().getPlayer().getBodyObject().getX(), 
 							getGameWorld().getPlayer().getBodyObject().getY(),
@@ -98,7 +82,51 @@ public class Enemy extends GameObject {
 		scannedArea = false;
 	}
 
-	public void setAI(IEnemyAI ai, float walkMul, float runMul, float sneakMul, float pullMul) {
+
+	@Override
+	public void init(JsonValue resources) {
+		super.init(resources);
+		setBodyObjectType(BodyObjectType.Enemy);
+		getAnimationObject().setLayer(3);
+
+		float lx = 0.6f, rx = 0.8f;
+		float y = 1f, w = 1.5f, h = 0.5f; 
+		getBodyObject().addSensor(Type.Polygon, new float[] { lx-w,y-h/2 , lx-w,y+h/2 , lx,y+h/2 , lx,y-h/2 },
+				SensorTypes.VISION_LEFT, Sensor.HANDLE_FIRST);
+		// NILS
+		getBodyObject().addSensor(Type.Polygon, new float[] { rx,y-h/2 , rx,y+h/2 , rx+w,y+h/2 , rx+w,y-h/2 },
+				SensorTypes.VISION_RIGHT, Sensor.HANDLE_FIRST);
+
+	}
+	
+	public void setNewAI(JsonValue jAI, JsonValue jMul) {
+		IEnemyAI ai = null;
+		switch (StringFunctions.getMostEqualIndexIgnoreCase(
+				jAI.getString("ID", ""), new String[] //
+				{ "SimplePatrolAI","MediumAI","HardAI" })) {
+		case 0:
+			ai = new SimplePatrolAI();
+			break;
+		case 1:
+			ai = new MediumAI();
+			break;
+		case 2:
+			ai = new HardAI();
+			break;
+		case -1:
+		default:
+			break;
+		}
+		if (ai != null)
+			ai.init(jAI.get("Actions"), jAI.get("Advanced"));
+		
+		if(jMul == null)	setAI(ai);
+		else				setAI(ai, jMul.getFloat(0), jMul.getFloat(1), 
+										jMul.getFloat(2), jMul.getFloat(3));
+		
+	}
+
+	private void setAI(IEnemyAI ai, float walkMul, float runMul, float sneakMul, float pullMul) {
 		if (AI == ai)
 			return;
 		AI = ai;
@@ -129,33 +157,6 @@ public class Enemy extends GameObject {
 		return !isStunned() && (AI.handleCollision(start, postSolve, mySensor, other, otherSensor)
 				|| getAI() != null
 				|| getAI().handleCollision(start, postSolve, mySensor, other, otherSensor));
-	}
-	
-	public void setNewAI(JsonValue jAI, JsonValue jMul) {
-		IEnemyAI ai = null;
-		switch (StringFunctions.getMostEqualIndexIgnoreCase(
-				jAI.getString("ID", ""), new String[] //
-				{ "SimplePatrolAI","MediumAI","HardAI" })) {
-		case 0:
-			ai = new SimplePatrolAI();
-			break;
-		case 1:
-			ai = new MediumAI();
-			break;
-		case 2:
-			ai = new HardAI();
-			break;
-		case -1:
-		default:
-			break;
-		}
-		if (ai != null)
-			ai.init(jAI.get("Actions"), jAI.get("Advanced"));
-		
-		if(jMul == null)	setAI(ai);
-		else				setAI(ai, jMul.getFloat(0), jMul.getFloat(1), 
-										jMul.getFloat(2), jMul.getFloat(3));
-		
 	}
 	
 	public InteractionHandler getInteractionHandler(){

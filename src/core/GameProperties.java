@@ -166,9 +166,9 @@ public class GameProperties {
 		int earnedPoints = world.getPlayer().getEnemiesHidden()*GameProperties.POINTS_DISPOSED_MUL 
 				+ world.getPlayer().getUnseenFrom() * GameProperties.POINTS_HIDDEN_MUL 
 				+ (int)(world.getTimeLimit()-world.getTime())
-				+ (int)Alarm.getTotalAlarmTime()*GameProperties.POINTS_ALARM_MUL;
+				+ (int)Alarm.getInstance().getTotalAlarmTime()*GameProperties.POINTS_ALARM_MUL;
 		
-		if(Alarm.getTotalAlarmTime() <= 0)
+		if(Alarm.getInstance().getTotalAlarmTime() <= 0)
 			earnedPoints += GameProperties.POINTS_UNSEEN;
 		if(world.getPlayer().getShurikenThrown() == 0)
 			earnedPoints += GameProperties.POINTS_WITHOUT_SHURIKENS;

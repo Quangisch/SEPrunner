@@ -6,15 +6,16 @@ import com.badlogic.gdx.math.Vector2;
 
 public interface MoveableCamera {
 
+	void update();
+	
 	/**
 	 * Set moveable target to follow.
 	 * @param moveable
 	 */
-	public void setToFollowMoveable(IBodyInitializer moveable);
-	/**
-	 * Set position to jump to.
-	 * @param position
-	 */
-	public void jumpTo(Vector2 position);
+	void setToFollowMoveable(IBodyInitializer moveable);
+	
+	Vector2 unproject(Vector2 vec);
+	
+	Vector2 project(Vector2 vec);
 	
 }

@@ -1,5 +1,6 @@
 package core.menu;
 
+import net.HighscoreServer;
 import misc.ShaderBatch;
 
 import com.badlogic.gdx.Gdx;
@@ -65,7 +66,6 @@ public class MenuHighscore implements Screen {
 		width = GameProperties.SCALE_WIDTH;
 		height = GameProperties.SCALE_HEIGHT;
 		
-
 		shaderBatch = new ShaderBatch(100);
 		stage = new Stage(width*2, height*2, true, shaderBatch);
 		iHandler = new InputHandler(stage);
@@ -123,7 +123,7 @@ public class MenuHighscore implements Screen {
 	
 	
 	private void iniScoreTable() {
-		if(Highscore.getHighscoreList(levelIndex) == null)
+		if(Highscore.getInstance().getHighscoreList(levelIndex) == null)
 			return;
 		
 		scoreTable.clear();
@@ -134,7 +134,7 @@ public class MenuHighscore implements Screen {
 		scoreTable.add().size(width, 0);
 		scoreTable.add().size(width/3, 0).row();
 		
-		iniScoreTableList(Highscore.getHighscoreList(levelIndex));
+		iniScoreTableList(Highscore.getInstance().getHighscoreList(levelIndex));
 	}
 	
 	private void iniScoreTableList(java.util.List<Score> scores) {

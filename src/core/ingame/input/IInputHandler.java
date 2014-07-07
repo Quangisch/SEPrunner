@@ -8,6 +8,8 @@ public interface IInputHandler {
 	void addActionKey(ActionKey action, int... keys);
 
 	boolean isKeyDown(ActionKey action);
+	
+	boolean isKeyDown(int[] keys);
 
 	boolean isButtonDown(ActionKey action);
 

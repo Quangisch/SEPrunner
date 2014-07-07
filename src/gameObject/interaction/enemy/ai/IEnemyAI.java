@@ -1,6 +1,6 @@
 package gameObject.interaction.enemy.ai;
 
-import gameObject.body.ICollisionable;
+import gameObject.interaction.ICollisionable;
 import gameObject.interaction.enemy.Enemy;
 
 import com.badlogic.gdx.utils.JsonValue;
