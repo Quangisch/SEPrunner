@@ -50,7 +50,9 @@ public class WinMenu implements Screen {
 	public void show() {
 		width = GameProperties.SCALE_WIDTH;
 		height = GameProperties.SCALE_HEIGHT;
+		
 		world.getPlayer().saveHighscore();
+		
 		
 		stage = new Stage(10,10, true, batch);
 		stage.setCamera(world.getCamera());

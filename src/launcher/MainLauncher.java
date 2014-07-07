@@ -42,8 +42,7 @@ public class MainLauncher {
 		GameProperties.lowQuality = false;
 		startScreen = GameScreen.MENU_HIGHSCORE;
 		
-		
-		new HighscoreServer().updateLocalHighscoreFile();
+
 		GameProperties.initPrefDisplayMode();
 		checkArguments(args);
 
