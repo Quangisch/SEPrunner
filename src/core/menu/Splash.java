@@ -5,7 +5,6 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenManager;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,6 +12,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import core.GameProperties;
+import core.GameProperties.GameScreen;
 import core.Project;
 import core.menu.tween.SpriteAccessor;
 
@@ -57,7 +58,7 @@ public class Splash implements Screen{
 		Tween.set(splash, SpriteAccessor.ALPHA).target(0).start(tweenManager);
 		Tween.to(splash, SpriteAccessor.ALPHA, 2).target(1).repeatYoyo(1,.25f).setCallback(new TweenCallback(){
 			public void onEvent(int type, BaseTween<?> source){
-				((Game) Gdx.app.getApplicationListener()).setScreen(new MenuMain());  //link to 2nd img
+				GameProperties.switchGameScreen(GameScreen.MENU_MAIN);  //link to 2nd img
 			}
 		}).start(tweenManager);
 		

@@ -433,7 +433,7 @@ public class MenuOption implements Screen {
 				updateDisplaySelect();
 				mainTable.remove();
 				stage.addActor(displaySelectTable);
-				
+				stage.setScrollFocus(scrollPane);
 				
 			} else if(event.getListenerActor() == selectModeNow) {
 				GameProperties.prefDisplayMode = LwjglApplicationConfiguration.getDisplayModes()[displayModeList.getSelectedIndex()];

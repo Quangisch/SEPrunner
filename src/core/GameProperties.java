@@ -51,7 +51,7 @@ public class GameProperties {
 	public static final int 
 		INITIAL_SHURIKENS = 10,
 		INITIAL_HOOK_RADIUS = 300,
-		INITIAL_STYLEPOINTS = 125,
+		INITIAL_STYLEPOINTS = 150,
 
 		MAX_NAME_LENGTH = 12,
 		MAX_PROFILE_COUNT = 5,
@@ -59,13 +59,13 @@ public class GameProperties {
 		MAX_SCOREPOSITION_TO_SERVER = 50,
 		
 		POINTS_DISPOSED_MUL = 30,
-		POINTS_HIDDEN_MUL = 10,
-		POINTS_ALARM_MUL = -5,
+		POINTS_HIDDEN_MUL = 30,
+		POINTS_ALARM_MUL = -2,
 		POINTS_UNSEEN = 300,
 		POINTS_WITHOUT_SHURIKENS = 300,
 		
-		PRICE_SHURIKEN = 50,
-		PRICE_HOOK = 25;
+		PRICE_SHURIKEN = 30,
+		PRICE_HOOK = 10;
 	
 	public static boolean debug = false,
 			offline = false,

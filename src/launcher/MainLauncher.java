@@ -40,7 +40,7 @@ public class MainLauncher {
 		GameProperties.debug = false;
 		GameProperties.fixedWorldStep = false;
 		GameProperties.lowQuality = false;
-		startScreen = GameScreen.MENU_SPLASH;
+		startScreen = GameScreen.LEVEL1;
 		
 		
 		new HighscoreServer().updateLocalHighscoreFile();

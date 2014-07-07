@@ -118,7 +118,7 @@ public class InteractionToWorld {
 		else if (gameObject.isGrounded()) jumpTimer = 1;
 
 		if (iHandler.isKeyDown(ActionKey.JUMP))
-			baseForce.scl(0.7f, Math.max((JUMP_TIMER_MAX - jumpTimer) * 0.4f, 0));
+			baseForce.scl(0.7f, Math.max((JUMP_TIMER_MAX - jumpTimer) * 0.45f, 0));
 		else
 			baseForce.scl(0.7f, 0);
 

@@ -13,9 +13,8 @@ import core.ingame.IDrawable;
 
 public class Alarm implements IDrawable {
 
-	private static float totalAlarmTime = 0;
-
 	private static Alarm alarm;
+	private float totalAlarmTime = 0;
 
 	public static Alarm getInstance() {
 		if (alarm == null) System.err.println("Alarm not initialized");
@@ -97,6 +96,6 @@ public class Alarm implements IDrawable {
 	}
 
 	public static float getTotalAlarmTime() {
-		return totalAlarmTime;
+		return getInstance().totalAlarmTime;
 	}
 }

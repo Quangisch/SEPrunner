@@ -145,7 +145,7 @@ public class WinMenu implements Screen {
 	
 	private float scrollToY = 0;
 	private void initScoreTable() {
-		int rank = 0;
+		int rank = 1;
 		int i = 0;
 		
 		Score ps = world.getPlayer().getScore();

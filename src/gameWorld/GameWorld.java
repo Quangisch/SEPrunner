@@ -263,6 +263,8 @@ public class GameWorld implements IDrawable, Runnable, Disposable {
 		goal = new BodyObject(world, gVecs[0]);
 		goal.addFixture(0, 0, 0, true, g, true);
 		goal.setBodyObjectType(BodyObjectType.Goal);
+		
+		iHandler.popClick();
 	}
 
 	private Light loadSingleLight(JsonValue jLight) {
