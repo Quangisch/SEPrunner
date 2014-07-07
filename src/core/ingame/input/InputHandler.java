@@ -164,8 +164,6 @@ public class InputHandler implements IInputHandler, InputProcessor {
 		private GeometricObject geo;
 
 		private Click(int screenX, int screenY, int pointer, int button) {
-			final Click Empty = new Click(0, 0, 0, 0);
-
 			this.screenX = screenX;
 			this.screenY = screenY;
 			this.pointer = pointer;
