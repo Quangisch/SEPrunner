@@ -29,7 +29,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 
 	private int groundedCounter, bodyBlockedCounter, grabCounter, hideCounter;
 	private boolean hookable;
-	protected GameObject grabTarget, disposeTarget, hideTarget;
+	protected GameObject grabTarget, hideTarget;
 	private Hook hook;
 
 	private Vector2 hookPoint;
@@ -61,7 +61,6 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	
 	private void calcGrabContact(boolean start) {
 		grabCounter += start ? 1 : -1;
-		grabCounter = Math.min(grabCounter, 2);
 	}
 	
 	protected void processInteractionTransitions() {
@@ -71,6 +70,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 		if(this.getBodyObject().getBodyObjectType().equals(BodyObjectType.Player)) {
 //			System.out.println(String.format("thrown:%d, hidden:%d, unseen:%d", shurikenThrown, enemiesHidden, unseen));
 //			System.out.println(feetGrounded + " "+areBothFeetsGrounded());
+//			System.out.println("grabC@"+grabCounter+", hideC@"+hideCounter);
 		}
 	}
 	
@@ -94,14 +94,15 @@ public abstract class InteractionObject extends InteractionManager implements IC
 			}
 			grabTarget.getBodyObject().setGravityScale(0.01f);
 			grabTarget.getAnimationObject().setActive(false);
-		} else {
-			disposeTarget = null;
-			if(grabTarget != null)
-				grabTarget.getBodyObject().setGravityScale(1);
 		}
 	}
 	
 	private void processHideTarget() {
+		if(hideCounter <= 0 && hideTarget != null) {
+			hideCounter = 0;
+			hideTarget = null;
+		}
+		
 		if(isHiding() && hideTarget != null) {
 			hideTarget.getAnimationObject().setActive(false);
 			if(getInteractionState().equals(InteractionState.HIDE_END))
@@ -157,7 +158,7 @@ public abstract class InteractionObject extends InteractionManager implements IC
 	
 	@Override
 	public boolean canDispose() {
-		return canGrab() && disposeTarget != null;
+		return canGrab() && hideTarget != null;
 	}
 	
 	@Override
@@ -321,36 +322,28 @@ public abstract class InteractionObject extends InteractionManager implements IC
 					default:
 						break;
 					}
-				
-
+					
+//				GRABTARGET
 				} else if(mySensor.getSensorType() == SensorTypes.BODY
 						&& otherSensor != null && otherSensor.getSensorType() == SensorTypes.BODY
-						&& other.getBodyObjectType().equals(BodyObjectType.Enemy)
-						&& other.getParent().isStunned() && !isGrabbing()) {
+						&& other.getBodyObjectType().equals(BodyObjectType.Enemy)) {
 					calcGrabContact(start);
-					grabTarget = grabCounter > 0 ? other.getParent() : null;
-					other.getParent().getAnimationObject().setActive(canGrab());
+					grabTarget = grabCounter > 0 && other.getParent().isStunned() && !isGrabbing() 
+									? other.getParent() : null;
 					
-					if(hideTarget != null) {
-						hideTarget.getAnimationObject().setActive(false);
-						disposeTarget = hideTarget;
-						hideTarget = null;
-					}
+					if(getBodyObject().getBodyObjectType().equals(BodyObjectType.Player))
+						other.getParent().getAnimationObject().setActive(canGrab());
 					
+//				CALC HIDDEN FROM
 				} else if(other.getBodyObjectType().equals(BodyObjectType.Enemy)
 						&& isHiding() && hiddenFrom.add(other)) {
 					return true;
-				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
-						&& grabTarget != null && isGrabbing()) {
-					calcHideContact(start);
-					disposeTarget = hideCounter > 0 ? other.getParent() : null;
-					other.getParent().getAnimationObject().setActive(canDispose());
-					return true;
 					
-				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)
-						&& !isInAction() && !isStunned()) {
+//				HIDEABLE	
+				} else if(other.getBodyObjectType().equals(BodyObjectType.Hideable)) {
 					calcHideContact(start);
-					hideTarget = hideCounter > 0 ? other.getParent() : null;
+					hideTarget = hideCounter > 0 && !isInAction() && !isStunned() 
+									? other.getParent() : null;
 					
 					if(getBodyObject().getBodyObjectType().equals(BodyObjectType.Player))
 						other.getParent().getAnimationObject().setActive(canHide());
