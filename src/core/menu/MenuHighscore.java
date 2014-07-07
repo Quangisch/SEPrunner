@@ -63,6 +63,8 @@ public class MenuHighscore implements Screen {
 
 	@Override
 	public void show() {
+		new HighscoreServer().updateLocalHighscoreFile();
+		
 		width = GameProperties.SCALE_WIDTH;
 		height = GameProperties.SCALE_HEIGHT;
 		

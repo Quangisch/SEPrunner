@@ -360,12 +360,8 @@ public class MenuOption implements Screen {
 			case Keys.TAB:
 				debug = !debug;
 				return true;
-			case Keys.ESCAPE:
 			case Keys.SYM:
 				resetLabel(remapLabel);
-				return true;
-			case Keys.F:
-				GameProperties.toogleFullScreen();
 				return true;
 			}
 			

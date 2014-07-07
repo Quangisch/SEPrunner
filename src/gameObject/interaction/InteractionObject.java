@@ -115,7 +115,7 @@ abstract class InteractionObject extends InteractionManager implements RayCastCa
 
 	@Override
 	public boolean isGrounded() {
-		return groundedCounter > 0;
+		return groundedCounter > 0 || feetGrounded > 0;
 	}
 	
 	@Override
