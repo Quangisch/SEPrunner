@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.HighscoreServer;
-
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -40,7 +38,7 @@ public class MainLauncher {
 		GameProperties.debug = false;
 		GameProperties.fixedWorldStep = false;
 		GameProperties.lowQuality = false;
-		startScreen = GameScreen.MENU_HIGHSCORE;
+		startScreen = GameScreen.MENU_SPLASH;
 		
 
 		GameProperties.initPrefDisplayMode();

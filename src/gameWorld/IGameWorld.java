@@ -1,7 +1,7 @@
 package gameWorld;
 
+import gameObject.GameObject;
 import gameObject.body.BodyObject;
-import gameObject.interaction.GameObject;
 import gameObject.interaction.player.Player;
 import box2dLight.RayHandler;
 

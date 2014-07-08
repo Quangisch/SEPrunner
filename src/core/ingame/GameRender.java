@@ -19,7 +19,7 @@ import core.AudioManager;
 import core.GameProperties;
 import core.GameProperties.GameScreen;
 import core.exception.LevelNotFoundException;
-import core.ingame.input.InputHandler;
+import core.ingame.input.player.InputHandler;
 
 public class GameRender implements Screen {
 

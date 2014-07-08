@@ -1,5 +1,6 @@
 package gameObject.interaction;
 
+import gameObject.IGameObject;
 import gameObject.body.BodyObject;
 import gameObject.drawable.AnimationObject;
 import gameWorld.GameWorld;

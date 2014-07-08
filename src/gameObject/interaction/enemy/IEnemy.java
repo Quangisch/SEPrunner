@@ -1,11 +1,11 @@
 package gameObject.interaction.enemy;
 
-import gameObject.interaction.IGameObject;
-import gameObject.interaction.enemy.ai.IEnemyAI;
+import gameObject.IGameObject;
 import box2dLight.Light;
 
 import com.badlogic.gdx.utils.JsonValue;
 
+import core.ingame.input.ai.IEnemyAI;
 import core.ingame.input.interaction.InteractionHandler;
 
 public interface IEnemy extends IGameObject {

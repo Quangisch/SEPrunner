@@ -1,9 +1,9 @@
 package gameObject.interaction.player;
 
+import gameObject.GameObject;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.Sensor;
-import gameObject.interaction.GameObject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;

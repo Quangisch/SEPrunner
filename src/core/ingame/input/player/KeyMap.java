@@ -1,4 +1,4 @@
-package core.ingame.input;
+package core.ingame.input.player;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

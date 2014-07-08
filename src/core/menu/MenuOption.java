@@ -29,8 +29,8 @@ import core.AudioManager;
 import core.GameProperties;
 import core.GameProperties.GameScreen;
 import core.Project;
-import core.ingame.input.KeyMap;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.KeyMap;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class MenuOption implements Screen {
 	

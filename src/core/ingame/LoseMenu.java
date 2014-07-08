@@ -13,9 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import core.GameProperties;
 import core.GameProperties.GameScreen;
-import core.ingame.input.InputHandler;
-import core.ingame.input.InputHandler.Click;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.InputHandler;
+import core.ingame.input.player.InputHandler.Click;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class LoseMenu implements IDrawable {
 

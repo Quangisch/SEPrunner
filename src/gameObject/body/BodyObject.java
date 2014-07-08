@@ -1,6 +1,6 @@
 package gameObject.body;
 
-import gameObject.interaction.GameObject;
+import gameObject.GameObject;
 import gameObject.interaction.InteractionState;
 
 import java.util.HashMap;

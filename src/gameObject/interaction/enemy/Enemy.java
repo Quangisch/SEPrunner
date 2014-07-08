@@ -1,15 +1,11 @@
 package gameObject.interaction.enemy;
 
+import gameObject.GameObject;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
-import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
-import gameObject.interaction.enemy.ai.HardAI;
-import gameObject.interaction.enemy.ai.IEnemyAI;
-import gameObject.interaction.enemy.ai.MediumAI;
-import gameObject.interaction.enemy.ai.SimplePatrolAI;
 import gameWorld.GameWorld;
 import misc.StringFunctions;
 import box2dLight.ConeLight;
@@ -21,6 +17,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Shape.Type;
 import com.badlogic.gdx.utils.JsonValue;
 
+import core.ingame.input.ai.HardAI;
+import core.ingame.input.ai.IEnemyAI;
+import core.ingame.input.ai.MediumAI;
+import core.ingame.input.ai.SimplePatrolAI;
 import core.ingame.input.interaction.InteractionHandler;
 
 public class Enemy extends GameObject implements IEnemy {

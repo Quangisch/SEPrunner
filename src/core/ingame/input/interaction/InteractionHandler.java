@@ -1,6 +1,6 @@
 package core.ingame.input.interaction;
 
-import gameObject.interaction.GameObject;
+import gameObject.GameObject;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,8 +8,8 @@ import java.util.Set;
 import core.GameProperties;
 import core.GameProperties.GameState;
 import core.ingame.input.IInputHandler;
-import core.ingame.input.InputHandler.Click;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.InputHandler.Click;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class InteractionHandler implements IInteractionHandler {
 	

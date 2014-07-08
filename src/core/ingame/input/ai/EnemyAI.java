@@ -1,4 +1,4 @@
-package gameObject.interaction.enemy.ai;
+package core.ingame.input.ai;
 
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
@@ -18,8 +18,8 @@ import misc.Debug;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonValue;
 
-import core.ingame.input.InputHandler.Click;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.InputHandler.Click;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public abstract class EnemyAI implements IEnemyAI {
 

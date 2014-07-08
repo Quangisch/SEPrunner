@@ -1,4 +1,4 @@
-package core.ingame.input;
+package core.ingame.input.player;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -16,7 +16,8 @@ import com.badlogic.gdx.math.Vector3;
 import core.GameProperties;
 import core.GameProperties.GameScreen;
 import core.ingame.Camera;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.IInputHandler;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class InputHandler implements IInputHandler, InputProcessor {
 

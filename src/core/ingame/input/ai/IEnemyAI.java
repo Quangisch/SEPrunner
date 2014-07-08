@@ -1,4 +1,4 @@
-package gameObject.interaction.enemy.ai;
+package core.ingame.input.ai;
 
 import gameObject.interaction.ICollisionable;
 import gameObject.interaction.enemy.Enemy;

@@ -1,10 +1,10 @@
 package gameObject.interaction.player;
 
+import gameObject.GameObject;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
 import gameObject.body.Sensor;
-import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 import gameObject.interaction.enemy.Enemy;
 import gameWorld.GameWorld;

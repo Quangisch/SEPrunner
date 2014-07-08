@@ -1,8 +1,8 @@
 package gameObject.statics;
 
+import gameObject.GameObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.IBodyInitializer;
-import gameObject.interaction.GameObject;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;

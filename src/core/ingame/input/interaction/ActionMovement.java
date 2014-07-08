@@ -1,7 +1,7 @@
 package core.ingame.input.interaction;
 
+import gameObject.GameObject;
 import gameObject.drawable.AnimationObject;
-import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 import gameObject.interaction.player.Shuriken;
 
@@ -10,8 +10,8 @@ import java.util.Set;
 import com.badlogic.gdx.math.Vector2;
 
 import core.ingame.input.IInputHandler;
-import core.ingame.input.InputHandler.Click;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.InputHandler.Click;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class ActionMovement  {
 	

@@ -1,8 +1,8 @@
 package gameWorld;
 
+import gameObject.GameObject;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
-import gameObject.interaction.GameObject;
 import gameObject.interaction.enemy.Alarm;
 import gameObject.interaction.enemy.Enemy;
 import gameObject.interaction.player.Player;

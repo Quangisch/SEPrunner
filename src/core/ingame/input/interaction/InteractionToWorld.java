@@ -1,12 +1,12 @@
 package core.ingame.input.interaction;
 
-import gameObject.interaction.GameObject;
+import gameObject.GameObject;
 import misc.Debug;
 
 import com.badlogic.gdx.math.Vector2;
 
 import core.ingame.input.IInputHandler;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class InteractionToWorld {
 

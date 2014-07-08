@@ -1,7 +1,7 @@
 package core.ingame.input.interaction;
 
 import misc.Debug;
-import gameObject.interaction.GameObject;
+import gameObject.GameObject;
 import gameObject.interaction.InteractionState;
 import core.ingame.input.IInputHandler;
 

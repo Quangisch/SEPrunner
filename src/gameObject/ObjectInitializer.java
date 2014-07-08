@@ -1,5 +1,7 @@
-package gameObject.interaction;
+package gameObject;
 
+import gameObject.interaction.InteractionObject;
+import gameObject.interaction.InteractionState;
 import gameWorld.GameWorld;
 
 import java.io.FileNotFoundException;

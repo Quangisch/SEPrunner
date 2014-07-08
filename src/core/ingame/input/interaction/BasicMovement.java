@@ -1,13 +1,13 @@
 package core.ingame.input.interaction;
 
+import gameObject.GameObject;
 import gameObject.body.BodyObjectType;
-import gameObject.interaction.GameObject;
 import gameObject.interaction.InteractionState;
 
 import java.util.Set;
 
 import core.ingame.input.IInputHandler;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class BasicMovement {
 

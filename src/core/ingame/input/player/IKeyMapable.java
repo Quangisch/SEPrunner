@@ -1,6 +1,6 @@
-package core.ingame.input;
+package core.ingame.input.player;
 
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public interface IKeyMapable {
 

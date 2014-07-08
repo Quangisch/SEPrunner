@@ -19,8 +19,8 @@ import core.GameProperties.GameScreen;
 import core.ingame.Camera;
 import core.ingame.IDrawable;
 import core.ingame.input.IInputHandler;
-import core.ingame.input.InputHandler.Click;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.InputHandler.Click;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class AnimatedBackground implements IInputHandler, Runnable, Disposable, IDrawable {
 	

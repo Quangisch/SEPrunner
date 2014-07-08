@@ -1,5 +1,6 @@
 package gameObject.interaction;
 
+import gameObject.GameObject;
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;
 import gameObject.body.ISensorTypes.SensorTypes;
@@ -23,7 +24,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import core.GameProperties;
 
-abstract class InteractionObject extends InteractionManager implements RayCastCallback, ICollisionable {
+public abstract class InteractionObject extends InteractionManager implements RayCastCallback, ICollisionable {
 
 	private int groundedCounter, bodyBlockedCounter, grabCounter, hideCounter;
 	private boolean hookable;

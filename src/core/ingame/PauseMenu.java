@@ -13,8 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 import core.GameProperties;
 import core.GameProperties.GameScreen;
 import core.GameProperties.GameState;
-import core.ingame.input.InputHandler;
-import core.ingame.input.InputHandler.Click;
+import core.ingame.input.player.InputHandler;
+import core.ingame.input.player.InputHandler.Click;
 
 public class PauseMenu implements IDrawable {
 

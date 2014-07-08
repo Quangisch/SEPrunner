@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input.Keys;
 
 import core.GameProperties;
 import core.ingame.Camera;
-import core.ingame.input.InputHandler;
+import core.ingame.input.player.InputHandler;
 
 public abstract class Debug {
 

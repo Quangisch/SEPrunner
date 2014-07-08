@@ -1,4 +1,4 @@
-package gameObject.interaction;
+package gameObject;
 
 import gameObject.body.BodyObject;
 import gameObject.body.BodyObjectType;

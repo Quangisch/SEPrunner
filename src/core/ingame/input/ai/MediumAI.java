@@ -1,4 +1,4 @@
-package gameObject.interaction.enemy.ai;
+package core.ingame.input.ai;
 
 import gameObject.body.BodyObject;
 import gameObject.body.Sensor;
@@ -6,7 +6,7 @@ import gameObject.interaction.enemy.Alarm;
 
 import com.badlogic.gdx.Gdx;
 
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public class MediumAI extends EnemyAI {
 

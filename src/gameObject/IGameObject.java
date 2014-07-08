@@ -1,7 +1,8 @@
-package gameObject.interaction;
+package gameObject;
 
 import gameObject.body.BodyObject;
 import gameObject.drawable.AnimationObject;
+import gameObject.interaction.InteractionState;
 import gameWorld.GameWorld;
 
 import com.badlogic.gdx.math.Vector2;

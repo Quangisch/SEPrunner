@@ -1,7 +1,7 @@
 package core.ingame.input;
 
-import core.ingame.input.InputHandler.Click;
-import core.ingame.input.KeyMap.ActionKey;
+import core.ingame.input.player.InputHandler.Click;
+import core.ingame.input.player.KeyMap.ActionKey;
 
 public interface IInputHandler {
 
