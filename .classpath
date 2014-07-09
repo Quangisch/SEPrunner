@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="libs/gdx-tools.jar"/>
 	<classpathentry kind="lib" path="libs/gdx.jar"/>
 	<classpathentry kind="lib" path="libs/tween-engine-api.jar"/>
-	<classpathentry kind="lib" path="libs/box2dlight.jar"/>
 	<classpathentry kind="lib" path="libs/keyCodeMap.jar"/>
+	<classpathentry kind="lib" path="libs/box2dlight.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
