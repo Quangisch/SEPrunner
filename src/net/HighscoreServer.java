@@ -33,7 +33,11 @@ public class HighscoreServer {
 	public boolean isConnected() {
 		try {
 			InetAddress.getByName(addr);
-			return !GameProperties.offline && true;//.isReachable(500);
+			if(GameProperties.offline)
+				System.out.println("Offline Mode");
+			if(GameProperties.debug)
+				System.out.println("Debug Mode - Server Connection Denied");
+			return !GameProperties.offline && !GameProperties.debug;//.isReachable(500);
 		} catch (UnknownHostException e) {} // catch (IOException e) {
 											// }
 		return false;

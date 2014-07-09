@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -85,12 +86,20 @@ public class EnterNameScreen implements Screen {
 		stage.setKeyboardFocus(nameField);
 		nameField.addListener(new ClickListener() {
 			public boolean keyDown(InputEvent event, int keycode) {
+				if(keycode == Keys.SPACE)
+					return true;
 				if(keycode == Keys.ENTER && event.getListenerActor().equals(nameField)) {
 					PlayerProfile.createNewProfile(nameField.getText()).updateAndSaveProfile();
 					GameProperties.switchGameScreen(NEXT_SCREEN);
 					return true;
 				}
 				return false;
+			}
+		});
+		
+		nameField.setTextFieldFilter(new TextFieldFilter() {
+			public boolean acceptChar(TextField arg0, char arg1) {
+				return 65 <= arg1 && arg1 <= 90 || 97 <= arg1 && arg1 <= 122 || 48 <= arg1 && arg1 <= 57;
 			}
 		});
 
